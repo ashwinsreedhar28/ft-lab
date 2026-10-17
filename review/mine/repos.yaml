@@ -16,7 +16,13 @@
   install: pip install -e .[socks] pytest pytest-httpbin pytest-mock trustme
 - name: pydantic
   url: https://github.com/pydantic/pydantic
-  install: pip install -e . pytest pytest-mock dirty-equals pytest-examples email-validator pytz jsonschema rich cloudpickle
+  install: pip install -e . pytest pytest-mock pytest-benchmark dirty-equals pytest-examples email-validator pytz jsonschema rich cloudpickle hypothesis
+  # pydantic refuses to import unless pydantic-core is the exact version that commit pins, so the
+  # per-candidate install must pull that wheel: network on, deps on (still --no-build-isolation).
+  network: true
+  candidate_install: pip install -q -e . --no-build-isolation
+  # monorepo: pydantic-core/ (Rust) lives inside; its tests need a cargo build. Skip those candidates.
+  exclude_paths: [pydantic-core/]
 - name: rich
   url: https://github.com/Textualize/rich
   install: pip install -e . pytest attrs

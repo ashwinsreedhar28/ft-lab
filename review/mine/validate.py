@@ -71,10 +71,10 @@ def build_images(only: str | None):
         print(f"{name:10s} {'ok' if p.returncode == 0 else 'FAILED: ' + p.stderr[-600:]}", flush=True)
 
 
-def docker(name: str, script: str, timeout: int) -> tuple[int, str]:
+def docker(name: str, script: str, timeout: int, network: bool = False) -> tuple[int, str]:
     clone = WORK / "repos" / name
     try:
-        p = subprocess.run(["docker", "run", "--rm", "--network", "none", "-v", f"{clone}:/repo:ro",
+        p = subprocess.run(["docker", "run", "--rm", "--network", "bridge" if network else "none", "-v", f"{clone}:/repo:ro",
                             IMG.format(name=name), "bash", "-lc", script],
                            capture_output=True, text=True, timeout=timeout)
         return p.returncode, p.stdout + p.stderr
@@ -82,7 +82,11 @@ def docker(name: str, script: str, timeout: int) -> tuple[int, str]:
         return 124, (e.stdout or b"").decode(errors="replace") if isinstance(e.stdout, bytes) else (e.stdout or "")
 
 
-def run_tests_script(sha: str, test_files: list[str], overlay_from: str | None, full_suite: bool) -> str:
+DEFAULT_CANDIDATE_INSTALL = "pip install -q -e . --no-deps --no-build-isolation"
+
+
+def run_tests_script(sha: str, test_files: list[str], overlay_from: str | None, full_suite: bool,
+                     install: str = DEFAULT_CANDIDATE_INSTALL) -> str:
     """Clone /repo -> /w, check out `sha`, optionally overlay test files from `overlay_from`, install, run."""
     files = " ".join(shlex.quote(f) for f in test_files)
     overlay = ""
@@ -95,7 +99,7 @@ def run_tests_script(sha: str, test_files: list[str], overlay_from: str | None, 
         suite = (" ; echo '=== SUITE'; timeout 1500 python -m pytest -q -x -p no:cacheprovider --no-header -rN 2>&1 | tail -n 5; "
                  "echo SUITE_EXIT=${PIPESTATUS[0]}")
     return (f"git clone -q /repo /w && cd /w && git checkout -q {sha}{overlay}"
-            f" && (pip install -q -e . --no-deps --no-build-isolation >/tmp/pip.log 2>&1 || {{ echo INSTALL_FAIL; tail -n 20 /tmp/pip.log; exit 3; }})"
+            f" && ({install} >/tmp/pip.log 2>&1 || {{ echo INSTALL_FAIL; tail -n 20 /tmp/pip.log; exit 3; }})"
             f" && {{ python -m pytest -rA -q -p no:cacheprovider --no-header {files} 2>&1 | tail -n 400; echo EXIT=${{PIPESTATUS[0]}}; }}{suite}")
 
 
@@ -126,16 +130,24 @@ def run(only: str | None, limit: int, timeout: int, full_suite: bool):
         for l in out_p.read_text().splitlines():
             if l.strip():
                 d = json.loads(l); done[(d["repo"], d["sha"])] = d
-    known = set(repos())
+    cfg = repos()
     with out_p.open("a") as fh:
         for c in cands:
             key = (c["repo"], c["sha"])
             if key in done:
                 continue
-            if c["repo"] not in known:
+            if c["repo"] not in cfg:
                 print(f"{c['repo']:10s} {c['sha'][:10]} skipped: not in repos.yaml"); continue
-            rc_p, p_out = docker(c["repo"], run_tests_script(c["parent"], c["test_files"], c["sha"], False), timeout)
-            rc_c, c_out = docker(c["repo"], run_tests_script(c["sha"], c["test_files"], None, full_suite), timeout)
+            r = cfg[c["repo"]]
+            net, inst = bool(r.get("network")), r.get("candidate_install", DEFAULT_CANDIDATE_INSTALL)
+            if any(f.startswith(tuple(r.get("exclude_paths", []))) for f in c["test_files"] if r.get("exclude_paths")):
+                status, oracle, p_out, c_out = "excluded", [], "", ""
+                row = {**c, "status": status, "oracle_tests": oracle, "suite_green": None, "parent_tail": "", "commit_tail": ""}
+                fh.write(json.dumps(row) + "\n"); fh.flush(); done[key] = row
+                print(f"{c['repo']:10s} {c['sha'][:10]} {status:15s} oracle= 0 lines={c['lines']:4d}  {c['subject'][:60]}", flush=True)
+                continue
+            rc_p, p_out = docker(c["repo"], run_tests_script(c["parent"], c["test_files"], c["sha"], False, inst), timeout, net)
+            rc_c, c_out = docker(c["repo"], run_tests_script(c["sha"], c["test_files"], None, full_suite, inst), timeout, net)
             if "Unable to find image" in p_out or "Unable to find image" in c_out:
                 status, oracle = "no_image", []
             elif rc_p == 124 or rc_c == 124:
@@ -157,7 +169,7 @@ def table(rows):
     by = {}
     for r in rows:
         by.setdefault(r["repo"], Counter())[r["status"]] += 1
-    cols = ["valid", "interface_leak", "not_reproduced", "not_green", "install_fail", "no_image", "timeout"]
+    cols = ["valid", "interface_leak", "not_reproduced", "not_green", "install_fail", "no_image", "timeout", "excluded"]
     print("\nrepo        " + " ".join(f"{c[:10]:>10s}" for c in cols))
     tot = Counter()
     for repo, cnt in sorted(by.items()):
