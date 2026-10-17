@@ -126,7 +126,22 @@ def docker_run(image: str, script: str, timeout: int = 900) -> tuple[int, str]:
     return p.returncode, p.stdout + p.stderr
 
 
+_RESULT_RE = re.compile(r"^(PASSED|FAILED|ERROR) (\S+)", re.M)
+
+
+def _parse_results(out: str) -> dict[str, str]:
+    """pytest -rA summary lines -> {test_id: passed|failed|error}."""
+    res = {}
+    for status, tid in _RESULT_RE.findall(out):
+        tid = tid.split(" - ")[0]
+        res[tid] = {"PASSED": "passed", "FAILED": "failed", "ERROR": "error"}[status]
+    return res
+
+
 def bisect(shwin: Path):
+    """Per-test bisect: walk ancestors back from base; a test's introducing commit is the child
+    of the first ancestor where it passes. Tests that never pass inside the window are dropped.
+    One positive per distinct introducing commit (several tests may pin the same one)."""
     cand = json.loads((WORK / "candidates.json").read_text())
     cache_p = WORK / "bisect.cache.json"
     cache = json.loads(cache_p.read_text()) if cache_p.exists() else {}
@@ -137,50 +152,64 @@ def bisect(shwin: Path):
         test_cmd = fx["environment"]["test_cmd"]
         tests = " ".join(f"'{t}'" for t in fx["fail_to_pass"])
         tfiles = " ".join(fx["test_files"])
-        last_fail = None
+        pending = set(fx["fail_to_pass"])          # tests whose introducing commit is still unknown
+        last_failed_at: dict[str, int] = {}        # test -> index of the last ancestor where it failed
+        introduced: dict[str, int] = {}            # test -> index of its introducing ancestor
         for i, anc in enumerate(fx["ancestors"]):
-            # checkout ancestor, overlay the fix commit's test files, run only the oracle tests
+            if not pending:
+                break
             key = f"{fx['fix_commit'][:12]}:{anc['sha'][:12]}"
-            if key in cache:
-                status, tail = cache[key]["status"], cache[key].get("tail", "")
+            if key in cache and "tests" in cache[key]:
+                results = cache[key]["tests"]
             else:
                 script = (f"{{ cd /testbed && git checkout -q {anc['sha']} && git checkout -q {fx['fix_commit']} -- {tfiles} "
-                          f"&& cd {subdir} && {test_cmd} {tests}; echo EXIT=$?; }} 2>&1 | tail -n 40")
+                          f"&& cd {subdir} && {test_cmd} {tests}; echo EXIT=$?; }} 2>&1 | tail -n 60")
                 rc, out = docker_run(image, script)
-                m = re.search(r"EXIT=(\d+)", out)
-                exit_code = int(m.group(1)) if m else (rc or 99)
-                # pytest: 0 pass, 1 failures, 2 interrupted (collection error), 4 usage, 5 no tests collected
-                status = "pass" if exit_code == 0 else "fail" if exit_code == 1 else "error"
-                tail = "\n".join(out.strip().splitlines()[-8:])
                 if "Unable to find image" in out or "docker: " in out:
-                    status = "error"; print(f"     image/docker problem for {image}; not cached", flush=True)
-                else:
-                    cache[key] = {"status": status, "exit": exit_code, "tail": tail}
-                    cache_p.write_text(json.dumps(cache, indent=1))
-            log.append({"fix": fx["fix_commit"][:7], "ancestor": anc["sha"][:7], "i": i, "status": status})
-            print(f"{fx['repo_name']} {fx['fix_commit'][:7]} anc[{i}] {anc['sha'][:7]} {status}", flush=True)
-            if status == "error":
-                print("     " + tail.replace("\n", "\n     "), flush=True)
-            if status == "fail":
-                last_fail = anc
+                    print(f"     image/docker problem for {image}: build it in shwin-bench first", flush=True)
+                    break
+                results = _parse_results(out)
+                if not results:   # collection error / checkout failure: every pending test is unknown here
+                    print("     " + "\n     ".join(out.strip().splitlines()[-6:]), flush=True)
+                cache[key] = {"tests": results, "tail": "\n".join(out.strip().splitlines()[-6:])}
+                cache_p.write_text(json.dumps(cache, indent=1))
+            summary = {"passed": 0, "failed": 0, "error": 0}
+            for t in list(pending):
+                st = results.get(t, "error")
+                summary[st] += 1
+                if st == "failed":
+                    last_failed_at[t] = i
+                elif st == "passed":
+                    if t in last_failed_at:
+                        introduced[t] = last_failed_at[t]
+                    pending.discard(t)     # passes here: introducing commit is the last failing ancestor (if any)
+                # error (can't import at this ancestor): stop tracking this test, no clean signal
+                elif st == "error" and i > 0:
+                    pending.discard(t)
+            log.append({"fix": fx["fix_commit"][:7], "ancestor": anc["sha"][:7], "i": i, **summary})
+            print(f"{fx['repo_name']} {fx['fix_commit'][:7]} anc[{i}] {anc['sha'][:7]} "
+                  f"pass={summary['passed']} fail={summary['failed']} err={summary['error']} pending={len(pending)}", flush=True)
+            if results and all(results.get(t) == "error" for t in fx["fail_to_pass"]) and i == 0:
+                print("     every oracle test errors at base; skipping this fix", flush=True)
+                break
+        by_commit: dict[int, list[str]] = {}
+        for t, idx in introduced.items():
+            by_commit.setdefault(idx, []).append(t)
+        if not by_commit:
+            print(f"  -> {fx['repo_name']} {fx['fix_commit'][:7]}: no test found its introducing commit in the window", flush=True)
+            continue
+        for idx, ts in sorted(by_commit.items()):
+            anc = fx["ancestors"][idx]
+            if anc["lines"] > MAX_POS_LINES:
+                print(f"  -> dropped: introducing commit {anc['sha'][:7]} has {anc['lines']} changed lines", flush=True)
                 continue
-            break  # pass (introducing = last_fail) or error (tests can't import; stop)
-        else:
-            last_fail = None  # ran out of ancestors still failing: bug older than the window
-        if last_fail is None:
-            print(f"  -> dropped (no introducing commit within window / tests never importable)")
-            continue
-        repo_meta = last_fail
-        if repo_meta["lines"] > MAX_POS_LINES:
-            print(f"  -> dropped: introducing commit {repo_meta['sha'][:7]} has {repo_meta['lines']} changed lines")
-            continue
-        positives.append({**{k: fx[k] for k in ("repo_name", "repo_url", "fix_commit", "base_commit", "split",
-                                                  "fail_to_pass", "test_files", "task_ids", "environment")},
-                          "introducing": repo_meta["sha"], "introducing_lines": repo_meta["lines"]})
-        print(f"  -> positive: {repo_meta['sha'][:7]} ({repo_meta['lines']} lines) {repo_meta['subject'][:60]}")
+            positives.append({**{k: fx[k] for k in ("repo_name", "repo_url", "fix_commit", "base_commit", "split",
+                                                      "test_files", "task_ids", "environment")},
+                              "fail_to_pass": sorted(ts), "introducing": anc["sha"], "introducing_lines": anc["lines"]})
+            print(f"  -> positive: {anc['sha'][:7]} ({anc['lines']} lines, {len(ts)} tests) {anc['subject'][:60]}", flush=True)
     (WORK / "positives.json").write_text(json.dumps(positives, indent=1))
     (WORK / "bisect.log.json").write_text(json.dumps(log, indent=1))
-    print(f"{len(positives)}/{len(cand['fixes'])} positives")
+    print(f"{len(positives)} positives from {len(cand['fixes'])} fix commits")
 
 
 # ---------- match ----------
