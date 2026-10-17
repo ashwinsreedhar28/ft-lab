@@ -66,8 +66,19 @@ def _rows(ds, system_prompt: str | None):
     )
 
 
+def n_steps(answer_field: str) -> int:
+    """Number of <<a*b=c>> calculator annotations in the gold solution: a proxy for difficulty."""
+    return answer_field.count("<<")
+
+
 def load_train(spec: DataSpec, system_prompt: str | None = None):
-    ds = load_dataset("openai/gsm8k", "main", split="train").shuffle(seed=spec.seed)
+    ds = load_dataset("openai/gsm8k", "main", split="train")
+    min_steps = int(spec.extra.get("min_steps", 0))
+    if min_steps:
+        before = len(ds)
+        ds = ds.filter(lambda r: n_steps(r["answer"]) >= min_steps)
+        print(f"[gsm8k] hard pool: {len(ds)}/{before} train problems with >= {min_steps} calc steps", flush=True)
+    ds = ds.shuffle(seed=spec.seed)
     if spec.train_limit:
         ds = ds.select(range(spec.train_limit))
     return _rows(ds, system_prompt)

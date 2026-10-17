@@ -22,7 +22,7 @@ for f in runs/*/train.log; do [ -f "$f" ] && tail -n 400 "$f" > "${f%.log}.tail.
 export GIT_INDEX_FILE=/workspace/.results-index
 rm -f "$GIT_INDEX_FILE"
 git add -f pod/versions.lock 2>/dev/null
-find runs -type f \( -name '*.json' -o -name '*.png' -o -name '*.yaml' -o -name '*.tail.log' -o -name 'STATUS.txt' -o -name "${PHASE}.log" \) -size -5M -print0 \
+find runs -type f -not -path "*/checkpoint-*" \( -name '*.json' -o -name '*.png' -o -name '*.yaml' -o -name '*.tail.log' -o -name 'STATUS.txt' -o -name "${PHASE}.log" \) -size -5M -print0 \
   | xargs -0 git add -f 2>/dev/null
 TREE=$(git write-tree)
 PARENT=$(git rev-parse -q --verify "refs/remotes/origin/${BR}" 2>/dev/null || true)
