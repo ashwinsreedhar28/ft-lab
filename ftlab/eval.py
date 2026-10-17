@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import os
 import time
 from pathlib import Path
@@ -72,6 +73,9 @@ def run_eval(cfg_path: str, label: str, model: str | None, backend: str, max_tok
     task = get_task(cfg.data.task)
     ds = task.load_eval(cfg.data, cfg.system_prompt)
     model = model or cfg.model
+    # default the vLLM window and completion cap to what the config trains with
+    max_model_len = max_model_len or int(cfg.grpo.get("vllm_max_model_length") or 4096)
+    max_tokens = max_tokens or int(cfg.grpo.get("max_completion_length") or 1024)
     rows = [dict(r) for r in ds]
     t0 = time.time()
     if backend == "vllm":
@@ -108,24 +112,43 @@ def run_eval(cfg_path: str, label: str, model: str | None, backend: str, max_tok
     return out
 
 
+_SEED_RE = re.compile(r"^(.*)_s(\d+)$")
+
+
 def table(paths: list[str]):
+    """One row per label; labels `<name>_s<seed>` collapse to mean ± half-range over seeds.
+
+    The CI column is the Wilson interval for a single run (eval-set noise); the ± column
+    is spread across training seeds (run-to-run noise). A lift smaller than either is not a result.
+    """
     rows = [json.loads(Path(p).read_text()) for p in paths]
-    rows.sort(key=lambda r: -r["acc"])
-    print(f"{'label':<14}{'model':<44}{'n':>6}{'acc':>8}{'ci95':>16}")
+    groups: dict[str, list[dict]] = {}
     for r in rows:
-        print(f"{r['label']:<14}{r['model'][:43]:<44}{r['n']:>6}{r['acc']:>8.3f}"
-              f"{r['ci95'][0]:>8.3f}-{r['ci95'][1]:.3f}")
+        m = _SEED_RE.match(r["label"])
+        groups.setdefault(m.group(1) if m else r["label"], []).append(r)
+    out = []
+    for label, rs in groups.items():
+        accs = [r["acc"] for r in rs]
+        mean = sum(accs) / len(accs)
+        spread = (max(accs) - min(accs)) / 2 if len(accs) > 1 else None
+        lo, hi = wilson(round(mean * rs[0]["n"]), rs[0]["n"])
+        out.append((label, rs[0]["model"], rs[0]["n"], mean, spread, len(rs), lo, hi))
+    out.sort(key=lambda t: -t[3])
+    print(f"{'label':<14}{'model':<40}{'n':>6}{'acc':>8}{'±seeds':>9}{'runs':>5}{'wilson95':>16}")
+    for label, model, n, mean, spread, k, lo, hi in out:
+        sp = f"{spread:.3f}" if spread is not None else "—"
+        print(f"{label:<14}{model[:39]:<40}{n:>6}{mean:>8.3f}{sp:>9}{k:>5}{lo:>8.3f}-{hi:.3f}")
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("config", nargs="?")
-    ap.add_argument("--label", default="base")
+    ap.add_argument("--label", default="base", help="use <name>_s<seed> for seed runs; --table groups on the prefix")
     ap.add_argument("--model", default=None, help="HF id / local path / anthropic model id")
     ap.add_argument("--backend", default="vllm", choices=["vllm", "anthropic"])
-    ap.add_argument("--max-tokens", type=int, default=1024)
+    ap.add_argument("--max-tokens", type=int, default=None, help="default: config max_completion_length")
     ap.add_argument("--gpu-mem", type=float, default=0.85)
-    ap.add_argument("--max-model-len", type=int, default=4096)
+    ap.add_argument("--max-model-len", type=int, default=None, help="default: config vllm_max_model_length")
     ap.add_argument("--table", nargs="*", help="print a comparison table from eval json files")
     ap.add_argument("--set", nargs="*", default=[], help="config overrides key=value")
     a = ap.parse_args()

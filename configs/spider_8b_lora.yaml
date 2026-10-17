@@ -1,0 +1,10 @@
+# Qwen3-8B LoRA. bf16 weights 16 GB + adapter grads/Adam ~1 GB + vLLM 0.3 (24 GB) + activations: fits an 80 GB H100 at batch 16.
+extends: spider_h100.yaml
+name: spider_8b_lora
+model: Qwen/Qwen3-8B
+lora: {enabled: true, r: 32, alpha: 64, target_modules: all-linear}
+grpo:
+  learning_rate: 1.0e-5
+  per_device_train_batch_size: 16
+  gradient_accumulation_steps: 4
+  vllm_gpu_memory_utilization: 0.30

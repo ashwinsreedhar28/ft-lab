@@ -1,0 +1,10 @@
+# Model-size axis: Qwen3-4B with an r=32 adapter on the same Spider split and reward.
+extends: spider_h100.yaml
+name: spider_4b_lora
+model: Qwen/Qwen3-4B
+lora: {enabled: true, r: 32, alpha: 64, target_modules: all-linear}
+grpo:
+  learning_rate: 1.0e-5
+  per_device_train_batch_size: 32
+  gradient_accumulation_steps: 2     # same 64 completions per optimizer step
+  vllm_gpu_memory_utilization: 0.35
