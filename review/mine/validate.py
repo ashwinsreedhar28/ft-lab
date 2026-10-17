@@ -42,6 +42,8 @@ IMG = "rb-mine-{name}"
 DOCKERFILE = """FROM python:3.12-slim
 RUN apt-get update -qq && apt-get install -y -qq --no-install-recommends git build-essential >/dev/null && rm -rf /var/lib/apt/lists/*
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1 PIP_NO_CACHE_DIR=1 PYTHONDONTWRITEBYTECODE=1
+# build backends up front: per-candidate installs run with the network off and --no-build-isolation
+RUN pip install -q setuptools wheel setuptools-scm flit_core hatchling hatch-vcs hatch-fancy-pypi-readme pdm-backend poetry-core
 COPY . /seed
 WORKDIR /seed
 RUN {install}
@@ -92,7 +94,7 @@ def run_tests_script(sha: str, test_files: list[str], overlay_from: str | None, 
         suite = (" ; echo '=== SUITE'; timeout 1500 python -m pytest -q -x -p no:cacheprovider --no-header -rN 2>&1 | tail -n 5; "
                  "echo SUITE_EXIT=${PIPESTATUS[0]}")
     return (f"git clone -q /repo /w && cd /w && git checkout -q {sha}{overlay}"
-            f" && (pip install -q -e . --no-deps >/tmp/pip.log 2>&1 || {{ echo INSTALL_FAIL; tail -n 20 /tmp/pip.log; exit 3; }})"
+            f" && (pip install -q -e . --no-deps --no-build-isolation >/tmp/pip.log 2>&1 || {{ echo INSTALL_FAIL; tail -n 20 /tmp/pip.log; exit 3; }})"
             f" && {{ python -m pytest -rA -q -p no:cacheprovider --no-header {files} 2>&1 | tail -n 400; echo EXIT=${{PIPESTATUS[0]}}; }}{suite}")
 
 

@@ -20,5 +20,5 @@ def test_not_reproduced_and_not_green_and_install_fail():
 
 def test_script_overlays_tests_from_commit_and_turns_off_deps():
     s = run_tests_script("p" * 40, ["tests/test_x.py"], "c" * 40, False)
-    assert f"git show {'c' * 40}:tests/test_x.py" in s and "--no-deps" in s and "PIPESTATUS" in s
+    assert f"git show {'c' * 40}:tests/test_x.py" in s and "--no-deps --no-build-isolation" in s and "PIPESTATUS" in s
     assert "git show" not in run_tests_script("c" * 40, ["tests/test_x.py"], None, False)
