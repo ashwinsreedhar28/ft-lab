@@ -1,6 +1,6 @@
 import random
 
-from review.mine.mutate import OPS, op_mutants, pytest_ok, script, SKIP_LINE
+from review.mine.mutate import OPS, killed_by, op_mutants, passed, pytest_ok, script, SKIP_LINE
 
 
 def test_every_operator_changes_its_match():
@@ -25,8 +25,16 @@ def test_skip_line_filters_defs_and_comments():
     assert SKIP_LINE.match("def f(x):") and SKIP_LINE.match("    # note") and SKIP_LINE.match("") and not SKIP_LINE.match("    x = 1")
 
 
-def test_script_applies_edit_before_pytest_and_captures_diff():
-    s = script("a" * 40, "pip install -e .", {"pkg/m.py": "x = 1\n"}, ("tests/test_p.py", "def test_a(): pass\n"), ["tests/test_p.py"], True, "b" * 40)
-    assert s.index("base64 -d > pkg/m.py") < s.index("python -m pytest")
-    assert "git diff " + "b" * 40 in s and "PYTHONPATH=/w/src:/w" in s
+def test_script_mounts_edits_before_pytest_and_captures_diff():
+    s, files = script("a" * 40, "pip install -e .", {"pkg/m.py": "x = 1\n"}, ("tests/test_p.py", "def test_a(): pass\n"), ["tests/test_p.py"], True, "b" * 40)
+    assert s.index("cp /inject/edit_0 pkg/m.py") < s.index("python -m pytest") and files == {"edit_0": "x = 1\n", "probe": "def test_a(): pass\n"}
+    assert "git diff " + "b" * 40 in s and "PYTHONPATH=/w/src:/w" in s and "base64" not in s
     assert pytest_ok("...\nEXIT=0") and not pytest_ok("EXIT=1") and not pytest_ok("no marker")
+
+
+def test_kill_criterion_is_relative_to_baseline():
+    base = "PASSED t.py::a\nPASSED t.py::b\nFAILED t.py::tty_only - needs a tty\nEXIT=1"
+    mut = "PASSED t.py::a\nFAILED t.py::b - assert\nFAILED t.py::tty_only - needs a tty\nEXIT=1"
+    same = "PASSED t.py::a\nPASSED t.py::b\nFAILED t.py::tty_only\nEXIT=1"
+    assert passed(base) == {"t.py::a", "t.py::b"}
+    assert killed_by(passed(base), mut) == {"t.py::b"} and killed_by(passed(base), same) == set()

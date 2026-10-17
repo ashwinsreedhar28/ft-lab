@@ -25,7 +25,6 @@ Report by `source` downstream: a model that only learned operator shapes shows u
 from __future__ import annotations
 
 import argparse
-import base64
 import json
 import random
 import re
@@ -144,24 +143,37 @@ def related_tests(repo: Path, sha: str, f: str, test_files: list[str]) -> list[s
     return sorted(hits)
 
 
-def b64(s: str) -> str:
-    return base64.b64encode(s.encode()).decode()
-
-
 def script(sha: str, inst: str, edits: dict[str, str] | None, probe: tuple[str, str] | None,
-           pytest_targets: list[str] | None, want_diff: bool, parent: str = "", timeout_s: int = 1500) -> str:
-    """Container script: checkout sha, apply file edits (path -> full content), write probe, run pytest."""
-    parts = [f"git clone -q /repo /w && cd /w && git checkout -q {sha}", "export PYTHONPATH=/w/src:/w",
-             f"({inst} >/tmp/pip.log 2>&1 || echo INSTALL_WARN)"]
-    for path, content in (edits or {}).items():
-        parts.append(f"echo {b64(content)} | base64 -d > {shlex.quote(path)}")
+           pytest_targets: list[str] | None, want_diff: bool, parent: str = "", timeout_s: int = 1500) -> tuple[str, dict[str, str]]:
+    """Container script + the files to mount at /inject. Checkout sha, copy edited files (path -> full
+    content) and the probe into place, optionally print the diff vs parent, run pytest with -rA."""
+    files, parts = {}, [f"git clone -q /repo /w && cd /w && git checkout -q {sha}", "export PYTHONPATH=/w/src:/w",
+                        f"({inst} >/tmp/pip.log 2>&1 || echo INSTALL_WARN)"]
+    for i, (path, content) in enumerate((edits or {}).items()):
+        files[f"edit_{i}"] = content
+        parts.append(f"cp /inject/edit_{i} {shlex.quote(path)}")
     if want_diff:
         parts.append(f"echo DIFF_BEGIN; git diff {parent}; echo DIFF_END")
     if probe:
-        parts.append(f"mkdir -p $(dirname {shlex.quote(probe[0])}) && echo {b64(probe[1])} | base64 -d > {shlex.quote(probe[0])}")
+        files["probe"] = probe[1]
+        parts.append(f"mkdir -p $(dirname {shlex.quote(probe[0])}) && cp /inject/probe {shlex.quote(probe[0])}")
     tg = " ".join(shlex.quote(t) for t in (pytest_targets or []))
-    parts.append(f"{{ timeout {timeout_s} python -m pytest -rA -q -x -p no:cacheprovider --no-header {tg} 2>&1 | tail -n 300; echo EXIT=${{PIPESTATUS[0]}}; }}")
-    return " && ".join(parts[:3]) + (" && " if len(parts) > 3 else "") + " ; ".join(parts[3:])
+    parts.append(f"{{ timeout {timeout_s} python -m pytest -rA -q -p no:cacheprovider --no-header {tg} 2>&1 | tail -n 3000; echo EXIT=${{PIPESTATUS[0]}}; }}")
+    return " && ".join(parts[:3]) + " && " + " ; ".join(parts[3:]), files
+
+
+def run(name: str, sha: str, inst: str, net: bool, timeout: int, **kw) -> str:
+    sc, files = script(sha, inst, **kw)
+    return docker(name, sc, timeout, net, files)[1]
+
+
+def passed(out: str) -> set[str]:
+    return {t for t, st in _parse_results(out).items() if st == "passed"}
+
+
+def killed_by(baseline_pass: set[str], out: str) -> set[str]:
+    """Tests that passed at baseline and no longer pass: the mutation-testing kill criterion."""
+    return baseline_pass - passed(out)
 
 
 def pytest_ok(out: str) -> bool:
@@ -206,32 +218,38 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
             continue
         rel = related_tests(repo, pr["sha"], f, pr["test_files"])
         targets = rel or None                       # None -> whole suite
-        rc, base_out = docker(name, script(pr["sha"], inst, None, None, targets, False), timeout, net)
-        if not pytest_ok(base_out):
-            log(f"{name:9s} {pr['sha'][:8]} {f}: baseline not green (exit {exit_code(base_out)}), skip\n    " + base_out.strip().replace("\n", "\n    ")[-700:])
-            rows.append({**{k: pr[k] for k in ("repo", "sha", "parent", "subject", "lines")}, "file": f, "status": "baseline_not_green",
+        base_out = run(name, pr["sha"], inst, net, timeout, edits=None, probe=None, pytest_targets=targets, want_diff=False)
+        base_pass = passed(base_out)
+        if not base_pass:
+            log(f"{name:9s} {pr['sha'][:8]} {f}: baseline collected nothing (exit {exit_code(base_out)}), skip\n    " + base_out.strip().replace("\n", "\n    ")[-500:])
+            rows.append({**{k: pr[k] for k in ("repo", "sha", "parent", "subject", "lines")}, "file": f, "status": "baseline_empty",
                          "targets": targets, "baseline_tail": base_out[-1500:]}); break
+        base_full_pass = None                       # full-suite baseline, computed once if any mutant survives stage 1
         muts = op_mutants(lines, per_pr - (1 if llm else 0), rng)
         if llm:
             m = llm_mutant(repo, pr["sha"], f, lines, PROBE_MODEL)
             if m: muts.append(m)
         for m in muts:
             content = mutated_file(repo, pr["sha"], f, m["line"], m["mutated"])
-            row = {**{k: pr[k] for k in ("repo", "sha", "parent", "subject", "lines")}, "file": f, **m}
-            # stage 1: related tests; stage 2: full suite (captures the bug PR diff on the way)
-            rc, out1 = docker(name, script(pr["sha"], inst, {f: content}, None, targets, False), timeout, net)
-            row["stage1"] = "survived" if pytest_ok(out1) else ("killed" if "EXIT=1" in out1 else "error")
-            row["stage1_tail"] = out1[-1500:]; row["targets"] = targets
+            row = {**{k: pr[k] for k in ("repo", "sha", "parent", "subject", "lines")}, "file": f, **m,
+                   "targets": targets, "baseline_passed": len(base_pass)}
+            out1 = run(name, pr["sha"], inst, net, timeout, edits={f: content}, probe=None, pytest_targets=targets, want_diff=False)
+            k1 = killed_by(base_pass, out1)
+            row["stage1"] = "killed" if k1 else ("survived" if exit_code(out1) in ("0", "1") else "error")
+            row["stage1_killers"] = sorted(k1)[:10]; row["stage1_tail"] = out1[-1200:]
             if row["stage1"] != "survived":
                 extra = "" if row["stage1"] == "killed" else " (exit " + exit_code(out1) + ")\n    " + out1.strip().replace("\n", "\n    ")[-500:]
-                rows.append(row); log(f"{name:9s} {pr['sha'][:8]} {f}:{m['line']} {m['operator']:14s} {row['stage1']}{extra}"); continue
-            rc, out2 = docker(name, script(pr["sha"], inst, {f: content}, None, None, True, pr["parent"]), timeout, net)
-            row["stage2"] = "survived" if pytest_ok(out2) else ("killed" if "EXIT=1" in out2 else "error")
-            row["stage2_tail"] = out2.split("DIFF_BEGIN")[0][-1500:] if "DIFF_BEGIN" in out2 else out2[-1500:]
+                rows.append(row); log(f"{name:9s} {pr['sha'][:8]} {f}:{m['line']} {m['operator']:14s} {row['stage1']} {len(k1)}{extra}"); continue
+            if base_full_pass is None:
+                base_full_pass = passed(run(name, pr["sha"], inst, net, timeout, edits=None, probe=None, pytest_targets=None, want_diff=False))
+            out2 = run(name, pr["sha"], inst, net, timeout, edits={f: content}, probe=None, pytest_targets=None, want_diff=True, parent=pr["parent"])
+            k2 = killed_by(base_full_pass, out2)
+            row["stage2"] = "killed" if k2 else ("survived" if exit_code(out2) in ("0", "1") else "error")
+            row["stage2_killers"] = sorted(k2)[:10]
             if "DIFF_BEGIN" in out2:
                 row["bug_diff"] = out2.split("DIFF_BEGIN", 1)[1].split("DIFF_END", 1)[0].strip()
             if row["stage2"] != "survived":
-                rows.append(row); log(f"{name:9s} {pr['sha'][:8]} {f}:{m['line']} {m['operator']:14s} suite-{row['stage2']}"); continue
+                rows.append(row); log(f"{name:9s} {pr['sha'][:8]} {f}:{m['line']} {m['operator']:14s} suite-{row['stage2']} {len(k2)}"); continue
             # guard: a probe that tells mutant from original
             src = git(repo, "show", f"{pr['sha']}:{f}").splitlines()
             ctx = "\n".join(src[max(0, m["line"] - 25): m["line"] + 25])
@@ -241,11 +259,11 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
                 if not probe:
                     continue
                 ppath = "tests/test_probe_mutant.py"
-                _, on_mut = docker(name, script(pr["sha"], inst, {f: content}, (ppath, probe), [ppath], False), timeout, net)
-                _, on_orig = docker(name, script(pr["sha"], inst, None, (ppath, probe), [ppath], False), timeout, net)
-                mut_fail, orig_pass = ("EXIT=1" in on_mut), pytest_ok(on_orig)
+                on_mut = run(name, pr["sha"], inst, net, timeout, edits={f: content}, probe=(ppath, probe), pytest_targets=[ppath], want_diff=False)
+                on_orig = run(name, pr["sha"], inst, net, timeout, edits=None, probe=(ppath, probe), pytest_targets=[ppath], want_diff=False)
+                mut_fail, orig_pass = exit_code(on_mut) == "1", pytest_ok(on_orig)
                 row.update(probe=probe, probe_on_mutant="fail" if mut_fail else ("pass" if pytest_ok(on_mut) else "error"),
-                           probe_on_original="pass" if orig_pass else ("fail" if "EXIT=1" in on_orig else "error"))
+                           probe_on_original="pass" if orig_pass else ("fail" if exit_code(on_orig) == "1" else "error"))
                 if mut_fail and orig_pass:
                     row["guard"] = "distinguished"; break
                 fb = f"on mutant: {row['probe_on_mutant']}; on original: {row['probe_on_original']}\n{on_mut[-600:]}"

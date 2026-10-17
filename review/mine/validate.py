@@ -72,15 +72,21 @@ def build_images(only: str | None):
         print(f"{name:10s} {'ok' if p.returncode == 0 else 'FAILED: ' + p.stderr[-600:]}", flush=True)
 
 
-def docker(name: str, script: str, timeout: int, network: bool = False) -> tuple[int, str]:
+def docker(name: str, script: str, timeout: int, network: bool = False, files: dict[str, str] | None = None) -> tuple[int, str]:
+    """Run `script` in the repo's image with the clone mounted ro at /repo. `files` {name: content} are
+    written to a temp dir mounted ro at /inject (big files can't ride on the command line)."""
+    import tempfile
     clone = WORK / "repos" / name
-    try:
-        p = subprocess.run(["docker", "run", "--rm", "--network", "bridge" if network else "none", "-v", f"{clone}:/repo:ro",
-                            IMG.format(name=name), "bash", "-lc", script],
-                           capture_output=True, text=True, timeout=timeout)
-        return p.returncode, p.stdout + p.stderr
-    except subprocess.TimeoutExpired as e:
-        return 124, (e.stdout or b"").decode(errors="replace") if isinstance(e.stdout, bytes) else (e.stdout or "")
+    with tempfile.TemporaryDirectory() as td:
+        for fname, content in (files or {}).items():
+            (Path(td) / fname).write_text(content)
+        cmd = ["docker", "run", "--rm", "--network", "bridge" if network else "none", "-v", f"{clone}:/repo:ro",
+               "-v", f"{td}:/inject:ro", IMG.format(name=name), "bash", "-lc", script]
+        try:
+            p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+            return p.returncode, p.stdout + p.stderr
+        except subprocess.TimeoutExpired as e:
+            return 124, (e.stdout or b"").decode(errors="replace") if isinstance(e.stdout, bytes) else (e.stdout or "")
 
 
 DEFAULT_CANDIDATE_INSTALL = "pip install -q -e . --no-deps --no-build-isolation"
