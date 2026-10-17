@@ -90,9 +90,17 @@ def search(n: int, status) -> tuple[str, int, int]:
 
 def unshallow(repo: Path):
     """scan.py clones --shallow-since; mature repos' bugs are older than that window."""
-    if (repo / ".git" / "shallow").exists():
-        print(f"{repo.name:10s} unshallowing clone …", flush=True)
-        git(repo, "fetch", "-q", "--unshallow")
+    if not (repo / ".git" / "shallow").exists():
+        return
+    print(f"{repo.name:10s} unshallowing clone …", flush=True)
+    import subprocess
+    for args in (["fetch", "-q", "--unshallow"], ["fetch", "-q", "--depth=1000000"]):
+        r = subprocess.run(["git", "-C", str(repo), *args], capture_output=True, text=True)
+        if r.returncode == 0 and not (repo / ".git" / "shallow").exists():
+            return
+        print(f"{repo.name:10s} {' '.join(args)}: {r.stderr.strip()[-200:]}", flush=True)
+    n = len(git(repo, "rev-list", "--count", "HEAD").split()) and git(repo, "rev-list", "--count", "HEAD").strip()
+    print(f"{repo.name:10s} still shallow ({n} commits reachable); bisect window limited to that", flush=True)
 
 
 def bisect_one(c: dict, cfg: dict, max_anc: int, max_lines: int, timeout: int) -> dict:
