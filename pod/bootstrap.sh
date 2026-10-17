@@ -4,6 +4,7 @@
 #   ssh -i ~/.ssh/runpod -p <PORT> root@<HOST> \
 #     'export GH_TOKEN=<fine-grained PAT, contents:write on ft-lab only>; \
 #      curl -sL https://raw.githubusercontent.com/ashwinsreedhar28/ft-lab/main/pod/bootstrap.sh | bash -s phase0'
+# Re-run after a fix (raw CDN caches ~5 min): cd /workspace/ft-lab && git fetch && git reset --hard origin/main && bash pod/bootstrap.sh phase0
 #
 # What it does: clones the repo to /workspace/ft-lab, runs pod/setup.sh, starts
 # pod/<phase>.sh under tmux (session "ft"), and starts a heartbeat that every

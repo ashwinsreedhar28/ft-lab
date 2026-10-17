@@ -18,6 +18,10 @@ The command (fill HOST, PORT, phase):
 ```
 ssh -i ~/.ssh/runpod -p PORT root@HOST "export GH_TOKEN=$FTLAB_PAT; curl -sL https://raw.githubusercontent.com/ashwinsreedhar28/ft-lab/main/pod/bootstrap.sh | bash -s phase0"
 ```
+Re-running after Claude pushes a fix (raw.githubusercontent caches ~5 min, so use the clone on the pod):
+```
+ssh -i ~/.ssh/runpod -p PORT root@HOST "export GH_TOKEN=$FTLAB_PAT; cd /workspace/ft-lab && git fetch -q origin main && git reset -q --hard origin/main && bash pod/bootstrap.sh phase0"
+```
 Re-running the same command is safe: it attaches to the running phase instead of
 restarting, and each stage is skipped once finished (`runs/<phase>.stages`).
 
