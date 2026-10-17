@@ -126,7 +126,10 @@ def call_anthropic(model: str, prompt: str, max_tokens: int) -> tuple[str, tuple
         try:
             r = client.messages.create(model=model, max_tokens=max_tokens, system=SYSTEM,
                                        messages=[{"role": "user", "content": prompt}])
-            text = "".join(b.text for b in r.content if getattr(b, "type", "") == "text")
+            text = "".join(getattr(b, "text", "") or "" for b in r.content)
+            if not text.strip():
+                text = (f"API_EMPTY stop_reason={r.stop_reason} blocks="
+                        f"{[getattr(b, 'type', '?') for b in r.content]} out_tokens={r.usage.output_tokens}")
             pin, pout = PRICES.get(model, (0.0, 0.0))
             usd = (r.usage.input_tokens * pin + r.usage.output_tokens * pout) / 1e6
             return text, (r.usage.input_tokens, r.usage.output_tokens), usd
@@ -156,7 +159,7 @@ def main():
     ap.add_argument("--label", default=None)
     ap.add_argument("--backend", default="anthropic", choices=["anthropic", "openai"])
     ap.add_argument("--base-url", default=None)
-    ap.add_argument("--max-tokens", type=int, default=1500)
+    ap.add_argument("--max-tokens", type=int, default=6000, help="5.5 models may spend tokens thinking before the JSON")
     ap.add_argument("--workers", type=int, default=2, help="keep low: prompts are 20-90k tokens")
     ap.add_argument("--runs", default=str(Path(__file__).parent / "runs.json"), help="precomputed suite results by head_sha")
     ap.add_argument("--table", nargs="*")
@@ -180,7 +183,7 @@ def main():
         results = list(ex.map(one, tasks))
     reviews = {tid: rev for tid, rev, _, _ in results}
     unparsable = sum(1 for _, _, ok, _ in results if not ok)
-    api_errors = sum(1 for _, _, _, raw in results if raw.startswith("API_ERROR"))
+    api_errors = sum(1 for _, _, _, raw in results if raw.startswith("API_ERROR") or raw.startswith("API_EMPTY"))
     if api_errors:
         print(f"WARNING: {api_errors} API errors (scored as escalate); see 'raw' in the results file", flush=True)
     scores = by_split(load_tasks(a.tasks), reviews)
