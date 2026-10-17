@@ -28,8 +28,8 @@ from collections import defaultdict
 from pathlib import Path
 
 WORK = Path(__file__).parent / "work"
-MAX_ANCESTORS = 60
-MAX_POS_LINES = 400        # bigger than this is not a reviewable PR (initial dumps, renames)
+MAX_ANCESTORS = 400        # walk to the repo root if needed; the error boundary stops early
+MAX_POS_LINES = 1500       # aether commits are squash-merged PRs; size is recorded and sliced at report time
 SIZE_TOL = 0.30
 
 
@@ -183,8 +183,11 @@ def bisect(shwin: Path):
                     if t in last_failed_at:
                         introduced[t] = last_failed_at[t]
                     pending.discard(t)     # passes here: introducing commit is the last failing ancestor (if any)
-                # error (can't import at this ancestor): stop tracking this test, no clean signal
                 elif st == "error" and i > 0:
+                    # the test can't even import here: the module it exercises doesn't exist yet. The bug was
+                    # born with the module, in the last failing ancestor (its child). That is the introducing PR.
+                    if t in last_failed_at:
+                        introduced[t] = last_failed_at[t]
                     pending.discard(t)
             log.append({"fix": fx["fix_commit"][:7], "ancestor": anc["sha"][:7], "i": i, **summary})
             print(f"{fx['repo_name']} {fx['fix_commit'][:7]} anc[{i}] {anc['sha'][:7]} "
@@ -205,7 +208,8 @@ def bisect(shwin: Path):
                 continue
             positives.append({**{k: fx[k] for k in ("repo_name", "repo_url", "fix_commit", "base_commit", "split",
                                                       "test_files", "task_ids", "environment")},
-                              "fail_to_pass": sorted(ts), "introducing": anc["sha"], "introducing_lines": anc["lines"]})
+                              "fail_to_pass": sorted(ts), "introducing": anc["sha"], "introducing_lines": anc["lines"],
+                              "introducing_subject": anc["subject"]})
             print(f"  -> positive: {anc['sha'][:7]} ({anc['lines']} lines, {len(ts)} tests) {anc['subject'][:60]}", flush=True)
     (WORK / "positives.json").write_text(json.dumps(positives, indent=1))
     (WORK / "bisect.log.json").write_text(json.dumps(log, indent=1))
