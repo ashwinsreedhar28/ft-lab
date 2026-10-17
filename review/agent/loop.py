@@ -99,9 +99,9 @@ def probe_is_specific(source: str, task: dict) -> bool:
     return any(re.search(rf"\b{re.escape(n)}\b", source) for n in names if len(n) > 2)
 
 
-def docker_run(image: str, script: str, files: dict[str, str] | None = None, timeout: int = 1200) -> tuple[int, str]:
+def docker_run(image: str, script: str, files: dict[str, str] | None = None, timeout: int = 1200, network: str = "none") -> tuple[int, str]:
     name = f"rb-{int(time.time() * 1000) % 10**9}"
-    subprocess.run(["docker", "create", "--name", name, "--network", "none", "--cpus=2", "--memory=4g",
+    subprocess.run(["docker", "create", "--name", name, "--network", network, "--cpus=2", "--memory=4g",
                     image, "bash", "-lc", script], check=True, capture_output=True)
     try:
         for path, text in (files or {}).items():
@@ -128,12 +128,12 @@ def run_probe(task: dict, sha: str, subdir: str, path: str, source: str, with_co
     """Returns (status passed|failed|error, output tail, probe_cov|None)."""
     full = f"/testbed/{subdir}/{path}".replace("/./", "/")
     if with_cov:
-        cmd = (f"cd /testbed && git checkout -q {sha} && mkdir -p $(dirname {full}) && cd {subdir} && "
+        cmd = (f"cd /testbed && git checkout -q {sha} && mkdir -p $(dirname {full}) && pip -q install coverage >/dev/null 2>&1; cd {subdir} && "
                f"python -m coverage run -m pytest -o addopts= -p no:cacheprovider -q {path} 2>&1 | tail -n 40; echo EXIT=${{PIPESTATUS[0]}}; "
                f"python -m coverage json -o /tmp/pc.json >/dev/null 2>&1 && echo COVJSON && cat /tmp/pc.json")
     else:
         cmd = f"cd /testbed && git checkout -q {sha} && mkdir -p $(dirname {full}) && cd {subdir} && {task['test_cmd']} {path} 2>&1 | tail -n 40; echo EXIT=${{PIPESTATUS[0]}}"
-    rc, out = docker_run(task["image"], cmd, files={full: source})
+    rc, out = docker_run(task["image"], cmd, files={full: source}, network="bridge" if with_cov else "none")
     m = re.search(r"EXIT=(\d+)", out)
     code = int(m.group(1)) if m else rc
     status = "passed" if code == 0 else "failed" if code == 1 else "error"
