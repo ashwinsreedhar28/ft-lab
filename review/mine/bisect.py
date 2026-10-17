@@ -91,6 +91,23 @@ def search(n: int, status, step: int = 64) -> tuple[str, int, int]:
     return "ok", lo, hi
 
 
+def unshallow(repo: Path, url: str):
+    """scan.py clones --shallow-since; mature repos' bugs are older than that window. Such clones
+    often cannot be deepened ("error in object: unshallow"), so the fallback is a fresh full clone."""
+    if not (repo / ".git" / "shallow").exists():
+        return
+    import shutil
+    import subprocess
+    print(f"{repo.name:10s} unshallowing clone …", flush=True)
+    r = subprocess.run(["git", "-C", str(repo), "fetch", "-q", "--unshallow"], capture_output=True, text=True)
+    if r.returncode == 0 and not (repo / ".git" / "shallow").exists():
+        return
+    print(f"{repo.name:10s} unshallow failed ({r.stderr.strip()[-120:]}); full re-clone from {url}", flush=True)
+    shutil.rmtree(repo)
+    subprocess.run(["git", "clone", "-q", url, str(repo)], check=True)
+    print(f"{repo.name:10s} {git(repo, 'rev-list', '--count', 'HEAD').strip()} commits", flush=True)
+
+
 def bisect_one(c: dict, cfg: dict, max_anc: int, max_lines: int, timeout: int) -> dict:
     name = c["repo"]; repo = WORK / "repos" / name
     r = cfg[name]

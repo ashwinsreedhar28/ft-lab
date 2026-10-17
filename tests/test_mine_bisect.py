@@ -29,3 +29,8 @@ def test_older_than_window_and_non_monotone():
     # cannot build at the far end: the install failure bounds the search instead of aborting it
     v, lo, hi = search(3000, mk(["fail"] * 1200 + ["docker_error"] * 1800)[0])
     assert (v, lo, hi) == ("ok", 1199, 1200)
+
+
+def test_module_exports():
+    import review.mine.bisect as b
+    assert all(hasattr(b, n) for n in ("search", "unshallow", "bisect_one", "oracle_status", "main"))
