@@ -248,6 +248,7 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
             k2 = killed_by(base_full_pass, out2)
             row["stage2"] = "killed" if k2 else ("survived" if exit_code(out2) in ("0", "1") else "error")
             row["stage2_killers"] = sorted(k2)[:10]
+            row["stage2_tail"] = (out2.split("DIFF_BEGIN")[0] if "DIFF_BEGIN" in out2 else out2)[-1500:]
             if "DIFF_BEGIN" in out2:
                 row["bug_diff"] = out2.split("DIFF_BEGIN", 1)[1].split("DIFF_END", 1)[0].strip()
             if row["stage2"] != "survived":
