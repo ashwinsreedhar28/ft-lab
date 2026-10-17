@@ -70,6 +70,30 @@ def uncovered_defs(task: dict) -> list[str]:
     return sorted(names) if not tests else []
 
 
+def _ranges(lines: list[int]) -> str:
+    out, start, prev = [], None, None
+    for l in sorted(lines):
+        if start is None:
+            start = prev = l
+        elif l == prev + 1:
+            prev = l
+        else:
+            out.append(f"{start}-{prev}" if prev != start else str(start)); start = prev = l
+    if start is not None:
+        out.append(f"{start}-{prev}" if prev != start else str(start))
+    return ",".join(out)
+
+
+def probe_targets_uncovered(task: dict, probe_cov: dict | None) -> bool:
+    """probe_cov: {file: set(lines)} executed by the probe (from coverage json), or None if unavailable."""
+    if not task.get("uncovered") or probe_cov is None:
+        return True   # no coverage data: fall back to the name rule
+    for u in task["uncovered"]:
+        if set(u["lines"]) & probe_cov.get(u["file"], set()):
+            return True
+    return False
+
+
 def probe_is_specific(source: str, task: dict) -> bool:
     names = changed_def_names(task)
     return any(re.search(rf"\b{re.escape(n)}\b", source) for n in names if len(n) > 2)
@@ -100,15 +124,32 @@ def suite_at(task: dict, sha: str, subdir: str) -> str:
     return out
 
 
-def run_probe(task: dict, sha: str, subdir: str, path: str, source: str) -> tuple[str, str]:
-    """Returns (status passed|failed|error, output tail)."""
+def run_probe(task: dict, sha: str, subdir: str, path: str, source: str, with_cov: bool = False):
+    """Returns (status passed|failed|error, output tail, probe_cov|None)."""
     full = f"/testbed/{subdir}/{path}".replace("/./", "/")
-    rc, out = docker_run(task["image"],
-                         f"cd /testbed && git checkout -q {sha} && mkdir -p $(dirname {full}) && cd {subdir} && {task['test_cmd']} {path} 2>&1 | tail -n 40; echo EXIT=${{PIPESTATUS[0]}}",
-                         files={full: source})
+    if with_cov:
+        cmd = (f"cd /testbed && git checkout -q {sha} && mkdir -p $(dirname {full}) && cd {subdir} && "
+               f"python -m coverage run -m pytest -o addopts= -p no:cacheprovider -q {path} 2>&1 | tail -n 40; echo EXIT=${{PIPESTATUS[0]}}; "
+               f"python -m coverage json -o /tmp/pc.json >/dev/null 2>&1 && echo COVJSON && cat /tmp/pc.json")
+    else:
+        cmd = f"cd /testbed && git checkout -q {sha} && mkdir -p $(dirname {full}) && cd {subdir} && {task['test_cmd']} {path} 2>&1 | tail -n 40; echo EXIT=${{PIPESTATUS[0]}}"
+    rc, out = docker_run(task["image"], cmd, files={full: source})
     m = re.search(r"EXIT=(\d+)", out)
     code = int(m.group(1)) if m else rc
-    return ("passed" if code == 0 else "failed" if code == 1 else "error"), out
+    status = "passed" if code == 0 else "failed" if code == 1 else "error"
+    cov = None
+    if with_cov and "COVJSON" in out:
+        try:
+            j = json.loads(out.split("COVJSON", 1)[1].strip())
+            cov = {}
+            for fpath, fdata in j.get("files", {}).items():
+                rel = fpath[len("/testbed/"):] if fpath.startswith("/testbed/") else fpath
+                if subdir != "." and not rel.startswith(subdir):
+                    rel = f"{subdir}/{rel}"
+                cov[rel] = set(fdata.get("executed_lines", []))
+        except (ValueError, json.JSONDecodeError):
+            cov = None
+    return status, out.split("COVJSON")[0], cov
 
 
 def call(model: str, system: str, messages: list[dict], max_tokens: int):
@@ -143,6 +184,11 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
     unc = uncovered_defs(task)
     if unc:
         prompt += "\n\nNo existing test file references these changed definitions: " + ", ".join(unc[:20])
+    if task.get("uncovered"):
+        lines = "; ".join(f"{u['file']}: {_ranges(u['lines'])}" for u in task["uncovered"][:12])
+        prompt += ("\n\nChanged lines that NO existing test executes (measured with coverage at the PR head). "
+                   "A bug on these lines would ship on a green suite. Probes that count as evidence for approve "
+                   "must execute at least one of these lines:\n" + lines)
     messages = [{"role": "user", "content": prompt}]
     evidence = False   # a specific, passing probe exists
     usd_total, tok_in, tok_out, probes = 0.0, 0, 0, []
@@ -172,20 +218,24 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
         if final or not has_probe:
             break
         path = probe.get("path") or "tests/test_probe_review.py"
-        status, out = run_probe(task, task["head_sha"], subdir, path, probe["source"])
+        status, out, pcov = run_probe(task, task["head_sha"], subdir, path, probe["source"], with_cov=bool(task.get("uncovered")))
         # scoring-only: does the probe reproduce the oracle? (fails on PR, passes on the fixed code)
         strong = None
         if task["kind"] == "bug" and status == "failed":
             fixed_sha = task.get("fix_sha")
             if fixed_sha:
-                s2, _ = run_probe(task, fixed_sha, subdir, path, probe["source"])
+                s2, _, _ = run_probe(task, fixed_sha, subdir, path, probe["source"])
                 strong = s2 == "passed"
         specific = probe_is_specific(probe["source"], task)
-        if status == "passed" and specific:
+        targets = probe_targets_uncovered(task, pcov)
+        if status == "passed" and specific and targets:
             evidence = True
         probes.append({"round": round_, "path": path, "status": status, "strong": strong, "specific": specific,
-                       "hypothesis": probe.get("hypothesis", ""), "source": probe["source"][:6000], "tail": out[-1500:]})
+                       "targets_uncovered": targets, "hypothesis": probe.get("hypothesis", ""),
+                       "source": probe["source"][:6000], "tail": out[-1500:]})
         note = "" if specific else " (note: this probe does not call any changed function by name, so it does not count as evidence for approve)"
+        if specific and not targets:
+            note = " (note: this probe executed none of the changed lines the suite leaves uncovered, so it does not count as evidence for approve)"
         messages.append({"role": "user", "content": f"Probe result at the PR head: {status}{note}\n```\n{out[-3000:]}\n```\nDecide again (you may probe once more if rounds remain)."})
     rev, ok = parse_review(text, (tok_in, tok_out), usd_total)
     return rev, ok, text, probes

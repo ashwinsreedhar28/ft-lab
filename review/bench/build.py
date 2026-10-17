@@ -24,6 +24,7 @@ import json
 import re
 import subprocess
 import sys
+import time
 from collections import defaultdict
 from pathlib import Path
 
@@ -435,14 +436,75 @@ def _added_ranges(repo: Path, sha: str) -> list[dict]:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("stage", choices=["prepare", "bisect", "match", "verify", "graph"])
+    ap.add_argument("stage", choices=["prepare", "bisect", "match", "verify", "graph", "coverage"])
     ap.add_argument("--shwin", default=str(Path.home() / "shwin-bench"))
     ap.add_argument("--repos", default=str(Path.home()), help="directory containing emberserve/, aether/, serverless-lakehouse/")
     a = ap.parse_args()
     shwin, repos = Path(a.shwin).expanduser(), Path(a.repos).expanduser()
     {"prepare": lambda: prepare(shwin, repos), "bisect": lambda: bisect(shwin), "match": lambda: match(repos),
-     "verify": lambda: verify(shwin), "graph": lambda: graph(repos)}[a.stage]()
+     "verify": lambda: verify(shwin), "graph": lambda: graph(repos), "coverage": lambda: coverage(shwin)}[a.stage]()
 
 
 if __name__ == "__main__":
     main()
+
+
+# ---------- coverage (docker): changed lines no existing test executes ----------
+def coverage(shwin: Path):
+    """For every task in tasks.jsonl: run the suite under coverage at head_sha inside the task image,
+    intersect executed lines with the diff's added lines, store `uncovered` = [{file, lines:[...]}]
+    (added lines no test executed) and `covered_frac`. Network is enabled for this stage only, to
+    pip install coverage inside the container."""
+    import tempfile
+    tasks_p = Path(__file__).parent / "tasks.jsonl"
+    rows = [json.loads(l) for l in tasks_p.read_text().splitlines() if l.strip()]
+    for t in rows:
+        if not t.get("image"):
+            continue
+        subdir = t.get("subdir") or "."
+        # added lines per file from the diff
+        added: dict[str, set[int]] = {}
+        cur = None
+        for ln in t["diff"].splitlines():
+            if ln.startswith("+++ b/"):
+                cur = ln[6:]
+            elif ln.startswith("@@") and cur and cur.endswith(".py") and not is_test_file(cur):
+                m = re.match(r"^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@", ln)
+                if m:
+                    s, n = int(m.group(1)), int(m.group(2) or 1)
+                    added.setdefault(cur, set()).update(range(s, s + n))
+        if not added:
+            t["uncovered"], t["covered_frac"] = [], None
+            continue
+        script = (f"cd /testbed && git checkout -q {t['head_sha']} && pip -q install coverage >/dev/null 2>&1; "
+                  f"cd {subdir} && python -m coverage run --branch -m pytest -q -x --no-header -p no:cacheprovider -o addopts= >/dev/null 2>&1; "
+                  f"python -m coverage json -o /tmp/cov.json >/dev/null 2>&1; cat /tmp/cov.json")
+        name = f"rbcov-{int(time.time() * 1000) % 10**9}"
+        p = subprocess.run(["docker", "run", "--rm", "--name", name, "--network", "bridge", t["image"], "bash", "-lc", script],
+                           capture_output=True, text=True, timeout=1800)
+        try:
+            cov = json.loads(p.stdout[p.stdout.index("{"):])
+        except (ValueError, json.JSONDecodeError):
+            print(f"{t['id']}: coverage failed: {p.stdout[-300:]} {p.stderr[-300:]}", flush=True)
+            t["uncovered"], t["covered_frac"] = [], None
+            continue
+        files = cov.get("files", {})
+        executed: dict[str, set[int]] = {}
+        for fpath, fdata in files.items():
+            rel = fpath
+            for prefix in ("/testbed/", f"{subdir}/"):
+                rel = rel[len(prefix):] if rel.startswith(prefix) else rel
+            rel = (Path(subdir) / rel).as_posix() if subdir != "." and not rel.startswith(subdir) else rel
+            executed[rel] = set(fdata.get("executed_lines", []))
+        unc, n_added, n_cov = [], 0, 0
+        for f, lines in added.items():
+            ex = executed.get(f, set())
+            missing = sorted(l for l in lines if l not in ex)
+            n_added += len(lines); n_cov += len(lines) - len(missing)
+            if missing:
+                unc.append({"file": f, "lines": missing})
+        t["uncovered"] = unc
+        t["covered_frac"] = round(n_cov / n_added, 3) if n_added else None
+        print(f"{t['id']:45s} added {n_added:4d} lines, {n_added - n_cov:4d} never executed by the suite ({t['covered_frac']})", flush=True)
+    tasks_p.write_text("\n".join(json.dumps(t) for t in rows) + "\n")
+    print(f"wrote {tasks_p}")

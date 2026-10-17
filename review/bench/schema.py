@@ -32,6 +32,8 @@ class Task:
     test_cmd: str = ""
     subdir: str = "."        # where test_cmd runs inside the checkout
     fix_sha: str = ""        # bug rows: the commit that fixed it (scoring-only, never shown)
+    uncovered: list = field(default_factory=list)   # [{file, lines}] added lines no existing test executes
+    covered_frac: float | None = None
 
     def to_json(self) -> dict:
         return asdict(self)
