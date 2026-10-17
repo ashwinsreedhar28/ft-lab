@@ -1,36 +1,49 @@
 # RUNBOOK — your side of each phase
 
-Every pod step is: spin up the pod, paste me `host port`, say go. I drive the pod
-over SSH from your Mac (`scripts/pod.sh`, key `~/.ssh/runpod`). You review the
-numbers I report, decide improve/proceed, and stop the pod.
+Neither Claude's cloud shell nor the Mac-side shell can open SSH to a pod (both are
+HTTPS-only), so the pod drives itself. Your loop per phase:
+
+1. Spin up the pod (template below). Copy its SSH host and port.
+2. In your Mac terminal, paste ONE command (below). It clones the repo, installs,
+   and runs the whole phase in tmux. The pod pushes logs/results to branch
+   `results/<phase>` every 5 min; Claude reads that branch and reports.
+3. When Claude says the phase is done (or you see `PHASE-DONE` in `tmux attach -t ft`),
+   stop the pod. Claude pulls results into `runs/` and writes the numbers up.
+
+One-time: create a fine-grained GitHub PAT scoped to `ashwinsreedhar28/ft-lab`,
+Contents: read & write, 30-day expiry. Keep it in your shell as `$FTLAB_PAT`
+(e.g. `export FTLAB_PAT=...` in a terminal you don't share). Never paste it in chat.
+
+The command (fill HOST, PORT, phase):
+```
+ssh -i ~/.ssh/runpod -p PORT root@HOST "export GH_TOKEN=$FTLAB_PAT; curl -sL https://raw.githubusercontent.com/ashwinsreedhar28/ft-lab/main/pod/bootstrap.sh | bash -s phase0"
+```
+Re-running the same command is safe: it attaches to the running phase instead of
+restarting, and each stage is skipped once finished (`runs/<phase>.stages`).
 
 Pod template for every phase: **Runpod PyTorch** (CUDA 12.8), container disk
 **80 GB**, no volume, **SSH over exposed TCP** on. Stop (don't just pause) when done.
 
-## Phase 0 — GSM8K mechanics, 1× H100 80 GB (~3 h, ~$8–10)
-1. Pod up → `scripts/pod.sh set <host> <port>` (I do this once you paste it).
-2. `pod/setup.sh` → pins land in `pod/versions.lock` (committed afterwards).
-3. `configs/gsm8k_smoke.yaml` (3 steps, 2 min). Pass = reward line prints, no OOM.
-4. Base eval: `python -m ftlab.eval configs/gsm8k_h100.yaml --label base` (1,319 problems, <2 min).
-5. `scripts/pod.sh run configs/gsm8k_h100.yaml` → 300 steps in tmux; I poll `train.log`.
-6. Tuned eval: `--label tuned --model runs/gsm8k_h100/final`; `plot.py`; `pod.sh pull`.
-7. Optional same pod: `configs/gsm8k_lora.yaml` → `--label lora --model runs/gsm8k_lora/merged`.
-8. Stop pod. Commit `runs/gsm8k_h100/{summary.json,eval_*.json,curves.png,log_history.json}` with `git add -f`.
-9. Drill (no pod): three questions from `docs/NOTES.md` § "How a GRPO step runs".
+## Phase 0 — GSM8K mechanics, 1× H100 80 GB (~3–4 h incl. LoRA, ~$10)
+`bash -s phase0` runs, in order: `pod/setup.sh` (pins → `pod/versions.lock`) → 3-step
+smoke → base eval on 1,319 → 300-step GRPO → tuned eval → `curves.png` → LoRA run +
+eval (set `SKIP_LORA=1` in the ssh command's export to skip) → `table.txt`.
+Afterwards (no pod): `scripts/results.sh phase0`, Claude writes the numbers into
+README, you do the drill in `docs/NOTES.md` / the study artifact.
 
 **Pass condition:** reward curve rises over 300 steps; tuned acc > base acc by
 more than the CI half-width (~2.5 pts); you can point at G, the group baseline,
 and `beta` in the trainer source.
 
-## Phase 1 — Spider text-to-SQL, 1× H100 (~4 h, ~$12)
-1. Pod up, `setup.sh`, then `scripts/get_spider.sh` (downloads ~100 MB of SQLite files).
-2. `configs/spider_smoke.yaml`.
-3. Base eval on dev (1,034). Also, from your Mac with `ANTHROPIC_API_KEY` in the
-   shell: `--backend anthropic --model claude-haiku-4-5 --label haiku` and the same
-   for Sonnet. Same prompt, same scorer.
-4. `spider_h100.yaml` (400 steps) → tuned eval → `spider_lora.yaml` → lora eval.
-5. `eval.py --table runs/spider_h100/eval_*.json runs/spider_lora/eval_lora.json`
-   → the four-to-five-row table for Jeremy (Oct 27).
+## Phase 1 — Spider text-to-SQL, 1× H100 (~5 h, ~$14)
+`bash -s phase1`: setup → Spider SQLite download → smoke → base eval on dev (1,034)
+→ 400-step GRPO → eval → LoRA → eval → table. Frontier rows run from your Mac
+(needs `scripts/get_spider.sh` locally and `ANTHROPIC_API_KEY` in the shell):
+```
+python -m ftlab.eval configs/spider_h100.yaml --backend anthropic --model claude-haiku-4-5 --label haiku
+python -m ftlab.eval configs/spider_h100.yaml --backend anthropic --model claude-sonnet-4-5 --label sonnet
+```
+Same prompt, same scorer. The merged table is the Oct 27 deliverable.
 
 ## Phase 2 — topology, 2× then 4× H100 (~1.5 h, ~$20)
 A. 2× H100: GPU 0 runs `VLLM_SERVER_DEV_MODE=1 vllm serve …` (command in
@@ -46,11 +59,8 @@ result matches the snapshot. Same registry, same train.py.
 
 ## Day-to-day commands (Mac)
 ```
-scripts/pod.sh set <host> <port>     # once per pod
-scripts/pod.sh push                  # code -> pod
-scripts/pod.sh ssh                   # shell on the pod
-scripts/pod.sh run configs/x.yaml    # train in tmux
-scripts/pod.sh log                   # tail training
-scripts/pod.sh pull                  # results -> ./runs (no checkpoints)
+scripts/results.sh phase0            # pull the pod's pushed results into ./runs
+scripts/pod.sh set/ssh/push/log      # manual pod access if you want it yourself
 make test                            # 23 pure-python tests, no GPU
 ```
+On the pod: `tmux attach -t ft` (phase), `tmux attach -t hb` (heartbeat), ctrl-b d to detach.
