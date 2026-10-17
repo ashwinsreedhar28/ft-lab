@@ -169,6 +169,11 @@ def pytest_ok(out: str) -> bool:
     return bool(m) and m.group(1) == "0"
 
 
+def exit_code(out: str) -> str:
+    m = re.search(r"EXIT=(\d+)", out)
+    return m.group(1) if m else "none"
+
+
 def mutated_file(repo: Path, sha: str, f: str, line: int, new_text: str) -> str:
     src = git(repo, "show", f"{sha}:{f}").splitlines(keepends=True)
     nl = "\n" if src[line - 1].endswith("\n") else ""
@@ -203,7 +208,9 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
         targets = rel or None                       # None -> whole suite
         rc, base_out = docker(name, script(pr["sha"], inst, None, None, targets, False), timeout, net)
         if not pytest_ok(base_out):
-            log(f"{name:9s} {pr['sha'][:8]} {f}: baseline not green, skip"); break
+            log(f"{name:9s} {pr['sha'][:8]} {f}: baseline not green (exit {exit_code(base_out)}), skip\n    " + base_out.strip().replace("\n", "\n    ")[-700:])
+            rows.append({**{k: pr[k] for k in ("repo", "sha", "parent", "subject", "lines")}, "file": f, "status": "baseline_not_green",
+                         "targets": targets, "baseline_tail": base_out[-1500:]}); break
         muts = op_mutants(lines, per_pr - (1 if llm else 0), rng)
         if llm:
             m = llm_mutant(repo, pr["sha"], f, lines, PROBE_MODEL)
@@ -214,10 +221,13 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
             # stage 1: related tests; stage 2: full suite (captures the bug PR diff on the way)
             rc, out1 = docker(name, script(pr["sha"], inst, {f: content}, None, targets, False), timeout, net)
             row["stage1"] = "survived" if pytest_ok(out1) else ("killed" if "EXIT=1" in out1 else "error")
+            row["stage1_tail"] = out1[-1500:]; row["targets"] = targets
             if row["stage1"] != "survived":
-                rows.append(row); log(f"{name:9s} {pr['sha'][:8]} {f}:{m['line']} {m['operator']:14s} {row['stage1']}"); continue
+                extra = "" if row["stage1"] == "killed" else " (exit " + exit_code(out1) + ")\n    " + out1.strip().replace("\n", "\n    ")[-500:]
+                rows.append(row); log(f"{name:9s} {pr['sha'][:8]} {f}:{m['line']} {m['operator']:14s} {row['stage1']}{extra}"); continue
             rc, out2 = docker(name, script(pr["sha"], inst, {f: content}, None, None, True, pr["parent"]), timeout, net)
             row["stage2"] = "survived" if pytest_ok(out2) else ("killed" if "EXIT=1" in out2 else "error")
+            row["stage2_tail"] = out2.split("DIFF_BEGIN")[0][-1500:] if "DIFF_BEGIN" in out2 else out2[-1500:]
             if "DIFF_BEGIN" in out2:
                 row["bug_diff"] = out2.split("DIFF_BEGIN", 1)[1].split("DIFF_END", 1)[0].strip()
             if row["stage2"] != "survived":
