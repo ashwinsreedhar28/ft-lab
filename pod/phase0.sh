@@ -4,6 +4,7 @@
 set -euo pipefail
 cd /workspace/ft-lab
 export HF_HOME=/workspace/hf
+[ -x /workspace/venv/bin/python ] && source /workspace/venv/bin/activate
 export TOKENIZERS_PARALLELISM=false
 STAGES=runs/phase0.stages; touch $STAGES
 done_() { grep -qx "$1" $STAGES; }
