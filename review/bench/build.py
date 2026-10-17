@@ -342,7 +342,7 @@ def graph(repos: Path):
     positives = json.loads((WORK / "positives.json").read_text())
     negs_path = WORK / "negatives.verified.json"
     negatives = json.loads(negs_path.read_text()) if negs_path.exists() else json.loads((WORK / "negatives.json").read_text())
-    base_by_repo = defaultdict(str)
+    base_for_repo = {p["repo_name"]: p["base_commit"] for p in positives}
     tasks = []
     for p in positives:
         repo = repos / p["repo_name"]
@@ -355,6 +355,7 @@ def graph(repos: Path):
             "oracle": p["fail_to_pass"], "gold_hunks": gold_hunks(repo, sha, p["fix_commit"]),
             "neighborhood": neighborhood(repo, sha),
             "image": f"shwin/{p['repo_name']}:{p['base_commit'][:12]}", "test_cmd": p["environment"]["test_cmd"],
+            "subdir": p["environment"].get("subdir") or ".", "fix_sha": p["fix_commit"],
         })
     for n in negatives:
         repo = repos / n["repo_name"]
@@ -365,7 +366,8 @@ def graph(repos: Path):
             "base_sha": git(repo, "rev-parse", f"{sha}^").strip(), "head_sha": sha,
             "diff": pr_diff(repo, sha), "files": files, "split": "fresh" if n["split"] != "own-older" else "own-older",
             "oracle": [], "gold_hunks": [], "neighborhood": neighborhood(repo, sha),
-            "image": "", "test_cmd": n["environment"]["test_cmd"],
+            "image": f"shwin/{n['repo_name']}:{base_for_repo[n['repo_name']][:12]}", "test_cmd": n["environment"]["test_cmd"],
+            "subdir": n["environment"].get("subdir") or ".", "fix_sha": "",
         })
     out = Path(__file__).parent / "tasks.jsonl"
     out.write_text("\n".join(json.dumps(t) for t in tasks) + "\n")

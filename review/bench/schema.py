@@ -30,6 +30,8 @@ class Task:
     neighborhood: str = ""   # two-hop context graph serialization
     image: str = ""          # docker image tag for diff+run
     test_cmd: str = ""
+    subdir: str = "."        # where test_cmd runs inside the checkout
+    fix_sha: str = ""        # bug rows: the commit that fixed it (scoring-only, never shown)
 
     def to_json(self) -> dict:
         return asdict(self)
