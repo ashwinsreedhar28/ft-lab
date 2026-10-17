@@ -32,12 +32,12 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     return c - h, c + h
 
 
-def gen_vllm(model: str, prompts: list[str], max_tokens: int, gpu_mem: float, max_model_len: int) -> list[str]:
+def gen_vllm(model: str, prompts: list[str], max_tokens: int, gpu_mem: float, max_model_len: int, temperature: float = 0.0, seed: int = 0) -> list[str]:
     from vllm import LLM, SamplingParams
 
     llm = LLM(model=model, dtype="bfloat16", gpu_memory_utilization=gpu_mem,
               max_model_len=max_model_len, enable_prefix_caching=True)
-    sp = SamplingParams(temperature=0.0, max_tokens=max_tokens)
+    sp = SamplingParams(temperature=temperature, top_p=0.95 if temperature > 0 else 1.0, max_tokens=max_tokens, seed=seed)
     outs = llm.generate(prompts, sp)
     return [o.outputs[0].text for o in outs]
 
@@ -68,7 +68,7 @@ def gen_anthropic(model: str, messages_list: list[list[dict]], max_tokens: int, 
 
 
 def run_eval(cfg_path: str, label: str, model: str | None, backend: str, max_tokens: int,
-             gpu_mem: float, max_model_len: int, overrides: list[str]):
+             gpu_mem: float, max_model_len: int, overrides: list[str], temperature: float = 0.0):
     cfg = load_config(cfg_path, overrides)
     task = get_task(cfg.data.task)
     ds = task.load_eval(cfg.data, cfg.system_prompt)
@@ -85,7 +85,7 @@ def run_eval(cfg_path: str, label: str, model: str | None, backend: str, max_tok
 
         tok = AutoTokenizer.from_pretrained(model)
         prompts = [render(tok, r["prompt"], cfg.enable_thinking) for r in rows]
-        texts = gen_vllm(model, prompts, max_tokens, gpu_mem, max_model_len)
+        texts = gen_vllm(model, prompts, max_tokens, gpu_mem, max_model_len, temperature)
     elif backend == "anthropic":
         texts = gen_anthropic(model, [r["prompt"] for r in rows], max_tokens)
     else:
@@ -98,7 +98,8 @@ def run_eval(cfg_path: str, label: str, model: str | None, backend: str, max_tok
     out = {
         "label": label, "model": model, "backend": backend, "task": cfg.data.task,
         "n": n, "correct": k, "acc": k / n, "ci95": [lo, hi], "wall_s": round(wall, 1),
-        "max_tokens": max_tokens,
+        "max_tokens": max_tokens, "temperature": temperature,
+        "no_answer_line": sum(1 for t in texts if "####" not in t),
         "rows": [
             {k2: v for k2, v in r.items() if k2 != "prompt"} | {"completion": t, "score": s}
             for r, t, s in zip(rows, texts, scores)
@@ -149,6 +150,7 @@ def main():
     ap.add_argument("--max-tokens", type=int, default=None, help="default: config max_completion_length")
     ap.add_argument("--gpu-mem", type=float, default=0.85)
     ap.add_argument("--max-model-len", type=int, default=None, help="default: config vllm_max_model_length")
+    ap.add_argument("--temperature", type=float, default=0.0, help="0 = greedy; Qwen3 recommends 0.6")
     ap.add_argument("--table", nargs="*", help="print a comparison table from eval json files")
     ap.add_argument("--set", nargs="*", default=[], help="config overrides key=value")
     a = ap.parse_args()
@@ -156,7 +158,7 @@ def main():
         return table(a.table)
     if not a.config:
         ap.error("config required")
-    run_eval(a.config, a.label, a.model, a.backend, a.max_tokens, a.gpu_mem, a.max_model_len, a.set)
+    run_eval(a.config, a.label, a.model, a.backend, a.max_tokens, a.gpu_mem, a.max_model_len, a.set, a.temperature)
 
 
 if __name__ == "__main__":
