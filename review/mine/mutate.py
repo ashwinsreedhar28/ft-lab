@@ -221,7 +221,9 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
         base_out = run(name, pr["sha"], inst, net, timeout, edits=None, probe=None, pytest_targets=targets, want_diff=False)
         base_pass = passed(base_out)
         if not base_pass:
-            log(f"{name:9s} {pr['sha'][:8]} {f}: baseline collected nothing (exit {exit_code(base_out)}), skip\n    " + base_out.strip().replace("\n", "\n    ")[-500:])
+            n_pass_lines = len(re.findall(r"^PASSED ", base_out, re.M))
+            log(f"{name:9s} {pr['sha'][:8]} {f}: baseline collected nothing (exit {exit_code(base_out)}; PASSED lines seen={n_pass_lines}; "
+                f"parsed={len(_parse_results(base_out))}; out={len(base_out)} chars), skip\n    " + base_out.strip().replace("\n", "\n    ")[-900:])
             rows.append({**{k: pr[k] for k in ("repo", "sha", "parent", "subject", "lines")}, "file": f, "status": "baseline_empty",
                          "targets": targets, "baseline_tail": base_out[-1500:]}); break
         base_full_pass = None                       # full-suite baseline, computed once if any mutant survives stage 1
@@ -249,7 +251,8 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
             if "DIFF_BEGIN" in out2:
                 row["bug_diff"] = out2.split("DIFF_BEGIN", 1)[1].split("DIFF_END", 1)[0].strip()
             if row["stage2"] != "survived":
-                rows.append(row); log(f"{name:9s} {pr['sha'][:8]} {f}:{m['line']} {m['operator']:14s} suite-{row['stage2']} {len(k2)}"); continue
+                extra = "" if row["stage2"] == "killed" else " (exit " + exit_code(out2) + ")\n    " + row["stage2_tail"].strip().replace("\n", "\n    ")[-600:]
+                rows.append(row); log(f"{name:9s} {pr['sha'][:8]} {f}:{m['line']} {m['operator']:14s} suite-{row['stage2']} {len(k2)}{extra}"); continue
             # guard: a probe that tells mutant from original
             src = git(repo, "show", f"{pr['sha']}:{f}").splitlines()
             ctx = "\n".join(src[max(0, m["line"] - 25): m["line"] + 25])
