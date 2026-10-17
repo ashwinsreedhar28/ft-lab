@@ -38,9 +38,10 @@ EOF
 chmod +x /workspace/heartbeat.sh
 tmux has-session -t hb 2>/dev/null || tmux new -d -s hb "/workspace/heartbeat.sh"
 
-if tmux has-session -t ft 2>/dev/null; then
+if tmux has-session -t ft 2>/dev/null && pgrep -f "pod/${PHASE}.sh" >/dev/null; then
   echo "phase already running in tmux 'ft'; attach with: tmux attach -t ft"
 else
+  tmux kill-session -t ft 2>/dev/null || true   # stale session from a failed/finished run
   mkdir -p runs
   tmux new -d -s ft "bash pod/${PHASE}.sh 2>&1 | tee runs/${PHASE}.log; bash pod/push_results.sh ${PHASE} final; echo PHASE-DONE; sleep 86400"
   echo "started pod/${PHASE}.sh in tmux 'ft'. tail: tmux attach -t ft   (ctrl-b d to detach)"
