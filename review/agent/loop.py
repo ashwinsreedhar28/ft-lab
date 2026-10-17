@@ -31,12 +31,44 @@ RESULTS = Path(__file__).parent / "results"
 RUNS = Path(__file__).parent / "runs.json"
 
 LOOP_SYSTEM = SYSTEM + (
-    "\n\nYou may run one probe test before deciding. To do so, include a top-level field "
+    "\n\nEvidence rules of this gate:\n"
+    "- The existing test suite being green at the PR head is NOT evidence that the change is correct. "
+    "Every bug that ever shipped was merged on a green suite. Only a test that exercises the changed "
+    "code counts.\n"
+    "- You cannot approve without evidence: an approve is accepted only if you ran a probe test that "
+    "passed and that calls at least one of the changed functions by name. Otherwise the harness bounces "
+    "the approve back to you (or escalates on the final round).\n"
+    "- To run a probe, include a top-level field "
     '"probe": {"path": "tests/test_probe_review.py", "source": "<pytest file>"} in your JSON. '
     "The harness runs it at the PR head and returns the output; then you decide again. "
-    "A probe that fails on the PR is evidence for block. If you need no probe, omit the field. "
-    "On the final round the probe field is ignored."
+    "A probe that fails on the PR is evidence for block. Make probes specific: import the changed "
+    "module, call the changed function with inputs the diff makes you suspicious about, assert the "
+    "behavior the PR claims.\n"
+    "- Blocking or escalating needs no probe. On the final round the probe field is ignored."
 )
+
+
+def changed_def_names(task: dict) -> set[str]:
+    """Parsed from the neighborhood text ('Changed definitions: file:name, ...')."""
+    m = re.search(r"Changed definitions: (.*)", task.get("neighborhood", ""))
+    if not m:
+        return set()
+    return {x.split(":")[-1].strip() for x in m.group(1).split(",") if ":" in x}
+
+
+def uncovered_defs(task: dict) -> list[str]:
+    """Changed defs whose name appears in no test file of the diff's neighborhood listing."""
+    names = changed_def_names(task)
+    m = re.search(r"Tests importing the changed modules: (.*)", task.get("neighborhood", ""))
+    tests = m.group(1) if m else ""
+    # we only know test *files*, not their contents, from the neighborhood; treat 'no test file at all'
+    # as uncovered and otherwise leave coverage to the probe rule
+    return sorted(names) if not tests else []
+
+
+def probe_is_specific(source: str, task: dict) -> bool:
+    names = changed_def_names(task)
+    return any(re.search(rf"\b{re.escape(n)}\b", source) for n in names if len(n) > 2)
 
 
 def docker_run(image: str, script: str, files: dict[str, str] | None = None, timeout: int = 1200) -> tuple[int, str]:
@@ -100,8 +132,15 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
     if image_ok and task["head_sha"] not in runs:
         runs[task["head_sha"]] = suite_at(task, task["head_sha"], subdir)
         RUNS.write_text(json.dumps(runs, indent=1))
-    prompt = build_prompt(task, "full" if image_ok else "diff+graph", runs.get(task["head_sha"]))
+    run_txt = runs.get(task["head_sha"])
+    if run_txt:
+        run_txt = ("(reminder: green here means the pre-existing tests still pass; it does not test the change)\n" + run_txt)
+    prompt = build_prompt(task, "full" if image_ok else "diff+graph", run_txt)
+    unc = uncovered_defs(task)
+    if unc:
+        prompt += "\n\nNo existing test file references these changed definitions: " + ", ".join(unc[:20])
     messages = [{"role": "user", "content": prompt}]
+    evidence = False   # a specific, passing probe exists
     usd_total, tok_in, tok_out, probes = 0.0, 0, 0, []
     text = ""
     for round_ in range(max_probes + 1):
@@ -112,12 +151,21 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
         usd_total += usd; tok_in += ti; tok_out += to
         messages.append({"role": "assistant", "content": text})
         m = re.search(r"\{.*\}", text, re.S)
-        probe = None
+        probe, decision = None, None
         try:
-            probe = json.loads(m.group(0)).get("probe") if m else None
+            obj = json.loads(m.group(0)) if m else {}
+            probe = obj.get("probe"); decision = obj.get("decision")
         except json.JSONDecodeError:
-            probe = None
-        if final or not probe or not image_ok or not isinstance(probe, dict) or "source" not in probe:
+            obj = {}
+        has_probe = image_ok and isinstance(probe, dict) and "source" in probe
+        if decision == "approve" and not evidence and not has_probe:
+            if final:
+                text = json.dumps({**obj, "decision": "escalate", "harness_note": "approve without a passing specific probe -> escalate"})
+                break
+            messages.append({"role": "user", "content": "Approve rejected: no passing probe that exercises the changed code. "
+                             "Write one now (probe field) or choose block/escalate."})
+            continue
+        if final or not has_probe:
             break
         path = probe.get("path") or "tests/test_probe_review.py"
         status, out = run_probe(task, task["head_sha"], subdir, path, probe["source"])
@@ -128,8 +176,12 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
             if fixed_sha:
                 s2, _ = run_probe(task, fixed_sha, subdir, path, probe["source"])
                 strong = s2 == "passed"
-        probes.append({"round": round_, "path": path, "status": status, "strong": strong, "tail": out[-1500:]})
-        messages.append({"role": "user", "content": f"Probe result at the PR head: {status}\n```\n{out[-3000:]}\n```\nDecide again (you may probe once more if rounds remain)."})
+        specific = probe_is_specific(probe["source"], task)
+        if status == "passed" and specific:
+            evidence = True
+        probes.append({"round": round_, "path": path, "status": status, "strong": strong, "specific": specific, "tail": out[-1500:]})
+        note = "" if specific else " (note: this probe does not call any changed function by name, so it does not count as evidence for approve)"
+        messages.append({"role": "user", "content": f"Probe result at the PR head: {status}{note}\n```\n{out[-3000:]}\n```\nDecide again (you may probe once more if rounds remain)."})
     rev, ok = parse_review(text, (tok_in, tok_out), usd_total)
     return rev, ok, text, probes
 
@@ -139,7 +191,7 @@ def main():
     ap.add_argument("--tasks", default=str(Path(__file__).parent.parent / "bench/tasks.jsonl"))
     ap.add_argument("--model", default="claude-sonnet-5-5")
     ap.add_argument("--label", default=None)
-    ap.add_argument("--max-probes", type=int, default=2)
+    ap.add_argument("--max-probes", type=int, default=3)
     ap.add_argument("--max-tokens", type=int, default=14000)
     a = ap.parse_args()
     label = a.label or f"{a.model}_loop"
