@@ -48,8 +48,41 @@ LOOP_SYSTEM = SYSTEM + (
     "old caller that still expects the old behavior.\n"
     "- A probe that fails on the PR is evidence for block (cite it). A probe that passes rules out one "
     "hypothesis; approve only when your remaining doubt about the changed code is gone.\n"
-    "- Blocking or escalating needs no probe. On the final round the probe field is ignored."
+    "- Blocking or escalating needs no probe. On the final round the probe field is ignored.\n"
+    "- You have no tools. Do not emit tool-call or <invoke> syntax; the probe is a field in your JSON reply, "
+    "and the harness, not you, runs it. Reply with one JSON object and nothing else."
 )
+
+
+def extract_reply(text: str) -> dict:
+    """Find the model's JSON object. Tolerates fences, prose, and the hallucinated
+    <invoke><parameter name="probe">{...}</parameter></invoke> form Sonnet 5.5 produced in v4
+    (which v4 scored as unparsable -> escalate, dropping 4 of 12 bug-PR probes)."""
+    objs = []
+    dec = json.JSONDecoder()
+    i = 0
+    while True:
+        j = text.find("{", i)
+        if j < 0:
+            break
+        try:
+            o, end = dec.raw_decode(text[j:])
+            if isinstance(o, dict):
+                objs.append(o)
+            i = j + end
+        except json.JSONDecodeError:
+            i = j + 1
+    out = {}
+    for o in objs:
+        if "decision" in o and "decision" not in out:
+            out.update(o)
+    if "probe" not in out:
+        for o in objs:
+            if isinstance(o.get("probe"), dict):
+                out["probe"] = o["probe"]; break
+            if "source" in o and "path" in o:        # bare probe object (invoke-wrapped form)
+                out["probe"] = o; break
+    return out
 
 
 def changed_def_names(task: dict) -> set[str]:
@@ -194,6 +227,7 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
     usd_total, tok_in, tok_out, probes = 0.0, 0, 0, []
     text = ""
     rounds, api_s, docker_s = [], 0.0, 0.0   # audit: why no probe, and where the wall-clock went
+    format_retried = False
     for round_ in range(max_probes + 1):
         final = round_ == max_probes
         if final:
@@ -203,16 +237,20 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
         api_s += time.time() - t_api
         usd_total += usd; tok_in += ti; tok_out += to
         messages.append({"role": "assistant", "content": text})
-        m = re.search(r"\{.*\}", text, re.S)
-        probe, decision = None, None
-        try:
-            obj = json.loads(m.group(0)) if m else {}
-            probe = obj.get("probe"); decision = obj.get("decision")
-        except json.JSONDecodeError:
-            obj = {}
+        obj = extract_reply(text)
+        probe, decision = obj.get("probe"), obj.get("decision")
         has_probe = image_ok and isinstance(probe, dict) and "source" in probe
         rounds.append({"round": round_, "decision": decision, "probe_requested": isinstance(probe, dict),
-                       "probe_runnable": has_probe, "parsed": bool(obj)})
+                       "probe_runnable": has_probe, "parsed": bool(obj), "invoke_syntax": "<invoke" in text})
+        if decision is None and not has_probe and not final and not format_retried:
+            # a format failure is not a decision: one free retry, then it counts
+            format_retried = True
+            messages.append({"role": "user", "content": "Your reply had no \"decision\" field and no runnable "
+                             "\"probe\" (path + source). You have no tools; do not use <invoke> syntax. "
+                             "Reply with the single JSON object described in the instructions."})
+            continue
+        if decision is None and has_probe:
+            decision = "pending"   # a probe request without a decision is fine mid-loop
         if decision == "approve" and not evidence and not has_probe:
             if final:
                 text = json.dumps({**obj, "decision": "escalate", "harness_note": "approve without a passing specific probe -> escalate"})
@@ -258,6 +296,8 @@ def no_probe_reason(rounds: list[dict], image_ok: bool) -> str:
         return "unparsable"
     if any(r["probe_requested"] and not r["probe_runnable"] for r in rounds):
         return "probe_malformed"          # asked for a probe but gave no source
+    if any(r.get("invoke_syntax") and r["decision"] is None for r in rounds):
+        return "format_failure"           # tool-call syntax, no decision, retry did not recover
     return f"model_decided_round0:{rounds[0]['decision']}"  # chose without asking for evidence
 
 

@@ -108,10 +108,17 @@ would be wrong before writing the probe: Sonnet 1/4 bugs approved in all three r
 `coverage` at the PR head; list the changed lines no test executes, e.g. 131 of the lines in
 `36f4e93` including 21 of its 54 gold lines) and required an approve-probe to execute one of them.
 Sonnet v4, three repeats: **0/4 bugs approved every time**, auto-ship 0.42 ± 0.12, escalate
-0.79 ± 0.06, $0.12/PR, and **probes = 0 on every bug PR in all 12 bug-PR runs**. The number is
-reached by abstaining: the agent only invests probes where it believes approval is reachable (the
-clean PRs), and escalates the rest without testing. An always-escalate agent scores 0 bugs approved
-at 0 auto-ship; v4's margin over it is 42 % of clean PRs shipped. Across v1–v4, 36 bug-PR runs, no
+0.79 ± 0.06, $0.12/PR, and no probe ran on any bug PR. The post-run audit split that last fact in two.
+In 10 of 12 bug-PR runs the model escalated in round 0 without asking for evidence: the number is
+reached by abstaining, and the agent spends probes only where it believes approval is reachable (the
+clean PRs). In the other 2 (both `36f4e93`) the model *did* write a probe, with a hypothesis, but
+emitted it inside hallucinated `<invoke>` tool-call syntax; the harness's JSON regex missed it and
+scored the review unparsable → escalate. Replaying the fixed parser over the stored replies recovers
+17/17; 4 probes (2 bug, 2 clean) were dropped in all. The result record now carries per-round
+decisions, a `no_probe_reason`, and API vs Docker wall-clock, so this question is answerable from the
+JSON next time instead of by reading raw text. An always-escalate agent scores 0 bugs approved at 0
+auto-ship; v4's margin over it is 42 % of clean PRs shipped.
+Across v1–v4, 36 bug-PR runs, no
 probe has ever failed on a bug and passed on its fix. The reliability number this project is after
 cannot be read off a 4-positive bench (rule of three: 0/4 bounds the rate at ~50 %), and the
 harness is now out of levers that rules can pull; the lever left is detection, which needs more
