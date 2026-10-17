@@ -60,9 +60,22 @@ the initial dump (>400 lines, dropped). 8–12 positives out of 15 is a fine fir
 harness until bugs_approved = 0 on review-bench with the highest auto_ship_rate, then swap
 Haiku in and record what breaks. **Phases 1+2 are the Oct 27 deliverable.**
 
-## Phase 3 — fine-tune into the harness (CPU pod for mining, then 1× H100, ~$40)
-Mining recipe in `review/mine/README.md`: public repos, commits after 2026-06-01, bisected
-positives + matched negatives, ~400 train / 100 eval, split by repo. Then, in order:
+## Phase 3a — public-repo bench (Mac + Docker, no GPU)
+Recipe in `review/mine/README.md`; repo list and per-repo install lines in `review/mine/repos.yaml`.
+```
+make mine-scan                 # git only (Claude ran it: 39 candidates from 6 repos since Jun 2026)
+make mine-images               # YOU, docker: builds rb-mine-<repo> per repo, ~2-5 min each first time
+make mine-validate             # YOU, docker: 2 short pytest runs per candidate; prints the per-repo table
+make mine-validate REPO=click LIMIT=3   # smoke it on one repo first
+```
+A wrong install line shows up as a column of `install_fail`/`not_green` for that repo: fix it in
+repos.yaml, `make mine-images REPO=x`, delete that repo's rows from `work/validated.jsonl`, rerun.
+Expect ~25 % `valid`; widen `SINCE=2026-01-01` or add repos until there are 30-40. Next stages
+(Claude writes once the table is in): bisect each valid fix to its introducing commit, match
+negatives, graph, coverage — the same four stages as shwin-bench, on the per-repo images.
+
+## Phase 3b — fine-tune into the harness (1× H100, ~$40)
+Then, in order:
 1. **SFT warm-start** (`ftlab/sft.py`, to write): Sonnet's reviews over the mined train PRs,
    kept only where the scorer says the decision was right; a small model won't emit the JSON
    decision reliably without this. Trace selection TEMP-style if traces are plentiful

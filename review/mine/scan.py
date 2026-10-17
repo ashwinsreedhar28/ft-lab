@@ -1,14 +1,14 @@
 """Scan public repos for candidate fix commits (git only; no Docker, no tests run).
 
-    python -m review.mine.scan --repos review/mine/repos.txt --since 2026-06-01 --out review/mine/work
+    python -m review.mine.scan --repos review/mine/repos.yaml --since 2026-06-01 --out review/mine/work
 
-For each repo URL in repos.txt: shallow-ish clone (full history after --since), list non-merge
+For each repo in repos.yaml: shallow-ish clone (full history after --since), list non-merge
 commits that touch >= 1 non-test .py file AND >= 1 test file, whose subject looks like a fix,
 and record the test files + the code files + diff size. Output candidates.jsonl, one line per
 commit, ready for the Docker validation stage (does the new test fail at parent / pass at commit)
 and then build.py's bisect/match/graph on a per-repo image.
 
-Repo selection rules (why these, in review/mine/README.md): Python, pytest, CPU-only suite under
+Repo selection rules and per-repo install lines live in repos.yaml (why these: README.md here): Python, pytest, CPU-only suite under
 ~5 min, active after --since, permissive license. The list is hand-picked; this script just mines it.
 """
 from __future__ import annotations
@@ -70,13 +70,14 @@ def scan_repo(repo: Path, since: str, max_lines: int) -> list[dict]:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--repos", default="review/mine/repos.txt")
+    ap.add_argument("--repos", default="review/mine/repos.yaml")
     ap.add_argument("--since", default="2026-06-01")
     ap.add_argument("--out", default="review/mine/work")
     ap.add_argument("--max-lines", type=int, default=400, help="fix commits bigger than this are rarely one bug")
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
-    urls = [l.strip() for l in Path(a.repos).read_text().splitlines() if l.strip() and not l.startswith("#")]
+    import yaml
+    urls = [r["url"] for r in yaml.safe_load(Path(a.repos).read_text())]
     allc = []
     for url in urls:
         try:

@@ -34,3 +34,11 @@ rb-loop:         ## the agent, 3 repeats each: suite at head + probe tests, dock
 	python -m review.agent.run --table review/agent/results/*.json
 rb-coverage:     ## docker (network on, pip installs coverage in the container): changed lines no test executes
 	python -m review.bench.build coverage --shwin $(SHWIN)
+
+# ---- mining (phase 3 bench). scan is git-only (Claude runs it); images/validate need Docker (Mac).
+mine-scan:       ## git only: candidate fix commits -> review/mine/work/candidates.jsonl
+	python -m review.mine.scan --since $(or $(SINCE),2026-06-01)
+mine-images:     ## docker: one image per repo in repos.yaml (deps at clone HEAD)
+	python -m review.mine.validate images $(if $(REPO),--repo $(REPO),)
+mine-validate:   ## docker: new tests fail at parent / pass at commit -> work/validated.jsonl + table
+	python -m review.mine.validate run $(if $(REPO),--repo $(REPO),) $(if $(LIMIT),--limit $(LIMIT),)

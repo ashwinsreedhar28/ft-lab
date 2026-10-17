@@ -1,0 +1,31 @@
+# Candidate repos for mining. Python, pytest, CPU-only suites, active in 2026, permissive licenses;
+# picked for small, test-covered fix commits in mature codebases (the small-PR distribution the
+# shwin-bench positives lack). `install` runs once per repo inside python:3.12-slim to build the
+# per-repo image (deps cached at the clone's HEAD); each candidate then does `pip install -e . --no-deps`
+# at its own sha with the network off. If a repo's install line is wrong, validate.py reports
+# `install_fail` / `error` for every one of its candidates and the line gets fixed here, not in code.
+# Selection bias of this list and of scan.py's filter: see README.md in this directory.
+- name: click
+  url: https://github.com/pallets/click
+  install: pip install -e . pytest
+- name: jinja
+  url: https://github.com/pallets/jinja
+  install: pip install -e . pytest trio
+- name: requests
+  url: https://github.com/psf/requests
+  install: pip install -e .[socks] pytest pytest-httpbin pytest-mock trustme
+- name: pydantic
+  url: https://github.com/pydantic/pydantic
+  install: pip install -e . pytest pytest-mock dirty-equals pytest-examples email-validator pytz jsonschema rich cloudpickle
+- name: rich
+  url: https://github.com/Textualize/rich
+  install: pip install -e . pytest attrs
+- name: attrs
+  url: https://github.com/python-attrs/attrs
+  install: pip install -e .[tests]
+- name: fastapi
+  url: https://github.com/tiangolo/fastapi
+  install: pip install -e . -r requirements-tests.txt
+- name: httpx
+  url: https://github.com/encode/httpx
+  install: pip install -r requirements.txt
