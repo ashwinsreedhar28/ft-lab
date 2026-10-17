@@ -1,0 +1,201 @@
+{
+ "label": "sonnet_diff+graph",
+ "model": "claude-sonnet-5-5",
+ "condition": "diff+graph",
+ "n": 10,
+ "unparsable": 0,
+ "wall_s": 65.3,
+ "scores": {
+  "all": {
+   "n_bug": 5,
+   "n_clean": 5,
+   "bugs_approved": 3,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.2,
+   "escalation_rate": 0.6,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.0728784
+  },
+  "fresh": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "bugs_approved": 2,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.25,
+   "escalation_rate": 0.625,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.078622125
+  },
+  "own-older": {
+   "n_bug": 1,
+   "n_clean": 1,
+   "bugs_approved": 1,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.0,
+   "escalation_rate": 0.5,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.0499035
+  }
+ },
+ "reviews": [
+  {
+   "task_id": "bug__aether__f0a823d",
+   "decision": "approve",
+   "usd": 0.054015,
+   "comments": [],
+   "raw": "{\"decision\":\"approve\",\"comments\":[]}"
+  },
+  {
+   "task_id": "bug__emberserve__36f4e93",
+   "decision": "approve",
+   "usd": 0.071472,
+   "comments": [],
+   "raw": "{\"decision\":\"approve\",\"comments\":[]}"
+  },
+  {
+   "task_id": "bug__emberserve__7edbe0f",
+   "decision": "approve",
+   "usd": 0.056223,
+   "comments": [],
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "bug__emberserve__f1943a4",
+   "decision": "escalate",
+   "usd": 0.129333,
+   "comments": [
+    {
+     "file": "pagedserve/dist.py",
+     "line_start": 1,
+     "line_end": 310,
+     "body": "I found no definite defect in the shown diff, but I cannot establish safety from it, so a human should review. The change adds multi-process tensor parallelism with several risks I cannot verify here: (1) NCCL collectives captured inside CUDA graphs and piecewise graphs; (2) the driver/worker lockstep protocol, where any divergence between ranks (a spec-decode step, async fill rows, preemption, abort paths) deadlocks with a 30-day timeout; (3) a worker crash during load leaves the driver blocked forever in collectives; (4) `head_dim` changed from a property to a stored field, so any caller using `dataclasses.replace` to change head counts now keeps a stale `head_dim`. The GPU tests need 2 GPUs and were not run in this review, and the CPU gloo tests only cover the CPU path. Please run the GPU tests and check the failure paths before merging.",
+     "proposed_test": null
+    }
+   ],
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"pagedserve/dist.py\",\"line_start\":1,\"line_end\":310,\"body\":\"I found no definite defect in the shown diff, but I cannot establish safety from it, so a human should review. The change adds multi-process tensor parallelism with several risks I cannot verify here: (1) NCCL collectives captured inside CUDA graphs and piecewise graphs; (2) the driver/worker lockstep protocol, where any divergence between ranks (a spec-decode step, async fill rows, preemption, abort paths) deadlocks with a 30-day timeout; (3) a worker crash during load leaves the driver blocked forever in collectives; (4) `head_dim` changed from a property to a stored field, so any caller using `dataclasses.replace` to change head counts now keeps a stale `head_dim`. The GPU tests need 2 GPUs and were not run in this review, and the CPU gloo tests only cover the CPU path. Please run the GPU tests and check the failure paths before merging.\"}]}"
+  },
+  {
+   "task_id": "bug__serverless-lakehouse__9e1c251",
+   "decision": "escalate",
+   "usd": 0.103737,
+   "comments": [
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 322,
+     "line_end": 324,
+     "body": "I found no definite defect, but I can't establish safety for this change. Timestamp handling depends on things I can't see. `iso_ts` and `pipe_ts` use `to_timestamp`, which follows the Spark session timezone. `get_spark` isn't in the diff, so I can't tell whether it pins UTC. `pipe_ts` also assumes the endpoint-logs (pipe) export is in America/New_York. The config comment only says console-copied logs carry laptop-local time, and the console format already carries an explicit GMT offset. If the pipe export is actually UTC, every boot-phase interval in `gold_worker_boot_phases` that mixes formats will be skewed by hours. A human should confirm both points.",
+     "proposed_test": null
+    },
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 119,
+     "line_end": 136,
+     "body": "The seed joins (`gpu_model == gpu_label`, series by `series_label`) depend on `seeds/*.csv`, which I could not review. The `.select(...)` list could also be ambiguous if the bronze runs table already has an `engine` or `gpu_model` column. None of the new silver or gold modules has tests, and the only test file shown covers landing. Please verify against real data.",
+     "proposed_test": null
+    }
+   ],
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"lakehouse/silver.py\",\"line_start\":322,\"line_end\":324,\"body\":\"I found no definite defect, but I can't establish safety for this change. Timestamp handling depends on things I can't see. `iso_ts` and `pipe_ts` use `to_timestamp`, which follows the Spark session timezone. `get_spark` isn't in the diff, so I can't tell whether it pins UTC. `pipe_ts` also assumes the endpoint-logs (pipe) export is in America/New_York. The config comment only says console-copied logs carry laptop-local time, and the console format already carries an explicit GMT offset. If the pipe export is actually UTC, every boot-phase interval in `gold_worker_boot_phases` that mixes formats will be skewed by hours. A human should confirm both points.\"},{\"file\":\"lakehouse/silver.py\",\"line_start\":119,\"line_end\":136,\"body\":\"The seed joins (`gpu_model == gpu_label`, series by `series_label`) depend on `seeds/*.csv`, which I could not review. The `.select(...)` list could also be ambiguous if the bronze runs table already has an `engine` or `gpu_model` column. None of the new silver or gold modules has tests, and the only test file shown covers landing. Please verify against real data.\"}]}"
+  },
+  {
+   "task_id": "clean__aether__ae70f99",
+   "decision": "escalate",
+   "usd": 0.045792,
+   "comments": [
+    {
+     "file": "shell/src/utils/controlBridge.ts",
+     "line_start": 117,
+     "line_end": 147,
+     "body": "The diff for controlBridge.ts appears truncated after the open-app change. The new viewer_desktop.apply_layout path dispatches 'apply-layout', and the comments refer to workspaceStore.applyLayoutPreset. Neither an 'apply-layout' handler nor applyLayoutPreset is visible in the shown diff. If they don't already exist, arrange_windows silently does nothing, because applyLayout in viewerNode.ts ignores the dispatch result and always returns ok:true. A human should also confirm that openWindow() returns the new window id as a string, since openTerminal now relies on that. Also unreviewed: shell/package.json, fix-node-pty-perms.mjs, the prompts and the schema.",
+     "proposed_test": null
+    }
+   ],
+   "raw": "<invoke name=\"\">\n{\"decision\":\"escalate\",\"comments\":[{\"file\":\"shell/src/utils/controlBridge.ts\",\"line_start\":117,\"line_end\":147,\"body\":\"The diff for controlBridge.ts appears truncated after the open-app change. The new viewer_desktop.apply_layout path dispatches 'apply-layout', and the comments refer to workspaceStore.applyLayoutPreset. Neither an 'apply-layout' handler nor applyLayoutPreset is visible in the shown diff. If they don't already exist, arrange_windows silently does nothing, because applyLayout in viewerNode.ts ignores the dispatch result and always returns ok:true. A human should also confirm that openWindow() returns the new window id as a string, since openTerminal now relies on that. Also unreviewed: shell/package.json, fix-node-pty-perms.mjs, the prompts and the schema.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__c6278c4",
+   "decision": "escalate",
+   "usd": 0.062433,
+   "comments": [
+    {
+     "file": "deploy/runpod/main.py",
+     "line_start": 47,
+     "line_end": 68,
+     "body": "serve_command builds a `pagedserve.cli serve` command line, and nothing in this diff or its tests runs it against the real CLI. The test only checks the strings it builds. I could not see pagedserve/cli.py, so I cannot confirm the flags exist with these names and semantics: --served-model-name, --enable-cuda-graphs, --enable-prefix-caching, --quantization, --tensor-parallel-size, --attn-backend, --block-size, --max-num-seqs and --dtype. The old handler said the CLI runs CUDA graphs by default. If so, `CUDA_GRAPHS=0` would only omit an enable flag and would not disable graphs. A wrong flag makes the worker exit at startup, and the failure only shows up in a deployed GPU image. A human should check against cli.py, or add a test that parses this command with the real argparse parser.",
+     "proposed_test": "def test_serve_command_parses_with_real_cli(monkeypatch):\n    from pagedserve import cli\n    main = _load('main')\n    cmd = main.serve_command('/models/m')\n    parser = cli.build_parser()  # adjust to actual parser factory\n    parser.parse_args(cmd[3:])"
+    },
+    {
+     "file": "tests/test_runpod_handler.py",
+     "line_start": 40,
+     "line_end": 41,
+     "body": "The tests call `create_app(aeng, MODEL, manage_lifespan=False)`. I could not verify that signature, since app.py is not shown. The proxy path against the real server, including SSE streaming and `[DONE]`, is verified only by these CPU-engine tests.",
+     "proposed_test": null
+    }
+   ],
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"deploy/runpod/main.py\",\"line_start\":47,\"line_end\":68,\"body\":\"serve_command builds a `pagedserve.cli serve` command line, and nothing in this diff or its tests runs it against the real CLI. The test only checks the strings it builds. I could not see pagedserve/cli.py, so I cannot confirm the flags exist with these names and semantics: --served-model-name, --enable-cuda-graphs, --enable-prefix-caching, --quantization, --tensor-parallel-size, --attn-backend, --block-size, --max-num-seqs and --dtype. The old handler said the CLI runs CUDA graphs by default. If so, `CUDA_GRAPHS=0` would only omit an enable flag and would not disable graphs. A wrong flag makes the worker exit at startup, and the failure only shows up in a deployed GPU image. A human should check against cli.py, or add a test that parses this command with the real argparse parser.\",\"proposed_test\":\"def test_serve_command_parses_with_real_cli(monkeypatch):\\n    from pagedserve import cli\\n    main = _load('main')\\n    cmd = main.serve_command('/models/m')\\n    parser = cli.build_parser()  # adjust to actual parser factory\\n    parser.parse_args(cmd[3:])\"},{\"file\":\"tests/test_runpod_handler.py\",\"line_start\":40,\"line_end\":41,\"body\":\"The tests call `create_app(aeng, MODEL, manage_lifespan=False)`. I could not verify that signature, since app.py is not shown. The proxy path against the real server, including SSE streaming and `[DONE]`, is verified only by these CPU-engine tests.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__581e293",
+   "decision": "escalate",
+   "usd": 0.053217,
+   "comments": [
+    {
+     "file": "pagedserve/engine.py",
+     "line_start": 49,
+     "line_end": 93,
+     "body": "This change enables CUDA-graph capture for paged_triton, and I can't confirm that is safe from the diff. GRAPH_CAPABLE_BACKENDS asserts the Triton decode path reads only static device tensors (meta.context_lens_t and meta.block_tables_nonneg). The diff doesn't show PagedTritonAttentionBackend or attn/cuda_graphs.py. I need to know: (1) whether the graph runner is hard-wired to the flash backend; (2) whether Triton kernels are compiled during warmup rather than inside capture; (3) whether the num_splits=None heuristic and the grid stay fixed across the captured buckets. The scratch-block padding behaviour also depends on the Triton backend honouring it. The kernel's own commit says 'GPU validation pending', and the new GPU tests (test_paged_triton_gpu.py) are the only check of the graph path and have not been run. A human should confirm the graph path and the GPU test results before this auto-deploys.",
+     "proposed_test": null
+    },
+    {
+     "file": "pagedserve/attn/paged_triton.py",
+     "line_start": 200,
+     "line_end": 213,
+     "body": "_tile_for changes the tile size, which affects numerics and register pressure, and is validated only by CPU-interpreter tests. The docstring says the tile always divides block_size. That is not guaranteed for a block_size that is a multiple of 16 but not a power of two, such as 48, where tile=32 would straddle two physical blocks. The shape assertion only requires a multiple of 16. Either assert block_size is a power of two or compute tile as a divisor of block_size.",
+     "proposed_test": null
+    }
+   ],
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"pagedserve/engine.py\",\"line_start\":49,\"line_end\":93,\"body\":\"This change enables CUDA-graph capture for paged_triton, and I can't confirm that is safe from the diff. GRAPH_CAPABLE_BACKENDS asserts the Triton decode path reads only static device tensors (meta.context_lens_t and meta.block_tables_nonneg). The diff doesn't show PagedTritonAttentionBackend or attn/cuda_graphs.py. I need to know: (1) whether the graph runner is hard-wired to the flash backend; (2) whether Triton kernels are compiled during warmup rather than inside capture; (3) whether the num_splits=None heuristic and the grid stay fixed across the captured buckets. The scratch-block padding behaviour also depends on the Triton backend honouring it. The kernel's own commit says 'GPU validation pending', and the new GPU tests (test_paged_triton_gpu.py) are the only check of the graph path and have not been run. A human should confirm the graph path and the GPU test results before this auto-deploys.\"},{\"file\":\"pagedserve/attn/paged_triton.py\",\"line_start\":200,\"line_end\":213,\"body\":\"_tile_for changes the tile size, which affects numerics and register pressure, and is validated only by CPU-interpreter tests. The docstring says the tile always divides block_size. That is not guaranteed for a block_size that is a multiple of 16 but not a power of two, such as 48, where tile=32 would straddle two physical blocks. The shape assertion only requires a multiple of 16. Either assert block_size is a power of two or compute tile as a divisor of block_size.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__96519cd",
+   "decision": "approve",
+   "usd": 0.101061,
+   "comments": [],
+   "raw": "{\"decision\":\"approve\",\"comments\":[]}"
+  },
+  {
+   "task_id": "clean__serverless-lakehouse__0718b2f",
+   "decision": "escalate",
+   "usd": 0.051501,
+   "comments": [
+    {
+     "file": "lakehouse/gold.py",
+     "line_start": 84,
+     "line_end": 86,
+     "body": "The cohort logic depends on a literal `source == 'pulse_coldstart'`, but the Pulse source string is not visible in this diff. If silver uses a different value, the Sep 23 rows silently fall into `host_unknown`, and the cohort rows no longer reproduce the figures the docstring and report cite (147.5 s). Please confirm the literal against silver and the seed contents.",
+     "proposed_test": "def test_pulse_source_literal():\n    import pathlib\n    assert 'pulse_coldstart' in pathlib.Path('lakehouse/silver.py').read_text()"
+    },
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 143,
+     "line_end": 148,
+     "body": "The left join to `dim_coldstart_run_notes` on (series_label, run_index) will duplicate request rows if the new seed has any duplicate key. The seed `coldstart_run_notes.csv` was not shown, so I could not rule this out. Add a uniqueness check or dedupe on the notes keys before joining.",
+     "proposed_test": null
+    },
+    {
+     "file": "lakehouse/dashboard.py",
+     "line_start": 27,
+     "line_end": 37,
+     "body": "`jsonable` does not handle `Decimal`, `Row` or dict values, so `json.dumps` raises `TypeError` if any gold column has one of those types. It also maps `-inf` to `\"inf\"`. The template that consumes this JSON was also not reviewable. Please verify the build end to end.",
+     "proposed_test": null
+    }
+   ],
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"lakehouse/gold.py\",\"line_start\":84,\"line_end\":86,\"body\":\"The cohort logic depends on a literal `source == 'pulse_coldstart'`, but the Pulse source string is not visible in this diff. If silver uses a different value, the Sep 23 rows silently fall into `host_unknown`, and the cohort rows no longer reproduce the figures the docstring and report cite (147.5 s). Please confirm the literal against silver and the seed contents.\",\"proposed_test\":\"def test_pulse_source_literal():\\n    import pathlib\\n    assert 'pulse_coldstart' in pathlib.Path('lakehouse/silver.py').read_text()\"},{\"file\":\"lakehouse/silver.py\",\"line_start\":143,\"line_end\":148,\"body\":\"The left join to `dim_coldstart_run_notes` on (series_label, run_index) will duplicate request rows if the new seed has any duplicate key. The seed `coldstart_run_notes.csv` was not shown, so I could not rule this out. Add a uniqueness check or dedupe on the notes keys before joining.\"},{\"file\":\"lakehouse/dashboard.py\",\"line_start\":27,\"line_end\":37,\"body\":\"`jsonable` does not handle `Decimal`, `Row` or dict values, so `json.dumps` raises `TypeError` if any gold column has one of those types. It also maps `-inf` to `\\\"inf\\\"`. The template that consumes this JSON was also not reviewable. Please verify the build end to end.\"}]}"
+  }
+ ]
+}

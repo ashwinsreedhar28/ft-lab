@@ -1,0 +1,267 @@
+{
+ "label": "probe",
+ "model": "claude-haiku-5-5",
+ "condition": "diff",
+ "n": 10,
+ "unparsable": 0,
+ "wall_s": 221.1,
+ "scores": {
+  "all": {
+   "n_bug": 5,
+   "n_clean": 5,
+   "bugs_approved": 2,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.0,
+   "escalation_rate": 0.7,
+   "block_precision": 1.0,
+   "localization": 0.0,
+   "strong_localization": 0.0,
+   "usd_per_pr": 0.0393239
+  },
+  "fresh": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "bugs_approved": 1,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.0,
+   "escalation_rate": 0.75,
+   "block_precision": 1.0,
+   "localization": 0.0,
+   "strong_localization": 0.0,
+   "usd_per_pr": 0.044014375
+  },
+  "own-older": {
+   "n_bug": 1,
+   "n_clean": 1,
+   "bugs_approved": 1,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.0,
+   "escalation_rate": 0.5,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.020562
+  }
+ },
+ "reviews": [
+  {
+   "task_id": "bug__aether__f0a823d",
+   "decision": "approve",
+   "usd": 0.020483,
+   "comments": [],
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "bug__emberserve__36f4e93",
+   "decision": "approve",
+   "usd": 0.08186,
+   "comments": [
+    {
+     "file": "deploy/runpod/handler.py",
+     "line_start": 97,
+     "line_end": 103,
+     "body": "Non-blocking: the flush deadline is only enforced through `wait_for(q.get(), timeout)`. On Python 3.12+, `asyncio.timeout(0)` does not interrupt a `q.get()` that can return immediately, so while the queue has a backlog an item can be appended after its window has expired and the buffer is not flushed. The window then only ends when the backlog drains, which can exceed `flush_s` when the downstream consumer is slow. A cheap guard is to check `loop.time() >= deadline` after each `get()` and flush before appending. Also, `except BaseException: pass` in `finally` would swallow cancellation of the consumer itself while it awaits the cancelled pump. Narrowing it to `asyncio.CancelledError` would avoid that.",
+     "proposed_test": "import asyncio\nimport importlib.util, pathlib, pytest\n\n@pytest.mark.asyncio\nasync def test_flush_respects_deadline_under_backlog():\n    spec = importlib.util.spec_from_file_location('h', pathlib.Path('deploy/runpod/handler.py'))\n    mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)\n    loop = asyncio.get_running_loop()\n    async def source():\n        yield 'a'\n        for _ in range(50):\n            yield 'x'\n            await asyncio.sleep(0)\n        await asyncio.sleep(0.5)\n        yield 'z'\n    out = []\n    async for c in mod._coalesced(source(), 0.05):\n        out.append(c)\n    assert out[0] == 'a'\n    assert len(out) >= 2\n"
+    }
+   ],
+   "raw": "{\"decision\": \"approve\", \"comments\": [{\"file\": \"deploy/runpod/handler.py\", \"line_start\": 97, \"line_end\": 103, \"body\": \"Non-blocking: the flush deadline is only enforced through `wait_for(q.get(), timeout)`. On Python 3.12+, `asyncio.timeout(0)` does not interrupt a `q.get()` that can return immediately, so while the queue has a backlog an item can be appended after its window has expired and the buffer is not flushed. The window then only ends when the backlog drains, which can exceed `flush_s` when the downstream consumer is slow. A cheap guard is to check `loop.time() >= deadline` after each `get()` and flush before appending. Also, `except BaseException: pass` in `finally` would swallow cancellation of the consumer itself while it awaits the cancelled pump. Narrowing it to `asyncio.CancelledError` would avoid that.\", \"proposed_test\": \"import asyncio\\nimport importlib.util, pathlib, pytest\\n\\n@pytest.mark.asyncio\\nasync def test_flush_respects_deadline_under_backlog():\\n    spec = importlib.util.spec_from_file_location('h', pathlib.Path('deploy/runpod/handler.py'))\\n    mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)\\n    loop = asyncio.get_running_loop()\\n    async def source():\\n        yield 'a'\\n        for _ in range(50):\\n            yield 'x'\\n            await asyncio.sleep(0)\\n        await asyncio.sleep(0.5)\\n        yield 'z'\\n    out = []\\n    async for c in mod._coalesced(source(), 0.05):\\n        out.append(c)\\n    assert out[0] == 'a'\\n    assert len(out) >= 2\\n\"}]}"
+  },
+  {
+   "task_id": "bug__emberserve__7edbe0f",
+   "decision": "escalate",
+   "usd": 0.02403,
+   "comments": [
+    {
+     "file": "pagedserve/server/engine_core.py",
+     "line_start": 310,
+     "line_end": 345,
+     "body": "_CommandWriter moves all pipe writes onto a background thread, so send() no longer raises when the core is gone. Commands queued before the writer thread records an error are silently dropped, and the caller only learns of the failure on the next put(). The deadlock-freedom argument (reader keeps draining, one writer keeps order) and the new AttachedCore/EngineCoreProcess shutdown paths (writer.close with a 1 s join, then closing the connection while the writer thread may still be blocked in send) need a human review against the core's failure and shutdown behavior.",
+     "proposed_test": null
+    },
+    {
+     "file": "pagedserve/engine.py",
+     "line_start": 536,
+     "line_end": 552,
+     "body": "On a failed step, release_graphs and destroy_tp now run in a daemon thread that is abandoned after 30 s. A teardown still in flight while stop_workers runs and the process exits is a concurrency hazard that depends on NCCL and CUDA-graph lifetime behavior I cannot verify from this diff.",
+     "proposed_test": null
+    },
+    {
+     "file": "pagedserve/sched/scheduler.py",
+     "line_start": 172,
+     "line_end": 182,
+     "body": "The over-budget check now admits a request alone in a step even when it exceeds max_num_batched_tokens. This relies on `batch` being defined in the surrounding loop and on the prefill path bounding the actual token count for that request. Neither is visible in the diff.",
+     "proposed_test": null
+    }
+   ],
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"pagedserve/server/engine_core.py\", \"line_start\": 310, \"line_end\": 345, \"body\": \"_CommandWriter moves all pipe writes onto a background thread, so send() no longer raises when the core is gone. Commands queued before the writer thread records an error are silently dropped, and the caller only learns of the failure on the next put(). The deadlock-freedom argument (reader keeps draining, one writer keeps order) and the new AttachedCore/EngineCoreProcess shutdown paths (writer.close with a 1 s join, then closing the connection while the writer thread may still be blocked in send) need a human review against the core's failure and shutdown behavior.\"}, {\"file\": \"pagedserve/engine.py\", \"line_start\": 536, \"line_end\": 552, \"body\": \"On a failed step, release_graphs and destroy_tp now run in a daemon thread that is abandoned after 30 s. A teardown still in flight while stop_workers runs and the process exits is a concurrency hazard that depends on NCCL and CUDA-graph lifetime behavior I cannot verify from this diff.\"}, {\"file\": \"pagedserve/sched/scheduler.py\", \"line_start\": 172, \"line_end\": 182, \"body\": \"The over-budget check now admits a request alone in a step even when it exceeds max_num_batched_tokens. This relies on `batch` being defined in the surrounding loop and on the prefill path bounding the actual token count for that request. Neither is visible in the diff.\"}]}"
+  },
+  {
+   "task_id": "bug__emberserve__f1943a4",
+   "decision": "block",
+   "usd": 0.083596,
+   "comments": [
+    {
+     "file": "pagedserve/model/qwen2.py",
+     "line_start": 216,
+     "line_end": 222,
+     "body": "`Qwen2ForCausalLM.forward` now all-gathers the vocabulary-parallel logits when `lm_head_sharded` is set, but the sibling method `forward_logits_all` (directly below this hunk, not updated) still returns `self.lm_head(...)` directly. Under tensor parallelism that returns only `vocab/tp` columns per rank, so any caller that gets all-position logits from it (speculative verification or the golden/logit checks) gets the wrong shape or silently partial logits. Apply the same `tpdist.all_gather_cols(...) if self.lm_head_sharded else ...` gather there. Also confirm that every caller of `forward_logits_all` runs on all ranks, since a driver-only call would leave the workers out of the collective and hang NCCL.",
+     "proposed_test": "import torch\nfrom pagedserve.config import ModelConfig\nfrom pagedserve.model.qwen2 import Qwen2ForCausalLM\n\ndef test_forward_logits_all_full_vocab_under_sharded_head(monkeypatch):\n    from pagedserve import dist as tpdist\n    monkeypatch.setattr(tpdist, 'all_gather_cols', lambda x: torch.cat([x, x], dim=-1))\n    cfg = ModelConfig.tiny()\n    m = Qwen2ForCausalLM(cfg, tp_size=2)\n    assert m.lm_head_sharded\n    assert m.lm_head.weight.shape[0] == cfg.vocab_size // 2\n    # forward_logits_all must return vocab_size columns, not vocab_size // 2\n"
+    }
+   ],
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"pagedserve/model/qwen2.py\", \"line_start\": 216, \"line_end\": 222, \"body\": \"`Qwen2ForCausalLM.forward` now all-gathers the vocabulary-parallel logits when `lm_head_sharded` is set, but the sibling method `forward_logits_all` (directly below this hunk, not updated) still returns `self.lm_head(...)` directly. Under tensor parallelism that returns only `vocab/tp` columns per rank, so any caller that gets all-position logits from it (speculative verification or the golden/logit checks) gets the wrong shape or silently partial logits. Apply the same `tpdist.all_gather_cols(...) if self.lm_head_sharded else ...` gather there. Also confirm that every caller of `forward_logits_all` runs on all ranks, since a driver-only call would leave the workers out of the collective and hang NCCL.\", \"proposed_test\": \"import torch\\nfrom pagedserve.config import ModelConfig\\nfrom pagedserve.model.qwen2 import Qwen2ForCausalLM\\n\\ndef test_forward_logits_all_full_vocab_under_sharded_head(monkeypatch):\\n    from pagedserve import dist as tpdist\\n    monkeypatch.setattr(tpdist, 'all_gather_cols', lambda x: torch.cat([x, x], dim=-1))\\n    cfg = ModelConfig.tiny()\\n    m = Qwen2ForCausalLM(cfg, tp_size=2)\\n    assert m.lm_head_sharded\\n    assert m.lm_head.weight.shape[0] == cfg.vocab_size // 2\\n    # forward_logits_all must return vocab_size columns, not vocab_size // 2\\n\"}]}"
+  },
+  {
+   "task_id": "bug__serverless-lakehouse__9e1c251",
+   "decision": "escalate",
+   "usd": 0.048844,
+   "comments": [
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 296,
+     "line_end": 300,
+     "body": "Timestamp parsing depends on the Spark session timezone, which is not in this diff. `iso_ts` parses `...T..Z` strings with `to_timestamp(..., \"yyyy-MM-dd'T'HH:mm:ss.SSS\")` and drops the `Z`, so the result is read as session-local time. Pulse's `F.to_timestamp(\"ts_utc\")` in `pulse_requests`, `build_scoring_requests` and `build_scoring_batches` has the same dependency. Only the console and pipe branches are explicit (`xx` offset and `to_utc_timestamp`). If `get_spark` does not pin `spark.sql.session.timeZone` to UTC, every ISO-format worker-log timestamp and Pulse timestamp is shifted by the host offset, which would silently corrupt `worker_boot_phases` deltas and the request timestamps. Confirm the session timezone in lakehouse/spark.py, or parse these with an explicit UTC conversion.",
+     "proposed_test": null
+    },
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 195,
+     "line_end": 200,
+     "body": "`emberserve_requests` depends on bronze column names that are not shown (`label`, `endpoint`, `run_index`, `cold_json`, `warm_json`, `health_before_json`, `submit_wall`, `ingested_at`). A mismatch fails at runtime, or yields null joins that the soft checks only print rather than fail. Verify these against the bronze schema and the coldstart runs ingest before relying on the build.",
+     "proposed_test": null
+    }
+   ],
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"lakehouse/silver.py\", \"line_start\": 296, \"line_end\": 300, \"body\": \"Timestamp parsing depends on the Spark session timezone, which is not in this diff. `iso_ts` parses `...T..Z` strings with `to_timestamp(..., \\\"yyyy-MM-dd'T'HH:mm:ss.SSS\\\")` and drops the `Z`, so the result is read as session-local time. Pulse's `F.to_timestamp(\\\"ts_utc\\\")` in `pulse_requests`, `build_scoring_requests` and `build_scoring_batches` has the same dependency. Only the console and pipe branches are explicit (`xx` offset and `to_utc_timestamp`). If `get_spark` does not pin `spark.sql.session.timeZone` to UTC, every ISO-format worker-log timestamp and Pulse timestamp is shifted by the host offset, which would silently corrupt `worker_boot_phases` deltas and the request timestamps. Confirm the session timezone in lakehouse/spark.py, or parse these with an explicit UTC conversion.\"}, {\"file\": \"lakehouse/silver.py\", \"line_start\": 195, \"line_end\": 200, \"body\": \"`emberserve_requests` depends on bronze column names that are not shown (`label`, `endpoint`, `run_index`, `cold_json`, `warm_json`, `health_before_json`, `submit_wall`, `ingested_at`). A mismatch fails at runtime, or yields null joins that the soft checks only print rather than fail. Verify these against the bronze schema and the coldstart runs ingest before relying on the build.\"}]}"
+  },
+  {
+   "task_id": "clean__aether__ae70f99",
+   "decision": "escalate",
+   "usd": 0.020641,
+   "comments": [
+    {
+     "file": "shell/src/utils/controlBridge.ts",
+     "line_start": 120,
+     "line_end": 150,
+     "body": "The new `if (!appDef)` guard runs before the `appId === 'terminal'` branch. If 'terminal' is not in the `getApps()` registry, every terminal open now returns `unknown app id` and the terminal branch is dead code. The diff does not show the registry, so a human should confirm 'terminal' is registered. The `open-app` handler also became async, so the caller's dispatch must await it. Otherwise the result is a Promise instead of the `{windowId}` payload.",
+     "proposed_test": null
+    },
+    {
+     "file": "shell/src/stores/workspaceStore.ts",
+     "line_start": 1211,
+     "line_end": 1230,
+     "body": "`const newWindowId = openWindow({...})` assumes `openWindow` returns the new window id as a string. The diff does not show its signature. If it returns void, this is a TypeScript error and `windowId` is undefined at runtime, which breaks the `openTerminal` contract and the new `open-app` terminal path. Confirm the return type.",
+     "proposed_test": null
+    },
+    {
+     "file": "shell/electron/main/services/viewerNode.ts",
+     "line_start": 421,
+     "line_end": 430,
+     "body": "`applyLayout` dispatches `'apply-layout'`, and the comment says controlBridge and `workspaceStore.applyLayoutPreset` implement it. The diff for controlBridge.ts and workspaceStore.ts contains no such handler or action. If they do not already exist on the renderer side, `arrange_windows` fails at runtime. Confirm the renderer handler exists and that an unknown action throws or returns an error that surfaces correctly.",
+     "proposed_test": null
+    },
+    {
+     "file": "shell/scripts/fix-node-pty-perms.mjs",
+     "line_start": 1,
+     "line_end": 1,
+     "body": "This script and the shell/package.json change are listed as unreviewed (non-code, not shown). A script that changes file permissions on native node-pty binaries, possibly wired as a postinstall hook, is a security-relevant change that cannot be verified from here. A human should review it, including what it chmods and whether it runs during install.",
+     "proposed_test": null
+    },
+    {
+     "file": "daemons/raven-core/raven_core/prompts/prompts.json",
+     "line_start": 1,
+     "line_end": 1,
+     "body": "The prompt file changed (92KB) and was not shown. It affects model behavior for every voice turn, including the new 'never claim an app does not exist' instruction. It needs human review.",
+     "proposed_test": null
+    }
+   ],
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"shell/src/utils/controlBridge.ts\", \"line_start\": 120, \"line_end\": 150, \"body\": \"The new `if (!appDef)` guard runs before the `appId === 'terminal'` branch. If 'terminal' is not in the `getApps()` registry, every terminal open now returns `unknown app id` and the terminal branch is dead code. The diff does not show the registry, so a human should confirm 'terminal' is registered. The `open-app` handler also became async, so the caller's dispatch must await it. Otherwise the result is a Promise instead of the `{windowId}` payload.\"}, {\"file\": \"shell/src/stores/workspaceStore.ts\", \"line_start\": 1211, \"line_end\": 1230, \"body\": \"`const newWindowId = openWindow({...})` assumes `openWindow` returns the new window id as a string. The diff does not show its signature. If it returns void, this is a TypeScript error and `windowId` is undefined at runtime, which breaks the `openTerminal` contract and the new `open-app` terminal path. Confirm the return type.\"}, {\"file\": \"shell/electron/main/services/viewerNode.ts\", \"line_start\": 421, \"line_end\": 430, \"body\": \"`applyLayout` dispatches `'apply-layout'`, and the comment says controlBridge and `workspaceStore.applyLayoutPreset` implement it. The diff for controlBridge.ts and workspaceStore.ts contains no such handler or action. If they do not already exist on the renderer side, `arrange_windows` fails at runtime. Confirm the renderer handler exists and that an unknown action throws or returns an error that surfaces correctly.\"}, {\"file\": \"shell/scripts/fix-node-pty-perms.mjs\", \"line_start\": 1, \"line_end\": 1, \"body\": \"This script and the shell/package.json change are listed as unreviewed (non-code, not shown). A script that changes file permissions on native node-pty binaries, possibly wired as a postinstall hook, is a security-relevant change that cannot be verified from here. A human should review it, including what it chmods and whether it runs during install.\"}, {\"file\": \"daemons/raven-core/raven_core/prompts/prompts.json\", \"line_start\": 1, \"line_end\": 1, \"body\": \"The prompt file changed (92KB) and was not shown. It affects model behavior for every voice turn, including the new 'never claim an app does not exist' instruction. It needs human review.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__c6278c4",
+   "decision": "escalate",
+   "usd": 0.022798,
+   "comments": [
+    {
+     "file": "deploy/runpod/main.py",
+     "line_start": 42,
+     "line_end": 60,
+     "body": "serve_command() hard-codes a set of `pagedserve.cli serve` flags (--attn-backend, --block-size, --served-model-name, --enable-cuda-graphs, --enable-prefix-caching, --quantization, --tensor-parallel-size, --host, --port) and invokes `python -m pagedserve.cli`. None of these are visible in this diff. If any flag is misspelled or the module lacks a `__main__` entry point, the worker exits at cold start, and the wait_for_server check only reports that after the fact. Confirm the CLI accepts exactly these flags and that `python -m pagedserve.cli serve` works before merging.",
+     "proposed_test": null
+    },
+    {
+     "file": "tests/test_runpod_handler.py",
+     "line_start": 28,
+     "line_end": 40,
+     "body": "The new fixture depends on `create_app(aeng, MODEL, manage_lifespan=False)` and `make_engine(max_model_len=512, num_blocks=512)`. Neither signature is visible in this change. If either differs, the test suite fails at fixture setup. Verify both signatures against the source.",
+     "proposed_test": null
+    }
+   ],
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"deploy/runpod/main.py\", \"line_start\": 42, \"line_end\": 60, \"body\": \"serve_command() hard-codes a set of `pagedserve.cli serve` flags (--attn-backend, --block-size, --served-model-name, --enable-cuda-graphs, --enable-prefix-caching, --quantization, --tensor-parallel-size, --host, --port) and invokes `python -m pagedserve.cli`. None of these are visible in this diff. If any flag is misspelled or the module lacks a `__main__` entry point, the worker exits at cold start, and the wait_for_server check only reports that after the fact. Confirm the CLI accepts exactly these flags and that `python -m pagedserve.cli serve` works before merging.\"}, {\"file\": \"tests/test_runpod_handler.py\", \"line_start\": 28, \"line_end\": 40, \"body\": \"The new fixture depends on `create_app(aeng, MODEL, manage_lifespan=False)` and `make_engine(max_model_len=512, num_blocks=512)`. Neither signature is visible in this change. If either differs, the test suite fails at fixture setup. Verify both signatures against the source.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__581e293",
+   "decision": "escalate",
+   "usd": 0.020914,
+   "comments": [
+    {
+     "file": "pagedserve/engine.py",
+     "line_start": 49,
+     "line_end": 52,
+     "body": "This adds `paged_triton` to `GRAPH_CAPABLE_BACKENDS`, so the engine will capture decode steps into CUDA graphs for the Triton backend. The comment asserts that the backend reads only static tensors (`meta.context_lens_t` / `meta.block_tables_nonneg`), but the Triton decode path and `cuda_graphs.py` are not in this diff, so I cannot confirm that. Open questions: (1) whether `paged_attention_decode` makes any host-side decision that varies per step, such as the `num_splits=None` heuristic or `_SM_COUNT` lookup, and whether that is safe under capture; (2) whether the Triton kernel is JIT-compiled and warmed up before capture; (3) whether padding rows in a bucket write to `scratch_block` correctly for the Triton kernel's indexing. The `test_engine_greedy_identical_across_backends` GPU test covers this, but it has not been run here. A human should confirm the graph path before this ships.",
+     "proposed_test": null
+    }
+   ],
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"pagedserve/engine.py\", \"line_start\": 49, \"line_end\": 52, \"body\": \"This adds `paged_triton` to `GRAPH_CAPABLE_BACKENDS`, so the engine will capture decode steps into CUDA graphs for the Triton backend. The comment asserts that the backend reads only static tensors (`meta.context_lens_t` / `meta.block_tables_nonneg`), but the Triton decode path and `cuda_graphs.py` are not in this diff, so I cannot confirm that. Open questions: (1) whether `paged_attention_decode` makes any host-side decision that varies per step, such as the `num_splits=None` heuristic or `_SM_COUNT` lookup, and whether that is safe under capture; (2) whether the Triton kernel is JIT-compiled and warmed up before capture; (3) whether padding rows in a bucket write to `scratch_block` correctly for the Triton kernel's indexing. The `test_engine_greedy_identical_across_backends` GPU test covers this, but it has not been run here. A human should confirm the graph path before this ships.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__96519cd",
+   "decision": "escalate",
+   "usd": 0.046807,
+   "comments": [
+    {
+     "file": "pagedserve/sched/scheduler.py",
+     "line_start": 212,
+     "line_end": 245,
+     "body": "`_schedule_chunked` appends every running request that has finished prefill as a decode row without checking `max_num_batched_tokens`. If the running decode batch exceeds the budget (e.g. budget 8 with 20 decoders, and `max_num_seqs` defaults to 256), `num_tokens` exceeds the cap, and `budget_left` goes negative. The docstring and the tests claim 'Every step obeys num_tokens <= max_num_batched_tokens', which is false in that case. Either cap decode admission, or state the actual invariant (decode rows are uncapped, budget applies to prefill only) and fix the docstring and the `num_tokens <= budget` assertions accordingly.",
+     "proposed_test": null
+    }
+   ],
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"pagedserve/sched/scheduler.py\", \"line_start\": 212, \"line_end\": 245, \"body\": \"`_schedule_chunked` appends every running request that has finished prefill as a decode row without checking `max_num_batched_tokens`. If the running decode batch exceeds the budget (e.g. budget 8 with 20 decoders, and `max_num_seqs` defaults to 256), `num_tokens` exceeds the cap, and `budget_left` goes negative. The docstring and the tests claim 'Every step obeys num_tokens <= max_num_batched_tokens', which is false in that case. Either cap decode admission, or state the actual invariant (decode rows are uncapped, budget applies to prefill only) and fix the docstring and the `num_tokens <= budget` assertions accordingly.\"}]}"
+  },
+  {
+   "task_id": "clean__serverless-lakehouse__0718b2f",
+   "decision": "escalate",
+   "usd": 0.023266,
+   "comments": [
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 143,
+     "line_end": 150,
+     "body": "The new left join of emberserve requests to `dim_coldstart_run_notes` on (series_label, run_index) multiplies request rows if the seed has more than one row per (series_label, run_index). That would silently double-count cold boots in every gold aggregate. The seed (seeds/coldstart_run_notes.csv) is unreviewed, so uniqueness cannot be confirmed. Add a uniqueness check or dedupe the notes before the join, and check the row count of silver_coldstart_requests before and after.",
+     "proposed_test": null
+    },
+    {
+     "file": "lakehouse/gold.py",
+     "line_start": 170,
+     "line_end": 177,
+     "body": "`coldstart_events` selects `endpoint_id`, `run_index`, `series_label`, `gpu_tier`, `host_state` and `is_flashboot_hit` from `req`. The diff does not show that silver_coldstart_requests produces these columns, and the first line of REQUEST_COLUMNS is not visible. A missing column fails `make gold` at runtime. Confirm the schema or run `make gold` before merging.",
+     "proposed_test": null
+    },
+    {
+     "file": "lakehouse/gold.py",
+     "line_start": 84,
+     "line_end": 86,
+     "body": "`F.date_format(\"request_ts_utc\", ...)` only works if request_ts_utc is a timestamp. If it is a string in silver, this fails. Also, the cohort and pooled rows are now computed inside `agg` and unioned by name, which the new output schema depends on. Verify both with a real run of `make gold`.",
+     "proposed_test": null
+    },
+    {
+     "file": "seeds/coldstart_run_notes.csv",
+     "line_start": 1,
+     "line_end": 1,
+     "body": "This new seed is read with an explicit schema (SEED_RUN_NOTES). Its header and column order must match exactly, and its (series_label, run_index) keys must be unique. The file was not reviewed, so this could not be checked.",
+     "proposed_test": null
+    }
+   ],
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"lakehouse/silver.py\", \"line_start\": 143, \"line_end\": 150, \"body\": \"The new left join of emberserve requests to `dim_coldstart_run_notes` on (series_label, run_index) multiplies request rows if the seed has more than one row per (series_label, run_index). That would silently double-count cold boots in every gold aggregate. The seed (seeds/coldstart_run_notes.csv) is unreviewed, so uniqueness cannot be confirmed. Add a uniqueness check or dedupe the notes before the join, and check the row count of silver_coldstart_requests before and after.\"}, {\"file\": \"lakehouse/gold.py\", \"line_start\": 170, \"line_end\": 177, \"body\": \"`coldstart_events` selects `endpoint_id`, `run_index`, `series_label`, `gpu_tier`, `host_state` and `is_flashboot_hit` from `req`. The diff does not show that silver_coldstart_requests produces these columns, and the first line of REQUEST_COLUMNS is not visible. A missing column fails `make gold` at runtime. Confirm the schema or run `make gold` before merging.\"}, {\"file\": \"lakehouse/gold.py\", \"line_start\": 84, \"line_end\": 86, \"body\": \"`F.date_format(\\\"request_ts_utc\\\", ...)` only works if request_ts_utc is a timestamp. If it is a string in silver, this fails. Also, the cohort and pooled rows are now computed inside `agg` and unioned by name, which the new output schema depends on. Verify both with a real run of `make gold`.\"}, {\"file\": \"seeds/coldstart_run_notes.csv\", \"line_start\": 1, \"line_end\": 1, \"body\": \"This new seed is read with an explicit schema (SEED_RUN_NOTES). Its header and column order must match exactly, and its (series_label, run_index) keys must be unique. The file was not reviewed, so this could not be checked.\"}]}"
+  }
+ ]
+}

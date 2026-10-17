@@ -1,0 +1,192 @@
+{
+ "label": "sonnet_loop",
+ "model": "claude-sonnet-5-5",
+ "condition": "loop",
+ "n": 10,
+ "unparsable": 0,
+ "wall_s": 754.3,
+ "scores": {
+  "all": {
+   "n_bug": 5,
+   "n_clean": 5,
+   "bugs_approved": 3,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.6,
+   "escalation_rate": 0.4,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.0800748
+  },
+  "fresh": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "bugs_approved": 2,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.75,
+   "escalation_rate": 0.375,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.087466125
+  },
+  "own-older": {
+   "n_bug": 1,
+   "n_clean": 1,
+   "bugs_approved": 1,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.0,
+   "escalation_rate": 0.5,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.0505095
+  }
+ },
+ "reviews": [
+  {
+   "task_id": "bug__aether__f0a823d",
+   "decision": "approve",
+   "usd": 0.055539,
+   "probes": [],
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"comments\":[]}"
+  },
+  {
+   "task_id": "bug__emberserve__36f4e93",
+   "decision": "approve",
+   "usd": 0.074967,
+   "probes": [],
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"comments\":[]}"
+  },
+  {
+   "task_id": "bug__emberserve__7edbe0f",
+   "decision": "approve",
+   "usd": 0.053163,
+   "probes": [],
+   "comments": [],
+   "parsed": true,
+   "raw": "<invoke name=\"\">\n</invoke>\n\n{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "bug__emberserve__f1943a4",
+   "decision": "escalate",
+   "usd": 0.138159,
+   "probes": [],
+   "comments": [
+    {
+     "file": "pagedserve/dist.py",
+     "line_start": 1,
+     "line_end": 310,
+     "body": "I found no concrete defect in the diff, and the CPU/gloo two-process tests pass for the plain, async, chunked, spec and engine-core modes. The production target is CUDA, and none of that path was exercised. tests/test_tp_gpu.py is skipped because it needs two CUDA devices. That leaves four paths unverified: NCCL collectives captured inside full-step and piecewise CUDA graphs; the device-side input_ids broadcast under async scheduling; the `getattr(dist, 'all_gather_single', None) or dist.all_gather_into_tensor` shim, which I could not confirm against the pod's torch version; and the worker watchdog and shutdown behaviour on GPUs. Separately, `head_dim` changed from a property to a stored field, so any caller elsewhere that uses `dataclasses.replace` on a ModelConfig to change `hidden_size` or `num_attention_heads` would now carry a stale `head_dim`. A human should run tests/test_tp_gpu.py on a 2-GPU machine before this merges and deploys.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"pagedserve/dist.py\",\"line_start\":1,\"line_end\":310,\"body\":\"I found no concrete defect in the diff, and the CPU/gloo two-process tests pass for the plain, async, chunked, spec and engine-core modes. The production target is CUDA, and none of that path was exercised. tests/test_tp_gpu.py is skipped because it needs two CUDA devices. That leaves four paths unverified: NCCL collectives captured inside full-step and piecewise CUDA graphs; the device-side input_ids broadcast under async scheduling; the `getattr(dist, 'all_gather_single', None) or dist.all_gather_into_tensor` shim, which I could not confirm against the pod's torch version; and the worker watchdog and shutdown behaviour on GPUs. Separately, `head_dim` changed from a property to a stored field, so any caller elsewhere that uses `dataclasses.replace` on a ModelConfig to change `hidden_size` or `num_attention_heads` would now carry a stale `head_dim`. A human should run tests/test_tp_gpu.py on a 2-GPU machine before this merges and deploys.\"}]}"
+  },
+  {
+   "task_id": "bug__serverless-lakehouse__9e1c251",
+   "decision": "escalate",
+   "usd": 0.109125,
+   "probes": [],
+   "comments": [
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 1,
+     "line_end": 473,
+     "body": "I found no definite defect in the diff, but I can't establish that it is safe to ship. The change adds about 800 lines of Spark transformation logic (silver, gold, report) and the only tests that ran cover the landing and redact modules. Nothing exercises the silver, gold or report code. The output depends on logic I could only read, not verify: the three log-timestamp regexes and timezone handling, the join of seeds to requests by gpu_model/gpu_label, the Pulse dedup key, the FlashBoot threshold and the cost formula. The unreviewed seeds/*.csv files feed those joins and the dollar figures, and gold.engine_comparison hardcodes 'Qwen3-8B' and 'RTX 4090', so it returns silently empty or wrong rows if the seed values differ. A human should run `make all` against real landed data and sanity-check the generated report, or add tests that build the silver and gold tables from small fixtures.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"lakehouse/silver.py\",\"line_start\":1,\"line_end\":473,\"body\":\"I found no definite defect in the diff, but I can't establish that it is safe to ship. The change adds about 800 lines of Spark transformation logic (silver, gold, report) and the only tests that ran cover the landing and redact modules. Nothing exercises the silver, gold or report code. The output depends on logic I could only read, not verify: the three log-timestamp regexes and timezone handling, the join of seeds to requests by gpu_model/gpu_label, the Pulse dedup key, the FlashBoot threshold and the cost formula. The unreviewed seeds/*.csv files feed those joins and the dollar figures, and gold.engine_comparison hardcodes 'Qwen3-8B' and 'RTX 4090', so it returns silently empty or wrong rows if the seed values differ. A human should run `make all` against real landed data and sanity-check the generated report, or add tests that build the silver and gold tables from small fixtures.\"}]}"
+  },
+  {
+   "task_id": "clean__aether__ae70f99",
+   "decision": "escalate",
+   "usd": 0.04548,
+   "probes": [],
+   "comments": [
+    {
+     "file": "shell/src/utils/controlBridge.ts",
+     "line_start": 117,
+     "line_end": 147,
+     "body": "The diff is cut off mid-hunk, and the new 'apply-layout' handler is not visible. viewerNode.applyLayout dispatches 'apply-layout' and returns ok:true unconditionally. If that handler is missing or does not accept these presets ('tile', 'focus', 'split', 'thirds', 'quarters'), arrange_windows will report success while doing nothing. A human should confirm the handler exists and covers every preset.",
+     "proposed_test": null
+    },
+    {
+     "file": "shell/src/stores/workspaceStore.ts",
+     "line_start": 1211,
+     "line_end": 1231,
+     "body": "`const newWindowId = openWindow(...)` is returned as `{ windowId: string }`. I could not confirm that `openWindow` returns a string id. If it returns void, this would fail type-checking or return an undefined windowId. Please verify the signature.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"shell/src/utils/controlBridge.ts\",\"line_start\":117,\"line_end\":147,\"body\":\"The diff is cut off mid-hunk, and the new 'apply-layout' handler is not visible. viewerNode.applyLayout dispatches 'apply-layout' and returns ok:true unconditionally. If that handler is missing or does not accept these presets ('tile', 'focus', 'split', 'thirds', 'quarters'), arrange_windows will report success while doing nothing. A human should confirm the handler exists and covers every preset.\"},{\"file\":\"shell/src/stores/workspaceStore.ts\",\"line_start\":1211,\"line_end\":1231,\"body\":\"`const newWindowId = openWindow(...)` is returned as `{ windowId: string }`. I could not confirm that `openWindow` returns a string id. If it returns void, this would fail type-checking or return an undefined windowId. Please verify the signature.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__c6278c4",
+   "decision": "approve",
+   "usd": 0.122031,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.6.0\nrootdir: /testbed\nconfigfile: pyproject.toml\nplugins: anyio-4.15.1, timeout-2.4.0\ncollected 1 item\n\ntests/test_probe_review.py .                                             [100%]\n\n=========================== short test summary info ============================\nPASSED tests/test_probe_review.py::test_flags_exist\n============================== 1 passed in 1.07s ===============================\nEXIT=0\n"
+    }
+   ],
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "clean__emberserve__581e293",
+   "decision": "escalate",
+   "usd": 0.052887,
+   "probes": [],
+   "comments": [
+    {
+     "file": "pagedserve/engine.py",
+     "line_start": 49,
+     "line_end": 93,
+     "body": "This change turns on CUDA-graph capture for paged_triton, and the only tests that exercise that path are the new GPU tests, which were skipped in CI (\"needs CUDA\"). The previous commit also says GPU validation is still pending. From the diff I cannot confirm three things: that PagedTritonAttentionBackend.forward reads only the static tensors (meta.context_lens_t and meta.block_tables_nonneg) during capture; that Triton kernel compilation and autotune happen during warmup rather than inside capture; and that the split-K heuristic (num_splits=None, which uses the SM count) yields a shape that stays fixed across replay. A human should run the GPU tests (`pytest -m gpu -k triton`) before this ships.",
+     "proposed_test": null
+    },
+    {
+     "file": "pagedserve/attn/paged_triton.py",
+     "line_start": 203,
+     "line_end": 214,
+     "body": "The new docstring says the tile always divides block_size. That is not guaranteed: min(block_size, tile) with a 32 tile does not divide a block size such as 48, even though the kernel's check only requires a multiple of 16. This is pre-existing behaviour, but the claim should either be asserted or the block-size check tightened to a power of two.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"pagedserve/engine.py\",\"line_start\":49,\"line_end\":93,\"body\":\"This change turns on CUDA-graph capture for paged_triton, and the only tests that exercise that path are the new GPU tests, which were skipped in CI (\\\"needs CUDA\\\"). The previous commit also says GPU validation is still pending. From the diff I cannot confirm three things: that PagedTritonAttentionBackend.forward reads only the static tensors (meta.context_lens_t and meta.block_tables_nonneg) during capture; that Triton kernel compilation and autotune happen during warmup rather than inside capture; and that the split-K heuristic (num_splits=None, which uses the SM count) yields a shape that stays fixed across replay. A human should run the GPU tests (`pytest -m gpu -k triton`) before this ships.\"},{\"file\":\"pagedserve/attn/paged_triton.py\",\"line_start\":203,\"line_end\":214,\"body\":\"The new docstring says the tile always divides block_size. That is not guaranteed: min(block_size, tile) with a 32 tile does not divide a block size such as 48, even though the kernel's check only requires a multiple of 16. This is pre-existing behaviour, but the claim should either be asserted or the block-size check tightened to a power of two.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__96519cd",
+   "decision": "approve",
+   "usd": 0.101808,
+   "probes": [],
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"comments\":[]}"
+  },
+  {
+   "task_id": "clean__serverless-lakehouse__0718b2f",
+   "decision": "approve",
+   "usd": 0.047589,
+   "probes": [],
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"comments\":[]}"
+  }
+ ]
+}

@@ -1,0 +1,212 @@
+{
+ "label": "sonnet_loop_v2",
+ "model": "claude-sonnet-5-5",
+ "condition": "loop",
+ "n": 10,
+ "unparsable": 2,
+ "wall_s": 170.4,
+ "scores": {
+  "all": {
+   "n_bug": 5,
+   "n_clean": 5,
+   "bugs_approved": 1,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.4,
+   "escalation_rate": 0.7,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.0991299
+  },
+  "fresh": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "bugs_approved": 0,
+   "bugs_approved_rate_ub95": 0.5271291954984121,
+   "auto_ship_rate": 0.5,
+   "escalation_rate": 0.75,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.1025775
+  },
+  "own-older": {
+   "n_bug": 1,
+   "n_clean": 1,
+   "bugs_approved": 1,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.0,
+   "escalation_rate": 0.5,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.0853395
+  }
+ },
+ "reviews": [
+  {
+   "task_id": "bug__aether__f0a823d",
+   "decision": "approve",
+   "usd": 0.118803,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed/daemons/raven-core\nplugins: anyio-4.15.1, timeout-2.4.0\ncollected 1 item\n\ntests/test_probe_review.py .                                             [100%]\n\n=========================== short test summary info ============================\nPASSED tests/test_probe_review.py::test_probe\n============================== 1 passed in 1.08s ===============================\nEXIT=0\n"
+    }
+   ],
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"comments\":[]}"
+  },
+  {
+   "task_id": "bug__emberserve__36f4e93",
+   "decision": "escalate",
+   "usd": 0.081459,
+   "probes": [],
+   "comments": [],
+   "parsed": false,
+   "raw": "<invoke name=\"bash\">\n<parameter name=\"probe\">{\"path\": \"tests/test_probe_review.py\", \"source\": \"import asyncio, importlib.util, pathlib\\n\\ndef _load():\\n    p = pathlib.Path(__file__).resolve().parents[1] / 'deploy' / 'runpod' / 'handler.py'\\n    s = importlib.util.spec_from_file_location('hprobe', p)\\n    m = importlib.util.module_from_spec(s); s.loader.exec_module(m); return m\\n\\ndef test_order_and_content():\\n    m = _load()\\n    async def src():\\n        for i in range(50):\\n            yield str(i)\\n            if i % 7 == 0:\\n                await asyncio.sleep(0.03)\\n        yield ''\\n    async def run():\\n        return [c async for c in m._coalesced(src(), 0.05)]\\n    out = asyncio.run(run())\\n    assert ''.join(out) == ''.join(str(i) for i in range(50))\\n    assert all(out)\\n\"}</parameter>\n</invoke>\nby"
+  },
+  {
+   "task_id": "bug__emberserve__7edbe0f",
+   "decision": "escalate",
+   "usd": 0.059595,
+   "probes": [],
+   "comments": [],
+   "parsed": false,
+   "raw": "<invoke name=\"bash\">\n<parameter name=\"probe\">{\"path\": \"tests/test_probe_review.py\", \"source\": \"from pagedserve.attn.paged_triton import _pow2_divisor, _tile_for\\n\\ndef test_p():\\n    for bs in range(16, 513, 16):\\n        for cap in (16, 32, 64):\\n            t = _pow2_divisor(bs, cap)\\n            assert t >= 16 and t <= cap and bs % t == 0 and (t & (t - 1)) == 0\\n    assert _pow2_divisor(96, 64) == 32 and _pow2_divisor(48, 64) == 16\\n    for bs in (16, 48, 96, 128):\\n        assert bs % _tile_for(bs, 128, 16) == 0\\n\"}</parameter>\n</invoke>\n"
+  },
+  {
+   "task_id": "bug__emberserve__f1943a4",
+   "decision": "escalate",
+   "usd": 0.125316,
+   "probes": [],
+   "comments": [
+    {
+     "file": "pagedserve/dist.py",
+     "line_start": 1,
+     "line_end": 310,
+     "body": "I found no defect on the CPU paths, but I cannot establish that this is safe to deploy without a human. The change adds a multi-process tensor-parallel mode whose real target is NCCL on GPUs. None of that is exercised in the CI run: tests/test_tp_gpu.py was skipped ('needs two CUDA devices'). Unverified GPU-specific behaviour includes NCCL collectives captured inside full-step and piecewise CUDA graphs, async scheduling's device-side token gather with the input_ids broadcast, and the gloo/NCCL group split. The int8 quantization path under TP and the case where the vocabulary does not divide evenly (lm_head replicated while shard_tensor still chunks it) are also untested. Please have someone run tests/test_tp_gpu.py on a 2-GPU box and confirm the worker lifecycle (shutdown, watchdog) before this ships.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"pagedserve/dist.py\",\"line_start\":1,\"line_end\":310,\"body\":\"I found no defect on the CPU paths, but I cannot establish that this is safe to deploy without a human. The change adds a multi-process tensor-parallel mode whose real target is NCCL on GPUs. None of that is exercised in the CI run: tests/test_tp_gpu.py was skipped ('needs two CUDA devices'). Unverified GPU-specific behaviour includes NCCL collectives captured inside full-step and piecewise CUDA graphs, async scheduling's device-side token gather with the input_ids broadcast, and the gloo/NCCL group split. The int8 quantization path under TP and the case where the vocabulary does not divide evenly (lm_head replicated while shard_tensor still chunks it) are also untested. Please have someone run tests/test_tp_gpu.py on a 2-GPU box and confirm the worker lifecycle (shutdown, watchdog) before this ships.\"}]}"
+  },
+  {
+   "task_id": "bug__serverless-lakehouse__9e1c251",
+   "decision": "escalate",
+   "usd": 0.098697,
+   "probes": [],
+   "comments": [
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 1,
+     "line_end": 473,
+     "body": "This adds about 800 lines of Spark transformation logic (silver, gold, report) with no tests that exercise it. The existing suite only covers landing and redaction, so a green run says nothing about this change. I found no certain defect, but I could not establish correctness from the diff alone. Several behaviours depend on data and Spark session settings that I cannot see:\n- The pipe-format worker-log timestamps are converted with `to_utc_timestamp(..., CONSOLE_LOG_TZ)`, while the ISO timestamps are parsed in the session timezone. Whether this is right depends on the Spark session timezone, which is not visible here.\n- The `is_flashboot_hit` threshold and the cost formula depend on seed CSV contents that were not shown.\n- The deduplication keys in `pulse_requests` and the seed joins are unchecked against real data.\n- `engine_comparison` hard-codes `Qwen3-8B` and `RTX 4090`.\n\nA human should run `make all` on real data and spot-check the gold tables before this deploys.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"lakehouse/silver.py\",\"line_start\":1,\"line_end\":473,\"body\":\"This adds about 800 lines of Spark transformation logic (silver, gold, report) with no tests that exercise it. The existing suite only covers landing and redaction, so a green run says nothing about this change. I found no certain defect, but I could not establish correctness from the diff alone. Several behaviours depend on data and Spark session settings that I cannot see:\\n- The pipe-format worker-log timestamps are converted with `to_utc_timestamp(..., CONSOLE_LOG_TZ)`, while the ISO timestamps are parsed in the session timezone. Whether this is right depends on the Spark session timezone, which is not visible here.\\n- The `is_flashboot_hit` threshold and the cost formula depend on seed CSV contents that were not shown.\\n- The deduplication keys in `pulse_requests` and the seed joins are unchecked against real data.\\n- `engine_comparison` hard-codes `Qwen3-8B` and `RTX 4090`.\\n\\nA human should run `make all` on real data and spot-check the gold tables before this deploys.\"}]}"
+  },
+  {
+   "task_id": "clean__aether__ae70f99",
+   "decision": "escalate",
+   "usd": 0.051876,
+   "probes": [],
+   "comments": [
+    {
+     "file": "shell/src/utils/controlBridge.ts",
+     "line_start": 120,
+     "line_end": 147,
+     "body": "I could not establish that this change is safe, and I have not run a probe. Two things are unverified.\n\n1. The new viewer_desktop.apply_layout path dispatches the renderer action 'apply-layout'. The shown controlBridge.ts diff only changes 'open-app', and workspaceStore.ts only changes openTerminal. I cannot see an 'apply-layout' handler or an applyLayoutPreset store action in what was shown, even though viewerNode.ts says they exist. If they are not already in the tree, arrange_windows fails at runtime.\n\n2. The `!appDef` early return comes before the `appId === 'terminal'` special case. If 'terminal' is not in getApps(), opening a terminal by voice now returns unknown-app instead of spawning a PTY. The comment says terminal is 'not a plain registry app'.\n\nThe handler also became async. I did not verify that dispatch awaits handler results.\n\nThe Python side (fuzzy resolve and retry) looks plausible, but it has no tests. A human should confirm the renderer and registry pieces.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"shell/src/utils/controlBridge.ts\",\"line_start\":120,\"line_end\":147,\"body\":\"I could not establish that this change is safe, and I have not run a probe. Two things are unverified.\\n\\n1. The new viewer_desktop.apply_layout path dispatches the renderer action 'apply-layout'. The shown controlBridge.ts diff only changes 'open-app', and workspaceStore.ts only changes openTerminal. I cannot see an 'apply-layout' handler or an applyLayoutPreset store action in what was shown, even though viewerNode.ts says they exist. If they are not already in the tree, arrange_windows fails at runtime.\\n\\n2. The `!appDef` early return comes before the `appId === 'terminal'` special case. If 'terminal' is not in getApps(), opening a terminal by voice now returns unknown-app instead of spawning a PTY. The comment says terminal is 'not a plain registry app'.\\n\\nThe handler also became async. I did not verify that dispatch awaits handler results.\\n\\nThe Python side (fuzzy resolve and retry) looks plausible, but it has no tests. A human should confirm the renderer and registry pieces.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__c6278c4",
+   "decision": "approve",
+   "usd": 0.13847399999999999,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.6.0\nrootdir: /testbed\nconfigfile: pyproject.toml\nplugins: anyio-4.15.1, timeout-2.4.0\ncollected 1 item\n\ntests/test_probe_review.py .                                             [100%]\n\n=========================== short test summary info ============================\nPASSED tests/test_probe_review.py::test_flags_exist_in_cli\n============================== 1 passed in 1.83s ===============================\nEXIT=0\n"
+    }
+   ],
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"comments\":[]}"
+  },
+  {
+   "task_id": "clean__emberserve__581e293",
+   "decision": "escalate",
+   "usd": 0.055224,
+   "probes": [],
+   "comments": [
+    {
+     "file": "pagedserve/engine.py",
+     "line_start": 49,
+     "line_end": 93,
+     "body": "This change adds paged_triton to GRAPH_CAPABLE_BACKENDS, so CUDA-graph capture is enabled for the Triton backend. I cannot establish from the diff that it is safe. The backend is not shown to read only static device tensors (meta.context_lens_t, meta.block_tables_nonneg) during decode. Nothing shows that split-K selection (num_splits=None, derived from SM count and batch size), the intermediate buffer allocations, or the Triton launch grid stay fixed across graph replays with padded buckets. Every test that covers this path (test_paged_triton_gpu.py, including the graph-enabled engine tests) is skipped without CUDA, and the commit history says GPU validation is pending. A human needs to run the GPU tests, or review the graph-capture path of PagedTritonAttentionBackend.",
+     "proposed_test": null
+    },
+    {
+     "file": "pagedserve/attn/paged_triton.py",
+     "line_start": 200,
+     "line_end": 214,
+     "body": "_tile_for is now a new tile-sizing heuristic that depends on groups_pad, and the kernel's real-GPU behaviour with it is unvalidated. The docstring says the tile divides block_size, but the code only guarantees a power of two of at most 32 and never checks that it divides block_size. A block_size of 48 passes the multiple-of-16 assertion yet gives a tile of 32 that straddles two blocks. That case is the same as before this change, but the new docstring makes a stronger claim than the code.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"pagedserve/engine.py\",\"line_start\":49,\"line_end\":93,\"body\":\"This change adds paged_triton to GRAPH_CAPABLE_BACKENDS, so CUDA-graph capture is enabled for the Triton backend. I cannot establish from the diff that it is safe. The backend is not shown to read only static device tensors (meta.context_lens_t, meta.block_tables_nonneg) during decode. Nothing shows that split-K selection (num_splits=None, derived from SM count and batch size), the intermediate buffer allocations, or the Triton launch grid stay fixed across graph replays with padded buckets. Every test that covers this path (test_paged_triton_gpu.py, including the graph-enabled engine tests) is skipped without CUDA, and the commit history says GPU validation is pending. A human needs to run the GPU tests, or review the graph-capture path of PagedTritonAttentionBackend.\"},{\"file\":\"pagedserve/attn/paged_triton.py\",\"line_start\":200,\"line_end\":214,\"body\":\"_tile_for is now a new tile-sizing heuristic that depends on groups_pad, and the kernel's real-GPU behaviour with it is unvalidated. The docstring says the tile divides block_size, but the code only guarantees a power of two of at most 32 and never checks that it divides block_size. A block_size of 48 passes the multiple-of-16 assertion yet gives a tile of 32 that straddles two blocks. That case is the same as before this change, but the new docstring makes a stronger claim than the code.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__96519cd",
+   "decision": "approve",
+   "usd": 0.213444,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "tail": "================ short test summary info ============================\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[False-256-1]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[False-256-2]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[False-256-3]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[False-256-5]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[False-24-1]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[False-24-2]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[False-24-3]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[False-24-5]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[True-256-1]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[True-256-2]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[True-256-3]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[True-256-5]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[True-24-1]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[True-24-2]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[True-24-3]\nPASSED tests/test_probe_review.py::test_probe_chunked_small_budgets[True-24-5]\nPASSED tests/test_probe_review.py::test_probe_output_defaults\n============================= 17 passed in 24.15s ==============================\nEXIT=0\n"
+    }
+   ],
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "clean__serverless-lakehouse__0718b2f",
+   "decision": "escalate",
+   "usd": 0.048411,
+   "probes": [],
+   "comments": [
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 140,
+     "line_end": 170,
+     "body": "I could not establish safety. The run-notes join in emberserve_requests, the column order against REQUEST_COLUMNS, and the cohort logic in engine_comparison are not covered by any test. The seed file seeds/coldstart_run_notes.csv was not visible, so I cannot rule out duplicate (series_label, run_index) rows fanning out request rows. A human should review these.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "<invoke name=\"probe\">\n</invoke>\n```json\n{\"decision\":\"escalate\",\"comments\":[{\"file\":\"lakehouse/silver.py\",\"line_start\":140,\"line_end\":170,\"body\":\"I could not establish safety. The run-notes join in emberserve_requests, the column order against REQUEST_COLUMNS, and the cohort logic in engine_comparison are not covered by any test. The seed file seeds/coldstart_run_notes.csv was not visible, so I cannot rule out duplicate (series_label, run_index) rows fanning out request rows. A human should review these.\"}]}\n```"
+  }
+ ]
+}

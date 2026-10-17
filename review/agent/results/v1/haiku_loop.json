@@ -1,0 +1,295 @@
+{
+ "label": "haiku_loop",
+ "model": "claude-haiku-5-5",
+ "condition": "loop",
+ "n": 10,
+ "unparsable": 0,
+ "wall_s": 225.9,
+ "scores": {
+  "all": {
+   "n_bug": 5,
+   "n_clean": 5,
+   "bugs_approved": 2,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.0,
+   "escalation_rate": 0.5,
+   "block_precision": 0.6666666666666666,
+   "localization": 0.5,
+   "strong_localization": 0.0,
+   "usd_per_pr": 0.0446899
+  },
+  "fresh": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "bugs_approved": 1,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.0,
+   "escalation_rate": 0.5,
+   "block_precision": 0.6666666666666666,
+   "localization": 0.5,
+   "strong_localization": 0.0,
+   "usd_per_pr": 0.046872625
+  },
+  "own-older": {
+   "n_bug": 1,
+   "n_clean": 1,
+   "bugs_approved": 1,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.0,
+   "escalation_rate": 0.5,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.035959000000000005
+  }
+ },
+ "reviews": [
+  {
+   "task_id": "bug__aether__f0a823d",
+   "decision": "approve",
+   "usd": 0.052108,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed/daemons/raven-core\nplugins: anyio-4.15.1, timeout-2.4.0\ncollected 1 item\n\ntests/test_probe_review.py .                                             [100%]\n\n=========================== short test summary info ============================\nPASSED tests/test_probe_review.py::test_revise_text_bound_before_module_level_use\n============================== 1 passed in 0.01s ===============================\nEXIT=0\n"
+    }
+   ],
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "bug__emberserve__36f4e93",
+   "decision": "approve",
+   "usd": 0.046019,
+   "probes": [],
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "bug__emberserve__7edbe0f",
+   "decision": "escalate",
+   "usd": 0.034566,
+   "probes": [],
+   "comments": [
+    {
+     "file": "pagedserve/server/engine_core.py",
+     "line_start": 307,
+     "line_end": 355,
+     "body": "`_CommandWriter` changes failure semantics. Before, `send` raised to the caller when the core pipe was dead, so the caller could react. Now `put` only succeeds, and a failed `conn.send` in `_run` is recorded in `self.error` and silently drops that message. Only the next `put` raises. A lost `add` or `abort` may never reach the core and nothing surfaces it at the call site. The queue is also unbounded, so backpressure is gone. Confirm that the reader's death detection fails all in-flight requests whenever a write is lost, and that a silently dropped message cannot leave a request hanging. Also, `AttachedCore.stop` closes `cmd_send` after `writer.close(1.0)`, which can return while the writer thread is still blocked in `send` on the same fd.",
+     "proposed_test": null
+    },
+    {
+     "file": "pagedserve/attn/paged_triton.py",
+     "line_start": 230,
+     "line_end": 245,
+     "body": "The tile change (`_pow2_divisor`, which also replaces `min(block_size, 64)` in the dot path) alters kernel tiling for every non-power-of-two block size. The new regression test `test_kernel_block_sizes_that_are_not_powers_of_two` is a Triton/CUDA test, and the run shows only `test_paged_triton_gpu.py` as skipped. Nothing in the reported run shows the Triton kernels actually executing at block 48/96. Please confirm the new test ran on a GPU, and that the split-K path and any other code deriving tile counts from `tile` (e.g. `TILES_PER_BLOCK`) agrees with the new value.",
+     "proposed_test": null
+    },
+    {
+     "file": "pagedserve/sched/scheduler.py",
+     "line_start": 169,
+     "line_end": 180,
+     "body": "The `and batch` guard admits a request whose query alone exceeds `max_num_batched_tokens`. Check that nothing sized to `max_num_batched_tokens` (CUDA graph buffers, activation or workspace preallocation, the chunked-prefill path) assumes a step never exceeds the budget. The stated reason is only for preempted re-prefills; confirm no other path reaches this.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"pagedserve/server/engine_core.py\", \"line_start\": 307, \"line_end\": 355, \"body\": \"`_CommandWriter` changes failure semantics. Before, `send` raised to the caller when the core pipe was dead, so the caller could react. Now `put` only succeeds, and a failed `conn.send` in `_run` is recorded in `self.error` and silently drops that message. Only the next `put` raises. A lost `add` or `abort` may never reach the core and nothing surfaces it at the call site. The queue is also unbounded, so backpressure is gone. Confirm that the reader's death detection fails all in-flight requests whenever a write is lost, and that a silently dropped message cannot leave a request hanging. Also, `AttachedCore.stop` closes `cmd_send` after `writer.close(1.0)`, which can return while the writer thread is still blocked in `send` on the same fd.\"}, {\"file\": \"pagedserve/attn/paged_triton.py\", \"line_start\": 230, \"line_end\": 245, \"body\": \"The tile change (`_pow2_divisor`, which also replaces `min(block_size, 64)` in the dot path) alters kernel tiling for every non-power-of-two block size. The new regression test `test_kernel_block_sizes_that_are_not_powers_of_two` is a Triton/CUDA test, and the run shows only `test_paged_triton_gpu.py` as skipped. Nothing in the reported run shows the Triton kernels actually executing at block 48/96. Please confirm the new test ran on a GPU, and that the split-K path and any other code deriving tile counts from `tile` (e.g. `TILES_PER_BLOCK`) agrees with the new value.\"}, {\"file\": \"pagedserve/sched/scheduler.py\", \"line_start\": 169, \"line_end\": 180, \"body\": \"The `and batch` guard admits a request whose query alone exceeds `max_num_batched_tokens`. Check that nothing sized to `max_num_batched_tokens` (CUDA graph buffers, activation or workspace preallocation, the chunked-prefill path) assumes a step never exceeds the budget. The stated reason is only for preempted re-prefills; confirm no other path reaches this.\"}]}"
+  },
+  {
+   "task_id": "bug__emberserve__f1943a4",
+   "decision": "block",
+   "usd": 0.076723,
+   "probes": [],
+   "comments": [
+    {
+     "file": "pagedserve/dist.py",
+     "line_start": 236,
+     "line_end": 241,
+     "body": "The tiny tensor-parallel branch of `build_tp_model` never casts the model to `dtype`. The sharded model is built under `torch.device(device)` in the default dtype (fp32), and `load_hf_state_dict(..., dtype=dtype)` only casts the source tensors into the existing fp32 parameters (`target.copy_` keeps the target's dtype). The function then returns an fp32 model even when `ecfg.dtype` is fp16. The single-rank tiny path calls `.to(device, dtype)`, and the real-checkpoint path goes through `load_model`, which honors dtype. So the fp16 tiny TP engine built here (the path `tests/test_tp_gpu.py` exercises with `paged_flash`, and `build_engine` with `tiny=True`) would run fp32 weights against an fp16 KV cache and an fp16-only flash-attention backend. The CPU tests use float32 and cannot catch this, and the GPU tests are skipped here. Fix: build the sharded model with the target dtype, e.g. `with torch.device(device): model = Qwen2ForCausalLM(full_cfg.shard(tp.size)).to(dtype)`, or pass dtype through to `_load_tensors` and assert it on the result.",
+     "proposed_test": "import torch\nfrom pagedserve.config import ModelConfig\nfrom pagedserve.dist import TPState\nfrom pagedserve.model.qwen2 import Qwen2ForCausalLM\nfrom pagedserve.model.weights import hf_state_dict, load_hf_state_dict\n\ndef test_tp_shard_loaded_in_requested_dtype():\n    cfg = ModelConfig.tiny()\n    full = Qwen2ForCausalLM(cfg, tp_size=1)\n    shard = Qwen2ForCausalLM(cfg.shard(2), tp_size=2)\n    load_hf_state_dict(shard, hf_state_dict(full), dtype=torch.float16, tp=TPState(0, 2))\n    assert all(p.dtype == torch.float16 for p in shard.parameters())\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"pagedserve/dist.py\", \"line_start\": 236, \"line_end\": 241, \"body\": \"The tiny tensor-parallel branch of `build_tp_model` never casts the model to `dtype`. The sharded model is built under `torch.device(device)` in the default dtype (fp32), and `load_hf_state_dict(..., dtype=dtype)` only casts the source tensors into the existing fp32 parameters (`target.copy_` keeps the target's dtype). The function then returns an fp32 model even when `ecfg.dtype` is fp16. The single-rank tiny path calls `.to(device, dtype)`, and the real-checkpoint path goes through `load_model`, which honors dtype. So the fp16 tiny TP engine built here (the path `tests/test_tp_gpu.py` exercises with `paged_flash`, and `build_engine` with `tiny=True`) would run fp32 weights against an fp16 KV cache and an fp16-only flash-attention backend. The CPU tests use float32 and cannot catch this, and the GPU tests are skipped here. Fix: build the sharded model with the target dtype, e.g. `with torch.device(device): model = Qwen2ForCausalLM(full_cfg.shard(tp.size)).to(dtype)`, or pass dtype through to `_load_tensors` and assert it on the result.\", \"proposed_test\": \"import torch\\nfrom pagedserve.config import ModelConfig\\nfrom pagedserve.dist import TPState\\nfrom pagedserve.model.qwen2 import Qwen2ForCausalLM\\nfrom pagedserve.model.weights import hf_state_dict, load_hf_state_dict\\n\\ndef test_tp_shard_loaded_in_requested_dtype():\\n    cfg = ModelConfig.tiny()\\n    full = Qwen2ForCausalLM(cfg, tp_size=1)\\n    shard = Qwen2ForCausalLM(cfg.shard(2), tp_size=2)\\n    load_hf_state_dict(shard, hf_state_dict(full), dtype=torch.float16, tp=TPState(0, 2))\\n    assert all(p.dtype == torch.float16 for p in shard.parameters())\\n\"}]}"
+  },
+  {
+   "task_id": "bug__serverless-lakehouse__9e1c251",
+   "decision": "block",
+   "usd": 0.05891,
+   "probes": [],
+   "comments": [
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 262,
+     "line_end": 264,
+     "body": "`endpoint_from_url` never reaches its fallback. `F.regexp_extract` returns \"\" on no match, not null, so `F.coalesce` always returns the first pattern's result. For `https://<id>.api.runpod.ai` base URLs (the load-balancer case, which `build_sweep_summaries` labels `endpoint_mode = load_balancer`), the first pattern returns \"\", the coalesce returns \"\", and the outer `F.when(... != \"\")` yields NULL. So `silver_sweep_summaries.endpoint_id` is NULL for every load-balancer sweep, and that NULL propagates to `gold_sweep_latency.endpoint_id`. The fix is to test each extraction for non-empty before falling through, e.g. `F.when(a != \"\", a).otherwise(b)` with `a` and `b` each being the regexp_extract result. Separately, the reviewed diff does not show `bronze.load_table`, the bronze column names silver reads (`label`, `endpoint`, `cold_json`, `warm_json`, `health_before_json`, `run_label`, `ingested_at`), or the seed CSV column order. Those are assumed to match, and `read_seed` maps the CSVs by position under an explicit schema, so a reordered seed would silently mis-type columns.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"lakehouse/silver.py\", \"line_start\": 262, \"line_end\": 264, \"body\": \"`endpoint_from_url` never reaches its fallback. `F.regexp_extract` returns \\\"\\\" on no match, not null, so `F.coalesce` always returns the first pattern's result. For `https://<id>.api.runpod.ai` base URLs (the load-balancer case, which `build_sweep_summaries` labels `endpoint_mode = load_balancer`), the first pattern returns \\\"\\\", the coalesce returns \\\"\\\", and the outer `F.when(... != \\\"\\\")` yields NULL. So `silver_sweep_summaries.endpoint_id` is NULL for every load-balancer sweep, and that NULL propagates to `gold_sweep_latency.endpoint_id`. The fix is to test each extraction for non-empty before falling through, e.g. `F.when(a != \\\"\\\", a).otherwise(b)` with `a` and `b` each being the regexp_extract result. Separately, the reviewed diff does not show `bronze.load_table`, the bronze column names silver reads (`label`, `endpoint`, `cold_json`, `warm_json`, `health_before_json`, `run_label`, `ingested_at`), or the seed CSV column order. Those are assumed to match, and `read_seed` maps the CSVs by position under an explicit schema, so a reordered seed would silently mis-type columns.\"}]}"
+  },
+  {
+   "task_id": "clean__aether__ae70f99",
+   "decision": "escalate",
+   "usd": 0.01981,
+   "probes": [],
+   "comments": [
+    {
+     "file": "shell/scripts/fix-node-pty-perms.mjs",
+     "line_start": 1,
+     "line_end": 1,
+     "body": "This script and the shell/package.json change that wires it in were not shown. The script changes file permissions on node-pty binaries, and if it runs as a postinstall hook it executes on every install. A human should confirm it only chmods the intended paths and cannot widen permissions elsewhere.",
+     "proposed_test": null
+    },
+    {
+     "file": "daemons/raven-core/raven_core/prompts/prompts.json",
+     "line_start": 1,
+     "line_end": 1,
+     "body": "The prompts.json change (92 KB) was not shown. It changes model-facing instructions for the voice agent, so its content needs a human look.",
+     "proposed_test": null
+    },
+    {
+     "file": "shell/src/utils/controlBridge.ts",
+     "line_start": 120,
+     "line_end": 121,
+     "body": "The 'open-app' handler is now async and returns structured results. The dispatch path that calls handlers must await them, and the tail of the handler (the return of windowId) is not in the diff. Please confirm the caller awaits the handler's result.",
+     "proposed_test": null
+    },
+    {
+     "file": "shell/src/stores/workspaceStore.ts",
+     "line_start": 1211,
+     "line_end": 1211,
+     "body": "The new code assigns `const newWindowId = openWindow(...)`, which assumes openWindow already returns a string id. Its signature is not in the diff. If it returns void, this is a type error and a runtime undefined windowId. Please verify.",
+     "proposed_test": null
+    },
+    {
+     "file": "shell/electron/main/services/viewerNode.ts",
+     "line_start": 409,
+     "line_end": 411,
+     "body": "The apply-layout dispatch relies on a 'apply-layout' control action in controlBridge.ts. That action is not in this diff, so it must already exist. Please confirm it is present and accepts the presets listed in LAYOUT_PRESETS.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"shell/scripts/fix-node-pty-perms.mjs\", \"line_start\": 1, \"line_end\": 1, \"body\": \"This script and the shell/package.json change that wires it in were not shown. The script changes file permissions on node-pty binaries, and if it runs as a postinstall hook it executes on every install. A human should confirm it only chmods the intended paths and cannot widen permissions elsewhere.\"}, {\"file\": \"daemons/raven-core/raven_core/prompts/prompts.json\", \"line_start\": 1, \"line_end\": 1, \"body\": \"The prompts.json change (92 KB) was not shown. It changes model-facing instructions for the voice agent, so its content needs a human look.\"}, {\"file\": \"shell/src/utils/controlBridge.ts\", \"line_start\": 120, \"line_end\": 121, \"body\": \"The 'open-app' handler is now async and returns structured results. The dispatch path that calls handlers must await them, and the tail of the handler (the return of windowId) is not in the diff. Please confirm the caller awaits the handler's result.\"}, {\"file\": \"shell/src/stores/workspaceStore.ts\", \"line_start\": 1211, \"line_end\": 1211, \"body\": \"The new code assigns `const newWindowId = openWindow(...)`, which assumes openWindow already returns a string id. Its signature is not in the diff. If it returns void, this is a type error and a runtime undefined windowId. Please verify.\"}, {\"file\": \"shell/electron/main/services/viewerNode.ts\", \"line_start\": 409, \"line_end\": 411, \"body\": \"The apply-layout dispatch relies on a 'apply-layout' control action in controlBridge.ts. That action is not in this diff, so it must already exist. Please confirm it is present and accepts the presets listed in LAYOUT_PRESETS.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__c6278c4",
+   "decision": "escalate",
+   "usd": 0.036651,
+   "probes": [],
+   "comments": [
+    {
+     "file": "deploy/runpod/handler.py",
+     "line_start": 60,
+     "line_end": 66,
+     "body": "The shorthand contract changed without being called out. The removed handler read `max_tokens`, `temperature`, etc. from the top level of `input` and accepted `prompt_token_ids`. The new shorthand only reads `sampling_params`, so an existing client sending `{\"prompt\": \"...\", \"max_tokens\": 64}` now has `max_tokens` silently dropped and gets the server default. Streamed output also changes from `{\"text\": ...}` chunks to raw SSE strings, and `prompt_token_ids` is no longer accepted. If the break is intended, the deploy README and changelog need to say so and the old fields need an explicit error or a compatibility mapping. A human should confirm the break is acceptable for current callers.",
+     "proposed_test": null
+    },
+    {
+     "file": "deploy/runpod/handler.py",
+     "line_start": 84,
+     "line_end": 85,
+     "body": "The non-streaming branch calls `.json()` on the body. A non-JSON 2xx response (for example a text route) raises `json.JSONDecodeError`, which is not an `httpx.HTTPError`, so it escapes the `except` and fails the job with a traceback instead of returning an `error` payload. Wrap the parse and return `_error` on failure.",
+     "proposed_test": null
+    },
+    {
+     "file": "deploy/runpod/main.py",
+     "line_start": 44,
+     "line_end": 56,
+     "body": "The worker builds `pagedserve serve` flags (`--attn-backend`, `--enable-cuda-graphs`, `--enable-prefix-caching`, `--quantization`, `--tensor-parallel-size`, `--served-model-name`, and the `EXTRA_SERVE_ARGS` examples such as `--piecewise-bucket-step`) and polls `/health`. None of these are exercised by the tests, which only check the argv list, so a flag name mismatch with `pagedserve/cli.py` would surface only at cold start on a GPU. Verify each flag against the CLI parser and confirm that `/health` exists on the server.",
+     "proposed_test": null
+    },
+    {
+     "file": "deploy/runpod/handler.py",
+     "line_start": 73,
+     "line_end": 73,
+     "body": "The route comes straight from job input and is passed to `client.stream`. If the value is an absolute URL, httpx ignores `base_url` and the worker sends the request to that address. Restrict `route` to paths starting with `/` and reject values containing a scheme or host.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"deploy/runpod/handler.py\", \"line_start\": 60, \"line_end\": 66, \"body\": \"The shorthand contract changed without being called out. The removed handler read `max_tokens`, `temperature`, etc. from the top level of `input` and accepted `prompt_token_ids`. The new shorthand only reads `sampling_params`, so an existing client sending `{\\\"prompt\\\": \\\"...\\\", \\\"max_tokens\\\": 64}` now has `max_tokens` silently dropped and gets the server default. Streamed output also changes from `{\\\"text\\\": ...}` chunks to raw SSE strings, and `prompt_token_ids` is no longer accepted. If the break is intended, the deploy README and changelog need to say so and the old fields need an explicit error or a compatibility mapping. A human should confirm the break is acceptable for current callers.\"}, {\"file\": \"deploy/runpod/handler.py\", \"line_start\": 84, \"line_end\": 85, \"body\": \"The non-streaming branch calls `.json()` on the body. A non-JSON 2xx response (for example a text route) raises `json.JSONDecodeError`, which is not an `httpx.HTTPError`, so it escapes the `except` and fails the job with a traceback instead of returning an `error` payload. Wrap the parse and return `_error` on failure.\"}, {\"file\": \"deploy/runpod/main.py\", \"line_start\": 44, \"line_end\": 56, \"body\": \"The worker builds `pagedserve serve` flags (`--attn-backend`, `--enable-cuda-graphs`, `--enable-prefix-caching`, `--quantization`, `--tensor-parallel-size`, `--served-model-name`, and the `EXTRA_SERVE_ARGS` examples such as `--piecewise-bucket-step`) and polls `/health`. None of these are exercised by the tests, which only check the argv list, so a flag name mismatch with `pagedserve/cli.py` would surface only at cold start on a GPU. Verify each flag against the CLI parser and confirm that `/health` exists on the server.\"}, {\"file\": \"deploy/runpod/handler.py\", \"line_start\": 73, \"line_end\": 73, \"body\": \"The route comes straight from job input and is passed to `client.stream`. If the value is an absolute URL, httpx ignores `base_url` and the worker sends the request to that address. Restrict `route` to paths starting with `/` and reject values containing a scheme or host.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__581e293",
+   "decision": "escalate",
+   "usd": 0.027109,
+   "probes": [],
+   "comments": [
+    {
+     "file": "pagedserve/engine.py",
+     "line_start": 89,
+     "line_end": 93,
+     "body": "`paged_triton` is now a graph-capable backend, so `use_graphs` is true for it on CUDA. That is only safe if `PagedTritonAttentionBackend` reads exclusively from the static `meta.context_lens_t` / `meta.block_tables_nonneg` tensors during decode and does no host-side work or allocation that breaks capture. The backend code is not in this diff, and the GPU graph test (`test_engine_greedy_identical_across_backends`, `test_engine_graphs_batch_between_buckets`) is skipped at this head. A human should confirm the capture path before this ships.",
+     "proposed_test": null
+    },
+    {
+     "file": "pagedserve/attn/paged_triton.py",
+     "line_start": 200,
+     "line_end": 214,
+     "body": "The docstring says the tile is 'always a multiple of 16 that divides block_size', but the code only does `min(block_size, tile)`. For a non-power-of-two block size such as 48, tile 32 gives 48 % 32 != 0, so a tile would straddle two physical blocks. The old code had the same gap, so this is not a regression, but the comment is inaccurate and the kernel's behaviour for such sizes should be checked or asserted.",
+     "proposed_test": null
+    },
+    {
+     "file": "tests/test_paged_triton_gpu.py",
+     "line_start": 1,
+     "line_end": 217,
+     "body": "The Triton kernel has never run on a GPU. The commit history says 'GPU validation pending', and every test in this file is skipped in the reported run. The new `paged_triton` engine option is reachable through `LLMEngine` / `from_pretrained` with `attn_backend='paged_triton'`, so the kernel's numerical correctness at real geometry (7 groups, D=64, fp16, split-K) is unverified. Run `pytest -m gpu -k triton` on hardware before deploying.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"pagedserve/engine.py\", \"line_start\": 89, \"line_end\": 93, \"body\": \"`paged_triton` is now a graph-capable backend, so `use_graphs` is true for it on CUDA. That is only safe if `PagedTritonAttentionBackend` reads exclusively from the static `meta.context_lens_t` / `meta.block_tables_nonneg` tensors during decode and does no host-side work or allocation that breaks capture. The backend code is not in this diff, and the GPU graph test (`test_engine_greedy_identical_across_backends`, `test_engine_graphs_batch_between_buckets`) is skipped at this head. A human should confirm the capture path before this ships.\"}, {\"file\": \"pagedserve/attn/paged_triton.py\", \"line_start\": 200, \"line_end\": 214, \"body\": \"The docstring says the tile is 'always a multiple of 16 that divides block_size', but the code only does `min(block_size, tile)`. For a non-power-of-two block size such as 48, tile 32 gives 48 % 32 != 0, so a tile would straddle two physical blocks. The old code had the same gap, so this is not a regression, but the comment is inaccurate and the kernel's behaviour for such sizes should be checked or asserted.\"}, {\"file\": \"tests/test_paged_triton_gpu.py\", \"line_start\": 1, \"line_end\": 217, \"body\": \"The Triton kernel has never run on a GPU. The commit history says 'GPU validation pending', and every test in this file is skipped in the reported run. The new `paged_triton` engine option is reachable through `LLMEngine` / `from_pretrained` with `attn_backend='paged_triton'`, so the kernel's numerical correctness at real geometry (7 groups, D=64, fp16, split-K) is unverified. Run `pytest -m gpu -k triton` on hardware before deploying.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__96519cd",
+   "decision": "block",
+   "usd": 0.051091,
+   "probes": [],
+   "comments": [
+    {
+     "file": "pagedserve/sched/scheduler.py",
+     "line_start": 221,
+     "line_end": 223,
+     "body": "Invariant violation in chunked mode. `_schedule_chunked` reserves one decode slot per running request that has finished prefill, with no check against the budget. `budget_left = budget - len(decode_rows)` can go negative, and the step then has `num_tokens = len(decode_rows) > max_num_batched_tokens`. This happens whenever the running batch exceeds the budget, e.g. `max_num_batched_tokens=128` with `max_num_seqs=256` and 200 decoding requests. The docstring (\"Every step obeys `num_tokens <= max_num_batched_tokens`\"), the `EngineConfig` comment (\"the cap on EVERY step\"), and the ablation help text all promise otherwise, and no test covers a decode batch larger than the budget. Fix either by rejecting the configuration at construction (`enable_chunked_prefill` requires `max_num_batched_tokens >= max_num_seqs`, or validate it in `EngineConfig.__post_init__`), or by deferring decode rows that do not fit. At minimum, correct the docstrings and add a test with budget < running batch.",
+     "proposed_test": "import pytest\nfrom tests.fakes import FakeEngineLoop\n\ndef test_chunked_decode_batch_larger_than_budget_respects_cap():\n    loop = FakeEngineLoop(num_blocks=256, block_size=4, max_num_seqs=16,\n                          max_num_batched_tokens=4, enable_chunked_prefill=True)\n    for i in range(8):\n        loop.add_request(f\"r{i}\", [1, 2], None) if hasattr(loop, 'add_request') else None\n    loop.run_until_done(max_steps=200)\n    assert all(r.num_tokens <= 4 for r in loop.log)\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"pagedserve/sched/scheduler.py\", \"line_start\": 221, \"line_end\": 223, \"body\": \"Invariant violation in chunked mode. `_schedule_chunked` reserves one decode slot per running request that has finished prefill, with no check against the budget. `budget_left = budget - len(decode_rows)` can go negative, and the step then has `num_tokens = len(decode_rows) > max_num_batched_tokens`. This happens whenever the running batch exceeds the budget, e.g. `max_num_batched_tokens=128` with `max_num_seqs=256` and 200 decoding requests. The docstring (\\\"Every step obeys `num_tokens <= max_num_batched_tokens`\\\"), the `EngineConfig` comment (\\\"the cap on EVERY step\\\"), and the ablation help text all promise otherwise, and no test covers a decode batch larger than the budget. Fix either by rejecting the configuration at construction (`enable_chunked_prefill` requires `max_num_batched_tokens >= max_num_seqs`, or validate it in `EngineConfig.__post_init__`), or by deferring decode rows that do not fit. At minimum, correct the docstrings and add a test with budget < running batch.\", \"proposed_test\": \"import pytest\\nfrom tests.fakes import FakeEngineLoop\\n\\ndef test_chunked_decode_batch_larger_than_budget_respects_cap():\\n    loop = FakeEngineLoop(num_blocks=256, block_size=4, max_num_seqs=16,\\n                          max_num_batched_tokens=4, enable_chunked_prefill=True)\\n    for i in range(8):\\n        loop.add_request(f\\\"r{i}\\\", [1, 2], None) if hasattr(loop, 'add_request') else None\\n    loop.run_until_done(max_steps=200)\\n    assert all(r.num_tokens <= 4 for r in loop.log)\\n\"}]}"
+  },
+  {
+   "task_id": "clean__serverless-lakehouse__0718b2f",
+   "decision": "escalate",
+   "usd": 0.043912,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-8.4.1, pluggy-1.7.0\nrootdir: /testbed\nplugins: timeout-2.4.0\ncollected 2 items\n\ntests/test_probe_review.py ..                                            [100%]\n\n=========================== short test summary info ============================\nPASSED tests/test_probe_review.py::test_run_notes_seed_key_is_unique\nPASSED tests/test_probe_review.py::test_run_notes_host_state_values\n============================== 2 passed in 0.01s ===============================\nEXIT=0\n"
+    }
+   ],
+   "comments": [
+    {
+     "file": "lakehouse/dashboard.py",
+     "line_start": 17,
+     "line_end": 17,
+     "body": "This imports FLASHBOOT_HIT_MS from lakehouse/config.py, which is not in the diff and not shown in the context. If the constant is missing, `make dashboard` fails at import time. The new dashboard path also depends on templates/dashboard.html, which was not reviewed, and on the generated docs/dashboard.html, which is 128 KB. The seed's host_state values were never checked, because the second probe assertion is vacuous (`or True`). A human should confirm the import, the template marker, and the seed contents before merge.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"lakehouse/dashboard.py\", \"line_start\": 17, \"line_end\": 17, \"body\": \"This imports FLASHBOOT_HIT_MS from lakehouse/config.py, which is not in the diff and not shown in the context. If the constant is missing, `make dashboard` fails at import time. The new dashboard path also depends on templates/dashboard.html, which was not reviewed, and on the generated docs/dashboard.html, which is 128 KB. The seed's host_state values were never checked, because the second probe assertion is vacuous (`or True`). A human should confirm the import, the template marker, and the seed contents before merge.\"}]}"
+  }
+ ]
+}
