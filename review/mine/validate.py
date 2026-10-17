@@ -12,6 +12,7 @@ run exactly those test files; then check out the COMMIT and run them again. A ca
     not_green         some new test does not pass at the commit itself
     install_fail      pip install -e . failed at either sha (deps drifted from the image's HEAD)
     timeout           either run exceeded --timeout
+    no_image          `make mine-images` failed for that repo; fix its install line
 
 Writes work/validated.jsonl (every candidate, with status, oracle_tests, and pytest tails) and prints
 a per-repo table. Only `valid` rows go on to the introducing-commit bisect (review/bench/build.py
@@ -43,7 +44,7 @@ DOCKERFILE = """FROM python:3.12-slim
 RUN apt-get update -qq && apt-get install -y -qq --no-install-recommends git build-essential >/dev/null && rm -rf /var/lib/apt/lists/*
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1 PIP_NO_CACHE_DIR=1 PYTHONDONTWRITEBYTECODE=1
 # build backends up front: per-candidate installs run with the network off and --no-build-isolation
-RUN pip install -q setuptools wheel setuptools-scm flit_core hatchling hatch-vcs hatch-fancy-pypi-readme pdm-backend poetry-core
+RUN pip install -q --upgrade pip && pip install -q setuptools wheel setuptools-scm flit_core hatchling hatch-vcs hatch-fancy-pypi-readme pdm-backend poetry-core editables
 COPY . /seed
 WORKDIR /seed
 RUN {install}
@@ -135,7 +136,9 @@ def run(only: str | None, limit: int, timeout: int, full_suite: bool):
                 print(f"{c['repo']:10s} {c['sha'][:10]} skipped: not in repos.yaml"); continue
             rc_p, p_out = docker(c["repo"], run_tests_script(c["parent"], c["test_files"], c["sha"], False), timeout)
             rc_c, c_out = docker(c["repo"], run_tests_script(c["sha"], c["test_files"], None, full_suite), timeout)
-            if rc_p == 124 or rc_c == 124:
+            if "Unable to find image" in p_out or "Unable to find image" in c_out:
+                status, oracle = "no_image", []
+            elif rc_p == 124 or rc_c == 124:
                 status, oracle = "timeout", []
             else:
                 status, oracle = classify(_parse_results(p_out), _parse_results(c_out), p_out, c_out)
@@ -154,7 +157,7 @@ def table(rows):
     by = {}
     for r in rows:
         by.setdefault(r["repo"], Counter())[r["status"]] += 1
-    cols = ["valid", "interface_leak", "not_reproduced", "not_green", "install_fail", "timeout"]
+    cols = ["valid", "interface_leak", "not_reproduced", "not_green", "install_fail", "no_image", "timeout"]
     print("\nrepo        " + " ".join(f"{c[:10]:>10s}" for c in cols))
     tot = Counter()
     for repo, cnt in sorted(by.items()):
