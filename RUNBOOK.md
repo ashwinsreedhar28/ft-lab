@@ -60,19 +60,20 @@ the initial dump (>400 lines, dropped). 8–12 positives out of 15 is a fine fir
 harness until bugs_approved = 0 on review-bench with the highest auto_ship_rate, then swap
 Haiku in and record what breaks. **Phases 1+2 are the Oct 27 deliverable.**
 
-## Phase 3a — public-repo bench (Mac + Docker, no GPU)
-Recipe in `review/mine/README.md`; repo list and per-repo install lines in `review/mine/repos.yaml`.
+## Phase 3a — public-repo bench + mutation training set (Mac + Docker, Haiku for probes)
+Recipe and findings in `review/mine/README.md`; repo list and install lines in `review/mine/repos.yaml`.
 ```
-make mine-scan                 # git only (Claude ran it: 39 candidates from 6 repos since Jun 2026)
-make mine-images               # YOU, docker: builds rb-mine-<repo> per repo, ~2-5 min each first time
-make mine-validate             # YOU, docker: 2 short pytest runs per candidate; prints the per-repo table
-make mine-validate REPO=click LIMIT=3   # smoke it on one repo first
+make mine-scan                 # git only: fix-commit candidates (39 from 8 repos since Jun 2026)
+make mine-images               # docker: rb-mine-<repo> per repo
+make mine-validate             # docker: fix's tests fail at parent / pass at fix -> 24 valid
+make mine-bisect               # docker: introducing commit per valid fix -> 2 positives (see README)
+export ANTHROPIC_API_KEY=...; make mine-mutate REPO=click LIMIT=5    # smoke; then without REPO/LIMIT
 ```
-A wrong install line shows up as a column of `install_fail`/`not_green` for that repo: fix it in
-repos.yaml, `make mine-images REPO=x`, delete that repo's rows from `work/validated.jsonl`, rerun.
-Expect ~25 % `valid`; widen `SINCE=2026-01-01` or add repos until there are 30-40. Next stages
-(Claude writes once the table is in): bisect each valid fix to its introducing commit, match
-negatives, graph, coverage — the same four stages as shwin-bench, on the per-repo images.
+Mutate: clean PRs since 2026-01-01, ≤400 lines; up to 3 mutants per PR (2 regex operators + 1 Haiku
+edit); each costs ~3 container runs + 2 Haiku calls when it survives the suite. Expect ~1 in 3 to
+survive stage 1, and ~70 % of suite survivors to pass the probe guard. Target 150 positives (+ their
+clean originals) for SFT/GRPO; eval = real positives only (shwin-bench 8 + public 2 + regressions as
+found). A wrong install line shows up as "baseline not green" for every PR of that repo.
 
 ## Phase 3b — fine-tune into the harness (1× H100, ~$40)
 Then, in order:

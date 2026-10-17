@@ -46,3 +46,5 @@ mine-bisect:     ## docker: valid fixes -> introducing commits (work/positives.j
 	python -m review.mine.bisect $(if $(REPO),--repo $(REPO),) --jobs $(or $(JOBS),3)
 mine-rescan:     ## git only: re-tag candidates (adds the regression flag) without recloning
 	python -m review.mine.scan --since $(or $(SINCE),2026-06-01)
+mine-mutate:     ## docker + ANTHROPIC_API_KEY (Haiku): inject bugs into clean PRs, keep suite-green + probe-distinguished ones
+	python -m review.mine.mutate $(if $(REPO),--repo $(REPO),) $(if $(LIMIT),--limit $(LIMIT),) $(if $(SINCE),--since $(SINCE),)

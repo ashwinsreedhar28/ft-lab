@@ -11,7 +11,8 @@ own repos (shwin-bench), then a small model fine-tuned into the roles where it h
 | 0 | GRPO mechanics: GSM8K, Qwen3-1.7B, 1×H100 | answer match | done Oct 17; lessons below |
 | 1 | review-bench from shwin-bench: bisected bug PRs + matched clean PRs, 4 context conditions, frontier baselines | bugs approved (target 0), auto-ship rate | v0 built: 4 bug + 4 clean; see below |
 | 2 | the review agent: neighborhood → run suite → probe test → decision | same scorer | v1–v4 run on the 8-PR bench; frozen until the bench is bigger |
-| 3 | mine fresh public repos (~400 PRs); SFT warm-start on frontier review traces (TEMP-selected); GRPO a 4B/8B LoRA into the triage gate with variance-guided rollouts (VIGOR) | asymmetric decision reward | recipe written |
+| 3a | public bench: mined fix commits → validate → bisect (real positives, eval); mutation-injected bugs on clean PRs with a probe guard (training volume) | same scorer | validate+bisect run on 8 repos; mutate written |
+| 3b | SFT warm-start on frontier review traces (TEMP-selected); GRPO a 4B/8B LoRA into the triage gate with variance-guided rollouts (VIGOR) | asymmetric decision reward | recipe written; waits on 3a |
 | 4 | topology: 1-colocate / 2-server / 4-colocate | $/1k completions | configs ready |
 | backlog | Spider / BIRD / lakehouse text-to-SQL | execution match | adapters kept |
 
@@ -135,7 +136,25 @@ harness is now out of levers that rules can pull; the lever left is detection, w
 and smaller positives. Harness work stops here until the bench is 5–10× larger.
 
 Raw: `review/bench/tasks.jsonl`, `review/agent/results/` (v1 runs under `results/v1/`).
-Next: `review/mine/` mines fix commits from mature public repos (git-only scan: 39 candidates from
-6 repos since Jun 2026, before Docker validation), then bisect/match/graph/coverage on per-repo
-images for 30–40 small positives, then re-run v4 unchanged. A small model in the gate role comes
-after that, under the same harness.
+
+## Phase 3a: what mining public repos taught (Oct 17, 2026, Mac + Docker)
+
+`review/mine/`: scan → validate → bisect, each a `make` target, details in `review/mine/README.md`.
+39 fix-commit candidates since June 2026 from 8 repos → **24 validated** (the fix's tests fail at the
+parent, pass at the fix; 62 %, every failure was an install line) → bisected to the introducing commit
+with a galloping search along first-parent history (Θ(log age) container runs) → **2 positives**.
+The other 22: 4 introducing commits over 1,500 lines (feature commits: SSE support, a router refactor,
+"drop Python 3.9" at 10,708 lines), 7 import-boundary artifacts (the overlaid test can't run before a
+pytest-9 upgrade or a warning removal), 1 bug that arrived in a branch merge, and 10 where the
+oracle fails all the way back to the repo's first commit because the test asserts behavior that did
+not exist before the feature. Zero of 39 fix messages mentioned a regression.
+
+**The finding:** in a mature repo a test-covered fix almost always fixes a bug born with its feature,
+and the feature PR is 200–10,000 lines. That is what shwin-bench showed on young repos too. The small
+bug-introducing PR the gate most needs to catch is a *regression* (test passed → broke), 1 of 24 here
+(fastapi, 1,239 lines, 592 commits old). Real small positives are rare by the fix-commit route; a
+regression-targeted scan over many more repos is the eval route, and training volume has to be
+synthetic: `review/mine/mutate.py` injects one bug into a line a clean PR changed, keeps it only if the
+suite still passes **and** a Haiku-written probe fails on the mutant and passes on the original
+(equivalent-mutant guard; the probe doubles as the strong-localization oracle), tags each mutant
+`op` or `llm` so operator-shape learning shows up as a gap between the two. Eval stays real.
