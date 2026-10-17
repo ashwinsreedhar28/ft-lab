@@ -17,7 +17,7 @@ own repos (shwin-bench), then a small model fine-tuned into the roles where it h
 
 ```
 pip install -r requirements.txt          # or bash pod/setup.sh on a pod
-make test                                # 26 pure-python tests
+make test                                # 27 pure-python tests
 python -m ftlab.train configs/gsm8k_h100.yaml
 python -m ftlab.eval  configs/gsm8k_h100.yaml --label tuned --model runs/gsm8k_h100/final
 python -m ftlab.plot  runs/gsm8k_h100

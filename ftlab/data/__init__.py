@@ -15,6 +15,7 @@ TASKS = {
     "spider": "ftlab.data.spider",
     "bird": "ftlab.data.bird",
     "lakehouse": "ftlab.data.lakehouse",
+    "review": "ftlab.data.review",
 }
 
 

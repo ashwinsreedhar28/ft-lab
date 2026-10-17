@@ -14,6 +14,7 @@ from collections.abc import Callable
 
 from ftlab.rewards import gsm8k as _gsm8k
 from ftlab.rewards import lakehouse as _lh
+from ftlab.rewards import review as _rev
 from ftlab.rewards import sql as _sql
 
 REWARDS: dict[str, Callable[..., list[float]]] = {
@@ -24,6 +25,7 @@ REWARDS: dict[str, Callable[..., list[float]]] = {
     "length_penalty": _gsm8k.length_penalty,
     "lh_match": _lh.lh_match,
     "lh_runs": _lh.lh_runs,
+    "review_gate": _rev.gate,
 }
 
 

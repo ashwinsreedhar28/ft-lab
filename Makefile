@@ -9,3 +9,22 @@ eval:            ## CFG=... LABEL=... MODEL=...
 	python -m ftlab.eval $(CFG) --label $(LABEL) $(if $(MODEL),--model $(MODEL),)
 plot:            ## RUN=runs/x
 	python -m ftlab.plot $(RUN)
+
+# ---- review-bench (phase 1). Docker stages run from the Mac terminal, not Claude's shell.
+SHWIN ?= $(HOME)/shwin-bench
+REPOS ?= $(HOME)
+rb-prepare:      ## git only
+	python -m review.bench.build prepare --shwin $(SHWIN) --repos $(REPOS)
+rb-bisect:       ## docker: find the introducing commit per fix
+	python -m review.bench.build bisect --shwin $(SHWIN)
+rb-match:        ## git only
+	python -m review.bench.build match --repos $(REPOS)
+rb-verify:       ## docker: suite green at parent+commit for each negative
+	python -m review.bench.build verify --shwin $(SHWIN)
+rb-graph:        ## git only; writes review/bench/tasks.jsonl
+	python -m review.bench.build graph --repos $(REPOS)
+rb-baselines:    ## needs ANTHROPIC_API_KEY
+	for c in diff diff+graph; do \
+	  python -m review.agent.run --model claude-haiku-4-5  --condition $$c --label haiku_$$c; \
+	  python -m review.agent.run --model claude-sonnet-4-5 --condition $$c --label sonnet_$$c; done
+	python -m review.agent.run --table review/agent/results/*.json

@@ -36,11 +36,20 @@ more than the CI half-width (~2.5 pts); you can point at G, the group baseline,
 and `beta` in the trainer source.
 
 ## Phase 1 — review-bench (Mac + Docker, ~no GPU)
-Design in `review/README.md`. Build from `~/shwin-bench`: bisect each task's hidden test to
-the commit that introduced the bug, pick a size-matched clean commit per positive, build the
-two-hop neighborhood, write `review/bench/tasks.jsonl`. Then frontier baselines
-(`ANTHROPIC_API_KEY` in the shell): Haiku and Sonnet in the `diff`, `diff+run`, `diff+graph`,
-`full` conditions, scored by `review/bench/score.py`. Output: one table, bugs-approved first.
+Design in `review/README.md`; builder in `review/bench/build.py`. Git-only stages Claude runs
+from its shell; the two Docker stages you run in your Mac terminal (Docker Desktop up,
+shwin-bench images built via its `make setup`):
+```
+cd ~/ft-lab
+make rb-prepare            # done Oct 17: 15 fix commits, pools 84/114/37
+make rb-bisect             # YOU, docker: ~15 fixes x up to 60 ancestors x seconds each
+make rb-match              # Claude
+make rb-verify             # YOU, docker: 2 suite runs per negative
+make rb-graph              # Claude -> review/bench/tasks.jsonl
+export ANTHROPIC_API_KEY=...; make rb-baselines   # YOU: Haiku + Sonnet x {diff, diff+graph}
+```
+Expect attrition in bisect: emberserve was 5 days old at these commits, so some bugs trace to
+the initial dump (>400 lines, dropped). 8–12 positives out of 15 is a fine first bench.
 
 ## Phase 2 — the review agent (Mac + Docker; Sonnet then Haiku)
 `review/agent`: neighborhood → run suite → probe test if unsure → decision. Iterate the
@@ -67,6 +76,6 @@ still runs it as a harness check if wanted), lakehouse text-to-SQL adapter.
 ```
 scripts/results.sh phase0            # pull the pod's pushed results into ./runs
 scripts/pod.sh set/ssh/push/log      # manual pod access if you want it yourself
-make test                            # 26 pure-python tests, no GPU
+make test                            # 27 pure-python tests, no GPU
 ```
 On the pod: `tmux attach -t ft` (phase), `tmux attach -t hb` (heartbeat), ctrl-b d to detach.
