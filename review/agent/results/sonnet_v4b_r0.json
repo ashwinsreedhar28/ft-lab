@@ -1,0 +1,340 @@
+{
+ "label": "sonnet_v4b_r0",
+ "model": "claude-sonnet-5-5",
+ "condition": "loop",
+ "n": 8,
+ "unparsable": 0,
+ "wall_s": 207.9,
+ "api_s": 188.2,
+ "docker_s": 19.7,
+ "no_probe_reasons": {
+  "model_decided_round0:escalate": 5
+ },
+ "scores": {
+  "all": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "bugs_approved": 1,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.25,
+   "escalation_rate": 0.75,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.15033037500000002
+  },
+  "fresh": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "bugs_approved": 1,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.25,
+   "escalation_rate": 0.75,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.15033037500000002
+  }
+ },
+ "reviews": [
+  {
+   "task_id": "bug__emberserve__36f4e93",
+   "decision": "approve",
+   "usd": 0.1716,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "chunk classification drops/duplicates tokens, failure-only duration is wrong, or coalescer loses/empties chunks",
+     "source": "import asyncio\nfrom pagedserve.bench.load import _chunk_text, _chunk_finished\nfrom pagedserve.bench.metrics import RequestRecord, summarize\n\n\ndef test_chunk_text_cases():\n    assert _chunk_text({\"choices\": [{\"delta\": {\"role\": \"assistant\", \"content\": \"\"}, \"finish_reason\": None}]}) is None\n    assert _chunk_text({\"choices\": [{\"delta\": {}, \"finish_reason\": \"stop\"}]}) is None\n    assert _chunk_text({\"choices\": [{\"delta\": {\"content\": \"hi\"}, \"finish_reason\": None}]}) == \"hi\"\n    assert _chunk_text({\"choices\": [{\"delta\": {\"content\": \"x\"}, \"finish_reason\": \"stop\"}]}) == \"x\"\n    assert _chunk_text({\"choices\": [{\"text\": \"\", \"finish_reason\": None}]}) == \"\"\n    assert _chunk_text({\"choices\": [{\"text\": \"\", \"finish_reason\": \"stop\"}]}) is None\n    assert _chunk_text({\"choices\": []}) is None\n    assert _chunk_finished({\"choices\": [{\"finish_reason\": \"stop\"}]})\n    assert not _chunk_finished({\"choices\": [{\"finish_reason\": None}]})\n\n\ndef test_summarize_only_failures():\n    recs = [RequestRecord(\"b\", arrival_s=1.0, first_token_s=None, finish_s=None, prompt_tokens=5,\n                          output_tokens=0, success=False, error=\"x\", end_s=5.0)]\n    s = summarize(recs)\n    assert s.duration_s == 4.0 and s.completed == 0\n\n\ndef test_coalesced_edges():\n    import importlib.util, pathlib\n    p = pathlib.Path(\"deploy/runpod/handler.py\")\n    spec = importlib.util.spec_from_file_location(\"h_probe\", p)\n    m = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(m)\n\n    async def src():\n        for i in range(5):\n            yield str(i)\n            await asyncio.sleep(0.03)\n\n    async def run():\n        return [c async for c in m._coalesced(src(), 0.1)]\n\n    out = asyncio.run(run())\n    assert \"\".join(out) == \"01234\"\n    assert all(out)\n\n    async def empty():\n        return\n        yield\n\n    async def run2():\n        return [c async for c in m._coalesced(empty(), 0.1)]\n\n    assert asyncio.run(run2()) == []\n",
+     "tail": "ing_lines\": [], \"excluded_lines\": [], \"start_line\": 44}, \"test_coalesced_edges.run2\": {\"executed_lines\": [49], \"summary\": {\"covered_lines\": 1, \"num_statements\": 1, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 48}, \"\": {\"executed_lines\": [1, 2, 3, 6, 18, 25], \"summary\": {\"covered_lines\": 6, \"num_statements\": 6, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 1}}, \"classes\": {\"\": {\"executed_lines\": [1, 2, 3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 21, 22, 25, 26, 27, 28, 29, 30, 32, 33, 34, 35, 37, 38, 40, 41, 42, 44, 45, 48, 49, 51], \"summary\": {\"covered_lines\": 37, \"num_statements\": 37, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 1}}}}, \"totals\": {\"covered_lines\": 325, \"num_statements\": 775, \"percent_covered\": 41.935483870967744, \"percent_covered_display\": \"42\", \"missing_lines\": 450, \"excluded_lines\": 2, \"percent_statements_covered\": 41.935483870967744, \"percent_statements_covered_display\": \"42\"}}"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "approve",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "approve",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 23.0,
+   "docker_s": 3.8,
+   "no_probe_reason": null,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"comments\":[]}"
+  },
+  {
+   "task_id": "bug__emberserve__7edbe0f",
+   "decision": "escalate",
+   "usd": 0.062613,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 11.0,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "pagedserve/sched/scheduler.py",
+     "line_start": 172,
+     "line_end": 177,
+     "body": "The new `and batch` guard admits a request over `max_num_batched_tokens` whenever `batch` is empty. The diff does not show what `batch` holds. If it only counts prefill admissions, a step that already carries decode rows or other budgeted tokens would still admit an over-budget prefill, which breaks the token budget. That would be a real regression for chunked or mixed steps. The new test covers only the non-chunked, preempted re-prefill case. A human needs to confirm that `batch` and `budget` mean what the comment says, and that the exception cannot fire in mixed steps. I could not establish this from the visible context.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"pagedserve/sched/scheduler.py\",\"line_start\":172,\"line_end\":177,\"body\":\"The new `and batch` guard admits a request over `max_num_batched_tokens` whenever `batch` is empty. The diff does not show what `batch` holds. If it only counts prefill admissions, a step that already carries decode rows or other budgeted tokens would still admit an over-budget prefill, which breaks the token budget. That would be a real regression for chunked or mixed steps. The new test covers only the non-chunked, preempted re-prefill case. A human needs to confirm that `batch` and `budget` mean what the comment says, and that the exception cannot fire in mixed steps. I could not establish this from the visible context.\"}]}"
+  },
+  {
+   "task_id": "bug__emberserve__f1943a4",
+   "decision": "escalate",
+   "usd": 0.122031,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 16.8,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "pagedserve/config.py",
+     "line_start": 116,
+     "line_end": 150,
+     "body": "I could not establish safety. `head_dim` changed from a property to a stored field. Any code that builds a config with `dataclasses.replace` after changing `hidden_size` or `num_attention_heads` now keeps a stale `head_dim`. This diff does not show whether such code exists. Most of the new tensor-parallel code is not covered by in-process coverage: `dist.py`, the worker path, and the `engine_core` shutdown path. That includes the NCCL/GPU paths, which the CPU suite skips. A human should review this before it ships.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"pagedserve/config.py\",\"line_start\":116,\"line_end\":150,\"body\":\"I could not establish safety. `head_dim` changed from a property to a stored field. Any code that builds a config with `dataclasses.replace` after changing `hidden_size` or `num_attention_heads` now keeps a stale `head_dim`. This diff does not show whether such code exists. Most of the new tensor-parallel code is not covered by in-process coverage: `dist.py`, the worker path, and the `engine_core` shutdown path. That includes the NCCL/GPU paths, which the CPU suite skips. A human should review this before it ships.\"}]}"
+  },
+  {
+   "task_id": "bug__serverless-lakehouse__9e1c251",
+   "decision": "escalate",
+   "usd": 0.100974,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 13.3,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 1,
+     "line_end": 473,
+     "body": "This PR adds about 800 lines of Spark transformation code (silver.py, gold.py, report.py) that no existing test executes. Coverage confirms lakehouse/gold.py, lakehouse/report.py and lakehouse/silver.py are 100% uncovered. The seeds and the report are not shown, so the join keys and numbers in the committed report cannot be checked from the diff.\n\nSpecific risks I could not rule out:\n- The emberserve cost join matches `series.gpu_model` to `gpu_labels.gpu_label`. A mismatch silently nulls the price and cost columns.\n- The iso and pipe timestamps are parsed in the Spark session timezone, so correctness depends on `get_spark` setting UTC.\n- `is_flashboot_hit` is null for warm rows. The aggregates treat that null differently in different places, for example `full_boot_delay_ms_p50` in `coldstart_by_gpu_image` includes warm rows.\n- The dedupe key and priority logic in `pulse_requests` is untested.\n\nThe code needs a human review plus a Spark-backed test on fixture data.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"lakehouse/silver.py\",\"line_start\":1,\"line_end\":473,\"body\":\"This PR adds about 800 lines of Spark transformation code (silver.py, gold.py, report.py) that no existing test executes. Coverage confirms lakehouse/gold.py, lakehouse/report.py and lakehouse/silver.py are 100% uncovered. The seeds and the report are not shown, so the join keys and numbers in the committed report cannot be checked from the diff.\\n\\nSpecific risks I could not rule out:\\n- The emberserve cost join matches `series.gpu_model` to `gpu_labels.gpu_label`. A mismatch silently nulls the price and cost columns.\\n- The iso and pipe timestamps are parsed in the Spark session timezone, so correctness depends on `get_spark` setting UTC.\\n- `is_flashboot_hit` is null for warm rows. The aggregates treat that null differently in different places, for example `full_boot_delay_ms_p50` in `coldstart_by_gpu_image` includes warm rows.\\n- The dedupe key and priority logic in `pulse_requests` is untested.\\n\\nThe code needs a human review plus a Spark-backed test on fixture data.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__c6278c4",
+   "decision": "escalate",
+   "usd": 0.063819,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 7.7,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "deploy/runpod/main.py",
+     "line_start": 46,
+     "line_end": 66,
+     "body": "serve_command builds a CLI invocation, but no test or visible code confirms that `pagedserve.cli serve` accepts every flag it emits (--served-model-name, --enable-cuda-graphs, --enable-prefix-caching, --quantization, --tensor-parallel-size, --attn-backend and the rest). Lines 35-101 of main.py are never executed by tests. Handler line 88 (`.json()` on a non-JSON 2xx body) is also unguarded and would raise out of the generator. I am escalating instead of probing because I cannot verify the CLI contract from the diff alone.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"deploy/runpod/main.py\",\"line_start\":46,\"line_end\":66,\"body\":\"serve_command builds a CLI invocation, but no test or visible code confirms that `pagedserve.cli serve` accepts every flag it emits (--served-model-name, --enable-cuda-graphs, --enable-prefix-caching, --quantization, --tensor-parallel-size, --attn-backend and the rest). Lines 35-101 of main.py are never executed by tests. Handler line 88 (`.json()` on a non-JSON 2xx body) is also unguarded and would raise out of the generator. I am escalating instead of probing because I cannot verify the CLI contract from the diff alone.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__581e293",
+   "decision": "escalate",
+   "usd": 0.421335,
+   "probes": [
+    {
+     "round": 1,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "_tile_for returns a power-of-two >=16 dividing block_size for all power-of-two block sizes, and the engine wires paged_triton correctly (backend built, graphs gated off on CPU).",
+     "source": "import pytest\nimport warnings\nimport torch\nfrom pagedserve.attn.paged_triton import _tile_for\nfrom pagedserve.engine import LLMEngine, GRAPH_CAPABLE_BACKENDS\nfrom pagedserve.config import EngineConfig, ModelConfig\nfrom pagedserve.model.qwen2 import Qwen2ForCausalLM, reset_parameters_deterministic\n\n\n@pytest.mark.parametrize('block', [16, 32, 64, 128, 256])\n@pytest.mark.parametrize('d', [16, 32, 64, 128, 256])\n@pytest.mark.parametrize('g', [1, 2, 4, 8, 16])\ndef test_tile_for_valid(block, d, g):\n    t = _tile_for(block, d, g)\n    assert t >= 16 and (t & (t - 1)) == 0\n    assert block % t == 0\n    assert t <= block\n\n\ndef test_tile_real_config():\n    assert _tile_for(16, 64, 8) == 16\n    assert _tile_for(256, 64, 8) == 16\n    assert _tile_for(256, 64, 4) == 32\n\n\ndef test_engine_paged_triton_cpu_builds_and_warns():\n    cfg = ModelConfig.tiny(num_attention_heads=4, num_key_value_heads=2, hidden_size=256)\n    model = Qwen2ForCausalLM(cfg)\n    reset_parameters_deterministic(model, 0)\n    ecfg = EngineConfig(device='cpu', dtype=torch.float32, block_size=16, num_gpu_blocks=16,\n                        max_num_seqs=4, max_num_batched_tokens=256, max_model_len=128,\n                        attn_backend='paged_triton', enable_cuda_graphs=True)\n    with warnings.catch_warnings(record=True) as w:\n        warnings.simplefilter('always')\n        eng = LLMEngine(model, cfg, ecfg, tokenizer=None)\n    assert any('enable_cuda_graphs ignored' in str(x.message) for x in w)\n    assert eng.scratch_block is None\n    assert eng.block_manager.num_blocks == 16\n    assert type(eng.backend).__name__ == 'PagedTritonAttentionBackend'\n",
+     "tail": "\": {\"executed_lines\": [27, 28, 29, 30, 33, 34, 35], \"summary\": {\"covered_lines\": 7, \"num_statements\": 11, \"percent_covered\": 63.63636363636363, \"percent_covered_display\": \"64\", \"missing_lines\": 4, \"excluded_lines\": 0, \"percent_statements_covered\": 63.63636363636363, \"percent_statements_covered_display\": \"64\"}, \"missing_lines\": [36, 37, 38, 39], \"excluded_lines\": [], \"start_line\": 26}, \"\": {\"executed_lines\": [1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 20, 26], \"summary\": {\"covered_lines\": 13, \"num_statements\": 13, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 1}}, \"classes\": {\"\": {\"executed_lines\": [1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 26, 27, 28, 29, 30, 33, 34, 35], \"summary\": {\"covered_lines\": 27, \"num_statements\": 31, \"percent_covered\": 87.09677419354838, \"percent_covered_display\": \"87\", \"missing_lines\": 4, \"excluded_lines\": 0, \"percent_statements_covered\": 87.09677419354838, \"percent_statements_covered_display\": \"87\"}, \"missing_lines\": [36, 37, 38, 39], \"excluded_lines\": [], \"start_line\": 1}}}}, \"totals\": {\"covered_lines\": 669, \"num_statements\": 1639, \"percent_covered\": 40.81757169005491, \"percent_covered_display\": \"41\", \"missing_lines\": 970, \"excluded_lines\": 5, \"percent_statements_covered\": 40.81757169005491, \"percent_statements_covered_display\": \"41\"}}"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": null,
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": false,
+     "invoke_syntax": true
+    },
+    {
+     "round": 1,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 2,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 86.8,
+   "docker_s": 5.7,
+   "no_probe_reason": null,
+   "comments": [
+    {
+     "file": "pagedserve/engine.py",
+     "line_start": 89,
+     "line_end": 98,
+     "body": "The probe passed, but its coverage shows lines 36-39 of the probe never ran. Those are the assertions after the LLMEngine construction (warning emitted, scratch_block None, block count, backend type). So the engine wiring for paged_triton and the GRAPH_CAPABLE_BACKENDS gating is still unverified, even though the probe reported a pass. Separately, enabling CUDA graphs for paged_triton depends on the Triton backend's decode path reading only static tensors and capturing correctly. That can only be checked on a GPU, and every GPU test in this PR is skipped in CI.",
+     "proposed_test": null
+    },
+    {
+     "file": "pagedserve/attn/paged_triton.py",
+     "line_start": 200,
+     "line_end": 210,
+     "body": "_tile_for passes the probe's property checks (power of two, at least 16, divides block_size). Whether the new tile sizes compile and are numerically correct in the real Triton kernel at groups_pad=8, D=64 on a GPU is not established. The kernel history is marked 'GPU validation pending'. A human should run the GPU tests before this ships.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"pagedserve/engine.py\",\"line_start\":89,\"line_end\":98,\"body\":\"The probe passed, but its coverage shows lines 36-39 of the probe never ran. Those are the assertions after the LLMEngine construction (warning emitted, scratch_block None, block count, backend type). So the engine wiring for paged_triton and the GRAPH_CAPABLE_BACKENDS gating is still unverified, even though the probe reported a pass. Separately, enabling CUDA graphs for paged_triton depends on the Triton backend's decode path reading only static tensors and capturing correctly. That can only be checked on a GPU, and every GPU test in this PR is skipped in CI.\"},{\"file\":\"pagedserve/attn/paged_triton.py\",\"line_start\":200,\"line_end\":210,\"body\":\"_tile_for passes the probe's property checks (power of two, at least 16, divides block_size). Whether the new tile sizes compile and are numerically correct in the real Triton kernel at groups_pad=8, D=64 on a GPU is not established. The kernel history is marked 'GPU validation pending'. A human should run the GPU tests before this ships.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__96519cd",
+   "decision": "approve",
+   "usd": 0.215646,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "chunked prefill + prefix caching + preemption yields tokens differing from solo runs",
+     "source": "import torch\nfrom tests.test_engine import make_engine, prompts, run_alone, CFG\nfrom pagedserve.sched.request import SamplingParams\n\n\ndef test_chunked_prefix_preemption_matches_alone():\n    ps = prompts(8, seed=3)\n    sp = SamplingParams.greedy(14, ignore_eos=True)\n    eng = make_engine('paged_torch', num_blocks=14, block_size=4, max_batched=7,\n                      enable_chunked_prefill=True, enable_prefix_caching=True)\n    for i, p in enumerate(ps):\n        eng.add_request(str(i), p, sp)\n    res = {}\n    n = 0\n    while eng.has_unfinished_requests():\n        for o in eng.step():\n            if o.finished:\n                res[o.request_id] = o.output_token_ids\n        n += 1\n        assert n < 2000\n    assert sum(s.num_preempted for s in eng.stats) > 0\n    for i, p in enumerate(ps):\n        assert res[str(i)] == run_alone('paged_torch', p, 14)\n",
+     "tail": "missing_lines\": [], \"excluded_lines\": [], \"functions\": {\"test_chunked_prefix_preemption_matches_alone\": {\"executed_lines\": [7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"summary\": {\"covered_lines\": 16, \"num_statements\": 16, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 6}, \"\": {\"executed_lines\": [1, 2, 3, 6], \"summary\": {\"covered_lines\": 4, \"num_statements\": 4, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 1}}, \"classes\": {\"\": {\"executed_lines\": [1, 2, 3, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"summary\": {\"covered_lines\": 20, \"num_statements\": 20, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 1}}}}, \"totals\": {\"covered_lines\": 1237, \"num_statements\": 1656, \"percent_covered\": 74.69806763285024, \"percent_covered_display\": \"75\", \"missing_lines\": 419, \"excluded_lines\": 3, \"percent_statements_covered\": 74.69806763285024, \"percent_statements_covered_display\": \"75\"}}"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": true
+    },
+    {
+     "round": 1,
+     "decision": "approve",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 21.7,
+   "docker_s": 10.2,
+   "no_probe_reason": null,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"comments\":[]}"
+  },
+  {
+   "task_id": "clean__serverless-lakehouse__0718b2f",
+   "decision": "escalate",
+   "usd": 0.044625,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 7.9,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "lakehouse/gold.py",
+     "line_start": 75,
+     "line_end": 118,
+     "body": "I can't establish safety from what is visible. The reworked engine_comparison, the new coldstart_events, the silver host_state/run_notes join and the whole new dashboard module are not executed by any existing test. Several points need a human who can run the pipeline:\n- coldstart_events selects columns (endpoint_id, run_index, flashboot, host_state, etc.) whose presence in the silver request schema I can't confirm.\n- The silver left join to dim_coldstart_run_notes will duplicate request rows if the seed has duplicate (series_label, run_index) pairs. The seed CSV was not shown.\n- The cohort logic and the 147.5 s claim depend on that seed data.\n- Embedding the gold tables into the dashboard template cannot be reviewed here.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"lakehouse/gold.py\",\"line_start\":75,\"line_end\":118,\"body\":\"I can't establish safety from what is visible. The reworked engine_comparison, the new coldstart_events, the silver host_state/run_notes join and the whole new dashboard module are not executed by any existing test. Several points need a human who can run the pipeline:\\n- coldstart_events selects columns (endpoint_id, run_index, flashboot, host_state, etc.) whose presence in the silver request schema I can't confirm.\\n- The silver left join to dim_coldstart_run_notes will duplicate request rows if the seed has duplicate (series_label, run_index) pairs. The seed CSV was not shown.\\n- The cohort logic and the 147.5 s claim depend on that seed data.\\n- Embedding the gold tables into the dashboard template cannot be reviewed here.\"}]}"
+  }
+ ]
+}
