@@ -10,7 +10,7 @@ own repos (shwin-bench), then a small model fine-tuned into the roles where it h
 |---|---|---|---|
 | 0 | GRPO mechanics: GSM8K, Qwen3-1.7B, 1×H100 | answer match | done Oct 17; lessons below |
 | 1 | review-bench from shwin-bench: bisected bug PRs + matched clean PRs, 4 context conditions, frontier baselines | bugs approved (target 0), auto-ship rate | v0 built: 4 bug + 4 clean; see below |
-| 2 | the review agent: neighborhood → run suite → probe test → decision | same scorer | harness v2 running; see below |
+| 2 | the review agent: neighborhood → run suite → probe test → decision | same scorer | v1–v4 run on the 8-PR bench; frozen until the bench is bigger |
 | 3 | mine fresh public repos (~400 PRs); SFT warm-start on frontier review traces (TEMP-selected); GRPO a 4B/8B LoRA into the triage gate with variance-guided rollouts (VIGOR) | asymmetric decision reward | recipe written |
 | 4 | topology: 1-colocate / 2-server / 4-colocate | $/1k completions | configs ready |
 | backlog | Spider / BIRD / lakehouse text-to-SQL | execution match | adapters kept |
@@ -50,7 +50,8 @@ fine-tune, GRPO 300 steps × 64 completions (4 prompts × 16), lr 1e-6, β 0.04,
   weak support for the one-base-many-adapters pattern, not proof.
 - **Eval protocol is part of the method.** Decode budget and temperature must be fixed before
   training, not chosen after seeing which setting looks best (this run chose 1,536 after the fact;
-  the hard-pool run reports at both budgets, decided in advance). Report tokens per answer next to
+  the hard-pool run reports at both budgets, decided in advance; it died at step 150 when a second
+  17 GB full-FT checkpoint filled the disk, so `save_total_limit: 1` now). Report tokens per answer next to
   accuracy. One seed is an anecdote; `eval.py --table` collapses `<label>_s<seed>` for a reason.
 - **What this changes downstream:** model size for the review agent is chosen by $/PR at the target
   reliability (start at 4B/8B), not inherited from here; the review reward gets a token-cost term;
@@ -101,6 +102,23 @@ and the harness lever that matters next is probe quality (falsifiable hypotheses
 about when to approve. This is the "harness engineering" loop: the scoreboard says what the agent
 needs to see, what it is forbidden to do, and what it is still not doing.
 
+**Harness v3 (probe as hypothesis) and v4 (uncovered-lines cue).** v3 made the agent state what
+would be wrong before writing the probe: Sonnet 1/4 bugs approved in all three repeats, Haiku 0/4
+×3, strong-probe rate still 0.00. v4 added a coverage stage to the bench (run the suite under
+`coverage` at the PR head; list the changed lines no test executes, e.g. 131 of the lines in
+`36f4e93` including 21 of its 54 gold lines) and required an approve-probe to execute one of them.
+Sonnet v4, three repeats: **0/4 bugs approved every time**, auto-ship 0.42 ± 0.12, escalate
+0.79 ± 0.06, $0.12/PR, and **probes = 0 on every bug PR in all 12 bug-PR runs**. The number is
+reached by abstaining: the agent only invests probes where it believes approval is reachable (the
+clean PRs), and escalates the rest without testing. An always-escalate agent scores 0 bugs approved
+at 0 auto-ship; v4's margin over it is 42 % of clean PRs shipped. Across v1–v4, 36 bug-PR runs, no
+probe has ever failed on a bug and passed on its fix. The reliability number this project is after
+cannot be read off a 4-positive bench (rule of three: 0/4 bounds the rate at ~50 %), and the
+harness is now out of levers that rules can pull; the lever left is detection, which needs more
+and smaller positives. Harness work stops here until the bench is 5–10× larger.
+
 Raw: `review/bench/tasks.jsonl`, `review/agent/results/` (v1 runs under `results/v1/`).
-Next: scale the bench by mining fresh public repos (`review/mine/`), then a small model in the
-gate role under the same harness.
+Next: `review/mine/` mines fix commits from mature public repos (git-only scan: 39 candidates from
+6 repos since Jun 2026, before Docker validation), then bisect/match/graph/coverage on per-repo
+images for 30–40 small positives, then re-run v4 unchanged. A small model in the gate role comes
+after that, under the same harness.
