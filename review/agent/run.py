@@ -112,6 +112,8 @@ def parse_review(text: str, usage: tuple[int, int], usd: float) -> tuple[Review,
         return Review("escalate", [], usage[0], usage[1], usd), False
 
 
+THINKING_BUDGET = int(os.environ.get("REVIEW_THINKING_BUDGET", "8000"))   # 0 disables the thinking param
+
 # $/M tokens (input, output); update when prices change
 PRICES = {"claude-haiku-4-5": (1.0, 5.0), "claude-sonnet-4-5": (3.0, 15.0),
           "claude-haiku-5-5": (1.0, 5.0), "claude-sonnet-5-5": (3.0, 15.0)}  # 5.5 rows assumed = 4.5; fix from the invoice
@@ -124,8 +126,11 @@ def call_anthropic(model: str, prompt: str, max_tokens: int) -> tuple[str, tuple
     last = ""
     for attempt in range(7):
         try:
-            r = client.messages.create(model=model, max_tokens=max_tokens, system=SYSTEM,
-                                       messages=[{"role": "user", "content": prompt}])
+            kw = dict(model=model, max_tokens=max_tokens, system=SYSTEM,
+                      messages=[{"role": "user", "content": prompt}])
+            if THINKING_BUDGET:
+                kw["thinking"] = {"type": "enabled", "budget_tokens": THINKING_BUDGET}
+            r = client.messages.create(**kw)
             text = "".join(getattr(b, "text", "") or "" for b in r.content)
             if not text.strip():
                 text = (f"API_EMPTY stop_reason={r.stop_reason} blocks="
@@ -159,7 +164,7 @@ def main():
     ap.add_argument("--label", default=None)
     ap.add_argument("--backend", default="anthropic", choices=["anthropic", "openai"])
     ap.add_argument("--base-url", default=None)
-    ap.add_argument("--max-tokens", type=int, default=6000, help="5.5 models may spend tokens thinking before the JSON")
+    ap.add_argument("--max-tokens", type=int, default=14000, help="thinking budget (8000) + room for the JSON")
     ap.add_argument("--workers", type=int, default=2, help="keep low: prompts are 20-90k tokens")
     ap.add_argument("--runs", default=str(Path(__file__).parent / "runs.json"), help="precomputed suite results by head_sha")
     ap.add_argument("--table", nargs="*")
