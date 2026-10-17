@@ -193,11 +193,14 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
     evidence = False   # a specific, passing probe exists
     usd_total, tok_in, tok_out, probes = 0.0, 0, 0, []
     text = ""
+    rounds, api_s, docker_s = [], 0.0, 0.0   # audit: why no probe, and where the wall-clock went
     for round_ in range(max_probes + 1):
         final = round_ == max_probes
         if final:
             messages.append({"role": "user", "content": "Final round: decide now. The probe field is ignored."})
+        t_api = time.time()
         text, (ti, to), usd = call(model, LOOP_SYSTEM, messages, max_tokens)
+        api_s += time.time() - t_api
         usd_total += usd; tok_in += ti; tok_out += to
         messages.append({"role": "assistant", "content": text})
         m = re.search(r"\{.*\}", text, re.S)
@@ -208,6 +211,8 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
         except json.JSONDecodeError:
             obj = {}
         has_probe = image_ok and isinstance(probe, dict) and "source" in probe
+        rounds.append({"round": round_, "decision": decision, "probe_requested": isinstance(probe, dict),
+                       "probe_runnable": has_probe, "parsed": bool(obj)})
         if decision == "approve" and not evidence and not has_probe:
             if final:
                 text = json.dumps({**obj, "decision": "escalate", "harness_note": "approve without a passing specific probe -> escalate"})
@@ -218,6 +223,7 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
         if final or not has_probe:
             break
         path = probe.get("path") or "tests/test_probe_review.py"
+        t_dk = time.time()
         status, out, pcov = run_probe(task, task["head_sha"], subdir, path, probe["source"], with_cov=bool(task.get("uncovered")))
         # scoring-only: does the probe reproduce the oracle? (fails on PR, passes on the fixed code)
         strong = None
@@ -226,6 +232,7 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
             if fixed_sha:
                 s2, _, _ = run_probe(task, fixed_sha, subdir, path, probe["source"])
                 strong = s2 == "passed"
+        docker_s += time.time() - t_dk
         specific = probe_is_specific(probe["source"], task)
         targets = probe_targets_uncovered(task, pcov)
         if status == "passed" and specific and targets:
@@ -238,7 +245,20 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
             note = " (note: this probe executed none of the changed lines the suite leaves uncovered, so it does not count as evidence for approve)"
         messages.append({"role": "user", "content": f"Probe result at the PR head: {status}{note}\n```\n{out[-3000:]}\n```\nDecide again (you may probe once more if rounds remain)."})
     rev, ok = parse_review(text, (tok_in, tok_out), usd_total)
-    return rev, ok, text, probes
+    audit = {"rounds": rounds, "api_s": round(api_s, 1), "docker_s": round(docker_s, 1),
+             "no_probe_reason": None if probes else no_probe_reason(rounds, image_ok)}
+    return rev, ok, text, probes, audit
+
+
+def no_probe_reason(rounds: list[dict], image_ok: bool) -> str:
+    """Why a review ended with zero probes run: 'the model never asked' vs a harness cause."""
+    if not image_ok:
+        return "no_image"
+    if not rounds or not any(r["parsed"] for r in rounds):
+        return "unparsable"
+    if any(r["probe_requested"] and not r["probe_runnable"] for r in rounds):
+        return "probe_malformed"          # asked for a probe but gave no source
+    return f"model_decided_round0:{rounds[0]['decision']}"  # chose without asking for evidence
 
 
 def main():
@@ -261,18 +281,23 @@ def run_once(a, label):
     reviews, strong, out_rows = {}, {}, []
     t0 = time.time()
     for t in tasks:
-        rev, ok, raw, probes = review_one(t, a.model, a.max_probes, runs, a.max_tokens)
+        rev, ok, raw, probes, audit = review_one(t, a.model, a.max_probes, runs, a.max_tokens)
         reviews[t["id"]] = rev
         if any(p.get("strong") for p in probes):
             strong[t["id"]] = True
-        out_rows.append({"task_id": t["id"], "decision": rev.decision, "usd": rev.usd, "probes": probes,
+        out_rows.append({"task_id": t["id"], "decision": rev.decision, "usd": rev.usd, "probes": probes, **audit,
                          "comments": [c.__dict__ for c in rev.comments], "parsed": ok, "raw": raw[:4000]})
-        print(f"{t['id']:45s} {rev.decision:9s} probes={len(probes)} ${rev.usd:.3f}", flush=True)
+        why = f" ({audit['no_probe_reason']})" if audit["no_probe_reason"] else ""
+        print(f"{t['id']:45s} {rev.decision:9s} probes={len(probes)}{why} ${rev.usd:.3f} "
+              f"api={audit['api_s']:.0f}s docker={audit['docker_s']:.0f}s", flush=True)
     scores = by_split(load_tasks(a.tasks), reviews, strong)
     RESULTS.mkdir(exist_ok=True)
     p = RESULTS / f"{label}.json"
     p.write_text(json.dumps({"label": label, "model": a.model, "condition": "loop", "n": len(tasks),
                              "unparsable": sum(1 for r in out_rows if not r["parsed"]), "wall_s": round(time.time() - t0, 1),
+                             "api_s": round(sum(r["api_s"] for r in out_rows), 1), "docker_s": round(sum(r["docker_s"] for r in out_rows), 1),
+                             "no_probe_reasons": {k: sum(1 for r in out_rows if r["no_probe_reason"] == k)
+                                                  for k in sorted({r["no_probe_reason"] for r in out_rows if r["no_probe_reason"]})},
                              "scores": scores, "reviews": out_rows}, indent=1))
     s = scores["all"]
     print(f"{label}: bugs_approved={s['bugs_approved']}/{s['n_bug']} auto_ship={s['auto_ship_rate']:.2f} "

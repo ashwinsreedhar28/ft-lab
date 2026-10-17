@@ -46,3 +46,10 @@ weekend of the Mac. No GPU until the GRPO run.
 - same repo in train and eval → **split by repo**
 - test file in the PR gives the answer away → positives and negatives both include their
   test changes as they were; the oracle test from the *fix* is never shown
+
+## Selection bias to remember
+`scan.py` keeps commits whose subject matches a fix vocabulary and that touch both a test and a
+code file, ≤400 lines. That selects for small bugs the author recognized and tested as bugs. The
+bench will under-represent silent regressions, bugs fixed without a new test, and bugs fixed inside
+feature commits. Fine for a first bench of real positives; say so in any write-up, and do not treat
+a rate on it as a rate on "PRs in general".
