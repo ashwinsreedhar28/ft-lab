@@ -11,7 +11,7 @@ own repos (shwin-bench), then a small model fine-tuned into the roles where it h
 | 0 | GRPO mechanics: GSM8K, Qwen3-1.7B, 1×H100 | answer match | scaffolded, not yet run |
 | 1 | review-bench from shwin-bench: bisected bug PRs + matched clean PRs, 4 context conditions, frontier baselines | bugs approved (target 0), auto-ship rate | designed (`review/`) |
 | 2 | the review agent: neighborhood → run suite → probe test → decision | same scorer | planned |
-| 3 | mine fresh public repos (~400 PRs), GRPO a 4B/8B LoRA into the triage gate | asymmetric decision reward | recipe written |
+| 3 | mine fresh public repos (~400 PRs); SFT warm-start on frontier review traces (TEMP-selected); GRPO a 4B/8B LoRA into the triage gate with variance-guided rollouts (VIGOR) | asymmetric decision reward | recipe written |
 | 4 | topology: 1-colocate / 2-server / 4-colocate | $/1k completions | configs ready |
 | backlog | Spider / BIRD / lakehouse text-to-SQL | execution match | adapters kept |
 

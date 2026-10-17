@@ -92,3 +92,30 @@ emitting `SELECT 1` runs but never matches, so the 1.0 term still dominates.
 - Step time on the H100 (expect 20–40 s). 300 steps ≈ 2–3 h.
 - Whether `report_to: wandb` is worth it; `log_history.json` + `plot.py` is enough
   for the write-up.
+
+## Spending rollouts where the gradient is (added Oct 17 after phase 0's first run)
+Phase 0 showed `frac_reward_zero_std` at 0.25–0.75: with a base model at 79 % on GSM8K, a
+quarter to three quarters of each step's prompts had all-correct or all-wrong groups and
+contributed zero policy gradient. Two papers from Mirzasoleiman's group (UCLA) formalize the fix
+at each stage:
+- **VIGOR** (Jiang, Liu, Mirzasoleiman, COLM 2026): with binary rewards the GRPO gradient norm
+  is bounded by within-group reward std (their Thm 1). Allocate rollouts progressively: m0=2 per
+  prompt, keep the top α=0.5 by variance, multiply budget by γ=2, T=4 rounds, feed all rollouts
+  to one GRPO update. Same total budget; 1.5–2.8× fewer rollouts to reach a target accuracy;
+  accuracy gains themselves are small (0.5–1.2 pts on math). KL off in their setup. Compared
+  against GRESO and RL-ZVP (same idea, different selection rules) and PODS.
+  Where it matters for us: phase 3 (long diffs, 8B), not GSM8K at 3 s/step. One-round variant
+  is enough to start: sample 4, drop zero-variance prompts, resample survivors to 16.
+  `configs/gsm8k_hard.yaml` is the static, offline version of the same idea (pick prompts with
+  ≥5 calculator steps); online variance selection is strictly better.
+- **TEMP** (Jin, Yang, Ghaffari, Morato, Mirzasoleiman, ICML 2026): SFT data selection using
+  only the first reasoning tokens. Difficulty = loss on the first ~100 response tokens at a
+  randomly perturbed checkpoint; diversity = cluster the loss trajectory over the first ~1k
+  tokens across a few noisy checkpoints, sample across clusters. ~1k examples; up to 1.7 pts
+  over baselines, 91 % fewer tokens processed than full-trace scoring. SFT only; no RL, no LoRA.
+  Where it matters: the SFT warm-start of the review agent (phase 3 step 1) if we mine more
+  frontier review traces than we can afford to train on.
+SFT vs GRPO in one line: SFT trains on (prompt, gold answer) by cross-entropy, no sampling, cheap,
+bounded by the demonstrations; GRPO samples G attempts, scores them with a verifier, pushes toward
+the better ones, expensive, can exceed the demonstrations. Pipeline for the review agent: SFT for
+the output format and rough judgment, GRPO for the gate decision under the asymmetric reward.

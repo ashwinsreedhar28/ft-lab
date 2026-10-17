@@ -62,8 +62,18 @@ Haiku in and record what breaks. **Phases 1+2 are the Oct 27 deliverable.**
 
 ## Phase 3 — fine-tune into the harness (CPU pod for mining, then 1× H100, ~$40)
 Mining recipe in `review/mine/README.md`: public repos, commits after 2026-06-01, bisected
-positives + matched negatives, ~400 train / 100 eval, split by repo. Then GRPO a Qwen3-4B
-or 8B LoRA into the triage-gate role (`ftlab/rewards/review.py`, asymmetric reward).
+positives + matched negatives, ~400 train / 100 eval, split by repo. Then, in order:
+1. **SFT warm-start** (`ftlab/sft.py`, to write): Sonnet's reviews over the mined train PRs,
+   kept only where the scorer says the decision was right; a small model won't emit the JSON
+   decision reliably without this. Trace selection TEMP-style if traces are plentiful
+   (loss on the first ~100 response tokens at a perturbed checkpoint → difficulty; cluster
+   loss trajectories → diversity; keep ~1k). Jin et al., ICML 2026.
+2. **GRPO** a Qwen3-4B or 8B LoRA into the triage-gate role (`ftlab/rewards/review.py`,
+   asymmetric reward). Rollouts here are long (diff + neighborhood, 8B), so use
+   variance-guided rollout allocation: sample a small group per prompt first, drop prompts
+   whose rewards have zero variance (no gradient; `frac_reward_zero_std` in phase 0 was
+   0.25–0.75), re-sample the survivors to the full group. VIGOR, Jiang et al., COLM 2026,
+   reports 1.5–2.8× fewer rollouts to target; implement as a `rollout_func` in TRL.
 Report auto-ship at zero bugs approved and $/PR vs the frontier harness, 3 seeds.
 
 ## Phase 4 — topology, 2× then 4× H100 (~1.5 h, ~$20), if budget remains
