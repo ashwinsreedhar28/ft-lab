@@ -201,17 +201,19 @@ def passed(out: str) -> set[str]:
 def stage_status(baseline_pass: set[str], out: str) -> tuple[str, set[str]]:
     """killed: a baseline-passing test no longer passes. survived: nothing killed and the run collected
     at least 90 % of the baseline's passes (so an aborted collection is 'error', not 'survived')."""
+    res = junit(out)
+    collected = {t for t in baseline_pass if t in res}
+    if len(collected) < 0.9 * len(baseline_pass) or not baseline_pass:
+        return "error", set()            # most of the baseline never ran: aborted collection, not a verdict
     k = killed_by(baseline_pass, out)
-    if k:
-        return "killed", k
-    if len(passed(out)) >= 0.9 * len(baseline_pass) and baseline_pass:
-        return "survived", k
-    return "error", k
+    return ("killed" if k else "survived"), k
 
 
 def killed_by(baseline_pass: set[str], out: str) -> set[str]:
-    """Tests that passed at baseline and no longer pass: the mutation-testing kill criterion."""
-    return baseline_pass - passed(out)
+    """Tests that passed at baseline and RAN and did not pass: the mutation-testing kill criterion.
+    A test absent from the run was not collected (aborted/errored collection), which is not a kill."""
+    res = junit(out)
+    return {t for t in baseline_pass if t in res and res[t] != "passed"}
 
 
 def pytest_ok(out: str) -> bool:
