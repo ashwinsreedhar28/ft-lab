@@ -352,7 +352,7 @@ def graph(repos: Path):
             "id": f"bug__{p['repo_name']}__{sha[:7]}", "repo": p["repo_name"], "kind": "bug",
             "base_sha": git(repo, "rev-parse", f"{sha}^").strip(), "head_sha": sha,
             "diff": pr_diff(repo, sha), "files": files, "split": "fresh" if p["split"] != "own-older" else "own-older",
-            "oracle": p["fail_to_pass"], "gold_hunks": gold_hunks(repo, sha),
+            "oracle": p["fail_to_pass"], "gold_hunks": gold_hunks(repo, sha, p["fix_commit"]),
             "neighborhood": neighborhood(repo, sha),
             "image": f"shwin/{p['repo_name']}:{p['base_commit'][:12]}", "test_cmd": p["environment"]["test_cmd"],
         })
@@ -372,8 +372,43 @@ def graph(repos: Path):
     print(f"{len(tasks)} tasks -> {out} ({sum(t['kind']=='bug' for t in tasks)} bug, {sum(t['kind']=='clean' for t in tasks)} clean)")
 
 
-def gold_hunks(repo: Path, sha: str) -> list[dict]:
-    """Where the defect lives in the introducing commit: its own added-line ranges in non-test files."""
+def gold_hunks(repo: Path, sha: str, fix_sha: str | None = None) -> list[dict]:
+    """Where the defect lives in the introducing commit: its added-line ranges in non-test files,
+    narrowed to the functions/classes the eventual fix commit modified (by file + def name, so line
+    drift between the two commits doesn't matter). Falls back to all ranges if nothing intersects."""
+    all_h = _added_ranges(repo, sha)
+    if not fix_sha:
+        return all_h
+    fixed = set(changed_defs(repo, fix_sha))
+    if not fixed:
+        return all_h
+    fixed_files = {f for f, _ in fixed}
+    narrowed = []
+    for h in all_h:
+        if h["file"] not in fixed_files:
+            continue
+        defs_here = _defs_covering(repo, sha, h["file"], h["line_start"], h["line_end"])
+        if defs_here & {n for f, n in fixed if f == h["file"]}:
+            narrowed.append(h)
+    return narrowed or [h for h in all_h if h["file"] in fixed_files] or all_h
+
+
+def _defs_covering(repo: Path, sha: str, f: str, lo: int, hi: int) -> set[str]:
+    import ast
+    try:
+        tree = ast.parse(git(repo, "show", f"{sha}:{f}"))
+    except (subprocess.CalledProcessError, SyntaxError):
+        return set()
+    out = set()
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            a, b = node.lineno, getattr(node, "end_lineno", node.lineno)
+            if a <= hi and b >= lo:
+                out.add(node.name)
+    return out
+
+
+def _added_ranges(repo: Path, sha: str) -> list[dict]:
     hunks = []
     cur = None
     for ln in git(repo, "show", "--format=", "--first-parent", "--unified=0", sha).splitlines():
