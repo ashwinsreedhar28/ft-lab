@@ -1,0 +1,51 @@
+name: gsm8k_h100
+model: Qwen/Qwen3-1.7B
+output_dir: runs/${name}
+data:
+  task: gsm8k
+  train_limit: null
+  eval_limit: null
+  seed: 0
+  extra: {}
+rewards:
+- gsm8k_correct
+- gsm8k_format
+reward_weights: null
+lora:
+  enabled: false
+  r: 32
+  alpha: 64
+  dropout: 0.0
+  target_modules: all-linear
+system_prompt: null
+enable_thinking: false
+grpo:
+  num_generations: 16
+  per_device_train_batch_size: 64
+  gradient_accumulation_steps: 1
+  vllm_max_model_length: 1536
+  max_completion_length: 768
+  temperature: 1.0
+  loss_type: dapo
+  beta: 0.04
+  epsilon: 0.2
+  num_iterations: 1
+  scale_rewards: group
+  learning_rate: 1.0e-06
+  lr_scheduler_type: constant_with_warmup
+  warmup_steps: 10
+  max_grad_norm: 1.0
+  gradient_checkpointing: true
+  bf16: true
+  max_steps: 300
+  use_vllm: true
+  vllm_mode: colocate
+  vllm_gpu_memory_utilization: 0.35
+  vllm_importance_sampling_correction: true
+  logging_steps: 1
+  log_completions: true
+  num_completions_to_print: 2
+  report_to: none
+  save_steps: 50
+  save_total_limit: 2
+  seed: 0
