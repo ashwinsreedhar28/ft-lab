@@ -29,6 +29,6 @@ rb-baselines:    ## needs ANTHROPIC_API_KEY
 	  python -m review.agent.run --model claude-sonnet-5-5 --condition $$c --label sonnet_$$c; done
 	python -m review.agent.run --table review/agent/results/*.json
 rb-loop:         ## the agent, 3 repeats each: suite at head + probe tests, docker + ANTHROPIC_API_KEY
-	python -m review.agent.loop --model claude-sonnet-5-5 --label sonnet_v2 --repeat 3
-	python -m review.agent.loop --model claude-haiku-5-5  --label haiku_v2 --repeat 3
+	python -m review.agent.loop --model claude-sonnet-5-5 --label sonnet_v3 --repeat 3
+	python -m review.agent.loop --model claude-haiku-5-5  --label haiku_v3 --repeat 3
 	python -m review.agent.run --table review/agent/results/*.json
