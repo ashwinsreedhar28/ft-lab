@@ -46,13 +46,50 @@ SYSTEM = (
 )
 
 
+CODE_EXT = {".py", ".ts", ".tsx", ".js", ".jsx", ".sh", ".bash", ".yaml", ".yml", ".toml", ".cfg", ".ini",
+            ".sql", ".rs", ".go", ".java", ".kt", ".c", ".h", ".cpp", ".hpp", ".cs", ".rb", ".swift", ".dockerfile"}
+MAX_DIFF_CHARS = 350_000   # ~90k tokens; Sonnet/Haiku 5.5 take it
+
+
+def split_diff(diff: str) -> list[tuple[str, str]]:
+    """[(path, per-file diff text)] in order."""
+    parts, cur, buf = [], None, []
+    for ln in diff.splitlines(keepends=True):
+        if ln.startswith("diff --git "):
+            if cur is not None:
+                parts.append((cur, "".join(buf)))
+            cur = ln.split(" b/", 1)[1].strip() if " b/" in ln else ln.strip()
+            buf = [ln]
+        else:
+            buf.append(ln)
+    if cur is not None:
+        parts.append((cur, "".join(buf)))
+    return parts
+
+
+def reviewable_diff(diff: str) -> tuple[str, list[str]]:
+    """Keep code files whole; drop data/markup/lockfiles and say which. Never cut a file mid-hunk."""
+    kept, omitted, total = [], [], 0
+    for path, text in split_diff(diff):
+        ext = ("." + path.rsplit(".", 1)[-1].lower()) if "." in path.rsplit("/", 1)[-1] else ""
+        is_code = ext in CODE_EXT or path.endswith("Dockerfile") or path.endswith("Makefile")
+        if not is_code or total + len(text) > MAX_DIFF_CHARS:
+            omitted.append(f"{path} ({len(text)} chars{'' if is_code else ', non-code'})")
+            continue
+        kept.append(text); total += len(text)
+    return "".join(kept), omitted
+
+
 def build_prompt(task: dict, condition: str, run_result: str | None) -> str:
+    diff, omitted = reviewable_diff(task["diff"])
     parts = [f"Repository: {task['repo']}\nFiles changed: {', '.join(task['files'])}"]
+    if omitted:
+        parts.append("Not shown (non-code or over budget; treat as unreviewed): " + ", ".join(omitted))
     if condition in ("diff+graph", "full") and task.get("neighborhood"):
         parts.append("Context around the change (mechanically extracted):\n" + task["neighborhood"])
     if condition in ("diff+run", "full") and run_result:
         parts.append("Test suite result at the PR head:\n" + run_result)
-    parts.append("Diff:\n```diff\n" + task["diff"][:60000] + "\n```")
+    parts.append("Diff:\n```diff\n" + diff + "\n```")
     return "\n\n".join(parts)
 
 
@@ -83,8 +120,9 @@ PRICES = {"claude-haiku-4-5": (1.0, 5.0), "claude-sonnet-4-5": (3.0, 15.0),
 def call_anthropic(model: str, prompt: str, max_tokens: int) -> tuple[str, tuple[int, int], float]:
     import anthropic
 
-    client = anthropic.Anthropic()
-    for attempt in range(5):
+    client = anthropic.Anthropic(max_retries=0)
+    last = ""
+    for attempt in range(7):
         try:
             r = client.messages.create(model=model, max_tokens=max_tokens, system=SYSTEM,
                                        messages=[{"role": "user", "content": prompt}])
@@ -92,9 +130,12 @@ def call_anthropic(model: str, prompt: str, max_tokens: int) -> tuple[str, tuple
             pin, pout = PRICES.get(model, (0.0, 0.0))
             usd = (r.usage.input_tokens * pin + r.usage.output_tokens * pout) / 1e6
             return text, (r.usage.input_tokens, r.usage.output_tokens), usd
-        except anthropic.RateLimitError:
-            time.sleep(2 ** attempt)
-    return "", (0, 0), 0.0
+        except (anthropic.RateLimitError, anthropic.InternalServerError, anthropic.APIConnectionError) as e:
+            last = f"{type(e).__name__}: {str(e)[:200]}"
+            time.sleep(min(60, 3 * 2 ** attempt))
+        except anthropic.APIStatusError as e:
+            return f"API_ERROR {e.status_code}: {str(e)[:300]}", (0, 0), 0.0
+    return f"API_ERROR gave up: {last}", (0, 0), 0.0
 
 
 def call_openai(model: str, prompt: str, max_tokens: int, base_url: str) -> tuple[str, tuple[int, int], float]:
@@ -116,7 +157,7 @@ def main():
     ap.add_argument("--backend", default="anthropic", choices=["anthropic", "openai"])
     ap.add_argument("--base-url", default=None)
     ap.add_argument("--max-tokens", type=int, default=1500)
-    ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--workers", type=int, default=2, help="keep low: prompts are 20-90k tokens")
     ap.add_argument("--runs", default=str(Path(__file__).parent / "runs.json"), help="precomputed suite results by head_sha")
     ap.add_argument("--table", nargs="*")
     a = ap.parse_args()
@@ -139,6 +180,9 @@ def main():
         results = list(ex.map(one, tasks))
     reviews = {tid: rev for tid, rev, _, _ in results}
     unparsable = sum(1 for _, _, ok, _ in results if not ok)
+    api_errors = sum(1 for _, _, _, raw in results if raw.startswith("API_ERROR"))
+    if api_errors:
+        print(f"WARNING: {api_errors} API errors (scored as escalate); see 'raw' in the results file", flush=True)
     scores = by_split(load_tasks(a.tasks), reviews)
     out = {"label": label, "model": a.model, "condition": a.condition, "n": len(tasks), "unparsable": unparsable,
            "wall_s": round(time.time() - t0, 1), "scores": scores,
