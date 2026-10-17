@@ -1,6 +1,6 @@
 import random
 
-from review.mine.mutate import OPS, killed_by, op_mutants, passed, pytest_ok, script, SKIP_LINE
+from review.mine.mutate import OPS, junit, killed_by, op_mutants, passed, pytest_ok, script, stage_status, SKIP_LINE
 
 
 def test_every_operator_changes_its_match():
@@ -32,9 +32,19 @@ def test_script_mounts_edits_before_pytest_and_captures_diff():
     assert pytest_ok("...\nEXIT=0") and not pytest_ok("EXIT=1") and not pytest_ok("no marker")
 
 
+def _junit(cases):
+    body = "".join(f'<testcase classname="tests.t" name="{n}">{"<failure/>" if s == "failed" else "<error/>" if s == "error" else ""}</testcase>' for n, s in cases)
+    return f"...\nEXIT=1\nJUNIT_BEGIN\n<testsuites><testsuite>{body}</testsuite></testsuites>\nJUNIT_END"
+
+
 def test_kill_criterion_is_relative_to_baseline():
-    base = "PASSED t.py::a\nPASSED t.py::b\nFAILED t.py::tty_only - needs a tty\nEXIT=1"
-    mut = "PASSED t.py::a\nFAILED t.py::b - assert\nFAILED t.py::tty_only - needs a tty\nEXIT=1"
-    same = "PASSED t.py::a\nPASSED t.py::b\nFAILED t.py::tty_only\nEXIT=1"
-    assert passed(base) == {"t.py::a", "t.py::b"}
-    assert killed_by(passed(base), mut) == {"t.py::b"} and killed_by(passed(base), same) == set()
+    base = _junit([("a", "passed"), ("b", "passed"), ("tty_only", "failed")])
+    mut = _junit([("a", "passed"), ("b", "failed"), ("tty_only", "failed")])
+    same = _junit([("a", "passed"), ("b", "passed"), ("tty_only", "error")])
+    aborted = _junit([("a", "passed")])
+    assert passed(base) == {"tests.t::a", "tests.t::b"} and junit(base)["tests.t::tty_only"] == "failed"
+    assert killed_by(passed(base), mut) == {"tests.t::b"} and killed_by(passed(base), same) == set()
+    assert stage_status(passed(base), mut) == ("killed", {"tests.t::b"})
+    assert stage_status(passed(base), same)[0] == "survived"
+    assert stage_status(passed(base), aborted)[0] == "error"
+    assert junit("no markers") == {} and junit("JUNIT_BEGIN\n<bad\nJUNIT_END") == {}

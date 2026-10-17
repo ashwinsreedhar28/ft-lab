@@ -32,7 +32,6 @@ import shlex
 from collections import Counter
 from pathlib import Path
 
-from review.bench.build import _parse_results
 from review.mine.scan import FIX_RE, SKIP_RE, git, is_test
 from review.mine.validate import DEFAULT_CANDIDATE_INSTALL, WORK, docker, repos
 
@@ -158,7 +157,12 @@ def script(sha: str, inst: str, edits: dict[str, str] | None, probe: tuple[str, 
         files["probe"] = probe[1]
         parts.append(f"mkdir -p $(dirname {shlex.quote(probe[0])}) && cp /inject/probe {shlex.quote(probe[0])}")
     tg = " ".join(shlex.quote(t) for t in (pytest_targets or []))
-    parts.append(f"{{ timeout {timeout_s} python -m pytest -rA -q -p no:cacheprovider --no-header {tg} 2>&1 | tail -n 3000; echo EXIT=${{PIPESTATUS[0]}}; }}")
+    # junit xml is the record of outcomes (the -rA text is not reliable at scale); warnings that the
+    # image's newer pytest raises on older commits must not abort collection under filterwarnings=error
+    parts.append(f"{{ timeout {timeout_s} python -m pytest -q -p no:cacheprovider --no-header "
+                 f"-W ignore::DeprecationWarning -W ignore::ResourceWarning -W ignore::PendingDeprecationWarning "
+                 f"--junitxml=/tmp/junit.xml {tg} 2>&1 | tail -n 200; echo EXIT=${{PIPESTATUS[0]}}; "
+                 f"echo JUNIT_BEGIN; cat /tmp/junit.xml 2>/dev/null; echo JUNIT_END; }}")
     return " && ".join(parts[:3]) + " && " + " ; ".join(parts[3:]), files
 
 
@@ -171,8 +175,38 @@ def run(name: str, sha: str, inst: str, net: bool, timeout: int, tag: str = "", 
     return out
 
 
+def junit(out: str) -> dict[str, str]:
+    """{test id: passed|failed|error|skipped} from the junit xml echoed between JUNIT markers."""
+    import xml.etree.ElementTree as ET
+    if "JUNIT_BEGIN" not in out:
+        return {}
+    xml = out.split("JUNIT_BEGIN", 1)[1].split("JUNIT_END", 1)[0].strip()
+    if not xml:
+        return {}
+    res = {}
+    try:
+        for tc in ET.fromstring(xml).iter("testcase"):
+            tid = f"{tc.get('classname', '')}::{tc.get('name', '')}"
+            kids = {k.tag for k in tc}
+            res[tid] = "error" if "error" in kids else "failed" if "failure" in kids else "skipped" if "skipped" in kids else "passed"
+    except ET.ParseError:
+        return {}
+    return res
+
+
 def passed(out: str) -> set[str]:
-    return {t for t, st in _parse_results(out).items() if st == "passed"}
+    return {t for t, st in junit(out).items() if st == "passed"}
+
+
+def stage_status(baseline_pass: set[str], out: str) -> tuple[str, set[str]]:
+    """killed: a baseline-passing test no longer passes. survived: nothing killed and the run collected
+    at least 90 % of the baseline's passes (so an aborted collection is 'error', not 'survived')."""
+    k = killed_by(baseline_pass, out)
+    if k:
+        return "killed", k
+    if len(passed(out)) >= 0.9 * len(baseline_pass) and baseline_pass:
+        return "survived", k
+    return "error", k
 
 
 def killed_by(baseline_pass: set[str], out: str) -> set[str]:
@@ -225,11 +259,11 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
         base_out = run(name, pr["sha"], inst, net, timeout, tag=f"{name}_{pr['sha'][:8]}_baseline", edits=None, probe=None, pytest_targets=targets, want_diff=False)
         base_pass = passed(base_out)
         if not base_pass:
-            n_pass_lines = len(re.findall(r"^PASSED ", base_out, re.M))
-            log(f"{name:9s} {pr['sha'][:8]} {f}: baseline collected nothing (exit {exit_code(base_out)}; PASSED lines seen={n_pass_lines}; "
-                f"parsed={len(_parse_results(base_out))}; out={len(base_out)} chars), skip\n    " + base_out.strip().replace("\n", "\n    ")[-900:])
+            log(f"{name:9s} {pr['sha'][:8]} {f}: baseline collected nothing (exit {exit_code(base_out)}; junit={len(junit(base_out))}), skip\n    "
+                + base_out.split("JUNIT_BEGIN")[0].strip().replace("\n", "\n    ")[-900:])
             rows.append({**{k: pr[k] for k in ("repo", "sha", "parent", "subject", "lines")}, "file": f, "status": "baseline_empty",
                          "targets": targets, "baseline_tail": base_out[-1500:]}); break
+        log(f"{name:9s} {pr['sha'][:8]} {f}: baseline {len(base_pass)} passing in {len(targets) if targets else 'all'} test files")
         base_full_pass = None                       # full-suite baseline, computed once if any mutant survives stage 1
         muts = op_mutants(lines, per_pr - (1 if llm else 0), rng)
         if llm:
@@ -240,19 +274,17 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
             row = {**{k: pr[k] for k in ("repo", "sha", "parent", "subject", "lines")}, "file": f, **m,
                    "targets": targets, "baseline_passed": len(base_pass)}
             out1 = run(name, pr["sha"], inst, net, timeout, tag=f"{name}_{pr['sha'][:8]}_{m['line']}_{m['operator']}_s1", edits={f: content}, probe=None, pytest_targets=targets, want_diff=False)
-            k1 = killed_by(base_pass, out1)
-            row["stage1"] = "killed" if k1 else ("survived" if exit_code(out1) in ("0", "1") else "error")
-            row["stage1_killers"] = sorted(k1)[:10]; row["stage1_tail"] = out1[-1200:]
+            row["stage1"], k1 = stage_status(base_pass, out1)
+            row["stage1_killers"] = sorted(k1)[:10]; row["stage1_tail"] = out1.split("JUNIT_BEGIN")[0][-1200:]; row["stage1_passed"] = len(passed(out1))
             if row["stage1"] != "survived":
                 extra = "" if row["stage1"] == "killed" else " (exit " + exit_code(out1) + ")\n    " + out1.strip().replace("\n", "\n    ")[-500:]
                 rows.append(row); log(f"{name:9s} {pr['sha'][:8]} {f}:{m['line']} {m['operator']:14s} {row['stage1']} {len(k1)}{extra}"); continue
             if base_full_pass is None:
                 base_full_pass = passed(run(name, pr["sha"], inst, net, timeout, edits=None, probe=None, pytest_targets=None, want_diff=False))
             out2 = run(name, pr["sha"], inst, net, timeout, tag=f"{name}_{pr['sha'][:8]}_{m['line']}_{m['operator']}_s2", edits={f: content}, probe=None, pytest_targets=None, want_diff=True, parent=pr["parent"])
-            k2 = killed_by(base_full_pass, out2)
-            row["stage2"] = "killed" if k2 else ("survived" if exit_code(out2) in ("0", "1") else "error")
+            row["stage2"], k2 = stage_status(base_full_pass, out2)
             row["stage2_killers"] = sorted(k2)[:10]
-            row["stage2_tail"] = (out2.split("DIFF_BEGIN")[0] if "DIFF_BEGIN" in out2 else out2)[-1500:]
+            row["stage2_tail"] = (out2.split("DIFF_BEGIN")[0] if "DIFF_BEGIN" in out2 else out2.split("JUNIT_BEGIN")[0])[-1500:]; row["stage2_passed"] = len(passed(out2)); row["baseline_full_passed"] = len(base_full_pass)
             if "DIFF_BEGIN" in out2:
                 row["bug_diff"] = out2.split("DIFF_BEGIN", 1)[1].split("DIFF_END", 1)[0].strip()
             if row["stage2"] != "survived":
@@ -269,12 +301,16 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
                 ppath = "tests/test_probe_mutant.py"
                 on_mut = run(name, pr["sha"], inst, net, timeout, edits={f: content}, probe=(ppath, probe), pytest_targets=[ppath], want_diff=False)
                 on_orig = run(name, pr["sha"], inst, net, timeout, edits=None, probe=(ppath, probe), pytest_targets=[ppath], want_diff=False)
-                mut_fail, orig_pass = exit_code(on_mut) == "1", pytest_ok(on_orig)
-                row.update(probe=probe, probe_on_mutant="fail" if mut_fail else ("pass" if pytest_ok(on_mut) else "error"),
-                           probe_on_original="pass" if orig_pass else ("fail" if exit_code(on_orig) == "1" else "error"))
+                jm, jo = junit(on_mut), junit(on_orig)
+                def verdict(j):
+                    if not j: return "error"
+                    if any(v == "error" for v in j.values()): return "error"
+                    return "fail" if any(v == "failed" for v in j.values()) else "pass"
+                row.update(probe=probe, probe_on_mutant=verdict(jm), probe_on_original=verdict(jo))
+                mut_fail, orig_pass = row["probe_on_mutant"] == "fail", row["probe_on_original"] == "pass"
                 if mut_fail and orig_pass:
                     row["guard"] = "distinguished"; break
-                fb = f"on mutant: {row['probe_on_mutant']}; on original: {row['probe_on_original']}\n{on_mut[-600:]}"
+                fb = f"on mutant: {row['probe_on_mutant']}; on original: {row['probe_on_original']}\n{on_mut.split('JUNIT_BEGIN')[0][-600:]}"
                 row["guard"] = "equivalent_or_untestable"
             row["status"] = "positive" if row["guard"] == "distinguished" else "dropped_" + row["guard"]
             rows.append(row)
