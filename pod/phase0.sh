@@ -11,6 +11,8 @@ done_() { grep -qx "$1" $STAGES; }
 mark() { echo "$1" >> $STAGES; echo "=== stage done: $1 ($(date -u +%T))"; }
 
 done_ setup || { bash pod/setup.sh; mark setup; }
+source /workspace/venv/bin/activate   # created by setup.sh
+python -c 'import datasets, trl, vllm; print("venv ok:", datasets.__version__, trl.__version__, vllm.__version__)'
 
 done_ smoke || {
   echo "=== smoke (3 steps)"; mkdir -p runs/gsm8k_smoke; python -m ftlab.train configs/gsm8k_smoke.yaml 2>&1 | tee runs/gsm8k_smoke/train.log

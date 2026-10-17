@@ -11,6 +11,8 @@ done_() { grep -qx "$1" $STAGES; }
 mark() { echo "$1" >> $STAGES; echo "=== stage done: $1 ($(date -u +%T))"; }
 
 done_ setup || { bash pod/setup.sh; mark setup; }
+source /workspace/venv/bin/activate   # created by setup.sh
+python -c 'import datasets, trl, vllm; print("venv ok:", datasets.__version__, trl.__version__, vllm.__version__)'
 done_ spider_db || { bash scripts/get_spider.sh; mark spider_db; }
 done_ smoke || { mkdir -p runs/spider_smoke; python -m ftlab.train configs/spider_smoke.yaml 2>&1 | tee runs/spider_smoke/train.log; mark smoke; }
 done_ base_eval || { python -m ftlab.eval configs/spider_h100.yaml --label base --max-tokens 512 --max-model-len 4096; mark base_eval; }
