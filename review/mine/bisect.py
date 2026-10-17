@@ -88,19 +88,21 @@ def search(n: int, status) -> tuple[str, int, int]:
     return "ok", lo, hi
 
 
-def unshallow(repo: Path):
-    """scan.py clones --shallow-since; mature repos' bugs are older than that window."""
+def unshallow(repo: Path, url: str):
+    """scan.py clones --shallow-since; mature repos' bugs are older than that window. Such clones
+    often cannot be deepened ("error in object: unshallow"), so the fallback is a fresh full clone."""
     if not (repo / ".git" / "shallow").exists():
         return
-    print(f"{repo.name:10s} unshallowing clone …", flush=True)
+    import shutil
     import subprocess
-    for args in (["fetch", "-q", "--unshallow"], ["fetch", "-q", "--depth=1000000"]):
-        r = subprocess.run(["git", "-C", str(repo), *args], capture_output=True, text=True)
-        if r.returncode == 0 and not (repo / ".git" / "shallow").exists():
-            return
-        print(f"{repo.name:10s} {' '.join(args)}: {r.stderr.strip()[-200:]}", flush=True)
-    n = len(git(repo, "rev-list", "--count", "HEAD").split()) and git(repo, "rev-list", "--count", "HEAD").strip()
-    print(f"{repo.name:10s} still shallow ({n} commits reachable); bisect window limited to that", flush=True)
+    print(f"{repo.name:10s} unshallowing clone …", flush=True)
+    r = subprocess.run(["git", "-C", str(repo), "fetch", "-q", "--unshallow"], capture_output=True, text=True)
+    if r.returncode == 0 and not (repo / ".git" / "shallow").exists():
+        return
+    print(f"{repo.name:10s} unshallow failed ({r.stderr.strip()[-120:]}); full re-clone from {url}", flush=True)
+    shutil.rmtree(repo)
+    subprocess.run(["git", "clone", "-q", url, str(repo)], check=True)
+    print(f"{repo.name:10s} {git(repo, 'rev-list', '--count', 'HEAD').strip()} commits", flush=True)
 
 
 def bisect_one(c: dict, cfg: dict, max_anc: int, max_lines: int, timeout: int) -> dict:
@@ -154,7 +156,7 @@ def main():
                 d = json.loads(l); done[(d["repo"], d["sha"])] = d
     todo = [v for v in valid if (v["repo"], v["sha"]) not in done]
     for name in sorted({v["repo"] for v in todo}):
-        unshallow(WORK / "repos" / name)
+        unshallow(WORK / "repos" / name, cfg[name]["url"])
     print(f"{len(valid)} valid fixes, {len(todo)} to bisect, {a.jobs} parallel")
     with out_p.open("a") as fh, ThreadPoolExecutor(a.jobs) as ex:
         futs = {ex.submit(bisect_one, v, cfg, a.max_ancestors, a.max_lines, a.timeout): v for v in todo}
