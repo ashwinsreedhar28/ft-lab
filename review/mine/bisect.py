@@ -88,6 +88,13 @@ def search(n: int, status) -> tuple[str, int, int]:
     return "ok", lo, hi
 
 
+def unshallow(repo: Path):
+    """scan.py clones --shallow-since; mature repos' bugs are older than that window."""
+    if (repo / ".git" / "shallow").exists():
+        print(f"{repo.name:10s} unshallowing clone …", flush=True)
+        git(repo, "fetch", "-q", "--unshallow")
+
+
 def bisect_one(c: dict, cfg: dict, max_anc: int, max_lines: int, timeout: int) -> dict:
     name = c["repo"]; repo = WORK / "repos" / name
     r = cfg[name]
@@ -109,6 +116,7 @@ def bisect_one(c: dict, cfg: dict, max_anc: int, max_lines: int, timeout: int) -
         return row
     intro = chain[lo]
     row.update(introducing=intro, boundary=status(hi), introducing_parent=chain[hi], probes=probes,
+               bug_age_commits=lo + 1,   # first-parent commits from introduction to the fix
                introducing_lines=lines_changed(repo, intro),
                introducing_subject=git(repo, "log", "-1", "--format=%s", intro).strip(),
                shared_code_files=sorted(code_files(repo, intro) & set(c["code_files"])))
@@ -124,7 +132,7 @@ def bisect_one(c: dict, cfg: dict, max_anc: int, max_lines: int, timeout: int) -
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo"); ap.add_argument("--jobs", type=int, default=3)
-    ap.add_argument("--max-ancestors", type=int, default=400); ap.add_argument("--max-lines", type=int, default=1500)
+    ap.add_argument("--max-ancestors", type=int, default=5000); ap.add_argument("--max-lines", type=int, default=1500)
     ap.add_argument("--timeout", type=int, default=900)
     a = ap.parse_args()
     cfg = repos()
@@ -137,6 +145,8 @@ def main():
             if l.strip():
                 d = json.loads(l); done[(d["repo"], d["sha"])] = d
     todo = [v for v in valid if (v["repo"], v["sha"]) not in done]
+    for name in sorted({v["repo"] for v in todo}):
+        unshallow(WORK / "repos" / name)
     print(f"{len(valid)} valid fixes, {len(todo)} to bisect, {a.jobs} parallel")
     with out_p.open("a") as fh, ThreadPoolExecutor(a.jobs) as ex:
         futs = {ex.submit(bisect_one, v, cfg, a.max_ancestors, a.max_lines, a.timeout): v for v in todo}
@@ -153,7 +163,8 @@ def main():
     if pos:
         import statistics
         print(f"positives: {len(pos)}, introducing-commit size median {statistics.median(r['introducing_lines'] for r in pos):.0f} lines, "
-              f"max {max(r['introducing_lines'] for r in pos)}; error-boundary {sum(r['boundary']=='error' for r in pos)}")
+              f"max {max(r['introducing_lines'] for r in pos)}; error-boundary {sum(r['boundary']=='error' for r in pos)}; "
+              f"bug age median {statistics.median(r['bug_age_commits'] for r in pos):.0f} commits")
     print("next: python -m review.mine.assemble (match negatives, graph, coverage -> review/bench/public_tasks.jsonl)")
 
 
