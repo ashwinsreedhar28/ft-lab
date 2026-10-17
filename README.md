@@ -88,10 +88,18 @@ shipped, and the reviewer read "tests pass" as evidence.
 **Harness v2: evidence rules.** The suite is presented as "pre-existing tests still pass, which says
 nothing about the change"; changed definitions with no referencing test are listed; an approve is
 accepted only with a passing probe that calls a changed function by name, otherwise it is bounced
-for one more round and then escalated. Sonnet on the 8-PR bench: **0/4 bugs approved, 2/4 clean
-PRs auto-shipped, 5/8 escalated, $0.10/PR**, every approve backed by a specific probe. Same model,
-same PRs, diff-only: 3/5 bugs approved. The harness, not the model, moved the number. This is the
-"harness engineering" loop: the scoreboard says what the agent needs to see and be forbidden to do.
+for one more round and then escalated. First run of Sonnet on the 8-PR bench: 0/4 bugs approved,
+2/4 clean auto-shipped. **Three repeats say that was the lucky draw**: Sonnet v2 approved 2/4, 1/4,
+0/4 (mean 0.25 ± 0.25), auto-ship 0.17 ± 0.12, escalate 0.75 ± 0.12, $0.10/PR; Haiku v2 1/4, 0/4,
+0/4 with escalation 0.83 ± 0.25 and almost nothing shipped. Versus diff-only Sonnet at 3/5, v2 lowers
+bugs-approved, mostly by pushing decisions toward escalate. The strong-probe rate (probe fails on
+the bug PR, passes on the fix) is **0.00 across all 24 runs**: not one probe found a bug. The probes
+that licensed approvals called a changed function by name without testing the behavior that was
+wrong, which is the gaming hole in a syntactic evidence rule. Two lessons that survive the noise:
+run-to-run variance at n=8 is ±25 points, so nothing here is a number until the bench is 5× larger;
+and the harness lever that matters next is probe quality (falsifiable hypotheses), not more rules
+about when to approve. This is the "harness engineering" loop: the scoreboard says what the agent
+needs to see, what it is forbidden to do, and what it is still not doing.
 
 Raw: `review/bench/tasks.jsonl`, `review/agent/results/` (v1 runs under `results/v1/`).
 Next: scale the bench by mining fresh public repos (`review/mine/`), then a small model in the

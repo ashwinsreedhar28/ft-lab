@@ -184,7 +184,7 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
         if status == "passed" and specific:
             evidence = True
         probes.append({"round": round_, "path": path, "status": status, "strong": strong, "specific": specific,
-                       "hypothesis": probe.get("hypothesis", ""), "tail": out[-1500:]})
+                       "hypothesis": probe.get("hypothesis", ""), "source": probe["source"][:6000], "tail": out[-1500:]})
         note = "" if specific else " (note: this probe does not call any changed function by name, so it does not count as evidence for approve)"
         messages.append({"role": "user", "content": f"Probe result at the PR head: {status}{note}\n```\n{out[-3000:]}\n```\nDecide again (you may probe once more if rounds remain)."})
     rev, ok = parse_review(text, (tok_in, tok_out), usd_total)
