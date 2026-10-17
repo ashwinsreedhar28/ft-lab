@@ -116,10 +116,20 @@ emitted it inside hallucinated `<invoke>` tool-call syntax; the harness's JSON r
 scored the review unparsable → escalate. Replaying the fixed parser over the stored replies recovers
 17/17; 4 probes (2 bug, 2 clean) were dropped in all. The result record now carries per-round
 decisions, a `no_probe_reason`, and API vs Docker wall-clock, so this question is answerable from the
-JSON next time instead of by reading raw text. An always-escalate agent scores 0 bugs approved at 0
-auto-ship; v4's margin over it is 42 % of clean PRs shipped.
-Across v1–v4, 36 bug-PR runs, no
-probe has ever failed on a bug and passed on its fix. The reliability number this project is after
+JSON next time instead of by reading raw text.
+
+**v4b (parser fixed, rerun ×3): the approve rule is satisfiable without testing the bug.** Sonnet
+approved `36f4e93` in 3/3 runs, each licensed by one passing probe: it calls a changed function by
+name and executes one of the PR's 131 uncovered lines, so it meets every rule, and it tests a
+hypothesis (timestamp clock bases) unrelated to the defect (token counting in `load.py`). The other
+three bug PRs were escalated in round 0 in 8 of 9 runs. v4b: 0.25 bugs approved, auto-ship
+0.33 ± 0.12, escalate 0.67 ± 0.06, $0.14/PR. In v4 the parse drop was accidentally protecting the
+number. An always-escalate agent scores 0 bugs approved at 0 auto-ship; no harness version here
+beats that bound while shipping anything.
+Across v1–v4b, 48 bug-PR runs, no
+probe has ever failed on a bug and passed on its fix; every approve of a bug PR was licensed by a probe
+that passed because it tested the wrong hypothesis. Syntactic evidence rules (names a changed def,
+touches an uncovered line) bound confidence, not correctness. The reliability number this project is after
 cannot be read off a 4-positive bench (rule of three: 0/4 bounds the rate at ~50 %), and the
 harness is now out of levers that rules can pull; the lever left is detection, which needs more
 and smaller positives. Harness work stops here until the bench is 5–10× larger.
