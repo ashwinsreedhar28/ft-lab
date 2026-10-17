@@ -79,11 +79,17 @@ def prepare(shwin: Path, repos: Path):
             "base_commit": r["base_commit"], "split": r["split"], "environment": r["environment"],
             "fail_to_pass": set(), "test_files": set(), "task_ids": [],
         })
+        if r.get("meta", {}).get("interface_leak"):
+            fx.setdefault("leaked_task_ids", []).append(r["instance_id"])
+            continue  # test imports a name the fix adds: errors at every pre-fix commit, no bisect signal
         fx["fail_to_pass"].update(r["FAIL_TO_PASS"])
         fx["test_files"].update(t.split("::")[0] for t in r["FAIL_TO_PASS"])
         fx["task_ids"].append(r["instance_id"])
     fixes, pools = [], {}
     for fx in by_fix.values():
+        if not fx["fail_to_pass"]:
+            print(f"{fx['repo_name']} {fx['fix_commit'][:7]}: all {len(fx.get('leaked_task_ids', []))} tasks are interface leaks; skipped")
+            continue
         repo = repos / fx["repo_name"]
         subdir = fx["environment"].get("subdir") or ""
         chain = first_parent_chain(repo, fx["base_commit"], MAX_ANCESTORS)
@@ -122,6 +128,8 @@ def docker_run(image: str, script: str, timeout: int = 900) -> tuple[int, str]:
 
 def bisect(shwin: Path):
     cand = json.loads((WORK / "candidates.json").read_text())
+    cache_p = WORK / "bisect.cache.json"
+    cache = json.loads(cache_p.read_text()) if cache_p.exists() else {}
     positives, log = [], []
     for fx in cand["fixes"]:
         image = f"shwin/{fx['repo_name']}:{fx['base_commit'][:12]}"
@@ -132,15 +140,24 @@ def bisect(shwin: Path):
         last_fail = None
         for i, anc in enumerate(fx["ancestors"]):
             # checkout ancestor, overlay the fix commit's test files, run only the oracle tests
-            script = (f"cd /testbed && git checkout -q {anc['sha']} && git checkout -q {fx['fix_commit']} -- {tfiles} "
-                      f"&& cd {subdir} && {test_cmd} {tests} 2>&1 | tail -n 30; echo EXIT=${{PIPESTATUS[0]}}")
-            rc, out = docker_run(image, script)
-            m = re.search(r"EXIT=(\d+)", out)
-            exit_code = int(m.group(1)) if m else rc
-            # pytest: 0 pass, 1 failures, 2 interrupted, 4 usage, 5 no tests collected
-            status = "pass" if exit_code == 0 else "fail" if exit_code == 1 else "error"
+            key = f"{fx['fix_commit'][:12]}:{anc['sha'][:12]}"
+            if key in cache:
+                status, tail = cache[key]["status"], cache[key].get("tail", "")
+            else:
+                script = (f"{{ cd /testbed && git checkout -q {anc['sha']} && git checkout -q {fx['fix_commit']} -- {tfiles} "
+                          f"&& cd {subdir} && {test_cmd} {tests}; echo EXIT=$?; }} 2>&1 | tail -n 40")
+                rc, out = docker_run(image, script)
+                m = re.search(r"EXIT=(\d+)", out)
+                exit_code = int(m.group(1)) if m else (rc or 99)
+                # pytest: 0 pass, 1 failures, 2 interrupted (collection error), 4 usage, 5 no tests collected
+                status = "pass" if exit_code == 0 else "fail" if exit_code == 1 else "error"
+                tail = "\n".join(out.strip().splitlines()[-8:])
+                cache[key] = {"status": status, "exit": exit_code, "tail": tail}
+                cache_p.write_text(json.dumps(cache, indent=1))
             log.append({"fix": fx["fix_commit"][:7], "ancestor": anc["sha"][:7], "i": i, "status": status})
             print(f"{fx['repo_name']} {fx['fix_commit'][:7]} anc[{i}] {anc['sha'][:7]} {status}", flush=True)
+            if status == "error":
+                print("     " + tail.replace("\n", "\n     "), flush=True)
             if status == "fail":
                 last_fail = anc
                 continue
