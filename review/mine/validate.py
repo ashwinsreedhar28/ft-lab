@@ -10,7 +10,8 @@ run exactly those test files; then check out the COMMIT and run them again. A ca
     interface_leak    tests only ERROR at the parent (import of a name the fix adds): no bisect signal
     not_reproduced    the new tests pass at the parent too (refactor labelled "fix", or test is vacuous)
     not_green         some new test does not pass at the commit itself
-    install_fail      pip install -e . failed at either sha (deps drifted from the image's HEAD)
+    install_fail      pip install -e . failed AND nothing could be collected (code is imported from the
+                      checkout via PYTHONPATH, so an install failure alone is only a warning)
     timeout           either run exceeded --timeout
     no_image          `make mine-images` failed for that repo; fix its install line
 
@@ -98,14 +99,18 @@ def run_tests_script(sha: str, test_files: list[str], overlay_from: str | None, 
     if full_suite:
         suite = (" ; echo '=== SUITE'; timeout 1500 python -m pytest -q -x -p no:cacheprovider --no-header -rN 2>&1 | tail -n 5; "
                  "echo SUITE_EXIT=${PIPESTATUS[0]}")
+    # PYTHONPATH precedes site-packages, so the checkout shadows the image's seed install even when the
+    # editable install fails (old commits predate the repo's current build system). The pip attempt
+    # stays for metadata/entry points; its failure is a warning in the log, not a verdict.
     return (f"git clone -q /repo /w && cd /w && git checkout -q {sha}{overlay}"
-            f" && ({install} >/tmp/pip.log 2>&1 || {{ echo INSTALL_FAIL; tail -n 20 /tmp/pip.log; exit 3; }})"
+            f" && export PYTHONPATH=/w/src:/w"
+            f" && ({install} >/tmp/pip.log 2>&1 || {{ echo INSTALL_WARN; tail -n 5 /tmp/pip.log; }})"
             f" && {{ python -m pytest -rA -q -p no:cacheprovider --no-header {files} 2>&1 | tail -n 400; echo EXIT=${{PIPESTATUS[0]}}; }}{suite}")
 
 
 def classify(parent: dict[str, str], commit: dict[str, str], p_out: str, c_out: str) -> tuple[str, list[str]]:
-    if "INSTALL_FAIL" in p_out or "INSTALL_FAIL" in c_out:
-        return "install_fail", []
+    if ("INSTALL_WARN" in p_out or "INSTALL_WARN" in c_out) and not commit:
+        return "install_fail", []       # install failed AND nothing imported: the environment, not the commit
     if not commit:
         return "not_green", []           # nothing collected at the commit (collection error / no tests)
     if any(s != "passed" for s in commit.values()):

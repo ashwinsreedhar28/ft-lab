@@ -37,7 +37,7 @@ def oracle_status(name: str, sha: str, fix_sha: str, test_files: list[str], orac
     """pass | fail | error | docker_error for the oracle tests at `sha` with the fix's tests overlaid."""
     # run the whole test files (node ids need the file to be collectable), then read the oracle ids
     rc, out = docker(name, run_tests_script(sha, test_files, fix_sha, False, inst), timeout, net)
-    if rc == 124 or "Unable to find image" in out or "INSTALL_FAIL" in out:
+    if rc == 124 or "Unable to find image" in out:
         return "docker_error", out[-800:]
     res = _parse_results(out)
     st = [res.get(t) for t in oracle]
@@ -128,13 +128,16 @@ def bisect_one(c: dict, cfg: dict, max_anc: int, max_lines: int, timeout: int) -
         row.update(status=verdict, probes=probes, note=f"parent={probes.get(chain[0])}")
         return row
     intro = chain[lo]
-    row.update(introducing=intro, boundary=status(hi), introducing_parent=chain[hi], probes=probes,
+    is_merge = len(git(repo, "rev-list", "--parents", "-n1", intro).split()) > 2
+    row.update(introducing=intro, boundary=status(hi), introducing_parent=chain[hi], probes=probes, merge_commit=is_merge,
                bug_age_commits=lo + 1,   # first-parent commits from introduction to the fix
                introducing_lines=lines_changed(repo, intro),
                introducing_subject=git(repo, "log", "-1", "--format=%s", intro).strip(),
                shared_code_files=sorted(code_files(repo, intro) & set(c["code_files"])))
     if row["boundary"] == "docker_error":
         row["status"] = "unrunnable_boundary"   # could not build/run at the commit before; no signal
+    elif is_merge:
+        row["status"] = "merge_commit"          # bug arrived via a branch merge; needs a second-parent descent
     elif not row["shared_code_files"]:
         row["status"] = "no_shared_file"
     elif row["introducing_lines"] > max_lines:
