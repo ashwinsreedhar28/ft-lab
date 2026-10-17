@@ -152,8 +152,11 @@ def bisect(shwin: Path):
                 # pytest: 0 pass, 1 failures, 2 interrupted (collection error), 4 usage, 5 no tests collected
                 status = "pass" if exit_code == 0 else "fail" if exit_code == 1 else "error"
                 tail = "\n".join(out.strip().splitlines()[-8:])
-                cache[key] = {"status": status, "exit": exit_code, "tail": tail}
-                cache_p.write_text(json.dumps(cache, indent=1))
+                if "Unable to find image" in out or "docker: " in out:
+                    status = "error"; print(f"     image/docker problem for {image}; not cached", flush=True)
+                else:
+                    cache[key] = {"status": status, "exit": exit_code, "tail": tail}
+                    cache_p.write_text(json.dumps(cache, indent=1))
             log.append({"fix": fx["fix_commit"][:7], "ancestor": anc["sha"][:7], "i": i, "status": status})
             print(f"{fx['repo_name']} {fx['fix_commit'][:7]} anc[{i}] {anc['sha'][:7]} {status}", flush=True)
             if status == "error":
