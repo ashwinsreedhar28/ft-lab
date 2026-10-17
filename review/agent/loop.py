@@ -39,11 +39,15 @@ LOOP_SYSTEM = SYSTEM + (
     "passed and that calls at least one of the changed functions by name. Otherwise the harness bounces "
     "the approve back to you (or escalates on the final round).\n"
     "- To run a probe, include a top-level field "
-    '"probe": {"path": "tests/test_probe_review.py", "source": "<pytest file>"} in your JSON. '
-    "The harness runs it at the PR head and returns the output; then you decide again. "
-    "A probe that fails on the PR is evidence for block. Make probes specific: import the changed "
-    "module, call the changed function with inputs the diff makes you suspicious about, assert the "
-    "behavior the PR claims.\n"
+    '"probe": {"path": "tests/test_probe_review.py", "source": "<pytest file>", "hypothesis": "<one line>"} '
+    "in your JSON. The harness runs it at the PR head and returns the output; then you decide again.\n"
+    "- A good probe is a falsifiable hypothesis about the change: state the specific way the change could "
+    "be wrong (an off-by-one, a missing guard, a changed default, an unhandled branch) and write the test "
+    "so that it FAILS if that hypothesis is true. 'It runs without error' is not a hypothesis. Prefer the "
+    "edge the diff makes you uneasy about: empty input, boundary index, the branch the PR added, the "
+    "old caller that still expects the old behavior.\n"
+    "- A probe that fails on the PR is evidence for block (cite it). A probe that passes rules out one "
+    "hypothesis; approve only when your remaining doubt about the changed code is gone.\n"
     "- Blocking or escalating needs no probe. On the final round the probe field is ignored."
 )
 
@@ -179,7 +183,8 @@ def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: 
         specific = probe_is_specific(probe["source"], task)
         if status == "passed" and specific:
             evidence = True
-        probes.append({"round": round_, "path": path, "status": status, "strong": strong, "specific": specific, "tail": out[-1500:]})
+        probes.append({"round": round_, "path": path, "status": status, "strong": strong, "specific": specific,
+                       "hypothesis": probe.get("hypothesis", ""), "tail": out[-1500:]})
         note = "" if specific else " (note: this probe does not call any changed function by name, so it does not count as evidence for approve)"
         messages.append({"role": "user", "content": f"Probe result at the PR head: {status}{note}\n```\n{out[-3000:]}\n```\nDecide again (you may probe once more if rounds remain)."})
     rev, ok = parse_review(text, (tok_in, tok_out), usd_total)
