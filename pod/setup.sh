@@ -15,6 +15,7 @@ TRL_PIN="${TRL_PIN:-}"          # e.g. ==1.15.0
 VLLM_PIN="${VLLM_PIN:-}"        # e.g. ==0.12.0
 TRANSFORMERS_PIN="${TRANSFORMERS_PIN:-}"
 
+export PIP_BREAK_SYSTEM_PACKAGES=1
 pip install -q --upgrade pip
 # vllm pins its own torch; install it first so it wins, then trl on top.
 pip install -q "vllm${VLLM_PIN}"
