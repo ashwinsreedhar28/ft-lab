@@ -35,32 +35,38 @@ README, you do the drill in `docs/NOTES.md` / the study artifact.
 more than the CI half-width (~2.5 pts); you can point at G, the group baseline,
 and `beta` in the trainer source.
 
-## Phase 1 — Spider text-to-SQL, 1× H100 (~5 h, ~$14)
-`bash -s phase1`: setup → Spider SQLite download → smoke → base eval on dev (1,034)
-→ 400-step GRPO → eval → LoRA → eval → table. Frontier rows run from your Mac
-(needs `scripts/get_spider.sh` locally and `ANTHROPIC_API_KEY` in the shell):
-```
-python -m ftlab.eval configs/spider_h100.yaml --backend anthropic --model claude-haiku-4-5 --label haiku
-python -m ftlab.eval configs/spider_h100.yaml --backend anthropic --model claude-sonnet-4-5 --label sonnet
-```
-Same prompt, same scorer. The merged table is the Oct 27 deliverable.
+## Phase 1 — review-bench (Mac + Docker, ~no GPU)
+Design in `review/README.md`. Build from `~/shwin-bench`: bisect each task's hidden test to
+the commit that introduced the bug, pick a size-matched clean commit per positive, build the
+two-hop neighborhood, write `review/bench/tasks.jsonl`. Then frontier baselines
+(`ANTHROPIC_API_KEY` in the shell): Haiku and Sonnet in the `diff`, `diff+run`, `diff+graph`,
+`full` conditions, scored by `review/bench/score.py`. Output: one table, bugs-approved first.
 
-## Phase 2 — topology, 2× then 4× H100 (~1.5 h, ~$20)
+## Phase 2 — the review agent (Mac + Docker; Sonnet then Haiku)
+`review/agent`: neighborhood → run suite → probe test if unsure → decision. Iterate the
+harness until bugs_approved = 0 on review-bench with the highest auto_ship_rate, then swap
+Haiku in and record what breaks. **Phases 1+2 are the Oct 27 deliverable.**
+
+## Phase 3 — fine-tune into the harness (CPU pod for mining, then 1× H100, ~$40)
+Mining recipe in `review/mine/README.md`: public repos, commits after 2026-06-01, bisected
+positives + matched negatives, ~400 train / 100 eval, split by repo. Then GRPO a Qwen3-4B
+or 8B LoRA into the triage-gate role (`ftlab/rewards/review.py`, asymmetric reward).
+Report auto-ship at zero bugs approved and $/PR vs the frontier harness, 3 seeds.
+
+## Phase 4 — topology, 2× then 4× H100 (~1.5 h, ~$20), if budget remains
 A. 2× H100: GPU 0 runs `VLLM_SERVER_DEV_MODE=1 vllm serve …` (command in
    `configs/gsm8k_server_2gpu.yaml`), GPU 1 trains 50 steps with `vllm_mode: server`.
 B. 4× H100: `accelerate launch --num_processes 4 -m ftlab.train configs/gsm8k_colocate_4gpu.yaml`.
 Record `step_time` and $/1k completions for 1-colocate, 2-server, 4-colocate.
-That's the paragraph for Zack: cost per use case at scale.
 
-## Phase 3 — lakehouse text-to-SQL (after Oct 27; Snowflake trial ends ~Nov 6)
-New adapter `ftlab/data/lakehouse.py`: 100–150 questions over `LAKEHOUSE.GOLD`/
-`SILVER`, reference SQL, reference result snapshot; reward = runs in Snowflake and
-result matches the snapshot. Same registry, same train.py.
+## Backlog (configs kept, not scheduled)
+Spider / BIRD text-to-SQL (`configs/spider_*.yaml`, `configs/bird_eval.yaml`, `pod/phase1.sh`
+still runs it as a harness check if wanted), lakehouse text-to-SQL adapter.
 
 ## Day-to-day commands (Mac)
 ```
 scripts/results.sh phase0            # pull the pod's pushed results into ./runs
 scripts/pod.sh set/ssh/push/log      # manual pod access if you want it yourself
-make test                            # 23 pure-python tests, no GPU
+make test                            # 26 pure-python tests, no GPU
 ```
 On the pod: `tmux attach -t ft` (phase), `tmux attach -t hb` (heartbeat), ctrl-b d to detach.
