@@ -62,47 +62,33 @@ def lines_changed(repo: Path, sha: str) -> int:
     return n
 
 
-def search(n: int, status) -> tuple[str, int, int]:
-    """Binary search over chain indices 0..n-1 (0 = fix's parent, must fail). Returns
-    ("ok", lo, hi) with status(lo)=fail and status(hi) in {pass, error}, hi = lo+1; or an error verdict."""
+def search(n: int, status, step: int = 64) -> tuple[str, int, int]:
+    """Gallop back from the fix's parent (index 0, must fail) in doubling steps until the oracle no
+    longer fails (pass, error, or docker_error = cannot build/run there), then binary-search the span.
+    Returns ("ok", lo, hi): status(lo) = fail, status(hi) != fail, hi = lo + 1; or a verdict."""
     s0 = status(0)
     if s0 == "docker_error":
         return "docker_error", 0, 0
     if s0 != "fail":
         return "non_monotone", 0, 0
-    s_old = status(n - 1)
-    if s_old == "fail":
-        return "older_than_window", 0, n - 1
-    if s_old == "docker_error":
-        return "docker_error", 0, n - 1
-    lo, hi = 0, n - 1
+    lo, hi = 0, None
+    k = step
+    while hi is None:
+        i = min(k, n - 1)
+        if status(i) == "fail":
+            lo = i
+            if i == n - 1:
+                return "older_than_window", 0, n - 1
+            k *= 2
+        else:
+            hi = i
     while hi - lo > 1:
         mid = (lo + hi) // 2
-        s = status(mid)
-        if s == "fail":
+        if status(mid) == "fail":
             lo = mid
-        elif s == "docker_error":
-            return "docker_error", lo, hi
         else:
             hi = mid
     return "ok", lo, hi
-
-
-def unshallow(repo: Path, url: str):
-    """scan.py clones --shallow-since; mature repos' bugs are older than that window. Such clones
-    often cannot be deepened ("error in object: unshallow"), so the fallback is a fresh full clone."""
-    if not (repo / ".git" / "shallow").exists():
-        return
-    import shutil
-    import subprocess
-    print(f"{repo.name:10s} unshallowing clone …", flush=True)
-    r = subprocess.run(["git", "-C", str(repo), "fetch", "-q", "--unshallow"], capture_output=True, text=True)
-    if r.returncode == 0 and not (repo / ".git" / "shallow").exists():
-        return
-    print(f"{repo.name:10s} unshallow failed ({r.stderr.strip()[-120:]}); full re-clone from {url}", flush=True)
-    shutil.rmtree(repo)
-    subprocess.run(["git", "clone", "-q", url, str(repo)], check=True)
-    print(f"{repo.name:10s} {git(repo, 'rev-list', '--count', 'HEAD').strip()} commits", flush=True)
 
 
 def bisect_one(c: dict, cfg: dict, max_anc: int, max_lines: int, timeout: int) -> dict:
@@ -130,7 +116,9 @@ def bisect_one(c: dict, cfg: dict, max_anc: int, max_lines: int, timeout: int) -
                introducing_lines=lines_changed(repo, intro),
                introducing_subject=git(repo, "log", "-1", "--format=%s", intro).strip(),
                shared_code_files=sorted(code_files(repo, intro) & set(c["code_files"])))
-    if not row["shared_code_files"]:
+    if row["boundary"] == "docker_error":
+        row["status"] = "unrunnable_boundary"   # could not build/run at the commit before; no signal
+    elif not row["shared_code_files"]:
         row["status"] = "no_shared_file"
     elif row["introducing_lines"] > max_lines:
         row["status"] = "too_big"

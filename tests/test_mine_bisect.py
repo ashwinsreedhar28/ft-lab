@@ -13,7 +13,7 @@ def test_finds_fail_to_pass_boundary_in_log_probes():
     states = ["fail"] * 38 + ["pass"] * 362
     status, calls = mk(states)
     v, lo, hi = search(400, status)
-    assert (v, lo, hi) == ("ok", 37, 38) and len(calls) <= 11
+    assert (v, lo, hi) == ("ok", 37, 38) and len(calls) <= 9
 
 
 def test_error_boundary_counts_as_module_creation():
@@ -25,4 +25,7 @@ def test_error_boundary_counts_as_module_creation():
 def test_older_than_window_and_non_monotone():
     assert search(10, mk(["fail"] * 10)[0])[0] == "older_than_window"
     assert search(10, mk(["pass"] * 10)[0])[0] == "non_monotone"
-    assert search(10, mk(["fail"] + ["docker_error"] * 9)[0])[0] == "docker_error"
+    assert search(10, mk(["docker_error"] * 10)[0])[0] == "docker_error"
+    # cannot build at the far end: the install failure bounds the search instead of aborting it
+    v, lo, hi = search(3000, mk(["fail"] * 1200 + ["docker_error"] * 1800)[0])
+    assert (v, lo, hi) == ("ok", 1199, 1200)
