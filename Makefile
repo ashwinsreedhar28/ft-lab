@@ -42,3 +42,5 @@ mine-images:     ## docker: one image per repo in repos.yaml (deps at clone HEAD
 	python -m review.mine.validate images $(if $(REPO),--repo $(REPO),)
 mine-validate:   ## docker: new tests fail at parent / pass at commit -> work/validated.jsonl + table
 	python -m review.mine.validate run $(if $(REPO),--repo $(REPO),) $(if $(LIMIT),--limit $(LIMIT),)
+mine-bisect:     ## docker: valid fixes -> introducing commits (work/positives.jsonl), JOBS=3
+	python -m review.mine.bisect $(if $(REPO),--repo $(REPO),) --jobs $(or $(JOBS),3)
