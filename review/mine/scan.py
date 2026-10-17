@@ -20,6 +20,7 @@ import subprocess
 from pathlib import Path
 
 FIX_RE = re.compile(r"\b(fix|fixes|fixed|bug|regress|crash|incorrect|wrong|broken|hotfix|repair)\b", re.I)
+REGRESSION_RE = re.compile(r"regress|\bsince\b.*\d|introduced in|\bbroke\b|broken (since|in|by)|no longer|stopped working|used to", re.I)
 SKIP_RE = re.compile(r"\b(revert|merge|bump|release|typo|docs?|changelog|lint|format|ci)\b", re.I)
 
 
@@ -62,7 +63,9 @@ def scan_repo(repo: Path, since: str, max_lines: int) -> list[dict]:
         code = [f for f in files if not is_test(f) and f.endswith(".py")]
         if not tests or not code or lines > max_lines:
             continue
+        body = git(repo, "log", "-1", "--format=%B", sha)
         out.append({"repo": repo.name, "sha": sha, "date": date, "subject": subj, "lines": lines,
+                    "regression": bool(REGRESSION_RE.search(body)),
                     "test_files": tests, "code_files": code,
                     "parent": git(repo, "rev-parse", f"{sha}^").strip()})
     return out

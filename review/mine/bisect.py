@@ -115,17 +115,20 @@ def bisect_one(c: dict, cfg: dict, max_anc: int, max_lines: int, timeout: int) -
     chain = git(repo, "rev-list", "--first-parent", f"--max-count={max_anc}", c["parent"]).split()
     probes = {}
 
+    tails = {}
+
     def status(i: int) -> str:
         sha = chain[i]
         if sha not in probes:
-            probes[sha] = oracle_status(name, sha, c["sha"], c["test_files"], c["oracle_tests"], inst, net, timeout)[0]
+            probes[sha], tails[sha] = oracle_status(name, sha, c["sha"], c["test_files"], c["oracle_tests"], inst, net, timeout)
         return probes[sha]
 
     row = {**{k: c[k] for k in ("repo", "sha", "parent", "subject", "lines", "test_files", "code_files", "oracle_tests")},
-           "chain_len": len(chain)}
+           "regression": c.get("regression", False), "chain_len": len(chain)}
     verdict, lo, hi = search(len(chain), status)
     if verdict != "ok":
-        row.update(status=verdict, probes=probes, note=f"parent={probes.get(chain[0])}")
+        oldest = chain[min(len(chain) - 1, max(probes and [chain.index(k) for k in probes] or [0]))]
+        row.update(status=verdict, probes=probes, note=f"parent={probes.get(chain[0])}", oldest_probe_tail=tails.get(oldest, "")[-600:])
         return row
     intro = chain[lo]
     is_merge = len(git(repo, "rev-list", "--parents", "-n1", intro).split()) > 2
@@ -150,7 +153,7 @@ def bisect_one(c: dict, cfg: dict, max_anc: int, max_lines: int, timeout: int) -
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo"); ap.add_argument("--jobs", type=int, default=3)
-    ap.add_argument("--max-ancestors", type=int, default=5000); ap.add_argument("--max-lines", type=int, default=1500)
+    ap.add_argument("--max-ancestors", type=int, default=800); ap.add_argument("--max-lines", type=int, default=1500)
     ap.add_argument("--timeout", type=int, default=900)
     a = ap.parse_args()
     cfg = repos()
@@ -172,7 +175,7 @@ def main():
             row = f.result()
             fh.write(json.dumps(row) + "\n"); fh.flush(); done[(row["repo"], row["sha"])] = row
             intro = row.get("introducing", "")[:10]
-            print(f"{row['repo']:10s} {row['sha'][:10]} -> {intro:10s} {row['status']:17s} probes={len(row['probes']):2d} "
+            print(f"{row['repo']:10s} {row['sha'][:10]}{'R' if row.get('regression') else ' '} -> {intro:10s} {row['status']:17s} probes={len(row['probes']):2d} "
                   f"boundary={row.get('boundary', '-'):5s} lines={row.get('introducing_lines', 0):5d}  {row.get('introducing_subject', '')[:50]}", flush=True)
     from collections import Counter
     cnt = Counter(r["status"] for r in done.values())

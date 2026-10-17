@@ -44,3 +44,5 @@ mine-validate:   ## docker: new tests fail at parent / pass at commit -> work/va
 	python -m review.mine.validate run $(if $(REPO),--repo $(REPO),) $(if $(LIMIT),--limit $(LIMIT),)
 mine-bisect:     ## docker: valid fixes -> introducing commits (work/positives.jsonl), JOBS=3
 	python -m review.mine.bisect $(if $(REPO),--repo $(REPO),) --jobs $(or $(JOBS),3)
+mine-rescan:     ## git only: re-tag candidates (adds the regression flag) without recloning
+	python -m review.mine.scan --since $(or $(SINCE),2026-06-01)
