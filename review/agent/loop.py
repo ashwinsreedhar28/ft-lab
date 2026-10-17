@@ -24,7 +24,7 @@ import subprocess
 import time
 from pathlib import Path
 
-from review.agent.run import PRICES, SYSTEM, THINKING_BUDGET, build_prompt, parse_review
+from review.agent.run import PRICES, SYSTEM, THINKING_BUDGET, THINKING_EFFORT, build_prompt, parse_review
 from review.bench.score import by_split, load_tasks
 
 RESULTS = Path(__file__).parent / "results"
@@ -83,7 +83,8 @@ def call(model: str, system: str, messages: list[dict], max_tokens: int):
         try:
             kw = dict(model=model, max_tokens=max_tokens, system=system, messages=messages)
             if THINKING_BUDGET:
-                kw["thinking"] = {"type": "enabled", "budget_tokens": THINKING_BUDGET}
+                kw["thinking"] = {"type": "adaptive"}
+                kw["output_config"] = {"effort": THINKING_EFFORT}
             r = client.messages.create(**kw)
             text = "".join(getattr(b, "text", "") or "" for b in r.content)
             pin, pout = PRICES.get(model, (0.0, 0.0))

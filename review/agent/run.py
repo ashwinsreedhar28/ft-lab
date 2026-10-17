@@ -112,7 +112,8 @@ def parse_review(text: str, usage: tuple[int, int], usd: float) -> tuple[Review,
         return Review("escalate", [], usage[0], usage[1], usd), False
 
 
-THINKING_BUDGET = int(os.environ.get("REVIEW_THINKING_BUDGET", "8000"))   # 0 disables the thinking param
+THINKING_BUDGET = int(os.environ.get("REVIEW_THINKING_BUDGET", "8000"))   # 0 disables the thinking params
+THINKING_EFFORT = os.environ.get("REVIEW_THINKING_EFFORT", "medium")      # 5.5 models: adaptive thinking + effort
 
 # $/M tokens (input, output); update when prices change
 PRICES = {"claude-haiku-4-5": (1.0, 5.0), "claude-sonnet-4-5": (3.0, 15.0),
@@ -129,7 +130,8 @@ def call_anthropic(model: str, prompt: str, max_tokens: int) -> tuple[str, tuple
             kw = dict(model=model, max_tokens=max_tokens, system=SYSTEM,
                       messages=[{"role": "user", "content": prompt}])
             if THINKING_BUDGET:
-                kw["thinking"] = {"type": "enabled", "budget_tokens": THINKING_BUDGET}
+                kw["thinking"] = {"type": "adaptive"}
+                kw["output_config"] = {"effort": THINKING_EFFORT}
             r = client.messages.create(**kw)
             text = "".join(getattr(b, "text", "") or "" for b in r.content)
             if not text.strip():
