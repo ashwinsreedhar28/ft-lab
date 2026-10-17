@@ -434,21 +434,6 @@ def _added_ranges(repo: Path, sha: str) -> list[dict]:
     return hunks
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("stage", choices=["prepare", "bisect", "match", "verify", "graph", "coverage"])
-    ap.add_argument("--shwin", default=str(Path.home() / "shwin-bench"))
-    ap.add_argument("--repos", default=str(Path.home()), help="directory containing emberserve/, aether/, serverless-lakehouse/")
-    a = ap.parse_args()
-    shwin, repos = Path(a.shwin).expanduser(), Path(a.repos).expanduser()
-    {"prepare": lambda: prepare(shwin, repos), "bisect": lambda: bisect(shwin), "match": lambda: match(repos),
-     "verify": lambda: verify(shwin), "graph": lambda: graph(repos), "coverage": lambda: coverage(shwin)}[a.stage]()
-
-
-if __name__ == "__main__":
-    main()
-
-
 # ---------- coverage (docker): changed lines no existing test executes ----------
 def coverage(shwin: Path):
     """For every task in tasks.jsonl: run the suite under coverage at head_sha inside the task image,
@@ -508,3 +493,18 @@ def coverage(shwin: Path):
         print(f"{t['id']:45s} added {n_added:4d} lines, {n_added - n_cov:4d} never executed by the suite ({t['covered_frac']})", flush=True)
     tasks_p.write_text("\n".join(json.dumps(t) for t in rows) + "\n")
     print(f"wrote {tasks_p}")
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("stage", choices=["prepare", "bisect", "match", "verify", "graph", "coverage"])
+    ap.add_argument("--shwin", default=str(Path.home() / "shwin-bench"))
+    ap.add_argument("--repos", default=str(Path.home()), help="directory containing emberserve/, aether/, serverless-lakehouse/")
+    a = ap.parse_args()
+    shwin, repos = Path(a.shwin).expanduser(), Path(a.repos).expanduser()
+    {"prepare": lambda: prepare(shwin, repos), "bisect": lambda: bisect(shwin), "match": lambda: match(repos),
+     "verify": lambda: verify(shwin), "graph": lambda: graph(repos), "coverage": lambda: coverage(shwin)}[a.stage]()
+
+
+if __name__ == "__main__":
+    main()
