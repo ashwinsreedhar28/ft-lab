@@ -201,11 +201,20 @@ def bisect(shwin: Path):
         if not by_commit:
             print(f"  -> {fx['repo_name']} {fx['fix_commit'][:7]}: no test found its introducing commit in the window", flush=True)
             continue
+        repo = Path(shwin).parent / fx["repo_name"] if (Path(shwin).parent / fx["repo_name"]).exists() else None
         for idx, ts in sorted(by_commit.items()):
             anc = fx["ancestors"][idx]
             if anc["lines"] > MAX_POS_LINES:
                 print(f"  -> dropped: introducing commit {anc['sha'][:7]} has {anc['lines']} changed lines", flush=True)
                 continue
+            # The fail->error boundary can also mean "the oracle test's imports became satisfiable", not
+            # "the buggy code appeared". Require the introducing commit to touch a code file the fix touched.
+            if repo is not None:
+                _, fi = diff_stat(repo, anc["sha"]); _, ff = diff_stat(repo, fx["fix_commit"])
+                code = lambda fs: {f for f in fs if not is_test_file(f) and f.endswith((".py", ".ts", ".tsx", ".js"))}  # noqa: E731
+                if not (code(fi) & code(ff)):
+                    print(f"  -> dropped: {anc['sha'][:7]} shares no code file with the fix {fx['fix_commit'][:7]} (import boundary, not the bug)", flush=True)
+                    continue
             positives.append({**{k: fx[k] for k in ("repo_name", "repo_url", "fix_commit", "base_commit", "split",
                                                       "test_files", "task_ids", "environment")},
                               "fail_to_pass": sorted(ts), "introducing": anc["sha"], "introducing_lines": anc["lines"],
