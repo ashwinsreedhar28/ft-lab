@@ -25,6 +25,6 @@ rb-graph:        ## git only; writes review/bench/tasks.jsonl
 	python -m review.bench.build graph --repos $(REPOS)
 rb-baselines:    ## needs ANTHROPIC_API_KEY
 	for c in diff diff+graph; do \
-	  python -m review.agent.run --model claude-haiku-4-5  --condition $$c --label haiku_$$c; \
-	  python -m review.agent.run --model claude-sonnet-4-5 --condition $$c --label sonnet_$$c; done
+	  python -m review.agent.run --model claude-haiku-5-5  --condition $$c --label haiku_$$c; \
+	  python -m review.agent.run --model claude-sonnet-5-5 --condition $$c --label sonnet_$$c; done
 	python -m review.agent.run --table review/agent/results/*.json

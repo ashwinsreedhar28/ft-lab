@@ -1,7 +1,7 @@
 """Run a reviewer over review-bench under one context condition and score it.
 
-    python -m review.agent.run --model claude-sonnet-4-5 --condition diff      --label sonnet_diff
-    python -m review.agent.run --model claude-haiku-4-5  --condition diff+graph --label haiku_graph
+    python -m review.agent.run --model claude-sonnet-5-5 --condition diff      --label sonnet_diff
+    python -m review.agent.run --model claude-haiku-5-5  --condition diff+graph --label haiku_graph
     python -m review.agent.run --table review/agent/results/*.json
 
 Conditions
@@ -76,7 +76,8 @@ def parse_review(text: str, usage: tuple[int, int], usd: float) -> tuple[Review,
 
 
 # $/M tokens (input, output); update when prices change
-PRICES = {"claude-haiku-4-5": (1.0, 5.0), "claude-sonnet-4-5": (3.0, 15.0)}
+PRICES = {"claude-haiku-4-5": (1.0, 5.0), "claude-sonnet-4-5": (3.0, 15.0),
+          "claude-haiku-5-5": (1.0, 5.0), "claude-sonnet-5-5": (3.0, 15.0)}  # 5.5 rows assumed = 4.5; fix from the invoice
 
 
 def call_anthropic(model: str, prompt: str, max_tokens: int) -> tuple[str, tuple[int, int], float]:
@@ -85,7 +86,7 @@ def call_anthropic(model: str, prompt: str, max_tokens: int) -> tuple[str, tuple
     client = anthropic.Anthropic()
     for attempt in range(5):
         try:
-            r = client.messages.create(model=model, max_tokens=max_tokens, temperature=0.0, system=SYSTEM,
+            r = client.messages.create(model=model, max_tokens=max_tokens, system=SYSTEM,
                                        messages=[{"role": "user", "content": prompt}])
             text = "".join(b.text for b in r.content if getattr(b, "type", "") == "text")
             pin, pout = PRICES.get(model, (0.0, 0.0))
@@ -109,7 +110,7 @@ def call_openai(model: str, prompt: str, max_tokens: int, base_url: str) -> tupl
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tasks", default=str(Path(__file__).parent.parent / "bench/tasks.jsonl"))
-    ap.add_argument("--model", default="claude-sonnet-4-5")
+    ap.add_argument("--model", default="claude-sonnet-5-5")
     ap.add_argument("--condition", default="diff", choices=["diff", "diff+graph", "diff+run", "full"])
     ap.add_argument("--label", default=None)
     ap.add_argument("--backend", default="anthropic", choices=["anthropic", "openai"])

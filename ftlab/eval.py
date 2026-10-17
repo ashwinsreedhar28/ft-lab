@@ -54,7 +54,7 @@ def gen_anthropic(model: str, messages_list: list[list[dict]], max_tokens: int, 
         user = [m for m in msgs if m["role"] != "system"]
         for attempt in range(5):
             try:
-                kw = {"model": model, "max_tokens": max_tokens, "temperature": 0.0, "messages": user}
+                kw = {"model": model, "max_tokens": max_tokens, "messages": user}
                 if system:
                     kw["system"] = system
                 r = client.messages.create(**kw)
