@@ -1,0 +1,231 @@
+{
+ "label": "sonnet_v4_r2",
+ "model": "claude-sonnet-5-5",
+ "condition": "loop",
+ "n": 8,
+ "unparsable": 0,
+ "wall_s": 156.5,
+ "scores": {
+  "all": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "bugs_approved": 0,
+   "bugs_approved_rate_ub95": 0.5271291954984121,
+   "auto_ship_rate": 0.5,
+   "escalation_rate": 0.75,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.12442425
+  },
+  "fresh": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "bugs_approved": 0,
+   "bugs_approved_rate_ub95": 0.5271291954984121,
+   "auto_ship_rate": 0.5,
+   "escalation_rate": 0.75,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.12442425
+  }
+ },
+ "reviews": [
+  {
+   "task_id": "bug__emberserve__36f4e93",
+   "decision": "escalate",
+   "usd": 0.0801,
+   "probes": [],
+   "comments": [
+    {
+     "file": "deploy/runpod/handler.py",
+     "line_start": 73,
+     "line_end": 133,
+     "body": "I did not run a probe, so I cannot confirm safety. The existing suite does not execute most of the changed lines (the new _coalesced pump/timer path, snapshot_complete, and the resolve_model_dir streaming branch). The new asyncio-based coalescer has timing, cancellation and wait_for/Queue edge cases that need a human or an executed test. In resolve_model_dir, the default PAGEDSERVE_LOADER value of 'stream' is assumed rather than verified against the engine.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "<invoke name=\"probe_placeholder\">\n</invoke>\n```json\n{\"decision\":\"escalate\",\"comments\":[{\"file\":\"deploy/runpod/handler.py\",\"line_start\":73,\"line_end\":133,\"body\":\"I did not run a probe, so I cannot confirm safety. The existing suite does not execute most of the changed lines (the new _coalesced pump/timer path, snapshot_complete, and the resolve_model_dir streaming branch). The new asyncio-based coalescer has timing, cancellation and wait_for/Queue edge cases that need a human or an executed test. In resolve_model_dir, the default PAGEDSERVE_LOADER value of 'stream' is assumed rather than verified against the engine.\"}]}\n```"
+  },
+  {
+   "task_id": "bug__emberserve__7edbe0f",
+   "decision": "escalate",
+   "usd": 0.061794,
+   "probes": [],
+   "comments": [
+    {
+     "file": "pagedserve/sched/scheduler.py",
+     "line_start": 172,
+     "line_end": 177,
+     "body": "I could not establish that the new `and batch` guard is safe from the diff. In chunked-prefill mode, decode rows may already have used part of `budget` while `batch` is still empty. This guard could then admit a prefill over the token budget. I cannot see what `batch` holds or how `query_len` is clipped. None of the changed lines here are executed by an existing test, and the new test covers only the non-chunked preempted case. A human should check the chunked path.",
+     "proposed_test": null
+    },
+    {
+     "file": "pagedserve/server/engine_core.py",
+     "line_start": 308,
+     "line_end": 356,
+     "body": "The synchronous send is replaced by a queued writer thread. Its `send` no longer raises on a dead pipe, and queued commands can be dropped at `stop()` after a 1 s join. Neither the `AttachedCore` path nor the `EngineCoreProcess` lifecycle is exercised by a test, and the error surfaces only on the next `put`. A human should confirm callers can tolerate this.",
+     "proposed_test": null
+    },
+    {
+     "file": "pagedserve/engine.py",
+     "line_start": 533,
+     "line_end": 551,
+     "body": "The failed-step TP teardown now runs on a daemon thread with a 30 s join. No test executes these lines. Moving `release_graphs` and `destroy_tp` to another thread could affect CUDA and NCCL thread affinity. This needs human review.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"pagedserve/sched/scheduler.py\",\"line_start\":172,\"line_end\":177,\"body\":\"I could not establish that the new `and batch` guard is safe from the diff. In chunked-prefill mode, decode rows may already have used part of `budget` while `batch` is still empty. This guard could then admit a prefill over the token budget. I cannot see what `batch` holds or how `query_len` is clipped. None of the changed lines here are executed by an existing test, and the new test covers only the non-chunked preempted case. A human should check the chunked path.\"},{\"file\":\"pagedserve/server/engine_core.py\",\"line_start\":308,\"line_end\":356,\"body\":\"The synchronous send is replaced by a queued writer thread. Its `send` no longer raises on a dead pipe, and queued commands can be dropped at `stop()` after a 1 s join. Neither the `AttachedCore` path nor the `EngineCoreProcess` lifecycle is exercised by a test, and the error surfaces only on the next `put`. A human should confirm callers can tolerate this.\"},{\"file\":\"pagedserve/engine.py\",\"line_start\":533,\"line_end\":551,\"body\":\"The failed-step TP teardown now runs on a daemon thread with a 30 s join. No test executes these lines. Moving `release_graphs` and `destroy_tp` to another thread could affect CUDA and NCCL thread affinity. This needs human review.\"}]}"
+  },
+  {
+   "task_id": "bug__emberserve__f1943a4",
+   "decision": "escalate",
+   "usd": 0.127887,
+   "probes": [],
+   "comments": [
+    {
+     "file": "pagedserve/engine.py",
+     "line_start": 264,
+     "line_end": 350,
+     "body": "This change adds a multi-process tensor-parallel path (launch_tp, worker_loop, NCCL collectives, CUDA-graph capture of collectives, subprocess lifecycle). The CPU gloo tests pass, but every GPU/NCCL test is skipped here, and I found no concrete defect I could cite. Turning `head_dim` from a property into a dataclass field also changes behaviour for any caller that builds a config via `dataclasses.replace` with a different hidden size or head count, because head_dim then goes stale. The shard path is only validated on CPU, so a human should review it and run the two-GPU tests before this deploys.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "<invoke name=\"\">\n</invoke>\n{\"decision\":\"escalate\",\"comments\":[{\"file\":\"pagedserve/engine.py\",\"line_start\":264,\"line_end\":350,\"body\":\"This change adds a multi-process tensor-parallel path (launch_tp, worker_loop, NCCL collectives, CUDA-graph capture of collectives, subprocess lifecycle). The CPU gloo tests pass, but every GPU/NCCL test is skipped here, and I found no concrete defect I could cite. Turning `head_dim` from a property into a dataclass field also changes behaviour for any caller that builds a config via `dataclasses.replace` with a different hidden size or head count, because head_dim then goes stale. The shard path is only validated on CPU, so a human should review it and run the two-GPU tests before this deploys.\"}]}"
+  },
+  {
+   "task_id": "bug__serverless-lakehouse__9e1c251",
+   "decision": "escalate",
+   "usd": 0.091965,
+   "probes": [],
+   "comments": [
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 1,
+     "line_end": 473,
+     "body": "This PR adds about 800 lines of Spark transformation logic (silver, gold, report, config.table_path) and no test executes any of it. The green suite covers only landing and redact. I found no definite defect, but I cannot establish correctness from the diff alone. Open points: (1) emberserve_requests joins the gpu_labels seed on gpu_model == gpu_label, which depends on seed contents I could not see; (2) the timestamp handling for the console, ISO and pipe worker-log formats, including the America/New_York conversion; (3) the Pulse dedupe key and priority; (4) the worker boot segmentation windows in gold. A human should review this, ideally with a fixture-based test of the silver and gold builders, before it is deployed.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"lakehouse/silver.py\",\"line_start\":1,\"line_end\":473,\"body\":\"This PR adds about 800 lines of Spark transformation logic (silver, gold, report, config.table_path) and no test executes any of it. The green suite covers only landing and redact. I found no definite defect, but I cannot establish correctness from the diff alone. Open points: (1) emberserve_requests joins the gpu_labels seed on gpu_model == gpu_label, which depends on seed contents I could not see; (2) the timestamp handling for the console, ISO and pipe worker-log formats, including the America/New_York conversion; (3) the Pulse dedupe key and priority; (4) the worker boot segmentation windows in gold. A human should review this, ideally with a fixture-based test of the silver and gold builders, before it is deployed.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__c6278c4",
+   "decision": "approve",
+   "usd": 0.21270899999999998,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "main.serve_command emits a CLI flag that `pagedserve serve` does not accept, so the worker would crash at startup",
+     "source": "import importlib.util, subprocess, sys\nfrom pathlib import Path\n\ndef test_serve_flags_exist_in_cli():\n    p = Path(__file__).resolve().parents[1] / 'deploy' / 'runpod' / 'main.py'\n    spec = importlib.util.spec_from_file_location('rp_main', p)\n    m = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(m)\n    import os\n    os.environ['QUANTIZATION'] = 'int8'\n    os.environ['TENSOR_PARALLEL_SIZE'] = '2'\n    os.environ['PREFIX_CACHING'] = '1'\n    cmd = m.serve_command('/models/m')\n    flags = [c for c in cmd if c.startswith('--')]\n    out = subprocess.run([sys.executable, '-m', 'pagedserve.cli', 'serve', '--help'], capture_output=True, text=True)\n    text = out.stdout + out.stderr\n    assert out.returncode == 0, text\n    missing = [f for f in flags if f not in text]\n    assert not missing, missing\n",
+     "tail": "tatements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"functions\": {\"test_serve_flags_exist_in_cli\": {\"executed_lines\": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"summary\": {\"covered_lines\": 15, \"num_statements\": 15, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 4}, \"\": {\"executed_lines\": [1, 2, 4], \"summary\": {\"covered_lines\": 3, \"num_statements\": 3, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 1}}, \"classes\": {\"\": {\"executed_lines\": [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"summary\": {\"covered_lines\": 18, \"num_statements\": 18, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 1}}}}, \"totals\": {\"covered_lines\": 58, \"num_statements\": 130, \"percent_covered\": 44.61538461538461, \"percent_covered_display\": \"45\", \"missing_lines\": 72, \"excluded_lines\": 0, \"percent_statements_covered\": 44.61538461538461, \"percent_statements_covered_display\": \"45\"}}"
+    },
+    {
+     "round": 1,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "wait_for_server polls /health, which the pagedserve app may not define, so the worker would never become ready",
+     "source": "import importlib.util\nfrom pathlib import Path\n\ndef test_health_route_exists_and_serve_command_ok():\n    root = Path(__file__).resolve().parents[1]\n    src = (root / 'pagedserve' / 'server' / 'app.py').read_text()\n    assert '/health' in src\n    spec = importlib.util.spec_from_file_location('rp_main2', root / 'deploy' / 'runpod' / 'main.py')\n    m = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(m)\n    cmd = m.serve_command('/models/m')\n    assert cmd[0] and '--served-model-name' in cmd\n",
+     "tail": "ent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"functions\": {\"test_health_route_exists_and_serve_command_ok\": {\"executed_lines\": [5, 6, 7, 8, 9, 10, 11, 12], \"summary\": {\"covered_lines\": 8, \"num_statements\": 8, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 4}, \"\": {\"executed_lines\": [1, 2, 4], \"summary\": {\"covered_lines\": 3, \"num_statements\": 3, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 1}}, \"classes\": {\"\": {\"executed_lines\": [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"summary\": {\"covered_lines\": 11, \"num_statements\": 11, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 1}}}}, \"totals\": {\"covered_lines\": 48, \"num_statements\": 123, \"percent_covered\": 39.02439024390244, \"percent_covered_display\": \"39\", \"missing_lines\": 75, \"excluded_lines\": 0, \"percent_statements_covered\": 39.02439024390244, \"percent_statements_covered_display\": \"39\"}}"
+    }
+   ],
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "clean__emberserve__581e293",
+   "decision": "escalate",
+   "usd": 0.127914,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "_tile_for returns a power of two >=16 dividing block_size for all groups_pad/D combos, and paged_triton engine builds on CPU without graphs",
+     "source": "import warnings, pytest, torch\nfrom pagedserve.attn.paged_triton import _tile_for, _next_pow2\nfrom pagedserve.config import EngineConfig, ModelConfig\nfrom pagedserve.engine import LLMEngine, GRAPH_CAPABLE_BACKENDS\nfrom pagedserve.model.qwen2 import Qwen2ForCausalLM, reset_parameters_deterministic\n\n\ndef test_tile_for():\n    for bs in (16, 32, 64, 128, 256):\n        for g in (1, 2, 4, 8, 16, 32):\n            for d in (16, 32, 64, 128, 256):\n                t = _tile_for(bs, d, g)\n                assert t >= 16 and t & (t - 1) == 0 and bs % t == 0 and t <= bs\n    assert _tile_for(16, 64, 8) == 16\n    assert _tile_for(256, 64, 8) == 16\n    assert _tile_for(256, 64, 4) == 32\n    assert _tile_for(256, 64, 1) == 32\n    assert _tile_for(256, 128, 8) == 16\n\n\ndef test_engine_triton_cpu():\n    cfg = ModelConfig.tiny(num_attention_heads=4, num_key_value_heads=2, hidden_size=256)\n    model = Qwen2ForCausalLM(cfg)\n    reset_parameters_deterministic(model, 0)\n    ecfg = EngineConfig(device='cpu', dtype=torch.float32, block_size=16, num_gpu_blocks=32,\n                        max_num_seqs=4, max_num_batched_tokens=256, max_model_len=128,\n                        attn_backend='paged_triton', enable_cuda_graphs=True)\n    with warnings.catch_warnings(record=True) as w:\n        warnings.simplefilter('always')\n        eng = LLMEngine(model, cfg, ecfg, tokenizer=None)\n    assert eng.graph_runner is None and eng.scratch_block is None\n    assert type(eng.backend).__name__ == 'PagedTritonAttentionBackend'\n    assert any('paged_triton' in str(x.message) for x in w)\n",
+     "tail": "s\": [], \"excluded_lines\": [], \"start_line\": 8}, \"test_engine_triton_cpu\": {\"executed_lines\": [22, 23, 24, 25, 28, 29, 30], \"summary\": {\"covered_lines\": 7, \"num_statements\": 10, \"percent_covered\": 70.0, \"percent_covered_display\": \"70\", \"missing_lines\": 3, \"excluded_lines\": 0, \"percent_statements_covered\": 70.0, \"percent_statements_covered_display\": \"70\"}, \"missing_lines\": [31, 32, 33], \"excluded_lines\": [], \"start_line\": 21}, \"\": {\"executed_lines\": [1, 2, 3, 4, 5, 8, 21], \"summary\": {\"covered_lines\": 7, \"num_statements\": 7, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 1}}, \"classes\": {\"\": {\"executed_lines\": [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 28, 29, 30], \"summary\": {\"covered_lines\": 24, \"num_statements\": 27, \"percent_covered\": 88.88888888888889, \"percent_covered_display\": \"89\", \"missing_lines\": 3, \"excluded_lines\": 0, \"percent_statements_covered\": 88.88888888888889, \"percent_statements_covered_display\": \"89\"}, \"missing_lines\": [31, 32, 33], \"excluded_lines\": [], \"start_line\": 1}}}}, \"totals\": {\"covered_lines\": 666, \"num_statements\": 1635, \"percent_covered\": 40.73394495412844, \"percent_covered_display\": \"41\", \"missing_lines\": 969, \"excluded_lines\": 5, \"percent_statements_covered\": 40.73394495412844, \"percent_statements_covered_display\": \"41\"}}"
+    }
+   ],
+   "comments": [
+    {
+     "file": "pagedserve/engine.py",
+     "line_start": 89,
+     "line_end": 98,
+     "body": "The change enables CUDA-graph capture for paged_triton, and the only tests that exercise it (tests/test_paged_triton_gpu.py, tests/test_cuda_graphs_gpu.py) are skipped without CUDA. Graph capture with a Triton kernel is not checked anywhere I can see. Kernel launch parameters such as num_splits=None and the SM-count-based heuristic could be baked in at capture time, or a first-call JIT compile could happen inside capture. A human needs to run the GPU tests on a real device.",
+     "proposed_test": null
+    },
+    {
+     "file": "pagedserve/attn/paged_triton.py",
+     "line_start": 200,
+     "line_end": 215,
+     "body": "The _tile_for probe passed, but the coverage output shows the three asserts at the end of test_engine_triton_cpu (lines 31-33) as never executed even though the test reported as passed. That is inconsistent, so I can't treat the engine-side probe as evidence. The git history also marks the kernel as WIP with GPU validation pending. The tile-size change alters register pressure and numerics on GPU, and nothing in this review has validated it there.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"pagedserve/engine.py\",\"line_start\":89,\"line_end\":98,\"body\":\"The change enables CUDA-graph capture for paged_triton, and the only tests that exercise it (tests/test_paged_triton_gpu.py, tests/test_cuda_graphs_gpu.py) are skipped without CUDA. Graph capture with a Triton kernel is not checked anywhere I can see. Kernel launch parameters such as num_splits=None and the SM-count-based heuristic could be baked in at capture time, or a first-call JIT compile could happen inside capture. A human needs to run the GPU tests on a real device.\"},{\"file\":\"pagedserve/attn/paged_triton.py\",\"line_start\":200,\"line_end\":215,\"body\":\"The _tile_for probe passed, but the coverage output shows the three asserts at the end of test_engine_triton_cpu (lines 31-33) as never executed even though the test reported as passed. That is inconsistent, so I can't treat the engine-side probe as evidence. The git history also marks the kernel as WIP with GPU validation pending. The tile-size change alters register pressure and numerics on GPU, and nothing in this review has validated it there.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__96519cd",
+   "decision": "approve",
+   "usd": 0.242274,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "chunked prefill with preemption and prefix caching under tight blocks diverges from unchunked outputs or exceeds budget",
+     "source": "import random\nimport torch\nfrom tests.test_engine import make_engine, CFG\nfrom pagedserve.llm import LLM\nfrom pagedserve.sched.request import SamplingParams\n\n\ndef test_chunked_preempt_prefix_stress():\n    rng = random.Random(3)\n    g = torch.Generator().manual_seed(5)\n    shared = torch.randint(2, CFG.vocab_size, (8,), generator=g).tolist()\n    ps = []\n    for i in range(10):\n        n = rng.randint(2, 30)\n        t = torch.randint(2, CFG.vocab_size, (n,), generator=g).tolist()\n        ps.append((shared + t) if i % 2 else t)\n    sp = SamplingParams.greedy(10, ignore_eos=True)\n    ref = LLM.from_engine(make_engine('paged_torch', num_blocks=512)).generate(ps, sp)\n    for prefix in (False, True):\n        eng = make_engine('paged_torch', num_blocks=18, block_size=4, max_batched=7,\n                          enable_chunked_prefill=True, enable_prefix_caching=prefix)\n        res = LLM.from_engine(eng).generate(ps, sp)\n        assert [r.output_token_ids for r in res] == [r.output_token_ids for r in ref]\n        assert all(s.num_tokens <= 7 for s in eng.stats)\n        assert any(s.num_preempted for s in eng.stats)\n",
+     "tail": "g_lines\": [], \"excluded_lines\": [], \"functions\": {\"test_chunked_preempt_prefix_stress\": {\"executed_lines\": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25], \"summary\": {\"covered_lines\": 16, \"num_statements\": 16, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 8}, \"\": {\"executed_lines\": [1, 2, 3, 4, 5, 8], \"summary\": {\"covered_lines\": 6, \"num_statements\": 6, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 1}}, \"classes\": {\"\": {\"executed_lines\": [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25], \"summary\": {\"covered_lines\": 22, \"num_statements\": 22, \"percent_covered\": 100.0, \"percent_covered_display\": \"100\", \"missing_lines\": 0, \"excluded_lines\": 0, \"percent_statements_covered\": 100.0, \"percent_statements_covered_display\": \"100\"}, \"missing_lines\": [], \"excluded_lines\": [], \"start_line\": 1}}}}, \"totals\": {\"covered_lines\": 1233, \"num_statements\": 1658, \"percent_covered\": 74.36670687575392, \"percent_covered_display\": \"74\", \"missing_lines\": 425, \"excluded_lines\": 3, \"percent_statements_covered\": 74.36670687575392, \"percent_statements_covered_display\": \"74\"}}"
+    }
+   ],
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"comments\":[]}"
+  },
+  {
+   "task_id": "clean__serverless-lakehouse__0718b2f",
+   "decision": "escalate",
+   "usd": 0.050751,
+   "probes": [],
+   "comments": [
+    {
+     "file": "lakehouse/gold.py",
+     "line_start": 75,
+     "line_end": 118,
+     "body": "I could not establish safety. The rewritten engine_comparison, the new coldstart_events and the silver host_state/run_note joins are Spark code that no test executes. Several risks need a human to run the pipeline (make silver gold dashboard) or write Spark tests:\n- The seed join in emberserve_requests will duplicate request rows if coldstart_run_notes.csv has duplicate (series_label, run_index) pairs. That seed was not shown to me.\n- The `.where(n_full_boots.isNotNull())` filter now drops pooled rows that only have warm requests. The old full join kept them, so this is a behavior change.\n- run_index in the notes seed is IntegerType, and the join type against the bronze column is unverified.\n- Whether silver's coldstart_requests builder unions the emberserve and pulse frames by position or by name needs checking. The added columns are placed consistently, but I could not confirm this.",
+     "proposed_test": null
+    },
+    {
+     "file": "lakehouse/dashboard.py",
+     "line_start": 22,
+     "line_end": 33,
+     "body": "jsonable does not handle Decimal or nested Row/dict values. If any gold column holds one, json.dumps will raise at build time. The whole module (lines 1-73) is untested, and the template with its GOLD_JSON marker was not visible to me.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"comments\":[{\"file\":\"lakehouse/gold.py\",\"line_start\":75,\"line_end\":118,\"body\":\"I could not establish safety. The rewritten engine_comparison, the new coldstart_events and the silver host_state/run_note joins are Spark code that no test executes. Several risks need a human to run the pipeline (make silver gold dashboard) or write Spark tests:\\n- The seed join in emberserve_requests will duplicate request rows if coldstart_run_notes.csv has duplicate (series_label, run_index) pairs. That seed was not shown to me.\\n- The `.where(n_full_boots.isNotNull())` filter now drops pooled rows that only have warm requests. The old full join kept them, so this is a behavior change.\\n- run_index in the notes seed is IntegerType, and the join type against the bronze column is unverified.\\n- Whether silver's coldstart_requests builder unions the emberserve and pulse frames by position or by name needs checking. The added columns are placed consistently, but I could not confirm this.\"},{\"file\":\"lakehouse/dashboard.py\",\"line_start\":22,\"line_end\":33,\"body\":\"jsonable does not handle Decimal or nested Row/dict values. If any gold column holds one, json.dumps will raise at build time. The whole module (lines 1-73) is untested, and the template with its GOLD_JSON marker was not visible to me.\"}]}"
+  }
+ ]
+}
