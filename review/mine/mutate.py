@@ -162,9 +162,13 @@ def script(sha: str, inst: str, edits: dict[str, str] | None, probe: tuple[str, 
     return " && ".join(parts[:3]) + " && " + " ; ".join(parts[3:]), files
 
 
-def run(name: str, sha: str, inst: str, net: bool, timeout: int, **kw) -> str:
+def run(name: str, sha: str, inst: str, net: bool, timeout: int, tag: str = "", **kw) -> str:
     sc, files = script(sha, inst, **kw)
-    return docker(name, sc, timeout, net, files)[1]
+    out = docker(name, sc, timeout, net, files)[1]
+    if tag:                                      # raw output for post-mortems: work/debug/<tag>.txt
+        d = WORK / "debug"; d.mkdir(exist_ok=True)
+        (d / f"{tag}.txt").write_text(sc + "\n\n=====\n" + out)
+    return out
 
 
 def passed(out: str) -> set[str]:
@@ -218,7 +222,7 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
             continue
         rel = related_tests(repo, pr["sha"], f, pr["test_files"])
         targets = rel or None                       # None -> whole suite
-        base_out = run(name, pr["sha"], inst, net, timeout, edits=None, probe=None, pytest_targets=targets, want_diff=False)
+        base_out = run(name, pr["sha"], inst, net, timeout, tag=f"{name}_{pr['sha'][:8]}_baseline", edits=None, probe=None, pytest_targets=targets, want_diff=False)
         base_pass = passed(base_out)
         if not base_pass:
             n_pass_lines = len(re.findall(r"^PASSED ", base_out, re.M))
@@ -235,7 +239,7 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
             content = mutated_file(repo, pr["sha"], f, m["line"], m["mutated"])
             row = {**{k: pr[k] for k in ("repo", "sha", "parent", "subject", "lines")}, "file": f, **m,
                    "targets": targets, "baseline_passed": len(base_pass)}
-            out1 = run(name, pr["sha"], inst, net, timeout, edits={f: content}, probe=None, pytest_targets=targets, want_diff=False)
+            out1 = run(name, pr["sha"], inst, net, timeout, tag=f"{name}_{pr['sha'][:8]}_{m['line']}_{m['operator']}_s1", edits={f: content}, probe=None, pytest_targets=targets, want_diff=False)
             k1 = killed_by(base_pass, out1)
             row["stage1"] = "killed" if k1 else ("survived" if exit_code(out1) in ("0", "1") else "error")
             row["stage1_killers"] = sorted(k1)[:10]; row["stage1_tail"] = out1[-1200:]
@@ -244,7 +248,7 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
                 rows.append(row); log(f"{name:9s} {pr['sha'][:8]} {f}:{m['line']} {m['operator']:14s} {row['stage1']} {len(k1)}{extra}"); continue
             if base_full_pass is None:
                 base_full_pass = passed(run(name, pr["sha"], inst, net, timeout, edits=None, probe=None, pytest_targets=None, want_diff=False))
-            out2 = run(name, pr["sha"], inst, net, timeout, edits={f: content}, probe=None, pytest_targets=None, want_diff=True, parent=pr["parent"])
+            out2 = run(name, pr["sha"], inst, net, timeout, tag=f"{name}_{pr['sha'][:8]}_{m['line']}_{m['operator']}_s2", edits={f: content}, probe=None, pytest_targets=None, want_diff=True, parent=pr["parent"])
             k2 = killed_by(base_full_pass, out2)
             row["stage2"] = "killed" if k2 else ("survived" if exit_code(out2) in ("0", "1") else "error")
             row["stage2_killers"] = sorted(k2)[:10]
