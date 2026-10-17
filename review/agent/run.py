@@ -206,15 +206,41 @@ def main():
           f"escalate={s['escalation_rate']:.2f}  unparsable={unparsable}  ${s['usd_per_pr']:.4f}/PR  -> {p}")
 
 
+_REP_RE = re.compile(r"^(.*)_r(\d+)$")
+
+
 def table(paths):
+    """One row per label; `<label>_r<i>` repeats collapse to mean ± half-range. Columns are rates over
+    the bench; 'strong' = fraction of blocked bug PRs whose probe reproduced the oracle."""
     rows = [json.loads(Path(p).read_text()) for p in paths]
-    rows.sort(key=lambda r: (r["scores"]["all"]["bugs_approved"], -(r["scores"]["all"]["auto_ship_rate"] or 0)))
-    print(f"{'label':<22}{'cond':<11}{'bugs appr':>10}{'auto-ship':>10}{'escalate':>9}{'blk prec':>9}{'local':>7}{'$/PR':>8}")
+    groups: dict[str, list[dict]] = {}
     for r in rows:
-        s = r["scores"]["all"]
-        f = lambda v: "   —" if v is None else f"{v:.2f}"  # noqa: E731
-        print(f"{r['label']:<22}{r['condition']:<11}{s['bugs_approved']:>6}/{s['n_bug']:<3}{f(s['auto_ship_rate']):>10}"
-              f"{f(s['escalation_rate']):>9}{f(s['block_precision']):>9}{f(s['localization']):>7}{s['usd_per_pr'] or 0:>8.4f}")
+        m = _REP_RE.match(r["label"])
+        groups.setdefault(m.group(1) if m else r["label"], []).append(r)
+
+    def agg(key, rs, denom=None):
+        vals = []
+        for r in rs:
+            s = r["scores"]["all"]
+            v = s[key] if denom is None else (s[key] / s[denom] if s[denom] else None)
+            if v is not None:
+                vals.append(v)
+        if not vals:
+            return None, None
+        return sum(vals) / len(vals), ((max(vals) - min(vals)) / 2 if len(vals) > 1 else None)
+
+    out = []
+    for label, rs in groups.items():
+        ba, ba_sp = agg("bugs_approved", rs, "n_bug")
+        out.append((label, rs[0]["condition"], len(rs), rs[0]["scores"]["all"]["n_bug"],
+                    ba, ba_sp, *agg("auto_ship_rate", rs), *agg("escalation_rate", rs),
+                    *agg("block_precision", rs), *agg("localization", rs), *agg("strong_localization", rs),
+                    *agg("usd_per_pr", rs)))
+    out.sort(key=lambda t: ((t[4] or 0), -(t[6] or 0)))
+    f = lambda v, sp=None: ("   —" if v is None else f"{v:.2f}") + (f"±{sp:.2f}" if sp else "     ")  # noqa: E731
+    print(f"{'label':<20}{'cond':<11}{'runs':>4}{'bugs appr':>12}{'auto-ship':>12}{'escalate':>12}{'blk prec':>12}{'local':>12}{'strong':>12}{'$/PR':>8}")
+    for (label, cond, k, nb, ba, bas, au, aus, es, ess, bp, bps, lo, los, st, sts, usd, _) in out:
+        print(f"{label:<20}{cond:<11}{k:>4}{f(ba, bas):>12}{f(au, aus):>12}{f(es, ess):>12}{f(bp, bps):>12}{f(lo, los):>12}{f(st, sts):>12}{(usd or 0):>8.3f}")
 
 
 if __name__ == "__main__":

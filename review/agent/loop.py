@@ -193,8 +193,14 @@ def main():
     ap.add_argument("--label", default=None)
     ap.add_argument("--max-probes", type=int, default=3)
     ap.add_argument("--max-tokens", type=int, default=14000)
+    ap.add_argument("--repeat", type=int, default=1, help="run N times, writing <label>_r<i>.json; --table collapses them")
     a = ap.parse_args()
-    label = a.label or f"{a.model}_loop"
+    base_label = a.label or f"{a.model}_loop"
+    for rep in range(a.repeat):
+        run_once(a, base_label if a.repeat == 1 else f"{base_label}_r{rep}")
+
+
+def run_once(a, label):
     tasks = [t.to_json() for t in load_tasks(a.tasks)]
     runs = json.loads(RUNS.read_text()) if RUNS.exists() else {}
     reviews, strong, out_rows = {}, {}, []
