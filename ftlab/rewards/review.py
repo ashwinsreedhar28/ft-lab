@@ -6,20 +6,25 @@
   escalate (either kind)  -0.2   cheap but useless if always chosen
   block w/ localized hint +0.5   the block was for the right reason
   unparsable output       -1.0   (scored as escalate on top)
+  tokens                  -0.1 per 256 completion tokens beyond 300   (phase 0 lesson: price length
+                                                                      or the policy pays for reward with it)
 """
 from __future__ import annotations
 
 from ftlab.data import review as task
 from ftlab.prompting import completion_text
 
-W = {"approve_bug": -5.0, "correct": 1.0, "block_clean": -0.5, "escalate": -0.2, "localized": 0.5, "unparsable": -1.0}
+W = {"approve_bug": -5.0, "correct": 1.0, "block_clean": -0.5, "escalate": -0.2, "localized": 0.5, "unparsable": -1.0,
+     "token_unit": -0.1, "free_tokens": 300, "token_unit_size": 256}
 
 
-def gate(completions, kind, gold_hunks, log_metric=None, log_extra=None, **_):
+def gate(completions, kind, gold_hunks, completion_ids=None, log_metric=None, log_extra=None, **_):
     rewards, decisions, approve_bug = [], [], 0
-    for c, k, gh in zip(completions, kind, gold_hunks):
+    lens = [len(ids) for ids in completion_ids] if completion_ids is not None else [0] * len(completions)
+    for c, k, gh, n_tok in zip(completions, kind, gold_hunks, lens):
         rev, ok = task.decision_of(completion_text(c))
         r = 0.0 if ok else W["unparsable"]
+        r += W["token_unit"] * max(0, n_tok - W["free_tokens"]) / W["token_unit_size"]
         if rev.decision == "escalate":
             r += W["escalate"]
         elif rev.decision == "approve":
@@ -40,4 +45,5 @@ def gate(completions, kind, gold_hunks, log_metric=None, log_extra=None, **_):
         log_metric("review/approve_bug_frac", approve_bug / n)
         log_metric("review/escalate_frac", sum(d == "escalate" for d in decisions) / n)
         log_metric("review/unparsable_frac", sum(d == "unparsable" for d in decisions) / n)
+        log_metric("review/mean_tokens", sum(lens) / n)
     return rewards
