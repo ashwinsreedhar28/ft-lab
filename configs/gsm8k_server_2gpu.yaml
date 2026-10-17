@@ -1,0 +1,11 @@
+# Phase 2 topology A: vLLM server on GPU 0, trainer on GPU 1. See RUNBOOK phase 2.
+#   GPU0: VLLM_SERVER_DEV_MODE=1 CUDA_VISIBLE_DEVICES=0 vllm serve Qwen/Qwen3-1.7B \
+#           --weight-transfer-config '{"backend": "nccl"}' --logprobs-mode processed_logprobs --max-logprobs -1
+#   GPU1: CUDA_VISIBLE_DEVICES=1 python -m ftlab.train configs/gsm8k_server_2gpu.yaml
+extends: gsm8k_h100.yaml
+name: gsm8k_server_2gpu
+grpo:
+  vllm_mode: server
+  vllm_server_host: "127.0.0.1"
+  vllm_server_port: 8000
+  max_steps: 50

@@ -1,0 +1,7 @@
+# Phase 2 topology B: 4 GPUs, each colocating its own vLLM (SPMD). Same global batch:
+#   accelerate launch --num_processes 4 -m ftlab.train configs/gsm8k_colocate_4gpu.yaml
+extends: gsm8k_h100.yaml
+name: gsm8k_colocate_4gpu
+grpo:
+  per_device_train_batch_size: 16   # 16 x 4 GPUs = 64 completions per step, same as 1 GPU
+  max_steps: 50

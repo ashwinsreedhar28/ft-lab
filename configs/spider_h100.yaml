@@ -1,0 +1,10 @@
+# Phase 1: Spider text-to-SQL with execution-match reward, full fine-tune, 1x H100.
+extends: base.yaml
+name: spider_h100
+data: {task: spider, eval_limit: null, extra: {db_dir: data/spider/database}}  # eval = full dev (1,034)
+rewards: [sql_exec, sql_runs]
+grpo:
+  vllm_max_model_length: 3072    # schemas are long: 2.5k prompt + 512 completion
+  max_completion_length: 512
+  max_steps: 400
+  vllm_gpu_memory_utilization: 0.4
