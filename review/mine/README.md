@@ -5,32 +5,69 @@ Why public repos: shwin-bench gives 42 positives, enough to design the scorer an
 tighter than 1-in-14 needs hundreds in eval too. Public repos supply volume; a date filter
 keeps them fresh.
 
-## Recipe (generalizes shwin-bench's tools/mine.py)
-1. **Candidate repos.** Python, pytest, CI green on main, active after 2026-06-01, permissive
-   license, suite runs on CPU in < 5 min inside a slim Docker image. Start list: ~30 repos
-   from PyPI top downloads and GitHub trending filtered by those rules; drop any whose
-   suite needs network or GPUs.
-2. **Fix commits.** `git log --since=2026-06-01` for commits that (a) touch at least one
-   test file and one non-test file, (b) whose message or linked PR mentions fix/bug/regress/
-   crash, (c) are not merges or reverts. Expected yield: 5–15 % of commits.
-3. **Validate the test as oracle** (shwin-bench's rule): the commit's new/changed tests
-   fail at `parent` 3/3 and pass at `commit` 3/3, and the full suite is green at `commit`.
-   Keep the failing set as FAIL_TO_PASS.
-4. **Bisect to the introducing commit.** Walk back from `parent` applying the test files
-   from `commit` at each ancestor; the first ancestor where FAIL_TO_PASS passes is the
-   last-good commit; its child is the **introducing commit** `C_bug`. Stop if the tests
-   can't import (interface predates the test) or after 50 ancestors; those tasks are dropped.
-   `C_bug`'s diff is the positive PR; `gold_hunks` = the lines of `C_bug`'s diff that
-   overlap the fix's hunks (file:line), falling back to all of `C_bug`'s hunks.
-5. **Matched negative.** From the same repo, a non-merge commit after 2026-06-01 with the
-   suite green at both parent and commit, diff size within ±30 % of `C_bug`'s, preferring
-   file-set overlap, not itself a fix commit. One per positive.
-6. **Neighborhood.** For both: callers/callees of changed functions (tree-sitter or jedi),
-   tests that import the changed modules (coverage.py over the suite once per repo),
-   last 3 commits touching each changed file, CODEOWNERS if present. Serialized to text
-   for the `diff+graph` condition and stored in the task row.
-7. **Split by repo**, not by task: eval repos never appear in train. Target 400 train /
-   100 eval positives plus matched negatives.
+## Pipeline as built (Oct 17, 2026)
+
+Each stage is a `make` target, reads the previous stage's JSONL under `work/`, and is a filter.
+Per-repo config (URL, install line, network, excluded paths) is `repos.yaml`.
+
+| stage | target | where | does | output |
+|---|---|---|---|---|
+| scan | `make mine-scan` | git only | `--shallow-since` clone; non-merge commits whose subject matches fix/bug/regress/crash/… and not revert/bump/docs/…, touching ≥1 test `.py` and ≥1 code `.py`, ≤400 lines | `work/candidates.jsonl` |
+| images | `make mine-images` | Docker | one `rb-mine-<repo>` image per repo: python:3.12-slim + build backends + the repo's `install` line at the clone's HEAD | docker images |
+| validate | `make mine-validate` | Docker | at the **parent** with the fix's test files overlaid, and at the **fix**: run just those files; classify (grid below) | `work/validated.jsonl` |
+| bisect | `make mine-bisect` | Docker | for each valid fix: unshallow the clone, gallop back along first-parent ancestors with the tests overlaid until the oracle stops failing, binary-search the bracket | `work/positives.jsonl` |
+| assemble | (to write) | git + Docker | matched clean PRs, neighborhood, gold hunks, coverage, as in `review/bench/build.py` | `review/bench/public_tasks.jsonl` |
+
+### Validate: the 2×2
+Rows = oracle tests at the parent (tests overlaid), columns = at the fix.
+
+| | at fix: all pass | at fix: not all pass |
+|---|---|---|
+| parent: ≥1 **fails** (assertion) | **valid**; oracle = the tests that flip fail→pass | not_green |
+| parent: only **errors** (can't import) | interface_leak: the test imports a name the fix adds; no bisect signal | not_green |
+| parent: all **pass** | not_reproduced: the "fix" changed no tested behavior | not_green |
+
+`not_green` has always meant the environment, not the commit: a missing pytest plugin
+(`pytest-run-parallel` markers), a pinned compiled dependency (pydantic refuses to import unless
+`pydantic-core` matches exactly; solved with `network: true` + a deps-on candidate install), a Rust
+subproject (`exclude_paths`), or network-only fixtures (requests/httpbin). Fix the install line,
+rebuild that image, delete that repo's rows, rerun.
+
+First run, 39 candidates since 2026-06-01 from 8 repos: **24 valid** (click 4/6, fastapi 9/12,
+pydantic 10/19, attrs 1/1, requests 0/1; jinja/rich/httpx had no candidates), 1 interface leak,
+2 not reproduced, 11 not green, 1 excluded. 62 % yield.
+
+### Bisect: finding the introducing commit
+Chain = `git rev-list --first-parent <parent>`; index 0 is the fix's parent, where the oracle
+fails by construction. A probe at index *i* = check out `chain[i]`, overlay the fix's test files,
+`pip install -e . --no-deps --no-build-isolation`, run the oracle's test files, read the oracle ids:
+`fail` (≥1 assertion failure), `pass`, `error` (can't collect/import), or `docker_error` (can't
+build there). Search:
+
+1. **Gallop**: probe 64, 128, 256, … back while the result is `fail`. Stops at the first non-fail.
+2. **Binary search** the bracket [last fail, first non-fail] to width 1.
+3. `introducing = chain[lo]` (fails), `boundary = status(chain[hi])`.
+
+Cost ≈ 2·log₂(age) container runs, ~10 for a bug 200 commits old; never probes much older than
+2× the bug's age, so it rarely touches ancient commits where the install breaks (and when it does,
+that `docker_error` is just the bracket's far end, `unrunnable_boundary` if it ends up adjacent).
+Plain binary search over the whole chain would be 12 probes on a 3,400-commit repo and must build
+at the far end, which failed on click's 2014 initial commit. Assumes the oracle is monotone along
+the chain; every probed sha and status is stored, so a flaky oracle shows up as a `non_monotone`
+row rather than a wrong answer.
+
+Then the shwin-bench rules: `boundary == error` means the test can't import at the older commit,
+so the introducing commit created the module (kept, flagged); the introducing commit must change
+a non-test `.py` the fix also changes (`no_shared_file` otherwise: an import-boundary artifact,
+the rule that dropped aether `f0a823d`); `introducing_lines > 1500` is `too_big`. `bug_age_commits`
+is recorded; mature-repo bugs are old (click's four all predate the 4-month scan window, so the
+clone is deepened to full history first; `--shallow-since` clones can't be deepened and are
+re-cloned).
+
+### Then (assemble, to write)
+Matched negative per positive from the same repo (size ±30 %, file-set overlap, suite green at
+parent and commit, not itself a fix), two-hop neighborhood, gold hunks = the introducing commit's
+hunks in defs the fix touched, coverage at the PR head for the uncovered-lines cue. Split by repo.
 
 ## Cost
 CPU, Docker, and time. One repo ≈ 30–90 min of machine time for steps 2–6 on a laptop or a
