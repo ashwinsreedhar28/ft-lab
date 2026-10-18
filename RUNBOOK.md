@@ -75,7 +75,13 @@ edit); each costs ~3 container runs + 2 Haiku calls when it survives the suite. 
 (`nohup make mine-mutate LIMIT=400 > review/mine/work/mutate_run.log 2>&1 &`); done PRs are skipped
 on rerun, env failures (`baseline_empty`) retry. Progress: `grep -c baseline` vs line 2 of the log.
 Widen with `SINCE=2025-01-01` for more PRs. Target 150 positives (+ their clean originals) for
-SFT/GRPO; eval = real positives only (shwin-bench 8 + public 2 + regressions as found). A wrong
+SFT/GRPO; eval = real positives only (shwin-bench 8 + public 2 + regressions as found).
+
+Then `make mine-assemble` (git only, seconds): makes each surviving mutant a real commit on branch
+`mutant/<id>` in the local clone, pairs it with its clean original, adds the bisected real positives,
+computes neighborhood + gold hunks, splits by repo (`EVAL_REPOS=attrs,click` default) and writes
+`review/bench/public_{tasks,train,eval}.jsonl`. The harness runs them from the mounted clone:
+`python -m review.agent.loop --tasks review/bench/public_eval.jsonl --model claude-haiku-5-5 --label haiku_pub_v4b`. A wrong
 install line or missing plugin shows up as `baseline_empty` for every PR of that repo: fix
 `repos.yaml`, `make mine-images REPO=x`, rerun.
 

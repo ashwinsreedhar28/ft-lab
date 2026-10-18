@@ -132,9 +132,11 @@ def probe_is_specific(source: str, task: dict) -> bool:
     return any(re.search(rf"\b{re.escape(n)}\b", source) for n in names if len(n) > 2)
 
 
-def docker_run(image: str, script: str, files: dict[str, str] | None = None, timeout: int = 1200, network: str = "none") -> tuple[int, str]:
+def docker_run(image: str, script: str, files: dict[str, str] | None = None, timeout: int = 1200, network: str = "none",
+               mounts: list[str] | None = None) -> tuple[int, str]:
     name = f"rb-{int(time.time() * 1000) % 10**9}"
-    subprocess.run(["docker", "create", "--name", name, "--network", network, "--cpus=2", "--memory=4g",
+    vols = [x for m in (mounts or []) for x in ("-v", m)]
+    subprocess.run(["docker", "create", "--name", name, "--network", network, "--cpus=2", "--memory=4g", *vols,
                     image, "bash", "-lc", script], check=True, capture_output=True)
     try:
         for path, text in (files or {}).items():
@@ -151,22 +153,44 @@ def docker_run(image: str, script: str, files: dict[str, str] | None = None, tim
         subprocess.run(["docker", "rm", "-f", name], capture_output=True)
 
 
+def prelude(task: dict, sha: str) -> str:
+    """Shell prefix that leaves the shell in /testbed at `sha`. shwin-bench images bake /testbed in;
+    mined tasks (assemble.py) carry setup_cmd that clones the mounted /repo and sets PYTHONPATH."""
+    if task.get("setup_cmd"):
+        return f"{task['setup_cmd']} && git checkout -q {sha}"
+    return f"cd /testbed && git checkout -q {sha}"
+
+
+def container_kw(task: dict, network: str = "none") -> dict:
+    """docker_run kwargs a task needs: its clone mounted ro at /repo, and its network if it needs one."""
+    kw = {"network": task.get("network") if task.get("network") not in (None, "none") else network}
+    if task.get("repo_mount"):
+        kw["mounts"] = [f"{task['repo_mount']}:/repo:ro"]
+    return kw
+
+
 def suite_at(task: dict, sha: str, subdir: str) -> str:
     """Full suite result (last 40 lines) at a commit, for the diff+run context."""
-    rc, out = docker_run(task["image"], f"cd /testbed && git checkout -q {sha} && cd {subdir} && {task['test_cmd']} -q 2>&1 | tail -n 40; echo EXIT=${{PIPESTATUS[0]}}")
+    rc, out = docker_run(task["image"], f"{prelude(task, sha)} && cd {subdir} && {task['test_cmd']} -q 2>&1 | tail -n 40; echo EXIT=${{PIPESTATUS[0]}}",
+                         **container_kw(task))
     return out
 
 
 def run_probe(task: dict, sha: str, subdir: str, path: str, source: str, with_cov: bool = False):
     """Returns (status passed|failed|error, output tail, probe_cov|None)."""
     full = f"/testbed/{subdir}/{path}".replace("/./", "/")
+    # mined tasks: /testbed does not exist until setup_cmd clones it, so the probe is staged in /tmp and copied
+    staged = bool(task.get("setup_cmd"))
+    stage = "/tmp/probe_staged.py"
+    place = f"mkdir -p $(dirname {full}) && cp {stage} {full}" if staged else f"mkdir -p $(dirname {full})"
     if with_cov:
-        cmd = (f"cd /testbed && git checkout -q {sha} && mkdir -p $(dirname {full}) && pip -q install coverage >/dev/null 2>&1; cd {subdir} && "
+        cmd = (f"{prelude(task, sha)} && {place} && pip -q install coverage >/dev/null 2>&1; cd {subdir} && "
                f"python -m coverage run -m pytest -o addopts= -p no:cacheprovider -q {path} 2>&1 | tail -n 40; echo EXIT=${{PIPESTATUS[0]}}; "
                f"python -m coverage json -o /tmp/pc.json >/dev/null 2>&1 && echo COVJSON && cat /tmp/pc.json")
     else:
-        cmd = f"cd /testbed && git checkout -q {sha} && mkdir -p $(dirname {full}) && cd {subdir} && {task['test_cmd']} {path} 2>&1 | tail -n 40; echo EXIT=${{PIPESTATUS[0]}}"
-    rc, out = docker_run(task["image"], cmd, files={full: source}, network="bridge" if with_cov else "none")
+        cmd = f"{prelude(task, sha)} && {place} && cd {subdir} && {task['test_cmd']} {path} 2>&1 | tail -n 40; echo EXIT=${{PIPESTATUS[0]}}"
+    rc, out = docker_run(task["image"], cmd, files={stage if staged else full: source},
+                         **container_kw(task, network="bridge" if with_cov else "none"))
     m = re.search(r"EXIT=(\d+)", out)
     code = int(m.group(1)) if m else rc
     status = "passed" if code == 0 else "failed" if code == 1 else "error"

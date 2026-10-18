@@ -48,3 +48,5 @@ mine-rescan:     ## git only: re-tag candidates (adds the regression flag) witho
 	python -m review.mine.scan --since $(or $(SINCE),2026-06-01)
 mine-mutate:     ## docker + ANTHROPIC_API_KEY (Haiku): inject bugs into clean PRs, keep suite-green + probe-distinguished ones
 	python -m review.mine.mutate $(if $(REPO),--repo $(REPO),) $(if $(LIMIT),--limit $(LIMIT),) $(if $(SINCE),--since $(SINCE),)
+mine-assemble:   ## git only: mutants + clean originals + real positives -> review/bench/public_{tasks,train,eval}.jsonl
+	python -m review.mine.assemble $(if $(EVAL_REPOS),--eval-repos $(EVAL_REPOS),)

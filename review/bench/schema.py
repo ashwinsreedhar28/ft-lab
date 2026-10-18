@@ -34,6 +34,15 @@ class Task:
     fix_sha: str = ""        # bug rows: the commit that fixed it (scoring-only, never shown)
     uncovered: list = field(default_factory=list)   # [{file, lines}] added lines no existing test executes
     covered_frac: float | None = None
+    # mined / mutated tasks (review/mine/assemble.py)
+    probe_source: str = ""   # bug rows from mutate.py: the guard probe (scoring-only oracle, never shown)
+    repo_mount: str = ""     # local clone to mount ro at /repo; setup_cmd clones it to /testbed
+    setup_cmd: str = ""
+    network: str = "none"
+    source: str = ""         # real | op | llm | clean
+    operator: str = ""
+    bug_age_commits: int | None = None
+    boundary: str = ""
 
     def to_json(self) -> dict:
         return asdict(self)
