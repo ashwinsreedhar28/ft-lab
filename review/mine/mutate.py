@@ -40,7 +40,7 @@ PROBE_MODEL = "claude-haiku-5-5"
 # ---- operators: (name, regex, replacement). Applied to ONE occurrence on ONE added line. ----
 OPS = [
     ("rel_lt_le", r"(?<![<>=!])<(?!=)", "<="), ("rel_le_lt", r"<=", "<"),
-    ("rel_gt_ge", r"(?<![<>=!])>(?!=)", ">="), ("rel_ge_gt", r">=", ">"),
+    ("rel_gt_ge", r"(?<![-<>=!])>(?!=)", ">="), ("rel_ge_gt", r">=", ">"),
     ("rel_eq_ne", r"==", "!="), ("rel_ne_eq", r"!=", "=="),
     ("bool_and_or", r"\band\b", "or"), ("bool_or_and", r"\bor\b", "and"),
     ("not_drop", r"\bif not\b", "if"), ("not_add", r"\bif (?!not\b)", "if not "),
@@ -53,6 +53,7 @@ OPS = [
     ("continue_break", r"\bcontinue\b", "break"), ("break_continue", r"\bbreak\b", "continue"),
     ("slice_drop_last", r"\[:-1\]", "[:]"), ("range_n_minus1", r"range\((\w+)\)", r"range(\1 - 1)"),
 ]
+NON_CODE_DIRS = ("scripts/", "docs/", "docs_src/", "examples/", "benchmarks/", "benches/", "tools/", "setup.py")
 SKIP_LINE = re.compile(r"^\s*(#|\"\"\"|'''|import |from |@|def |class |pass$|\.\.\.$|$)")
 
 
@@ -67,7 +68,7 @@ def clean_prs(repo: Path, since: str, max_lines: int) -> list[dict]:
             p = ln.split("\t")
             if len(p) == 3 and p[0].isdigit() and p[1].isdigit():
                 n += int(p[0]) + int(p[1]); files.append(p[2])
-        code = [f for f in files if f.endswith(".py") and not is_test(f)]
+        code = [f for f in files if f.endswith(".py") and not is_test(f) and not f.startswith(NON_CODE_DIRS)]
         if not code or n > max_lines or n < 5:
             continue
         out.append({"repo": repo.name, "sha": sha, "parent": git(repo, "rev-parse", f"{sha}^").strip(),
@@ -143,7 +144,8 @@ def related_tests(repo: Path, sha: str, f: str, test_files: list[str]) -> list[s
 
 
 def script(sha: str, inst: str, edits: dict[str, str] | None, probe: tuple[str, str] | None,
-           pytest_targets: list[str] | None, want_diff: bool, parent: str = "", timeout_s: int = 1500) -> tuple[str, dict[str, str]]:
+           pytest_targets: list[str] | None, want_diff: bool, parent: str = "", timeout_s: int = 1500,
+           pytest_args: str = "") -> tuple[str, dict[str, str]]:
     """Container script + the files to mount at /inject. Checkout sha, copy edited files (path -> full
     content) and the probe into place, optionally print the diff vs parent, run pytest with -rA."""
     files, parts = {}, [f"git clone -q /repo /w && cd /w && git checkout -q {sha}", "export PYTHONPATH=/w/src:/w",
@@ -161,12 +163,13 @@ def script(sha: str, inst: str, edits: dict[str, str] | None, probe: tuple[str, 
     # image's newer pytest raises on older commits must not abort collection under filterwarnings=error
     parts.append(f"{{ timeout {timeout_s} python -m pytest -q -p no:cacheprovider --no-header "
                  f"-W ignore::DeprecationWarning -W ignore::ResourceWarning -W ignore::PendingDeprecationWarning "
-                 f"--junitxml=/tmp/junit.xml {tg} 2>&1 | tail -n 200; echo EXIT=${{PIPESTATUS[0]}}; "
+                 f"--junitxml=/tmp/junit.xml {pytest_args} {tg} 2>&1 | tail -n 200; echo EXIT=${{PIPESTATUS[0]}}; "
                  f"echo JUNIT_BEGIN; cat /tmp/junit.xml 2>/dev/null; echo JUNIT_END; }}")
     return " && ".join(parts[:3]) + " && " + " ; ".join(parts[3:]), files
 
 
 def run(name: str, sha: str, inst: str, net: bool, timeout: int, tag: str = "", **kw) -> str:
+    kw.setdefault("pytest_args", repos()[name].get("pytest_args", ""))
     sc, files = script(sha, inst, **kw)
     out = docker(name, sc, timeout, net, files)[1]
     if tag:                                      # raw output for post-mortems: work/debug/<tag>.txt
@@ -241,8 +244,8 @@ def gen_probe(repo_name: str, f: str, orig: str, mut: str, context: str, model: 
               "beyond tmp_path. Reply with the file contents only, in a ```python fence." + (f"\n\nPrevious attempt did not distinguish them:\n{feedback}" if feedback else ""))
     try:
         text, _, _ = call(model, "You write small, decisive regression tests.", [{"role": "user", "content": prompt}], 1500)
-        m = re.search(r"```python\n(.*?)```", text, re.S)
-        return m.group(1) if m else None
+        m = re.search(r"```(?:python|py)?\n(.*?)```", text, re.S)
+        return m.group(1) if m else (text if "def test_" in text and "```" not in text else None)
     except Exception:
         return None
 
@@ -335,7 +338,9 @@ def main():
     if out_p.exists():
         for l in out_p.read_text().splitlines():
             if l.strip():
-                d = json.loads(l); done.add(d["sha"])
+                d = json.loads(l)
+                if d.get("status") != "baseline_empty":      # env failures are retried after a repos.yaml fix
+                    done.add(d["sha"])
     prs = []
     for name in cfg:
         if a.repo and name != a.repo:

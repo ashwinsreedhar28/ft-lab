@@ -7,7 +7,7 @@
 # Selection bias of this list and of scan.py's filter: see README.md in this directory.
 - name: click
   url: https://github.com/pallets/click
-  install: pip install -e . pytest
+  install: pip install -e . pytest typing_extensions
 - name: jinja
   url: https://github.com/pallets/jinja
   install: pip install -e . pytest trio
@@ -23,6 +23,8 @@
   candidate_install: pip install -q -e . --no-build-isolation
   # monorepo: pydantic-core/ (Rust) lives inside; its tests need a cargo build. Skip those candidates.
   exclude_paths: [pydantic-core/]
+  # two conftest.py files import as tests.conftest (monorepo); mypy/typechecking suites need plugins
+  pytest_args: --ignore=pydantic-core --ignore=tests/mypy --ignore=tests/typechecking --ignore=tests/benchmarks
 - name: rich
   url: https://github.com/Textualize/rich
   install: pip install -e . pytest attrs
@@ -31,7 +33,7 @@
   install: pip install -e . --group tests
 - name: fastapi
   url: https://github.com/tiangolo/fastapi
-  install: pip install -e .[all] --group tests   # PEP 735 group; pip >= 25.1
+  install: pip install -e .[all] --group tests orjson ujson   # PEP 735 group; pip >= 25.1
 - name: httpx
   url: https://github.com/encode/httpx
   install: pip install -r requirements.txt
