@@ -50,3 +50,12 @@ mine-mutate:     ## docker + ANTHROPIC_API_KEY (Haiku): inject bugs into clean P
 	python -m review.mine.mutate $(if $(REPO),--repo $(REPO),) $(if $(LIMIT),--limit $(LIMIT),) $(if $(SINCE),--since $(SINCE),)
 mine-assemble:   ## git only: mutants + clean originals + real positives -> review/bench/public_{tasks,train,eval}.jsonl
 	python -m review.mine.assemble $(if $(EVAL_REPOS),--eval-repos $(EVAL_REPOS),)
+# ---- analysis (no Docker, no API)
+leakage:         ## diff-text-only linear probe: can a bag of tokens tell bug PRs from clean? (AUROC)
+	python -m review.analysis.leakage $(if $(TASKS),--tasks $(TASKS),)
+sheet-labels:    ## markdown sheet of 20 mutants + all real positives for the human label-noise check
+	python -m review.analysis.sheets labels --n $(or $(N),20)
+sheet-failures:  ## RESULTS="review/agent/results/x.json ..." -> failure_sheet.md (approved bugs, blocked cleans)
+	python -m review.analysis.sheets failures $(RESULTS)
+sheet-tally:     ## summarize the verdict:/cause: lines you filled in
+	python -m review.analysis.sheets tally

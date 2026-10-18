@@ -27,6 +27,7 @@ def score(tasks: list[Task], reviews: dict[str, Review], strong: dict[str, bool]
     return {
         "n_bug": n_b, "n_clean": n_c,
         "bugs_approved": bugs_approved,
+        "bugs_blocked": len(blocked_bugs), "clean_blocked": len(blocked) - len(blocked_bugs),
         "bugs_approved_rate_ub95": 1 - (0.05) ** (1 / n_b) if bugs_approved == 0 and n_b else None,  # rule of three, exact
         "auto_ship_rate": clean_approved / n_c if n_c else None,
         "escalation_rate": escalated / len(tasks) if tasks else None,

@@ -241,6 +241,20 @@ def table(paths):
     print(f"{'label':<20}{'cond':<11}{'runs':>4}{'bugs appr':>12}{'auto-ship':>12}{'escalate':>12}{'blk prec':>12}{'local':>12}{'strong':>12}{'$/PR':>8}")
     for (label, cond, k, nb, ba, bas, au, aus, es, ess, bp, bps, lo, los, st, sts, usd, _) in out:
         print(f"{label:<20}{cond:<11}{k:>4}{f(ba, bas):>12}{f(au, aus):>12}{f(es, ess):>12}{f(bp, bps):>12}{f(lo, los):>12}{f(st, sts):>12}{(usd or 0):>8.3f}")
+    # per-source view (real / op / llm): the synthetic-vs-real and operator-vs-LLM gaps, where recorded
+    srcs = sorted({k for r in rows for k in r["scores"] if k.startswith("source:")})
+    if srcs:
+        print(f"\n{'label':<20}" + "".join(f"{k[7:] + ' bugs appr':>18}{k[7:] + ' blocked':>14}" for k in srcs))
+        for label, rs in groups.items():
+            cells = []
+            for k in srcs:
+                vals = [r["scores"][k] for r in rs if k in r["scores"]]
+                if not vals:
+                    cells += [f"{'—':>18}", f"{'—':>14}"]; continue
+                ba = sum(v["bugs_approved"] for v in vals) / max(sum(v["n_bug"] for v in vals), 1)
+                bl = sum(v.get("bugs_blocked", 0) for v in vals) / max(sum(v["n_bug"] for v in vals), 1)
+                cells += [f"{ba:>14.2f} n={vals[0]['n_bug']:<2d}", f"{bl:>14.2f}"]
+            print(f"{label:<20}" + "".join(cells))
 
 
 if __name__ == "__main__":
