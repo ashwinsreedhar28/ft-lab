@@ -11,14 +11,14 @@ own repos (shwin-bench), then a small model fine-tuned into the roles where it h
 | 0 | GRPO mechanics: GSM8K, Qwen3-1.7B, 1×H100 | answer match | done Oct 17; lessons below |
 | 1 | review-bench from shwin-bench: bisected bug PRs + matched clean PRs, 4 context conditions, frontier baselines | bugs approved (target 0), auto-ship rate | v0 built: 4 bug + 4 clean; see below |
 | 2 | the review agent: neighborhood → run suite → probe test → decision | same scorer | v1–v4 run on the 8-PR bench; frozen until the bench is bigger |
-| 3a | public bench: mined fix commits → validate → bisect (real positives, eval); mutation-injected bugs on clean PRs with a probe guard (training volume) | same scorer | validate+bisect run on 8 repos; mutate written |
+| 3a | public bench: mined fix commits → validate → bisect (real positives, eval); mutation-injected bugs on clean PRs with a probe guard (training volume) | same scorer | 2 real positives; mutate: 40 positives from 167 clean PRs so far, run continuing |
 | 3b | SFT warm-start on frontier review traces (TEMP-selected); GRPO a 4B/8B LoRA into the triage gate with variance-guided rollouts (VIGOR) | asymmetric decision reward | recipe written; waits on 3a |
 | 4 | topology: 1-colocate / 2-server / 4-colocate | $/1k completions | configs ready |
 | backlog | Spider / BIRD / lakehouse text-to-SQL | execution match | adapters kept |
 
 ```
 pip install -r requirements.txt          # or bash pod/setup.sh on a pod
-make test                                # 27 pure-python tests
+make test                                # 46 pure-python tests
 python -m ftlab.train configs/gsm8k_h100.yaml
 python -m ftlab.eval  configs/gsm8k_h100.yaml --label tuned --model runs/gsm8k_h100/final
 python -m ftlab.plot  runs/gsm8k_h100
@@ -158,3 +158,11 @@ synthetic: `review/mine/mutate.py` injects one bug into a line a clean PR change
 suite still passes **and** a Haiku-written probe fails on the mutant and passes on the original
 (equivalent-mutant guard; the probe doubles as the strong-localization oracle), tags each mutant
 `op` or `llm` so operator-shape learning shows up as a gap between the two. Eval stays real.
+
+**Mutation yield (first 167 clean PRs, 5 repos):** ~3 mutants per PR; roughly half are killed by the
+suite (stage 1 on the tests importing the module, stage 2 on the full suite against a baseline, since
+`filterwarnings = error` and tty-only tests make "all green" the wrong criterion); of suite survivors
+about 70 % pass the probe guard. **40 positives**, 22 from operators and 18 Haiku-written, each with a
+verified probe. Dropped survivors are mostly mutations in `scripts/`/`docs/` (nothing tests them;
+now excluded) and genuinely equivalent mutants. Pace ~2.5 min per PR on the Mac, pydantic's suite
+dominating.

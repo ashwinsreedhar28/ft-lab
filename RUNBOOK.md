@@ -70,10 +70,14 @@ make mine-bisect               # docker: introducing commit per valid fix -> 2 p
 export ANTHROPIC_API_KEY=...; make mine-mutate REPO=click LIMIT=5    # smoke; then without REPO/LIMIT
 ```
 Mutate: clean PRs since 2026-01-01, ≤400 lines; up to 3 mutants per PR (2 regex operators + 1 Haiku
-edit); each costs ~3 container runs + 2 Haiku calls when it survives the suite. Expect ~1 in 3 to
-survive stage 1, and ~70 % of suite survivors to pass the probe guard. Target 150 positives (+ their
-clean originals) for SFT/GRPO; eval = real positives only (shwin-bench 8 + public 2 + regressions as
-found). A wrong install line shows up as "baseline not green" for every PR of that repo.
+edit); each costs ~3 container runs + 2 Haiku calls when it survives the suite. Observed (Oct 17,
+167 PRs): ~0.25 positives per PR, ~2.5 min per PR, ~$0.02 Haiku per positive. Run it in the background
+(`nohup make mine-mutate LIMIT=400 > review/mine/work/mutate_run.log 2>&1 &`); done PRs are skipped
+on rerun, env failures (`baseline_empty`) retry. Progress: `grep -c baseline` vs line 2 of the log.
+Widen with `SINCE=2025-01-01` for more PRs. Target 150 positives (+ their clean originals) for
+SFT/GRPO; eval = real positives only (shwin-bench 8 + public 2 + regressions as found). A wrong
+install line or missing plugin shows up as `baseline_empty` for every PR of that repo: fix
+`repos.yaml`, `make mine-images REPO=x`, rerun.
 
 ## Phase 3b — fine-tune into the harness (1× H100, ~$40)
 Then, in order:
