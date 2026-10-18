@@ -17,8 +17,9 @@ Rows produced
   real__<repo>__<intro8>               kind=bug    bisected introducing commit; oracle = the fix's
                                        tests; fix_sha for strong localization.
 
-Split: by repo, never by task. --eval-repos names the held-out repos; everything from them is eval,
-the rest is train. Real positives are always eval. A model trained on mutants is reported on the
+Split: --split repo (by repo, --eval-repos held out) once >=3 repos contribute; --split pr (default
+while one repo dominates): 20 % of clean PRs by sha hash, each mutant on the same side as its clean
+original, so no PR appears in both. Real positives are always eval. A model trained on mutants is reported on the
 mutant eval split AND on real positives separately; the real number is the sanity check, not the claim.
 
 Harness fields for mounted clones (loop.py honors them): image=rb-mine-<repo>, repo_mount=<clone>,
@@ -28,6 +29,7 @@ the repo's pytest_args.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import random
 import subprocess
@@ -76,11 +78,21 @@ def files_of(repo: Path, sha: str) -> list[str]:
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--split", choices=["pr", "repo"], default="pr",
+                    help="pr: 20%% of clean PRs (and their mutants) held out by sha hash, any repo; repo: --eval-repos entirely held out. "
+                         "Use repo once >=3 repos contribute; pr while one repo dominates.")
+    ap.add_argument("--eval-frac", type=float, default=0.2)
     ap.add_argument("--eval-repos", default="attrs,click")
     ap.add_argument("--out", default="review/bench")
     ap.add_argument("--seed", type=int, default=0)
     a = ap.parse_args()
     cfg = repos(); eval_repos = set(a.eval_repos.split(","))
+
+    def split_of(repo_name: str, pr_sha: str) -> str:
+        if a.split == "repo":
+            return "eval" if repo_name in eval_repos else "train"
+        h = int(hashlib.sha256(pr_sha.encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
+        return "eval" if h < a.eval_frac else "train"
     out = Path(a.out); out.mkdir(exist_ok=True)
 
     def rows(p):
@@ -101,7 +113,7 @@ def main():
         hf = harness_fields(m["repo"], cfg)
         tasks.append({"id": mid, "repo": m["repo"], "kind": "bug", "base_sha": m["parent"], "head_sha": sha,
                       "diff": m.get("bug_diff") or pr_diff(repo, sha), "files": files_of(repo, sha),
-                      "split": "eval" if m["repo"] in eval_repos else "train",
+                      "split": split_of(m["repo"], m["sha"]),
                       "oracle": [PROBE_PATH], "probe_source": m.get("probe", ""),
                       "gold_hunks": [{"file": m["file"], "line_start": m["line"], "line_end": m["line"]}],
                       "neighborhood": neighborhood(repo, sha), "fix_sha": m["sha"],   # the clean original IS the fix
@@ -110,7 +122,7 @@ def main():
             seen_clean.add(m["sha"])
             tasks.append({"id": f"clean__{m['repo']}__{m['sha'][:8]}", "repo": m["repo"], "kind": "clean",
                           "base_sha": m["parent"], "head_sha": m["sha"], "diff": pr_diff(repo, m["sha"]),
-                          "files": files_of(repo, m["sha"]), "split": "eval" if m["repo"] in eval_repos else "train",
+                          "files": files_of(repo, m["sha"]), "split": split_of(m["repo"], m["sha"]),
                           "oracle": [], "probe_source": "", "gold_hunks": [], "neighborhood": neighborhood(repo, m["sha"]),
                           "fix_sha": "", "source": "clean", "operator": "", "uncovered": [], "covered_frac": None, **hf})
 

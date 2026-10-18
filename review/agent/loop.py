@@ -25,7 +25,7 @@ import time
 from pathlib import Path
 
 from review.agent.run import PRICES, SYSTEM, THINKING_BUDGET, THINKING_EFFORT, build_prompt, parse_review
-from review.bench.score import by_split, load_tasks
+from review.bench.score import by_split, provenance, load_tasks
 
 RESULTS = Path(__file__).parent / "results"
 RUNS = Path(__file__).parent / "runs.json"
@@ -358,6 +358,7 @@ def run_once(a, label):
     RESULTS.mkdir(exist_ok=True)
     p = RESULTS / f"{label}.json"
     p.write_text(json.dumps({"label": label, "model": a.model, "condition": "loop", "n": len(tasks),
+                             "provenance": provenance(a.tasks, {t.get("image") for t in tasks if t.get("image")}),
                              "unparsable": sum(1 for r in out_rows if not r["parsed"]), "wall_s": round(time.time() - t0, 1),
                              "api_s": round(sum(r["api_s"] for r in out_rows), 1), "docker_s": round(sum(r["docker_s"] for r in out_rows), 1),
                              "no_probe_reasons": {k: sum(1 for r in out_rows if r["no_probe_reason"] == k)

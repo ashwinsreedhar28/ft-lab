@@ -38,10 +38,36 @@ def score(tasks: list[Task], reviews: dict[str, Review], strong: dict[str, bool]
 
 
 def by_split(tasks: list[Task], reviews: dict[str, Review], strong=None) -> dict[str, dict]:
+    """Scores for all tasks, per split, and per source (real / op / llm / clean) so a synthetic-vs-real
+    gap and an operator-vs-LLM-mutation gap are visible in every results file."""
     out = {"all": score(tasks, reviews, strong)}
     for s in sorted({t.split for t in tasks}):
         out[s] = score([t for t in tasks if t.split == s], reviews, strong)
+    cleans = [t for t in tasks if t.kind == "clean"]
+    for src in sorted({t.source for t in tasks if t.kind == "bug" and t.source}):
+        bugs = [t for t in tasks if t.kind == "bug" and t.source == src]
+        out[f"source:{src}"] = score(bugs + cleans, reviews, strong)
     return out
+
+
+def provenance(tasks_path: str | Path, images: set[str] | None = None) -> dict:
+    """What the numbers were computed against: bench file hash, git head, image digests (if docker is up)."""
+    import hashlib, subprocess
+    tp = Path(tasks_path)
+    prov = {"tasks_file": str(tp), "tasks_sha256": hashlib.sha256(tp.read_bytes()).hexdigest()[:16]}
+    try:
+        prov["ft_lab_commit"] = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+    except Exception:
+        prov["ft_lab_commit"] = None
+    digests = {}
+    for img in sorted(images or []):
+        try:
+            d = subprocess.run(["docker", "image", "inspect", "--format", "{{.Id}}", img], capture_output=True, text=True, timeout=20)
+            digests[img] = d.stdout.strip()[:19] if d.returncode == 0 else None
+        except Exception:
+            digests[img] = None
+    prov["image_ids"] = digests
+    return prov
 
 
 def load_tasks(path: str | Path) -> list[Task]:
