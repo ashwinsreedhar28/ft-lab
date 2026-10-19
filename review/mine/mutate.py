@@ -133,10 +133,15 @@ def llm_mutant(repo: Path, sha: str, f: str, lines: list[tuple[int, str]], model
         return None
 
 
-def related_tests(repo: Path, sha: str, f: str, test_files: list[str]) -> list[str]:
+def related_tests(repo: Path, sha: str, f: str, test_files: list[str], exclude: tuple[str, ...] = ()) -> list[str]:
+    """Test files that import or name the mutated module. `exclude` = the repo's exclude_paths: an explicit
+    pytest argument bypasses --ignore, and pydantic-core/tests/conftest.py loading as `tests.conftest`
+    collided with the real one (51 of 92 empty baselines in run 2)."""
     mod = Path(f).stem
-    hits = set(test_files)
+    hits = {t for t in test_files if not t.startswith(exclude)}
     for t in git(repo, "ls-tree", "-r", "--name-only", sha).splitlines():
+        if t.startswith(exclude):
+            continue
         if t.endswith(".py") and is_test(t) and (mod in Path(t).stem or
                                                re.search(rf"\b{re.escape(mod)}\b", git(repo, "show", f"{sha}:{t}")[:20000])):
             hits.add(t)
@@ -259,7 +264,7 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
         lines = [(n, t) for n, t in lines if not SKIP_LINE.match(t)]
         if not lines:
             continue
-        rel = related_tests(repo, pr["sha"], f, pr["test_files"])
+        rel = related_tests(repo, pr["sha"], f, pr["test_files"], tuple(r.get("exclude_paths", [])))
         targets = rel or None                       # None -> whole suite
         base_out = run(name, pr["sha"], inst, net, timeout, tag=f"{name}_{pr['sha'][:8]}_baseline", edits=None, probe=None, pytest_targets=targets, want_diff=False)
         base_pass = passed(base_out)
