@@ -10,8 +10,8 @@ own repos (shwin-bench), then a small model fine-tuned into the roles where it h
 |---|---|---|---|
 | 0 | GRPO mechanics: GSM8K, Qwen3-1.7B, 1×H100 | answer match | done Oct 17; lessons below |
 | 1 | review-bench from shwin-bench: bisected bug PRs + matched clean PRs, 4 context conditions, frontier baselines | bugs approved (target 0), auto-ship rate | v0 built: 4 bug + 4 clean; see below |
-| 2 | the review agent: neighborhood → run suite → probe test → decision | same scorer | v1–v4 run on the 8-PR bench; frozen until the bench is bigger |
-| 3a | public bench: mined fix commits → validate → bisect (real positives, eval); mutation-injected bugs on clean PRs with a probe guard (training volume) | same scorer | 2 real positives; mutate: 40 positives from 167 clean PRs so far, run continuing |
+| 2 | the review agent: neighborhood → run suite → probe test → decision | same scorer | frozen at v4b; Sonnet 7/22, Haiku 0/22 on the public eval (below) |
+| 3a | public bench: mined fix commits → validate → bisect (real positives, eval); mutation-injected bugs on clean PRs with a probe guard (training volume) | same scorer | 97 tasks (56 mutants + 2 real + 39 clean); leakage AUROC 0.55 |
 | 3b | SFT warm-start on frontier review traces (TEMP-selected); GRPO a 4B/8B LoRA into the triage gate with variance-guided rollouts (VIGOR) | asymmetric decision reward | recipe written; waits on 3a |
 | 4 | topology: 1-colocate / 2-server / 4-colocate | $/1k completions | configs ready |
 | backlog | Spider / BIRD / lakehouse text-to-SQL | execution match | adapters kept |
@@ -159,10 +159,29 @@ suite still passes **and** a Haiku-written probe fails on the mutant and passes 
 (equivalent-mutant guard; the probe doubles as the strong-localization oracle), tags each mutant
 `op` or `llm` so operator-shape learning shows up as a gap between the two. Eval stays real.
 
-**Mutation yield (first 167 clean PRs, 5 repos):** ~3 mutants per PR; roughly half are killed by the
-suite (stage 1 on the tests importing the module, stage 2 on the full suite against a baseline, since
-`filterwarnings = error` and tty-only tests make "all green" the wrong criterion); of suite survivors
-about 70 % pass the probe guard. **40 positives**, 22 from operators and 18 Haiku-written, each with a
-verified probe. Dropped survivors are mostly mutations in `scripts/`/`docs/` (nothing tests them;
-now excluded) and genuinely equivalent mutants. Pace ~2.5 min per PR on the Mac, pydantic's suite
-dominating.
+**Mutation yield (258 clean PRs, Jan–Oct 2026, 5 repos; Oct 17–18):** ~3 mutants per PR; 190 killed by
+the suite (stage 1 on tests importing the module, stage 2 on the full suite, both against a baseline,
+since `filterwarnings = error` and tty-only tests make "all green" the wrong criterion); 30 suite
+survivors dropped by the probe guard (no distinguishing probe in 2 tries: equivalent or untestable);
+**56 positives**, 38 operator / 18 Haiku-written, each with a verified probe. 92 PRs produced nothing
+(environment: mostly pydantic baselines, under diagnosis). `assemble.py` makes each a real commit and
+pairs it with its clean original: **97 tasks** (58 bug incl. 2 real, 39 clean), split 80/20 by PR
+hash because click supplies 81 of them; the repo-level split returns when ≥3 repos contribute.
+
+**First frozen-harness numbers on the public eval (34 tasks: 12 op + 8 llm + 2 real bugs, 12 clean).**
+Haiku: 0/22 bugs approved, auto-ship 0.25, escalate 0.41, but it blocked 5 of 12 clean PRs
+(block precision 0.76). Sonnet: **7/22 bugs approved (32 %)**, auto-ship 0.58, escalate 0.09, strong-
+probe 0.00; by source 42 % of operator mutants, 12 % of LLM mutants, 1 of the 2 real positives. All
+seven approvals were probe-licensed: Sonnet wrote a test, it passed, it named a changed function and
+executed an uncovered changed line, and it did not exercise the mutated line. The `36f4e93` hole from
+the 4-positive bench, now on 22 positives: a passing test that satisfies syntactic evidence rules
+bounds the reviewer's confidence, not the change's correctness. The two frontier models fail in
+opposite directions, Sonnet by shipping and Haiku by blocking, and neither has found a bug with a probe
+in 70 bug-PR runs across both benches.
+
+**Leakage probe** (`make leakage`): a bag-of-tokens logistic regression on added diff lines, 5-fold CV
+grouped by PR so a mutant and its original never split across folds. AUROC 0.56 all, 0.55 operator,
+0.55 LLM. The operator vocabulary (`or`, `!=`, `True`) carries the top weights but does not separate
+the classes at n=97. Clears the cheap test; the op-vs-llm result gap after training is the real one.
+Human checks pending: label-noise sheet (22 items) and failure taxonomy (Sonnet's 7 approvals, both
+models' blocked cleans) in `review/analysis/`.
