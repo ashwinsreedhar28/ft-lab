@@ -57,7 +57,7 @@ NON_CODE_DIRS = ("scripts/", "docs/", "docs_src/", "examples/", "benchmarks/", "
 SKIP_LINE = re.compile(r"^\s*(#|\"\"\"|'''|import |from |@|def |class |pass$|\.\.\.$|$)")
 
 
-def clean_prs(repo: Path, since: str, max_lines: int) -> list[dict]:
+def clean_prs(repo: Path, since: str, max_lines: int, exclude: tuple[str, ...] = ()) -> list[dict]:
     out = []
     for line in git(repo, "log", "--no-merges", f"--since={since}", "--format=%H%x00%ad%x00%s", "--date=short").splitlines():
         sha, date, subj = line.split("\x00", 2)
@@ -68,7 +68,7 @@ def clean_prs(repo: Path, since: str, max_lines: int) -> list[dict]:
             p = ln.split("\t")
             if len(p) == 3 and p[0].isdigit() and p[1].isdigit():
                 n += int(p[0]) + int(p[1]); files.append(p[2])
-        code = [f for f in files if f.endswith(".py") and not is_test(f) and not f.startswith(NON_CODE_DIRS)]
+        code = [f for f in files if f.endswith(".py") and not is_test(f) and not f.startswith(NON_CODE_DIRS) and not f.startswith(exclude)]
         if not code or n > max_lines or n < 5:
             continue
         out.append({"repo": repo.name, "sha": sha, "parent": git(repo, "rev-parse", f"{sha}^").strip(),
@@ -352,7 +352,7 @@ def main():
             continue
         repo = WORK / "repos" / name
         if (repo / ".git").exists():
-            prs += clean_prs(repo, a.since, a.max_lines)
+            prs += clean_prs(repo, a.since, a.max_lines, tuple(cfg[name].get("exclude_paths", [])))
     prs = [p for p in prs if p["sha"] not in done]
     rng.shuffle(prs)
     if a.limit:
