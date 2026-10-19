@@ -54,6 +54,7 @@ OPS = [
     ("slice_drop_last", r"\[:-1\]", "[:]"), ("range_n_minus1", r"range\((\w+)\)", r"range(\1 - 1)"),
 ]
 NON_CODE_DIRS = ("scripts/", "docs/", "docs_src/", "examples/", "benchmarks/", "benches/", "tools/", "setup.py")
+STATEMENT_OPS = {"return_none", "raise_pass"}   # rewrite a whole statement: only safe on a line that starts one
 SKIP_LINE = re.compile(r"^\s*(#|\"\"\"|'''|import |from |@|def |class |pass$|\.\.\.$|$)")
 
 
@@ -91,12 +92,16 @@ def added_lines(repo: Path, sha: str, f: str) -> list[tuple[int, str]]:
     return out
 
 
-def op_mutants(lines: list[tuple[int, str]], k: int, rng: random.Random) -> list[dict]:
+def op_mutants(lines: list[tuple[int, str]], k: int, rng: random.Random, src: list[str] | None = None) -> list[dict]:
     cands = []
     for ln, text in lines:
         if SKIP_LINE.match(text):
             continue
+        prev = src[ln - 2].rstrip() if src and ln >= 2 else ""
+        continuation = prev.endswith(("(", "[", "{", ",", "\\")) or prev.count("(") > prev.count(")")
         for name, pat, rep in OPS:
+            if name in STATEMENT_OPS and continuation:
+                continue                       # `return (\n  x,\n  y)`: rewriting line 2 breaks the parse
             if re.search(pat, text):
                 new = re.sub(pat, rep, text, count=1)
                 if new != text:
@@ -166,7 +171,7 @@ def script(sha: str, inst: str, edits: dict[str, str] | None, probe: tuple[str, 
     tg = " ".join(shlex.quote(t) for t in (pytest_targets or []))
     # junit xml is the record of outcomes (the -rA text is not reliable at scale); warnings that the
     # image's newer pytest raises on older commits must not abort collection under filterwarnings=error
-    parts.append(f"{{ timeout {timeout_s} python -m pytest -q -p no:cacheprovider --no-header "
+    parts.append(f"{{ timeout {timeout_s} python -m pytest -q -p no:cacheprovider --no-header --continue-on-collection-errors "
                  f"-W ignore::DeprecationWarning -W ignore::ResourceWarning -W ignore::PendingDeprecationWarning "
                  f"--junitxml=/tmp/junit.xml {pytest_args} {tg} 2>&1 | tail -n 200; echo EXIT=${{PIPESTATUS[0]}}; "
                  f"echo JUNIT_BEGIN; cat /tmp/junit.xml 2>/dev/null; echo JUNIT_END; }}")
@@ -275,7 +280,7 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
                          "targets": targets, "baseline_tail": base_out[-1500:]}); break
         log(f"{name:9s} {pr['sha'][:8]} {f}: baseline {len(base_pass)} passing in {len(targets) if targets else 'all'} test files")
         base_full_pass = None                       # full-suite baseline, computed once if any mutant survives stage 1
-        muts = op_mutants(lines, per_pr - (1 if llm else 0), rng)
+        muts = op_mutants(lines, per_pr - (1 if llm else 0), rng, git(repo, "show", f"{pr['sha']}:{f}").splitlines())
         if llm:
             m = llm_mutant(repo, pr["sha"], f, lines, PROBE_MODEL)
             if m: muts.append(m)

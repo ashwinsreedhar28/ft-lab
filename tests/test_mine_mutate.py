@@ -48,3 +48,11 @@ def test_kill_criterion_is_relative_to_baseline():
     assert stage_status(passed(base), same)[0] == "survived"
     assert stage_status(passed(base), aborted)[0] == "error"
     assert junit("no markers") == {} and junit("JUNIT_BEGIN\n<bad\nJUNIT_END") == {}
+
+
+def test_statement_ops_skip_continuation_lines():
+    src = ["def f():", "    return (", "        x,", "        y)", "    raise ValueError(x)"]
+    lines = [(3, "        x,"), (5, "    raise ValueError(x)")]
+    ms = op_mutants(lines, 5, random.Random(0), src)
+    assert all(not (m["operator"] in ("return_none", "raise_pass") and m["line"] == 3) for m in ms)
+    assert any(m["operator"] == "raise_pass" and m["line"] == 5 for m in ms)
