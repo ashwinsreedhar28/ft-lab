@@ -5412,3 +5412,2336 @@ train rows: 260  columns: ['prompt', 'kind', 'gold_hunks', 'task_id']
 │ │ ```                 │                     │       │           │          │ │
 │ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
+  8%|▊         | 10/120 [15:21<2:27:26, 80.43s/it]step 10  reward=-0.084  reward_std=0.927  kl=0.001  mean_length=183.344  clipped_ratio=0.094  step_time=28.241  loss=0.519  gate=-0.084
+                                                    8%|▊         | 10/120 [15:21<2:27:26, 80.43s/it]{'loss': '0.5185', 'grad_norm': '0.2554', 'learning_rate': '9e-06', 'num_tokens': '6.41e+05', 'completions/mean_length': '183.3', 'completions/min_length': '12', 'completions/max_length': '500', 'completions/clipped_ratio': '0.09375', 'completions/mean_terminated_length': '150.6', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '358', 'rewards/gate/mean': '-0.08392', 'rewards/gate/std': '0.927', 'reward': '-0.08392', 'reward_std': '0.927', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0', 'review/escalate_frac': '0', 'review/mean_tokens': '183.3', 'review/unparsable_frac': '0.2188', 'sampling/sampling_logp_difference/mean': '0.01687', 'sampling/sampling_logp_difference/max': '0.4088', 'sampling/importance_sampling_ratio/min': '0.5033', 'sampling/importance_sampling_ratio/mean': '0.9265', 'sampling/importance_sampling_ratio/max': '1.697', 'kl': '0.0005632', 'entropy': '1.22', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '28.24', 'epoch': '0.1538'}
+╭────────────────────────────────── Step 10 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┓ │
+│ ┃ Prompt             ┃ Completion         ┃  gate ┃ Advantage ┃ decision   ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━┩ │
+│ │ SYSTEM             │ ASSISTANT          │  1.00 │      2.18 │ approve    │ │
+│ │ You are the code   │ {"decision":       │       │           │            │ │
+│ │ review gate for a  │ "approve",         │       │           │            │ │
+│ │ production         │ "comments": []}    │       │           │            │ │
+│ │ repository. Your   │                    │       │           │            │ │
+│ │ approval merges    │                    │       │           │            │ │
+│ │ and deploys the    │                    │       │           │            │ │
+│ │ change with no     │                    │       │           │            │ │
+│ │ further human      │                    │       │           │            │ │
+│ │ review. Decide:    │                    │       │           │            │ │
+│ │   approve  - you   │                    │       │           │            │ │
+│ │ are confident the  │                    │       │           │            │ │
+│ │ change is correct  │                    │       │           │            │ │
+│ │ and safe to ship.  │                    │       │           │            │ │
+│ │   block    - you   │                    │       │           │            │ │
+│ │ found a defect;    │                    │       │           │            │ │
+│ │ cite its location. │                    │       │           │            │ │
+│ │   escalate - you   │                    │       │           │            │ │
+│ │ cannot establish   │                    │       │           │            │ │
+│ │ safety from what   │                    │       │           │            │ │
+│ │ you can see; a     │                    │       │           │            │ │
+│ │ human must look.   │                    │       │           │            │ │
+│ │ Approving a change │                    │       │           │            │ │
+│ │ that contains a    │                    │       │           │            │ │
+│ │ defect is the      │                    │       │           │            │ │
+│ │ worst outcome.     │                    │       │           │            │ │
+│ │ Blocking a correct │                    │       │           │            │ │
+│ │ change costs an    │                    │       │           │            │ │
+│ │ engineer's time.   │                    │       │           │            │ │
+│ │ Escalating is      │                    │       │           │            │ │
+│ │ cheap but useless  │                    │       │           │            │ │
+│ │ if done for        │                    │       │           │            │ │
+│ │ everything.        │                    │       │           │            │ │
+│ │ Respond with       │                    │       │           │            │ │
+│ │ exactly one JSON   │                    │       │           │            │ │
+│ │ object and nothing │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ {"decision":       │                    │       │           │            │ │
+│ │ "approve|block|es… │                    │       │           │            │ │
+│ │ "comments":        │                    │       │           │            │ │
+│ │ [{"file": "...",   │                    │       │           │            │ │
+│ │ "line_start": N,   │                    │       │           │            │ │
+│ │ "line_end": N,     │                    │       │           │            │ │
+│ │ "body": "...",     │                    │       │           │            │ │
+│ │ "proposed_test":   │                    │       │           │            │ │
+│ │ "optional pytest   │                    │       │           │            │ │
+│ │ source"}]}         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ USER               │                    │       │           │            │ │
+│ │ Repository:        │                    │       │           │            │ │
+│ │ structlog          │                    │       │           │            │ │
+│ │ Files changed:     │                    │       │           │            │ │
+│ │ .pre-commit-confi… │                    │       │           │            │ │
+│ │ docs/thread-local… │                    │       │           │            │ │
+│ │ src/structlog/_ba… │                    │       │           │            │ │
+│ │ src/structlog/std… │                    │       │           │            │ │
+│ │ src/structlog/tes… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Not shown          │                    │       │           │            │ │
+│ │ (non-code or over  │                    │       │           │            │ │
+│ │ budget; treat as   │                    │       │           │            │ │
+│ │ unreviewed):       │                    │       │           │            │ │
+│ │ docs/thread-local… │                    │       │           │            │ │
+│ │ (1008 chars,       │                    │       │           │            │ │
+│ │ non-code)          │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Context around the │                    │       │           │            │ │
+│ │ change             │                    │       │           │            │ │
+│ │ (mechanically      │                    │       │           │            │ │
+│ │ extracted):        │                    │       │           │            │ │
+│ │ Changed            │                    │       │           │            │ │
+│ │ definitions:       │                    │       │           │            │ │
+│ │ src/structlog/_ba… │                    │       │           │            │ │
+│ │ src/structlog/_ba… │                    │       │           │            │ │
+│ │ src/structlog/std… │                    │       │           │            │ │
+│ │ src/structlog/std… │                    │       │           │            │ │
+│ │ src/structlog/std… │                    │       │           │            │ │
+│ │ src/structlog/tes… │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ src/structlog/_ba… │                    │       │           │            │ │
+│ │   c53f148          │                    │       │           │            │ │
+│ │ 2024-10-07 Switch  │                    │       │           │            │ │
+│ │ base methods to    │                    │       │           │            │ │
+│ │ return Self        │                    │       │           │            │ │
+│ │ instead of         │                    │       │           │            │ │
+│ │ BoundLoggerBase    │                    │       │           │            │ │
+│ │ (#659)             │                    │       │           │            │ │
+│ │   f0c7e8c          │                    │       │           │            │ │
+│ │ 2024-03-11         │                    │       │           │            │ │
+│ │ pre-commit         │                    │       │           │            │ │
+│ │ autoupdate         │                    │       │           │            │ │
+│ │   d3150de          │                    │       │           │            │ │
+│ │ 2023-12-29 It's    │                    │       │           │            │ │
+│ │ args and kwargs    │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ src/structlog/std… │                    │       │           │            │ │
+│ │   03b5143          │                    │       │           │            │ │
+│ │ 2025-01-27 Typing: │                    │       │           │            │ │
+│ │ return Self in     │                    │       │           │            │ │
+│ │ stdlib.BoundLogger │                    │       │           │            │ │
+│ │ (#694)             │                    │       │           │            │ │
+│ │   2a317b7          │                    │       │           │            │ │
+│ │ 2025-01-12 stdlib: │                    │       │           │            │ │
+│ │ add                │                    │       │           │            │ │
+│ │ PositionalArgumen… │                    │       │           │            │ │
+│ │ to                 │                    │       │           │            │ │
+│ │ recreate_defaults  │                    │       │           │            │ │
+│ │   ab23bbe          │                    │       │           │            │ │
+│ │ 2025-01-12 Add     │                    │       │           │            │ │
+│ │ 'structlog.stdlib… │                    │       │           │            │ │
+│ │ processor (#668)   │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ src/structlog/tes… │                    │       │           │            │ │
+│ │   af4733e          │                    │       │           │            │ │
+│ │ 2025-01-12 Update  │                    │       │           │            │ │
+│ │ Ruff               │                    │       │           │            │ │
+│ │   e28bbfe          │                    │       │           │            │ │
+│ │ 2024-07-13 Map     │                    │       │           │            │ │
+│ │ method name in     │                    │       │           │            │ │
+│ │ capture_logs as    │                    │       │           │            │ │
+│ │ well (#628)        │                    │       │           │            │ │
+│ │   5c3bc79          │                    │       │           │            │ │
+│ │ 2024-01-26 Black   │                    │       │           │            │ │
+│ │ 24                 │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Diff:              │                    │       │           │            │ │
+│ │ ```diff            │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/.pre-commit-con… │                    │       │           │            │ │
+│ │ b/.pre-commit-con… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 769998e..5dec266   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/.pre-commit-con… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/.pre-commit-con… │                    │       │           │            │ │
+│ │ @@ -4,7 +4,7 @@    │                    │       │           │            │ │
+│ │ ci:                │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  repos:            │                    │       │           │            │ │
+│ │    - repo:         │                    │       │           │            │ │
+│ │ https://github.co… │                    │       │           │            │ │
+│ │ -    rev: v0.9.2   │                    │       │           │            │ │
+│ │ +    rev: v0.9.3   │                    │       │           │            │ │
+│ │      hooks:        │                    │       │           │            │ │
+│ │        - id: ruff  │                    │       │           │            │ │
+│ │          args:     │                    │       │           │            │ │
+│ │ [--fix,            │                    │       │           │            │ │
+│ │ --exit-non-zero-o… │                    │       │           │            │ │
+│ │ @@ -17,10 +17,10   │                    │       │           │            │ │
+│ │ @@ repos:          │                    │       │           │            │ │
+│ │          args:     │                    │       │           │            │ │
+│ │ [tests]            │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │    - repo:         │                    │       │           │            │ │
+│ │ https://github.co… │                    │       │           │            │ │
+│ │ -    rev: v2.3.0   │                    │       │           │            │ │
+│ │ +    rev: v2.4.0   │                    │       │           │            │ │
+│ │      hooks:        │                    │       │           │            │ │
+│ │        - id:       │                    │       │           │            │ │
+│ │ codespell          │                    │       │           │            │ │
+│ │ -        args:     │                    │       │           │            │ │
+│ │ [-L, alog]         │                    │       │           │            │ │
+│ │ +        args:     │                    │       │           │            │ │
+│ │ [-L, alog, -L,     │                    │       │           │            │ │
+│ │ abl]               │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │    - repo:         │                    │       │           │            │ │
+│ │ https://github.co… │                    │       │           │            │ │
+│ │      rev: v5.0.0   │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/src/structlog/_… │                    │       │           │            │ │
+│ │ b/src/structlog/_… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 3342a8f..dab0275   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/src/structlog/_… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/src/structlog/_… │                    │       │           │            │ │
+│ │ @@ -111,7 +111,7   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ BoundLoggerBase:   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          Only      │                    │       │           │            │ │
+│ │ necessary with     │                    │       │           │            │ │
+│ │ dict               │                    │       │           │            │ │
+│ │ implementations    │                    │       │           │            │ │
+│ │ that keep global   │                    │       │           │            │ │
+│ │ state like         │                    │       │           │            │ │
+│ │          those     │                    │       │           │            │ │
+│ │ wrapped by         │                    │       │           │            │ │
+│ │ `structlog.thread… │                    │       │           │            │ │
+│ │ when threads       │                    │       │           │            │ │
+│ │ -        are       │                    │       │           │            │ │
+│ │ re-used.           │                    │       │           │            │ │
+│ │ +        are       │                    │       │           │            │ │
+│ │ reused.            │                    │       │           │            │ │
+│ │          """       │                    │       │           │            │ │
+│ │          self._co… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/src/structlog/s… │                    │       │           │            │ │
+│ │ b/src/structlog/s… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ dd95386..80ee628   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/src/structlog/s… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/src/structlog/s… │                    │       │           │            │ │
+│ │ @@ -191,7 +191,7   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ BoundLogger(Bound… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          Only      │                    │       │           │            │ │
+│ │ necessary with     │                    │       │           │            │ │
+│ │ dict               │                    │       │           │            │ │
+│ │ implementations    │                    │       │           │            │ │
+│ │ that keep global   │                    │       │           │            │ │
+│ │ state like         │                    │       │           │            │ │
+│ │          those     │                    │       │           │            │ │
+│ │ wrapped by         │                    │       │           │            │ │
+│ │ `structlog.thread… │                    │       │           │            │ │
+│ │ when threads       │                    │       │           │            │ │
+│ │ -        are       │                    │       │           │            │ │
+│ │ re-used.           │                    │       │           │            │ │
+│ │ +        are       │                    │       │           │            │ │
+│ │ reused.            │                    │       │           │            │ │
+│ │          """       │                    │       │           │            │ │
+│ │          return    │                    │       │           │            │ │
+│ │ super().new(**new… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/src/structlog/t… │                    │       │           │            │ │
+│ │ b/src/structlog/t… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 293c618..797372d   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/src/structlog/t… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/src/structlog/t… │                    │       │           │            │ │
+│ │ @@ -194,7 +194,7   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ CapturingLoggerFa… │                    │       │           │            │ │
+│ │      r"""          │                    │       │           │            │ │
+│ │      Produce and   │                    │       │           │            │ │
+│ │ cache              │                    │       │           │            │ │
+│ │ `CapturingLogger`\ │                    │       │           │            │ │
+│ │ s.                 │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    Each factory  │                    │       │           │            │ │
+│ │ produces and       │                    │       │           │            │ │
+│ │ re-uses only       │                    │       │           │            │ │
+│ │ **one** logger.    │                    │       │           │            │ │
+│ │ +    Each factory  │                    │       │           │            │ │
+│ │ produces and       │                    │       │           │            │ │
+│ │ reuses only        │                    │       │           │            │ │
+│ │ **one** logger.    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      You can       │                    │       │           │            │ │
+│ │ access it via the  │                    │       │           │            │ │
+│ │ ``logger``         │                    │       │           │            │ │
+│ │ attribute.         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │ -1.22 │     -2.43 │ unparsable │ │
+│ │ You are the code   │ {"decision":       │       │           │            │ │
+│ │ review gate for a  │ "block",           │       │           │            │ │
+│ │ production         │ "comments":        │       │           │            │ │
+│ │ repository. Your   │ [{"file":          │       │           │            │ │
+│ │ approval merges    │ "more_itertools/r… │       │           │            │ │
+│ │ and deploys the    │ "line_start": 566, │       │           │            │ │
+│ │ change with no     │ "line_end": 568,   │       │           │            │ │
+│ │ further human      │ "body": "removed   │       │           │            │ │
+│ │ review. Decide:    │ pred, but the      │       │           │            │ │
+│ │   approve  - you   │ function is now    │       │           │            │ │
+│ │ are confident the  │ typed for          │       │           │            │ │
+│ │ change is correct  │ predicate. Treat   │       │           │            │ │
+│ │ and safe to ship.  │ #1134 as a chance  │       │           │            │ │
+│ │   block    - you   │ for                │       │           │            │ │
+│ │ found a defect;    │ Python3.10+"}]}    │       │           │            │ │
+│ │ cite its location. │                    │       │           │            │ │
+│ │   escalate - you   │ {"decision":       │       │           │            │ │
+│ │ cannot establish   │ "block",           │       │           │            │ │
+│ │ safety from what   │ "comments":        │       │           │            │ │
+│ │ you can see; a     │ [{"file":          │       │           │            │ │
+│ │ human must look.   │ "more_itertools/r… │       │           │            │ │
+│ │ Approving a change │ "line_start": 566, │       │           │            │ │
+│ │ that contains a    │ "line_end": 568,   │       │           │            │ │
+│ │ defect is the      │ "body": "changed   │       │           │            │ │
+│ │ worst outcome.     │ the name from      │       │           │            │ │
+│ │ Blocking a correct │ 'pred' to          │       │           │            │ │
+│ │ change costs an    │ 'predicate'        │       │           │            │ │
+│ │ engineer's time.   │ without a version  │       │           │            │ │
+│ │ Escalating is      │ bump or note"}]}   │       │           │            │ │
+│ │ cheap but useless  │                    │       │           │            │ │
+│ │ if done for        │ {"decision":       │       │           │            │ │
+│ │ everything.        │ "block",           │       │           │            │ │
+│ │ Respond with       │ "comments":        │       │           │            │ │
+│ │ exactly one JSON   │ [{"file":          │       │           │            │ │
+│ │ object and nothing │ "more_itertools/r… │       │           │            │ │
+│ │ else:              │ "line_start": 569, │       │           │            │ │
+│ │ {"decision":       │ "line_end": 575,   │       │           │            │ │
+│ │ "approve|block|es… │ "body":            │       │           │            │ │
+│ │ "comments":        │ "keyword-only      │       │           │            │ │
+│ │ [{"file": "...",   │ parameter is       │       │           │            │ │
+│ │ "line_start": N,   │ wrong" + "legacy:  │       │           │            │ │
+│ │ "line_end": N,     │ 'pred' ->          │       │           │            │ │
+│ │ "body": "...",     │ 'predicate'; see   │       │           │            │ │
+│ │ "proposed_test":   │ docs"}]}           │       │           │            │ │
+│ │ "optional pytest   │                    │       │           │            │ │
+│ │ source"}]}         │ {"decision":       │       │           │            │ │
+│ │                    │ "block",           │       │           │            │ │
+│ │ USER               │ "comments":        │       │           │            │ │
+│ │ Repository:        │ [{"file":          │       │           │            │ │
+│ │ more-itertools     │ "more_itertools/r… │       │           │            │ │
+│ │ Files changed:     │ "line_start": 569, │       │           │            │ │
+│ │ more_itertools/mo… │ "line_end": 575,   │       │           │            │ │
+│ │ more_itertools/re… │ "body": "updated   │       │           │            │ │
+│ │ more_itertools/re… │ to Python3.10 /    │       │           │            │ │
+│ │ tests/test_recipe… │ 3.11"}, {"file":   │       │           │            │ │
+│ │                    │ "more_itertools/r… │       │           │            │ │
+│ │ Not shown          │ "line_start": 576, │       │           │            │ │
+│ │ (non-code or over  │ "line_end": 578,   │       │           │            │ │
+│ │ budget; treat as   │ "body":            │       │           │            │ │
+│ │ unreviewed):       │ "type.iscot is     │       │           │            │ │
+│ │ more_itertools/re… │ backward-compatib… │       │           │            │ │
+│ │ (700 chars,        │                    │       │           │            │ │
+│ │ non-code)          │ {"decision":       │       │           │            │ │
+│ │                    │ "block",           │       │           │            │ │
+│ │ Context around the │ "comments":        │       │           │            │ │
+│ │ change             │ [{"file":          │       │           │            │ │
+│ │ (mechanically      │ "more_itertools/r… │       │           │            │ │
+│ │ extracted):        │ "line_start": 576, │       │           │            │ │
+│ │ Changed            │ "line_end": 578,   │       │           │            │ │
+│ │ definitions:       │ "body":            │       │           │            │ │
+│ │ more_itertools/mo… │ "type.intcol is    │       │           │            │ │
+│ │ more_itertools/mo… │ deprecated - use   │       │           │            │ │
+│ │ more_itertools/re… │ typing.Sequence    │       │           │            │ │
+│ │ more_itertools/re… │ (no need for       │       │           │            │ │
+│ │ more_itertools/re… │ string"; etc}]}    │       │           │            │ │
+│ │ tests/test_recipe… │                    │       │           │            │ │
+│ │ tests/test_recipe… │                    │       │           │            │ │
+│ │ tests/test_recipe… │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │   e4d2a4a          │                    │       │           │            │ │
+│ │ 2026-03-31 Merge   │                    │       │           │            │ │
+│ │ pull request #1126 │                    │       │           │            │ │
+│ │ from               │                    │       │           │            │ │
+│ │ veeceey/fix/issue… │                    │       │           │            │ │
+│ │   18c57c7          │                    │       │           │            │ │
+│ │ 2026-03-31 Issue   │                    │       │           │            │ │
+│ │ #1134: Add         │                    │       │           │            │ │
+│ │ running_statistics │                    │       │           │            │ │
+│ │ (#1135)            │                    │       │           │            │ │
+│ │   b290c27          │                    │       │           │            │ │
+│ │ 2026-03-23 docs:   │                    │       │           │            │ │
+│ │ add                │                    │       │           │            │ │
+│ │ cross-references   │                    │       │           │            │ │
+│ │ between            │                    │       │           │            │ │
+│ │ groupby_transform, │                    │       │           │            │ │
+│ │ bucket, and        │                    │       │           │            │ │
+│ │ map_reduce         │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ more_itertools/re… │                    │       │           │            │ │
+│ │   d0c20f5          │                    │       │           │            │ │
+│ │ 2026-03-31         │                    │       │           │            │ │
+│ │ quantify: pred ->  │                    │       │           │            │ │
+│ │ predicate          │                    │       │           │            │ │
+│ │   a7bac4a          │                    │       │           │            │ │
+│ │ 2026-03-31         │                    │       │           │            │ │
+│ │ flatten:           │                    │       │           │            │ │
+│ │ listOfLists ->     │                    │       │           │            │ │
+│ │ list_of_lists      │                    │       │           │            │ │
+│ │   38b66e2          │                    │       │           │            │ │
+│ │ 2026-03-31         │                    │       │           │            │ │
+│ │ repeatfunc: func   │                    │       │           │            │ │
+│ │ -> function        │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ tests/test_recipe… │                    │       │           │            │ │
+│ │   18c57c7          │                    │       │           │            │ │
+│ │ 2026-03-31 Issue   │                    │       │           │            │ │
+│ │ #1134: Add         │                    │       │           │            │ │
+│ │ running_statistics │                    │       │           │            │ │
+│ │ (#1135)            │                    │       │           │            │ │
+│ │   db4f41b          │                    │       │           │            │ │
+│ │ 2026-02-09 Add     │                    │       │           │            │ │
+│ │ running_mean       │                    │       │           │            │ │
+│ │ recipe             │                    │       │           │            │ │
+│ │   def2d82          │                    │       │           │            │ │
+│ │ 2026-01-02         │                    │       │           │            │ │
+│ │ Simplify           │                    │       │           │            │ │
+│ │ nth_permutation.   │                    │       │           │            │ │
+│ │ Fix incorrect      │                    │       │           │            │ │
+│ │ exception.         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Diff:              │                    │       │           │            │ │
+│ │ ```diff            │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 6b0360e..8f1bfe7   │                    │       │           │            │ │
+│ │ 100755             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ @@ -5227,7 +5227,7 │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ nth_prime(n, *,    │                    │       │           │            │ │
+│ │ approximate=False… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      # Search from │                    │       │           │            │ │
+│ │ the midpoint and   │                    │       │           │            │ │
+│ │ return the first   │                    │       │           │            │ │
+│ │ odd prime          │                    │       │           │            │ │
+│ │      odd =         │                    │       │           │            │ │
+│ │ floor((lb + ub) /  │                    │       │           │            │ │
+│ │ 2) | 1             │                    │       │           │            │ │
+│ │ -    return        │                    │       │           │            │ │
+│ │ first_true(count(… │                    │       │           │            │ │
+│ │ step=2),           │                    │       │           │            │ │
+│ │ pred=is_prime)     │                    │       │           │            │ │
+│ │ +    return        │                    │       │           │            │ │
+│ │ first_true(count(… │                    │       │           │            │ │
+│ │ step=2))           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ argmin(iterable,   │                    │       │           │            │ │
+│ │ *, key=None):      │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 7548fc3..acab086   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ @@ -557,7 +557,7   │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ iter_except(func,  │                    │       │           │            │ │
+│ │ exception,         │                    │       │           │            │ │
+│ │ first=None):       │                    │       │           │            │ │
+│ │              yield │                    │       │           │            │ │
+│ │ func()             │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -def               │                    │       │           │            │ │
+│ │ first_true(iterab… │                    │       │           │            │ │
+│ │ default=None,      │                    │       │           │            │ │
+│ │ pred=None):        │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ first_true(iterab… │                    │       │           │            │ │
+│ │ default=None,      │                    │       │           │            │ │
+│ │ predicate=None):   │                    │       │           │            │ │
+│ │      """           │                    │       │           │            │ │
+│ │      Returns the   │                    │       │           │            │ │
+│ │ first true value   │                    │       │           │            │ │
+│ │ in the iterable.   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ @@ -568,13 +568,13 │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ first_true(iterab… │                    │       │           │            │ │
+│ │ default=None,      │                    │       │           │            │ │
+│ │ pred=None):        │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          >>>       │                    │       │           │            │ │
+│ │ first_true(range(… │                    │       │           │            │ │
+│ │          1         │                    │       │           │            │ │
+│ │ -        >>>       │                    │       │           │            │ │
+│ │ first_true(range(… │                    │       │           │            │ │
+│ │ pred=lambda x: x > │                    │       │           │            │ │
+│ │ 5)                 │                    │       │           │            │ │
+│ │ +        >>>       │                    │       │           │            │ │
+│ │ first_true(range(… │                    │       │           │            │ │
+│ │ predicate=lambda   │                    │       │           │            │ │
+│ │ x: x > 5)          │                    │       │           │            │ │
+│ │          6         │                    │       │           │            │ │
+│ │ -        >>>       │                    │       │           │            │ │
+│ │ first_true(range(… │                    │       │           │            │ │
+│ │ default='missing', │                    │       │           │            │ │
+│ │ pred=lambda x: x > │                    │       │           │            │ │
+│ │ 9)                 │                    │       │           │            │ │
+│ │ +        >>>       │                    │       │           │            │ │
+│ │ first_true(range(… │                    │       │           │            │ │
+│ │ default='missing', │                    │       │           │            │ │
+│ │ predicate=lambda   │                    │       │           │            │ │
+│ │ x: x > 9)          │                    │       │           │            │ │
+│ │          'missing' │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      """           │                    │       │           │            │ │
+│ │ -    return        │                    │       │           │            │ │
+│ │ next(filter(pred,  │                    │       │           │            │ │
+│ │ iterable),         │                    │       │           │            │ │
+│ │ default)           │                    │       │           │            │ │
+│ │ +    return        │                    │       │           │            │ │
+│ │ next(filter(predi… │                    │       │           │            │ │
+│ │ iterable),         │                    │       │           │            │ │
+│ │ default)           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ random_product(*i… │                    │       │           │            │ │
+│ │ repeat=1):         │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_reci… │                    │       │           │            │ │
+│ │ b/tests/test_reci… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 814b63f..dcbdde8   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_reci… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_reci… │                    │       │           │            │ │
+│ │ @@ -522,7 +522,7   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ FirstTrueTests(Te… │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ test_pred(self):   │                    │       │           │            │ │
+│ │          """Test   │                    │       │           │            │ │
+│ │ with a custom      │                    │       │           │            │ │
+│ │ predicate"""       │                    │       │           │            │ │
+│ │          self.ass… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ mi.first_true([2,  │                    │       │           │            │ │
+│ │ 4, 6], pred=lambda │                    │       │           │            │ │
+│ │ x: x % 3 == 0), 6  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ mi.first_true([2,  │                    │       │           │            │ │
+│ │ 4, 6],             │                    │       │           │            │ │
+│ │ predicate=lambda   │                    │       │           │            │ │
+│ │ x: x % 3 == 0), 6  │                    │       │           │            │ │
+│ │          )         │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+  9%|▉         | 11/120 [16:10<2:08:34, 70.78s/it]step 11  reward=0.398  reward_std=1.614  kl=0.001  mean_length=131.969  clipped_ratio=0.000  step_time=46.855  loss=0.048  gate=0.398
+                                                    9%|▉         | 11/120 [16:10<2:08:34, 70.78s/it]{'loss': '0.04839', 'grad_norm': '0.1761', 'learning_rate': '1e-05', 'num_tokens': '6.779e+05', 'completions/mean_length': '132', 'completions/min_length': '12', 'completions/max_length': '408', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '132', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '408', 'rewards/gate/mean': '0.3977', 'rewards/gate/std': '1.614', 'reward': '0.3977', 'reward_std': '1.614', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.0625', 'review/escalate_frac': '0', 'review/mean_tokens': '132', 'review/unparsable_frac': '0.03125', 'sampling/sampling_logp_difference/mean': '0.01961', 'sampling/sampling_logp_difference/max': '0.2887', 'sampling/importance_sampling_ratio/min': '0.3241', 'sampling/importance_sampling_ratio/mean': '0.8804', 'sampling/importance_sampling_ratio/max': '1.705', 'kl': '0.000611', 'entropy': '1.365', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '46.85', 'epoch': '0.1692'}
+╭────────────────────────────────── Step 11 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.50 │     -0.54 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "starlette/__init_… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 1,    │       │           │          │ │
+│ │ with no further     │ "line_end": 1,      │       │           │          │ │
+│ │ human review.       │ "body": "Someone is │       │           │          │ │
+│ │ Decide:             │ trying to sabotage  │       │           │          │ │
+│ │   approve  - you    │ this PR. But we     │       │           │          │ │
+│ │ are confident the   │ cannot rely on      │       │           │          │ │
+│ │ change is correct   │ __version__ to be   │       │           │          │ │
+│ │ and safe to ship.   │ correct unless we   │       │           │          │ │
+│ │   block    - you    │ have tested it in   │       │           │          │ │
+│ │ found a defect;     │ the build. The      │       │           │          │ │
+│ │ cite its location.  │ version should be   │       │           │          │ │
+│ │   escalate - you    │ strictly increased  │       │           │          │ │
+│ │ cannot establish    │ in the release      │       │           │          │ │
+│ │ safety from what    │ workflow: add +1 to │       │           │          │ │
+│ │ you can see; a      │ the build number,   │       │           │          │ │
+│ │ human must look.    │ put that in         │       │           │          │ │
+│ │ Approving a change  │ release_notes and   │       │           │          │ │
+│ │ that contains a     │ commit it. Cannot   │       │           │          │ │
+│ │ defect is the worst │ move forward        │       │           │          │ │
+│ │ outcome. Blocking a │ without that. Do    │       │           │          │ │
+│ │ correct change      │ not infer from the  │       │           │          │ │
+│ │ costs an engineer's │ diff."}]}           │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ starlette           │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ docs/release-notes… │                     │       │           │          │ │
+│ │ starlette/__init__… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ docs/release-notes… │                     │       │           │          │ │
+│ │ (433 chars,         │                     │       │           │          │ │
+│ │ non-code)           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/starlette/__init… │                     │       │           │          │ │
+│ │ b/starlette/__init… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 839a08a..3a7c7a2    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/starlette/__init… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/starlette/__init… │                     │       │           │          │ │
+│ │ @@ -1 +1 @@         │                     │       │           │          │ │
+│ │ -__version__ =      │                     │       │           │          │ │
+│ │ "0.49.3"            │                     │       │           │          │ │
+│ │ +__version__ =      │                     │       │           │          │ │
+│ │ "0.50.0"            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │  1.50 │      0.59 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "more_itertools/re… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 732,  │       │           │          │ │
+│ │ with no further     │ "line_end": 738,    │       │           │          │ │
+│ │ human review.       │ "body": "This       │       │           │          │ │
+│ │ Decide:             │ change lacks        │       │           │          │ │
+│ │   approve  - you    │ documentation,      │       │           │          │ │
+│ │ are confident the   │ examples, and test  │       │           │          │ │
+│ │ change is correct   │ coverage. The new   │       │           │          │ │
+│ │ and safe to ship.   │ code may not work   │       │           │          │ │
+│ │   block    - you    │ correctly. The      │       │           │          │ │
+│ │ found a defect;     │ meaning of the new  │       │           │          │ │
+│ │ cite its location.  │ wording is unclear. │       │           │          │ │
+│ │   escalate - you    │ It seems to be an   │       │           │          │ │
+│ │ cannot establish    │ example of the      │       │           │          │ │
+│ │ safety from what    │ *classic problem of │       │           │          │ │
+│ │ you can see; a      │ adding a patch      │       │           │          │ │
+│ │ human must look.    │ without proper      │       │           │          │ │
+│ │ Approving a change  │ testing or          │       │           │          │ │
+│ │ that contains a     │ documentation*."}]} │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ more-itertools      │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │   f312dce           │                     │       │           │          │ │
+│ │ 2026-07-16 Run the  │                     │       │           │          │ │
+│ │ formatter           │                     │       │           │          │ │
+│ │   eedb79a           │                     │       │           │          │ │
+│ │ 2026-07-16 Issue    │                     │       │           │          │ │
+│ │ 1215: Add docstring │                     │       │           │          │ │
+│ │ note for iter_index │                     │       │           │          │ │
+│ │ on using range      │                     │       │           │          │ │
+│ │ objects             │                     │       │           │          │ │
+│ │   c92c4fa           │                     │       │           │          │ │
+│ │ 2026-07-12 Let the  │                     │       │           │          │ │
+│ │ invariant speak for │                     │       │           │          │ │
+│ │ itself              │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/r… │                     │       │           │          │ │
+│ │ b/more_itertools/r… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ b4649d6..8a4cbea    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/r… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/r… │                     │       │           │          │ │
+│ │ @@ -718,7 +718,7 @@ │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ convolve(signal,    │                     │       │           │          │ │
+│ │ kernel):            │                     │       │           │          │ │
+│ │          >>>        │                     │       │           │          │ │
+│ │ list(convolve([1,   │                     │       │           │          │ │
+│ │ -1, -20], [1, -3])) │                     │       │           │          │ │
+│ │          [1, -4,    │                     │       │           │          │ │
+│ │ -17, 60]            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    Examples of    │                     │       │           │          │ │
+│ │ popular kinds of    │                     │       │           │          │ │
+│ │ kernels:            │                     │       │           │          │ │
+│ │ +    Examples of    │                     │       │           │          │ │
+│ │ useful kernels:     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      * The kernel   │                     │       │           │          │ │
+│ │ ``[0.25, 0.25,      │                     │       │           │          │ │
+│ │ 0.25, 0.25]``       │                     │       │           │          │ │
+│ │ computes a moving   │                     │       │           │          │ │
+│ │ average.            │                     │       │           │          │ │
+│ │        For image    │                     │       │           │          │ │
+│ │ data, this blurs    │                     │       │           │          │ │
+│ │ the image and       │                     │       │           │          │ │
+│ │ reduces noise.      │                     │       │           │          │ │
+│ │ @@ -727,11 +727,12  │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ convolve(signal,    │                     │       │           │          │ │
+│ │ kernel):            │                     │       │           │          │ │
+│ │      * The kernel   │                     │       │           │          │ │
+│ │ ``[1, -2, 1]``      │                     │       │           │          │ │
+│ │ estimates the       │                     │       │           │          │ │
+│ │ second derivative   │                     │       │           │          │ │
+│ │ of a                │                     │       │           │          │ │
+│ │        function     │                     │       │           │          │ │
+│ │ evaluated at evenly │                     │       │           │          │ │
+│ │ spaced inputs.      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    Convolutions   │                     │       │           │          │ │
+│ │ are mathematically  │                     │       │           │          │ │
+│ │ commutative;        │                     │       │           │          │ │
+│ │ however, the inputs │                     │       │           │          │ │
+│ │ are                 │                     │       │           │          │ │
+│ │ -    evaluated      │                     │       │           │          │ │
+│ │ differently.  The   │                     │       │           │          │ │
+│ │ signal is consumed  │                     │       │           │          │ │
+│ │ lazily and can be   │                     │       │           │          │ │
+│ │ -    infinite. The  │                     │       │           │          │ │
+│ │ kernel is fully     │                     │       │           │          │ │
+│ │ consumed before the │                     │       │           │          │ │
+│ │ calculations begin. │                     │       │           │          │ │
+│ │ +    Convolutions   │                     │       │           │          │ │
+│ │ are mathematically  │                     │       │           │          │ │
+│ │ commutative.        │                     │       │           │          │ │
+│ │ However, the input  │                     │       │           │          │ │
+│ │ iterables are       │                     │       │           │          │ │
+│ │ +    evaluated      │                     │       │           │          │ │
+│ │ differently by this │                     │       │           │          │ │
+│ │ function. *signal*  │                     │       │           │          │ │
+│ │ is consumed eagerly │                     │       │           │          │ │
+│ │ and can be          │                     │       │           │          │ │
+│ │ +    infinite.      │                     │       │           │          │ │
+│ │ *kernel* is fully   │                     │       │           │          │ │
+│ │ consumed before     │                     │       │           │          │ │
+│ │ calculations begin. │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      Supports all   │                     │       │           │          │ │
+│ │ numeric types: int, │                     │       │           │          │ │
+│ │ float, complex,     │                     │       │           │          │ │
+│ │ Decimal, Fraction.  │                     │       │           │          │ │
+│ │ +    Note that      │                     │       │           │          │ │
+│ │ empty input         │                     │       │           │          │ │
+│ │ iterables will      │                     │       │           │          │ │
+│ │ produce meaningless │                     │       │           │          │ │
+│ │ output.             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      References:    │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ 10%|█         | 12/120 [17:56<2:27:10, 81.77s/it]step 12  reward=-0.094  reward_std=1.376  kl=0.001  mean_length=176.219  clipped_ratio=0.031  step_time=102.200  loss=0.522  gate=-0.094
+                                                   10%|█         | 12/120 [17:56<2:27:10, 81.77s/it]{'loss': '0.5217', 'grad_norm': '0.4746', 'learning_rate': '1e-05', 'num_tokens': '7.566e+05', 'completions/mean_length': '176.2', 'completions/min_length': '12', 'completions/max_length': '500', 'completions/clipped_ratio': '0.03125', 'completions/mean_terminated_length': '165.8', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '465', 'rewards/gate/mean': '-0.09376', 'rewards/gate/std': '1.376', 'reward': '-0.09376', 'reward_std': '1.376', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.03125', 'review/escalate_frac': '0', 'review/mean_tokens': '176.2', 'review/unparsable_frac': '0.2812', 'sampling/sampling_logp_difference/mean': '0.02021', 'sampling/sampling_logp_difference/max': '1.096', 'sampling/importance_sampling_ratio/min': '0.3109', 'sampling/importance_sampling_ratio/mean': '0.9759', 'sampling/importance_sampling_ratio/max': '2.458', 'kl': '0.0005909', 'entropy': '1.368', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '102.2', 'epoch': '0.1846'}
+╭────────────────────────────────── Step 12 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.50 │      0.35 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "more_itertools/mo… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 1144, │       │           │          │ │
+│ │ with no further     │ "line_end": 1144,   │       │           │          │ │
+│ │ human review.       │ "body": "Use of     │       │           │          │ │
+│ │ Decide:             │ product_index([8,   │       │           │          │ │
+│ │   approve  - you    │ 0, 7], range(10),   │       │           │          │ │
+│ │ are confident the   │ repeat=3) for 807   │       │           │          │ │
+│ │ change is correct   │ would be 807 in the │       │           │          │ │
+│ │ and safe to ship.   │ digits. But         │       │           │          │ │
+│ │   block    - you    │ product_index([8,   │       │           │          │ │
+│ │ found a defect;     │ 0, 7], range(10),   │       │           │          │ │
+│ │ cite its location.  │ repeat=3) yields    │       │           │          │ │
+│ │   escalate - you    │ 807 for the product │       │           │          │ │
+│ │ cannot establish    │ order."}, {"file":  │       │           │          │ │
+│ │ safety from what    │ "more_itertools/mo… │       │           │          │ │
+│ │ you can see; a      │ "line_start": 1147, │       │           │          │ │
+│ │ human must look.    │ "line_end": 1147,   │       │           │          │ │
+│ │ Approving a change  │ "body":             │       │           │          │ │
+│ │ that contains a     │ "product_index now  │       │           │          │ │
+│ │ defect is the worst │ erroneously assigns │       │           │          │ │
+│ │ outcome. Blocking a │ to the `pools`      │       │           │          │ │
+│ │ correct change      │ variable a product  │       │           │          │ │
+│ │ costs an engineer's │ of iterables with   │       │           │          │ │
+│ │ time. Escalating is │ `repeat` as it's    │       │           │          │ │
+│ │ cheap but useless   │ evaluated. So, the  │       │           │          │ │
+│ │ if done for         │ repeat argument     │       │           │          │ │
+│ │ everything.         │ isn't handled       │       │           │          │ │
+│ │ Respond with        │ correctly           │       │           │          │ │
+│ │ exactly one JSON    │ initially."}]}      │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ more-itertools      │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ tests/test_more.py  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ (604 chars,         │                     │       │           │          │ │
+│ │ non-code)           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ tests/test_more.py… │                     │       │           │          │ │
+│ │ tests/test_more.py… │                     │       │           │          │ │
+│ │ tests/test_more.py… │                     │       │           │          │ │
+│ │ tests/test_more.py… │                     │       │           │          │ │
+│ │ tests/test_more.py… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │   37ae0d6           │                     │       │           │          │ │
+│ │ 2025-12-04 Add      │                     │       │           │          │ │
+│ │ repeat keyword      │                     │       │           │          │ │
+│ │ argument to         │                     │       │           │          │ │
+│ │ nth_product         │                     │       │           │          │ │
+│ │   20ce339           │                     │       │           │          │ │
+│ │ 2025-11-26 Merge    │                     │       │           │          │ │
+│ │ remote-tracking     │                     │       │           │          │ │
+│ │ branch              │                     │       │           │          │ │
+│ │ 'origin/master'     │                     │       │           │          │ │
+│ │ into                │                     │       │           │          │ │
+│ │ issue-1049-callback │                     │       │           │          │ │
+│ │   205dcb9           │                     │       │           │          │ │
+│ │ 2025-11-26 Issue    │                     │       │           │          │ │
+│ │ 1049: Try .result   │                     │       │           │          │ │
+│ │ with a timeout      │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ tests/test_more.py: │                     │       │           │          │ │
+│ │   37ae0d6           │                     │       │           │          │ │
+│ │ 2025-12-04 Add      │                     │       │           │          │ │
+│ │ repeat keyword      │                     │       │           │          │ │
+│ │ argument to         │                     │       │           │          │ │
+│ │ nth_product         │                     │       │           │          │ │
+│ │   6743b2f           │                     │       │           │          │ │
+│ │ 2025-11-19 Fix      │                     │       │           │          │ │
+│ │ typos               │                     │       │           │          │ │
+│ │   2af32e1           │                     │       │           │          │ │
+│ │ 2025-11-04 Add      │                     │       │           │          │ │
+│ │ monotonic option to │                     │       │           │          │ │
+│ │ extract()           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 41b195c..61d066d    │                     │       │           │          │ │
+│ │ 100755              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ @@ -4342,21         │                     │       │           │          │ │
+│ │ +4342,27 @@ def     │                     │       │           │          │ │
+│ │ value_chain(*args): │                     │       │           │          │ │
+│ │              yield  │                     │       │           │          │ │
+│ │ value               │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -def                │                     │       │           │          │ │
+│ │ product_index(elem… │                     │       │           │          │ │
+│ │ *args):             │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ product_index(elem… │                     │       │           │          │ │
+│ │ *iterables,         │                     │       │           │          │ │
+│ │ repeat=1):          │                     │       │           │          │ │
+│ │      """Equivalent  │                     │       │           │          │ │
+│ │ to                  │                     │       │           │          │ │
+│ │ ``list(product(*ar… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    The products   │                     │       │           │          │ │
+│ │ of *args* can be    │                     │       │           │          │ │
+│ │ ordered             │                     │       │           │          │ │
+│ │ lexicographically.  │                     │       │           │          │ │
+│ │ +    The products   │                     │       │           │          │ │
+│ │ of *iterables* can  │                     │       │           │          │ │
+│ │ be ordered          │                     │       │           │          │ │
+│ │ lexicographically.  │                     │       │           │          │ │
+│ │      :func:`produc… │                     │       │           │          │ │
+│ │ computes the first  │                     │       │           │          │ │
+│ │ index of *element*  │                     │       │           │          │ │
+│ │ without             │                     │       │           │          │ │
+│ │      computing the  │                     │       │           │          │ │
+│ │ previous products.  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          >>>        │                     │       │           │          │ │
+│ │ product_index([8,   │                     │       │           │          │ │
+│ │ 2], range(10),      │                     │       │           │          │ │
+│ │ range(5))           │                     │       │           │          │ │
+│ │          42         │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +    The *repeat*   │                     │       │           │          │ │
+│ │ keyword argument    │                     │       │           │          │ │
+│ │ specifies the       │                     │       │           │          │ │
+│ │ number of           │                     │       │           │          │ │
+│ │ repetitions         │                     │       │           │          │ │
+│ │ +    of the         │                     │       │           │          │ │
+│ │ iterables::         │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        >>>        │                     │       │           │          │ │
+│ │ product_index([8,   │                     │       │           │          │ │
+│ │ 0, 7], range(10),   │                     │       │           │          │ │
+│ │ repeat=3)           │                     │       │           │          │ │
+│ │ +        807        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │      ``ValueError`` │                     │       │           │          │ │
+│ │ will be raised if   │                     │       │           │          │ │
+│ │ the given *element* │                     │       │           │          │ │
+│ │ isn't in the        │                     │       │           │          │ │
+│ │ product             │                     │       │           │          │ │
+│ │      of *args*.     │                     │       │           │          │ │
+│ │      """            │                     │       │           │          │ │
+│ │      elements =     │                     │       │           │          │ │
+│ │ tuple(element)      │                     │       │           │          │ │
+│ │ -    pools =        │                     │       │           │          │ │
+│ │ tuple(map(tuple,    │                     │       │           │          │ │
+│ │ args))              │                     │       │           │          │ │
+│ │ +    pools =        │                     │       │           │          │ │
+│ │ tuple(map(tuple,    │                     │       │           │          │ │
+│ │ iterables)) *       │                     │       │           │          │ │
+│ │ repeat              │                     │       │           │          │ │
+│ │      if             │                     │       │           │          │ │
+│ │ len(elements) !=    │                     │       │           │          │ │
+│ │ len(pools):         │                     │       │           │          │ │
+│ │          raise      │                     │       │           │          │ │
+│ │ ValueError('element │                     │       │           │          │ │
+│ │ is not a product of │                     │       │           │          │ │
+│ │ args')              │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_more.… │                     │       │           │          │ │
+│ │ b/tests/test_more.… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 9e1ff39..6024705    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_more.… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_more.… │                     │       │           │          │ │
+│ │ @@ -4966,6 +4966,14 │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ ProductIndexTests(… │                     │       │           │          │ │
+│ │              12,    │                     │       │           │          │ │
+│ │          )          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_repeat(self):  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self.assertEqual(   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ mi.product_index([… │                     │       │           │          │ │
+│ │ 2, 3, 4],           │                     │       │           │          │ │
+│ │ range(10),          │                     │       │           │          │ │
+│ │ repeat=4),          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ mi.product_index(   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ [1, 2, 3, 4],       │                     │       │           │          │ │
+│ │ range(10),          │                     │       │           │          │ │
+│ │ range(10),          │                     │       │           │          │ │
+│ │ range(10),          │                     │       │           │          │ │
+│ │ range(10)           │                     │       │           │          │ │
+│ │ +            ),     │                     │       │           │          │ │
+│ │ +        )          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  class              │                     │       │           │          │ │
+│ │ CombinationIndexTe… │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ test_r_less_than_n… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │  1.50 │      1.24 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "fastapi/security/… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 8,    │       │           │          │ │
+│ │ with no further     │ "line_end": 8,      │       │           │          │ │
+│ │ human review.       │ "body": "Return     │       │           │          │ │
+│ │ Decide:             │ param[1:] from      │       │           │          │ │
+│ │   approve  - you    │ scheme and param.   │       │           │          │ │
+│ │ are confident the   │ This removes the    │       │           │          │ │
+│ │ change is correct   │ space and any       │       │           │          │ │
+│ │ and safe to ship.   │ trailing            │       │           │          │ │
+│ │   block    - you    │ whitespace, but may │       │           │          │ │
+│ │ found a defect;     │ break the protocol. │       │           │          │ │
+│ │ cite its location.  │ For example, does   │       │           │          │ │
+│ │   escalate - you    │ not distinguish     │       │           │          │ │
+│ │ cannot establish    │ between 'foobar'    │       │           │          │ │
+│ │ safety from what    │ and 'foobarspace'.  │       │           │          │ │
+│ │ you can see; a      │ Tests may not fail  │       │           │          │ │
+│ │ human must look.    │ yet."}]}            │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository: fastapi │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ fastapi/security/u… │                     │       │           │          │ │
+│ │ tests/test_securit… │                     │       │           │          │ │
+│ │ tests/test_securit… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ fastapi/security/u… │                     │       │           │          │ │
+│ │ tests/test_securit… │                     │       │           │          │ │
+│ │ tests/test_securit… │                     │       │           │          │ │
+│ │ tests/test_securit… │                     │       │           │          │ │
+│ │ tests/test_securit… │                     │       │           │          │ │
+│ │ tests/test_securit… │                     │       │           │          │ │
+│ │ tests/test_securit… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ fastapi/security/u… │                     │       │           │          │ │
+│ │   1c4fc96c9         │                     │       │           │          │ │
+│ │ 2025-12-17 ♻️       │                     │       │           │          │ │
+│ │ Upgrade internal    │                     │       │           │          │ │
+│ │ syntax to Python    │                     │       │           │          │ │
+│ │ 3.9+ 🎉 (#14564)    │                     │       │           │          │ │
+│ │   fdbd48be5         │                     │       │           │          │ │
+│ │ 2022-11-13 ⬆        │                     │       │           │          │ │
+│ │ Upgrade Starlette   │                     │       │           │          │ │
+│ │ to `0.21.0`,        │                     │       │           │          │ │
+│ │ including the new   │                     │       │           │          │ │
+│ │ [`TestClient` based │                     │       │           │          │ │
+│ │ on                  │                     │       │           │          │ │
+│ │ HTTPX](https://git… │                     │       │           │          │ │
+│ │ (#5471)             │                     │       │           │          │ │
+│ │   4a0316bcf         │                     │       │           │          │ │
+│ │ 2018-12-28 :art:    │                     │       │           │          │ │
+│ │ Add missing type    │                     │       │           │          │ │
+│ │ definition          │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ tests/test_securit… │                     │       │           │          │ │
+│ │   51ad909ff         │                     │       │           │          │ │
+│ │ 2025-11-24 🐛 Use   │                     │       │           │          │ │
+│ │ `401` status code   │                     │       │           │          │ │
+│ │ in security classes │                     │       │           │          │ │
+│ │ when credentials    │                     │       │           │          │ │
+│ │ are missing         │                     │       │           │          │ │
+│ │ (#13786)            │                     │       │           │          │ │
+│ │   7dad5a820         │                     │       │           │          │ │
+│ │ 2023-06-30 ✨ Add   │                     │       │           │          │ │
+│ │ support for OpenAPI │                     │       │           │          │ │
+│ │ 3.1.0 (#9770)       │                     │       │           │          │ │
+│ │   50c1a928f         │                     │       │           │          │ │
+│ │ 2023-05-08 ✅       │                     │       │           │          │ │
+│ │ Refactor OpenAPI    │                     │       │           │          │ │
+│ │ tests, prepare for  │                     │       │           │          │ │
+│ │ Pydantic v2 (#9503) │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ tests/test_securit… │                     │       │           │          │ │
+│ │   7dad5a820         │                     │       │           │          │ │
+│ │ 2023-06-30 ✨ Add   │                     │       │           │          │ │
+│ │ support for OpenAPI │                     │       │           │          │ │
+│ │ 3.1.0 (#9770)       │                     │       │           │          │ │
+│ │   50c1a928f         │                     │       │           │          │ │
+│ │ 2023-05-08 ✅       │                     │       │           │          │ │
+│ │ Refactor OpenAPI    │                     │       │           │          │ │
+│ │ tests, prepare for  │                     │       │           │          │ │
+│ │ Pydantic v2 (#9503) │                     │       │           │          │ │
+│ │   70a51b3af         │                     │       │           │          │ │
+│ │ 2020-07-10 ✨       │                     │       │           │          │ │
+│ │ Auto-generate       │                     │       │           │          │ │
+│ │ OpenAPI servers     │                     │       │           │          │ │
+│ │ from root_path      │                     │       │           │          │ │
+│ │ (#1596)             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/fastapi/security… │                     │       │           │          │ │
+│ │ b/fastapi/security… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 002e68b44..9b0f09b… │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/fastapi/security… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/fastapi/security… │                     │       │           │          │ │
+│ │ @@ -7,4 +7,4 @@ def │                     │       │           │          │ │
+│ │ get_authorization_… │                     │       │           │          │ │
+│ │      if not         │                     │       │           │          │ │
+│ │ authorization_head… │                     │       │           │          │ │
+│ │          return "", │                     │       │           │          │ │
+│ │ ""                  │                     │       │           │          │ │
+│ │      scheme, _,     │                     │       │           │          │ │
+│ │ param =             │                     │       │           │          │ │
+│ │ authorization_head… │                     │       │           │          │ │
+│ │ ")                  │                     │       │           │          │ │
+│ │ -    return scheme, │                     │       │           │          │ │
+│ │ param               │                     │       │           │          │ │
+│ │ +    return scheme, │                     │       │           │          │ │
+│ │ param[1:]           │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_secur… │                     │       │           │          │ │
+│ │ b/tests/test_secur… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 8cf259a75..ac38ee7… │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_secur… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_secur… │                     │       │           │          │ │
+│ │ @@ -21,6 +21,12 @@  │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ test_security_http… │                     │       │           │          │ │
+│ │      assert         │                     │       │           │          │ │
+│ │ response.json() ==  │                     │       │           │          │ │
+│ │ {"scheme": "Other", │                     │       │           │          │ │
+│ │ "credentials":      │                     │       │           │          │ │
+│ │ "foobar"}           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_security_http… │                     │       │           │          │ │
+│ │ +    response =     │                     │       │           │          │ │
+│ │ client.get("/users… │                     │       │           │          │ │
+│ │ headers={"Authoriz… │                     │       │           │          │ │
+│ │ "Other  foobar "})  │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.status_co… │                     │       │           │          │ │
+│ │ == 200,             │                     │       │           │          │ │
+│ │ response.text       │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.json() ==  │                     │       │           │          │ │
+│ │ {"scheme": "Other", │                     │       │           │          │ │
+│ │ "credentials":      │                     │       │           │          │ │
+│ │ "foobar"}           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │  def                │                     │       │           │          │ │
+│ │ test_security_http… │                     │       │           │          │ │
+│ │      response =     │                     │       │           │          │ │
+│ │ client.get("/users… │                     │       │           │          │ │
+│ │      assert         │                     │       │           │          │ │
+│ │ response.status_co… │                     │       │           │          │ │
+│ │ == 401,             │                     │       │           │          │ │
+│ │ response.text       │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_secur… │                     │       │           │          │ │
+│ │ b/tests/test_secur… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ f2097b149..66f53ab… │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_secur… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_secur… │                     │       │           │          │ │
+│ │ @@ -37,6 +37,12 @@  │                     │       │           │          │ │
+│ │ def test_token():   │                     │       │           │          │ │
+│ │      assert         │                     │       │           │          │ │
+│ │ response.json() ==  │                     │       │           │          │ │
+│ │ {"token":           │                     │       │           │          │ │
+│ │ "testtoken"}        │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_token_with_wh… │                     │       │           │          │ │
+│ │ +    response =     │                     │       │           │          │ │
+│ │ client.get("/items… │                     │       │           │          │ │
+│ │ headers={"Authoriz… │                     │       │           │          │ │
+│ │ "Bearer  testtoken  │                     │       │           │          │ │
+│ │ "})                 │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.status_co… │                     │       │           │          │ │
+│ │ == 200,             │                     │       │           │          │ │
+│ │ response.text       │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.json() ==  │                     │       │           │          │ │
+│ │ {"token":           │                     │       │           │          │ │
+│ │ "testtoken"}        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │  def                │                     │       │           │          │ │
+│ │ test_openapi_schem… │                     │       │           │          │ │
+│ │      response =     │                     │       │           │          │ │
+│ │ client.get("/opena… │                     │       │           │          │ │
+│ │      assert         │                     │       │           │          │ │
+│ │ response.status_co… │                     │       │           │          │ │
+│ │ == 200,             │                     │       │           │          │ │
+│ │ response.text       │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ 11%|█         | 13/120 [19:35<2:34:44, 86.77s/it]step 13  reward=0.192  reward_std=1.419  kl=0.001  mean_length=165.719  clipped_ratio=0.031  step_time=93.954  loss=0.017  gate=0.192
+                                                   11%|█         | 13/120 [19:35<2:34:44, 86.77s/it]{'loss': '0.01693', 'grad_norm': '0.2022', 'learning_rate': '1e-05', 'num_tokens': '8.329e+05', 'completions/mean_length': '165.7', 'completions/min_length': '12', 'completions/max_length': '500', 'completions/clipped_ratio': '0.03125', 'completions/mean_terminated_length': '154.9', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '398', 'rewards/gate/mean': '0.1923', 'rewards/gate/std': '1.419', 'reward': '0.1923', 'reward_std': '1.419', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.03125', 'review/escalate_frac': '0', 'review/mean_tokens': '165.7', 'review/unparsable_frac': '0.1875', 'sampling/sampling_logp_difference/mean': '0.02092', 'sampling/sampling_logp_difference/max': '0.3594', 'sampling/importance_sampling_ratio/min': '0.3645', 'sampling/importance_sampling_ratio/mean': '0.9729', 'sampling/importance_sampling_ratio/max': '2.294', 'kl': '0.0006256', 'entropy': '1.349', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '93.95', 'epoch': '0.2'}
+╭────────────────────────────────── Step 13 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt               ┃ Completion          ┃ gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM               │ ASSISTANT           │ 0.97 │     -1.01 │ block    │ │
+│ │ You are the code     │ {"decision":        │      │           │          │ │
+│ │ review gate for a    │ "block",            │      │           │          │ │
+│ │ production           │ "comments":         │      │           │          │ │
+│ │ repository. Your     │ [{"file":           │      │           │          │ │
+│ │ approval merges and  │ "tests/test_root_m… │      │           │          │ │
+│ │ deploys the change   │ "line_start": 653,  │      │           │          │ │
+│ │ with no further      │ "line_end": 685,    │      │           │          │ │
+│ │ human review.        │ "body": "The `copy` │      │           │          │ │
+│ │ Decide:              │ method is not a     │      │           │          │ │
+│ │   approve  - you are │ `copy.deepcopy`-co… │      │           │          │ │
+│ │ confident the change │ implementation of   │      │           │          │ │
+│ │ is correct and safe  │ `model_copy`. This  │      │           │          │ │
+│ │ to ship.             │ is why the          │      │           │          │ │
+│ │   block    - you     │ `deepcopy` test     │      │           │          │ │
+│ │ found a defect; cite │ doesn't pass under  │      │           │          │ │
+│ │ its location.        │ Iceberg (gh-14484). │      │           │          │ │
+│ │   escalate - you     │ In the context of   │      │           │          │ │
+│ │ cannot establish     │ the `RootModel`,    │      │           │          │ │
+│ │ safety from what you │ the `_private`      │      │           │          │ │
+│ │ can see; a human     │ attributes are      │      │           │          │ │
+│ │ must look.           │ stored in the       │      │           │          │ │
+│ │ Approving a change   │ `__dict__`. So, in  │      │           │          │ │
+│ │ that contains a      │ the shallow copy,   │      │           │          │ │
+│ │ defect is the worst  │ private attributes  │      │           │          │ │
+│ │ outcome. Blocking a  │ should not be       │      │           │          │ │
+│ │ correct change costs │ copied. But the     │      │           │          │ │
+│ │ an engineer's time.  │ test explicitly     │      │           │          │ │
+│ │ Escalating is cheap  │ allows both the     │      │           │          │ │
+│ │ but useless if done  │ `RootModel`         │      │           │          │ │
+│ │ for everything.      │ instance and the    │      │           │          │ │
+│ │ Respond with exactly │ copied instance to  │      │           │          │ │
+│ │ one JSON object and  │ modify their `_tag` │      │           │          │ │
+│ │ nothing else:        │ attributes. So this │      │           │          │ │
+│ │ {"decision":         │ change breaks the   │      │           │          │ │
+│ │ "approve|block|esca… │ `test_root_model_s… │      │           │          │ │
+│ │ "comments":          │ The test is         │      │           │          │ │
+│ │ [{"file": "...",     │ impacted by pyright │      │           │          │ │
+│ │ "line_start": N,     │ version 1.1.410     │      │           │          │ │
+│ │ "line_end": N,       │ (gh-14503) and by   │      │           │          │ │
+│ │ "body": "...",       │ the test having to  │      │           │          │ │
+│ │ "proposed_test":     │ be rewritten for    │      │           │          │ │
+│ │ "optional pytest     │ Iceberg. The        │      │           │          │ │
+│ │ source"}]}           │ `test_root_model_s… │      │           │          │ │
+│ │                      │ still works, as it  │      │           │          │ │
+│ │ USER                 │ doesn't involve     │      │           │          │ │
+│ │ Repository: pydantic │ private attributes. │      │           │          │ │
+│ │ Files changed:       │ So to correct the   │      │           │          │ │
+│ │ pydantic/root_model… │ `test_root_model_s… │      │           │          │ │
+│ │ tests/test_root_mod… │ it needs to be      │      │           │          │ │
+│ │                      │ rewritted to not    │      │           │          │ │
+│ │ Context around the   │ directly access the │      │           │          │ │
+│ │ change (mechanically │ `_tag` attributes.  │      │           │          │ │
+│ │ extracted):          │ The `RootModel`'s   │      │           │          │ │
+│ │ Changed definitions: │ `copy` method and   │      │           │          │ │
+│ │ pydantic/root_model… │ the                 │      │           │          │ │
+│ │ pydantic/root_model… │ `/root_model.py`    │      │           │          │ │
+│ │ tests/test_root_mod… │ file are            │      │           │          │ │
+│ │ tests/test_root_mod… │ incompatible with   │      │           │          │ │
+│ │ tests/test_root_mod… │ `copy.deepcopy`,    │      │           │          │ │
+│ │ tests/test_root_mod… │ which is a core     │      │           │          │ │
+│ │ tests/test_root_mod… │ functionality       │      │           │          │ │
+│ │ Recent history of    │ required in         │      │           │          │ │
+│ │ pydantic/root_model… │ multiple tests for  │      │           │          │ │
+│ │   428b0dba           │ Pydantic. The data  │      │           │          │ │
+│ │ 2026-07-17 Bump mypy │ structure is        │      │           │          │ │
+│ │ to 2.3.0, pyright to │ arbitrarily complex │      │           │          │ │
+│ │ 1.1.411 (#13458)     │ and has multiple    │      │           │          │ │
+│ │   92462ee5           │ unique features.    │      │           │          │ │
+│ │ 2026-07-16 Sync      │ For the purposes of │      │           │          │ │
+│ │ `RootModel.model_du… │ approving the code, │      │           │          │ │
+│ │ signature with its   │ it is insufficient  │      │           │          │ │
+│ │ parent (#13456)      │ to be just a        │      │           │          │ │
+│ │   cb1c5330           │ liminal fix, and    │      │           │          │ │
+│ │ 2026-01-13 Copy      │ the test is broken. │      │           │          │ │
+│ │ `root` value when    │ The correct         │      │           │          │ │
+│ │ making root model    │ solution is to      │      │           │          │ │
+│ │ shallow copies       │ remove the private  │      │           │          │ │
+│ │ (#12679)             │ attribute from the  │      │           │          │ │
+│ │ Recent history of    │ `RootModel`.        │      │           │          │ │
+│ │ tests/test_root_mod… │ Therefore, the code │      │           │          │ │
+│ │   92462ee5           │ that is pushed into │      │           │          │ │
+│ │ 2026-07-16 Sync      │ production would    │      │           │          │ │
+│ │ `RootModel.model_du… │ fail on             │      │           │          │ │
+│ │ signature with its   │ `copy.deepcopy` in  │      │           │          │ │
+│ │ parent (#13456)      │ Iceberg, and the    │      │           │          │ │
+│ │   b36eaeb4           │ test would fail in  │      │           │          │ │
+│ │ 2026-04-15 Drop      │ multiple ways."}]}  │      │           │          │ │
+│ │ support for Python   │                     │      │           │          │ │
+│ │ 3.9 (#13070)         │                     │      │           │          │ │
+│ │   cb1c5330           │                     │      │           │          │ │
+│ │ 2026-01-13 Copy      │                     │      │           │          │ │
+│ │ `root` value when    │                     │      │           │          │ │
+│ │ making root model    │                     │      │           │          │ │
+│ │ shallow copies       │                     │      │           │          │ │
+│ │ (#12679)             │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ Diff:                │                     │      │           │          │ │
+│ │ ```diff              │                     │      │           │          │ │
+│ │ diff --git           │                     │      │           │          │ │
+│ │ a/pydantic/root_mod… │                     │      │           │          │ │
+│ │ b/pydantic/root_mod… │                     │      │           │          │ │
+│ │ index                │                     │      │           │          │ │
+│ │ 4134862c..5fadbbe0   │                     │      │           │          │ │
+│ │ 100644               │                     │      │           │          │ │
+│ │ ---                  │                     │      │           │          │ │
+│ │ a/pydantic/root_mod… │                     │      │           │          │ │
+│ │ +++                  │                     │      │           │          │ │
+│ │ b/pydantic/root_mod… │                     │      │           │          │ │
+│ │ @@ -103,6 +103,12 @@ │                     │      │           │          │ │
+│ │ class                │                     │      │           │          │ │
+│ │ RootModel(BaseModel, │                     │      │           │          │ │
+│ │ Generic[RootModelRo… │                     │      │           │          │ │
+│ │ metaclass=_RootMode… │                     │      │           │          │ │
+│ │          m =         │                     │      │           │          │ │
+│ │ cls.__new__(cls)     │                     │      │           │          │ │
+│ │          new_dict =  │                     │      │           │          │ │
+│ │ copy(self.__dict__)  │                     │      │           │          │ │
+│ │          new_dict['… │                     │      │           │          │ │
+│ │ =                    │                     │      │           │          │ │
+│ │ copy(self.__dict__[… │                     │      │           │          │ │
+│ │ # pyright:           │                     │      │           │          │ │
+│ │ ignore[reportIndexI… │                     │      │           │          │ │
+│ │ (https://github.com… │                     │      │           │          │ │
+│ │ +        # Private   │                     │      │           │          │ │
+│ │ attributes live in   │                     │      │           │          │ │
+│ │ `__dict__` on root   │                     │      │           │          │ │
+│ │ models, so give the  │                     │      │           │          │ │
+│ │ copy its own:        │                     │      │           │          │ │
+│ │ +        private =   │                     │      │           │          │ │
+│ │ new_dict.get('__pyd… │                     │      │           │          │ │
+│ │ +        if private  │                     │      │           │          │ │
+│ │ is not None:         │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ new_dict['__pydanti… │                     │      │           │          │ │
+│ │ = {  # pyright:      │                     │      │           │          │ │
+│ │ ignore[reportIndexI… │                     │      │           │          │ │
+│ │ (https://github.com… │                     │      │           │          │ │
+│ │ +                k:  │                     │      │           │          │ │
+│ │ v for k, v in        │                     │      │           │          │ │
+│ │ private.items() if v │                     │      │           │          │ │
+│ │ is PydanticUndefined │                     │      │           │          │ │
+│ │ +            }       │                     │      │           │          │ │
+│ │          _object_se… │                     │      │           │          │ │
+│ │ '__dict__',          │                     │      │           │          │ │
+│ │ new_dict)            │                     │      │           │          │ │
+│ │          _object_se… │                     │      │           │          │ │
+│ │ '__pydantic_fields_… │                     │      │           │          │ │
+│ │ copy(self.__pydanti… │                     │      │           │          │ │
+│ │          return m    │                     │      │           │          │ │
+│ │ diff --git           │                     │      │           │          │ │
+│ │ a/tests/test_root_m… │                     │      │           │          │ │
+│ │ b/tests/test_root_m… │                     │      │           │          │ │
+│ │ index                │                     │      │           │          │ │
+│ │ ce97fca2..e3e8ff49   │                     │      │           │          │ │
+│ │ 100644               │                     │      │           │          │ │
+│ │ ---                  │                     │      │           │          │ │
+│ │ a/tests/test_root_m… │                     │      │           │          │ │
+│ │ +++                  │                     │      │           │          │ │
+│ │ b/tests/test_root_m… │                     │      │           │          │ │
+│ │ @@ -647,6 +647,18 @@ │                     │      │           │          │ │
+│ │ def                  │                     │      │           │          │ │
+│ │ test_root_model_sha… │                     │      │           │          │ │
+│ │ -> None:             │                     │      │           │          │ │
+│ │      assert          │                     │      │           │          │ │
+│ │ copied.root == [1,   │                     │      │           │          │ │
+│ │ 2, 3, 4]             │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ +def                 │                     │      │           │          │ │
+│ │ test_root_model_sha… │                     │      │           │          │ │
+│ │ -> None:             │                     │      │           │          │ │
+│ │ +    class           │                     │      │           │          │ │
+│ │ Root(RootModel[int]… │                     │      │           │          │ │
+│ │ +        _tag: str = │                     │      │           │          │ │
+│ │ PrivateAttr(default… │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ +    original =      │                     │      │           │          │ │
+│ │ Root(1)              │                     │      │           │          │ │
+│ │ +    copied =        │                     │      │           │          │ │
+│ │ original.model_copy… │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ +    copied._tag =   │                     │      │           │          │ │
+│ │ 'copy'               │                     │      │           │          │ │
+│ │ +    assert          │                     │      │           │          │ │
+│ │ original._tag ==     │                     │      │           │          │ │
+│ │ 'original'           │                     │      │           │          │ │
+│ │ +    assert          │                     │      │           │          │ │
+│ │ copied._tag ==       │                     │      │           │          │ │
+│ │ 'copy'               │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │  def                 │                     │      │           │          │ │
+│ │ test_root_model_dee… │                     │      │           │          │ │
+│ │ -> None:             │                     │      │           │          │ │
+│ │      class           │                     │      │           │          │ │
+│ │ NestedListRootModel… │                     │      │           │          │ │
+│ │          pass        │                     │      │           │          │ │
+│ │ ```                  │                     │      │           │          │ │
+│ ├──────────────────────┼─────────────────────┼──────┼───────────┼──────────┤ │
+│ │ SYSTEM               │ ASSISTANT           │ 1.00 │     -0.94 │ block    │ │
+│ │ You are the code     │ {"decision":        │      │           │          │ │
+│ │ review gate for a    │ "block",            │      │           │          │ │
+│ │ production           │ "comments":         │      │           │          │ │
+│ │ repository. Your     │ [{"file":           │      │           │          │ │
+│ │ approval merges and  │ "mkdocs.yml",       │      │           │          │ │
+│ │ deploys the change   │ "line_start": 125,  │      │           │          │ │
+│ │ with no further      │ "line_end": 125,    │      │           │          │ │
+│ │ human review.        │ "body": "Failed to  │      │           │          │ │
+│ │ Decide:              │ find module         │      │           │          │ │
+│ │   approve  - you are │ 'inventories' in    │      │           │          │ │
+│ │ confident the change │ 'plugins', which is │      │           │          │ │
+│ │ is correct and safe  │ currently unable to │      │           │          │ │
+│ │ to ship.             │ be found in the     │      │           │          │ │
+│ │   block    - you     │ correct version of  │      │           │          │ │
+│ │ found a defect; cite │ 'mkdocs'; variant   │      │           │          │ │
+│ │ its location.        │ 'import' is present │      │           │          │ │
+│ │   escalate - you     │ in the plugin list  │      │           │          │ │
+│ │ cannot establish     │ but is not required │      │           │          │ │
+│ │ safety from what you │ by the session. An  │      │           │          │ │
+│ │ can see; a human     │ error will occur if │      │           │          │ │
+│ │ must look.           │ the new             │      │           │          │ │
+│ │ Approving a change   │ 'inventories'       │      │           │          │ │
+│ │ that contains a      │ plugin is not       │      │           │          │ │
+│ │ defect is the worst  │ removed from the    │      │           │          │ │
+│ │ outcome. Blocking a  │ list. Revert the    │      │           │          │ │
+│ │ correct change costs │ files before        │      │           │          │ │
+│ │ an engineer's time.  │ merging, or change  │      │           │          │ │
+│ │ Escalating is cheap  │ the line to include │      │           │          │ │
+│ │ but useless if done  │ a 'plugins: -       │      │           │          │ │
+│ │ for everything.      │ import:'            │      │           │          │ │
+│ │ Respond with exactly │ instead."}]}        │      │           │          │ │
+│ │ one JSON object and  │                     │      │           │          │ │
+│ │ nothing else:        │                     │      │           │          │ │
+│ │ {"decision":         │                     │      │           │          │ │
+│ │ "approve|block|esca… │                     │      │           │          │ │
+│ │ "comments":          │                     │      │           │          │ │
+│ │ [{"file": "...",     │                     │      │           │          │ │
+│ │ "line_start": N,     │                     │      │           │          │ │
+│ │ "line_end": N,       │                     │      │           │          │ │
+│ │ "body": "...",       │                     │      │           │          │ │
+│ │ "proposed_test":     │                     │      │           │          │ │
+│ │ "optional pytest     │                     │      │           │          │ │
+│ │ source"}]}           │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ USER                 │                     │      │           │          │ │
+│ │ Repository:          │                     │      │           │          │ │
+│ │ starlette            │                     │      │           │          │ │
+│ │ Files changed:       │                     │      │           │          │ │
+│ │ docs/release-notes.… │                     │      │           │          │ │
+│ │ mkdocs.yml,          │                     │      │           │          │ │
+│ │ starlette/__init__.… │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ Not shown (non-code  │                     │      │           │          │ │
+│ │ or over budget;      │                     │      │           │          │ │
+│ │ treat as             │                     │      │           │          │ │
+│ │ unreviewed):         │                     │      │           │          │ │
+│ │ docs/release-notes.… │                     │      │           │          │ │
+│ │ (523 chars,          │                     │      │           │          │ │
+│ │ non-code)            │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ Diff:                │                     │      │           │          │ │
+│ │ ```diff              │                     │      │           │          │ │
+│ │ diff --git           │                     │      │           │          │ │
+│ │ a/mkdocs.yml         │                     │      │           │          │ │
+│ │ b/mkdocs.yml         │                     │      │           │          │ │
+│ │ index                │                     │      │           │          │ │
+│ │ ee8d095..2aa208b     │                     │      │           │          │ │
+│ │ 100644               │                     │      │           │          │ │
+│ │ --- a/mkdocs.yml     │                     │      │           │          │ │
+│ │ +++ b/mkdocs.yml     │                     │      │           │          │ │
+│ │ @@ -98,5 +98,5 @@    │                     │      │           │          │ │
+│ │ plugins:             │                     │      │           │          │ │
+│ │              show_s… │                     │      │           │          │ │
+│ │ true                 │                     │      │           │          │ │
+│ │              show_s… │                     │      │           │          │ │
+│ │ false                │                     │      │           │          │ │
+│ │              signat… │                     │      │           │          │ │
+│ │ true                 │                     │      │           │          │ │
+│ │ -          import:   │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ inventories:         │                     │      │           │          │ │
+│ │              - url:  │                     │      │           │          │ │
+│ │ https://docs.python… │                     │      │           │          │ │
+│ │ diff --git           │                     │      │           │          │ │
+│ │ a/starlette/__init_… │                     │      │           │          │ │
+│ │ b/starlette/__init_… │                     │      │           │          │ │
+│ │ index                │                     │      │           │          │ │
+│ │ 1eb5f60..3047a38     │                     │      │           │          │ │
+│ │ 100644               │                     │      │           │          │ │
+│ │ ---                  │                     │      │           │          │ │
+│ │ a/starlette/__init_… │                     │      │           │          │ │
+│ │ +++                  │                     │      │           │          │ │
+│ │ b/starlette/__init_… │                     │      │           │          │ │
+│ │ @@ -1 +1 @@          │                     │      │           │          │ │
+│ │ -__version__ =       │                     │      │           │          │ │
+│ │ "0.47.3"             │                     │      │           │          │ │
+│ │ +__version__ =       │                     │      │           │          │ │
+│ │ "0.84.0"             │                     │      │           │          │ │
+│ │ ```                  │                     │      │           │          │ │
+│ └──────────────────────┴─────────────────────┴──────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ 12%|█▏        | 14/120 [20:07<2:04:01, 70.20s/it]step 14  reward=-0.324  reward_std=2.270  kl=0.001  mean_length=119.906  clipped_ratio=0.000  step_time=30.668  loss=0.069  gate=-0.324
+                                                   12%|█▏        | 14/120 [20:07<2:04:01, 70.20s/it]{'loss': '0.06916', 'grad_norm': '0.2254', 'learning_rate': '1e-05', 'num_tokens': '8.67e+05', 'completions/mean_length': '119.9', 'completions/min_length': '12', 'completions/max_length': '457', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '119.9', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '457', 'rewards/gate/mean': '-0.324', 'rewards/gate/std': '2.27', 'reward': '-0.324', 'reward_std': '2.27', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.1562', 'review/escalate_frac': '0', 'review/mean_tokens': '119.9', 'review/unparsable_frac': '0.125', 'sampling/sampling_logp_difference/mean': '0.01718', 'sampling/sampling_logp_difference/max': '0.2253', 'sampling/importance_sampling_ratio/min': '0.2431', 'sampling/importance_sampling_ratio/mean': '0.9944', 'sampling/importance_sampling_ratio/max': '1.9', 'kl': '0.000589', 'entropy': '1.125', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '30.67', 'epoch': '0.2154'}
+╭────────────────────────────────── Step 14 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┓ │
+│ ┃ Prompt             ┃ Completion         ┃  gate ┃ Advantage ┃ decision   ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━┩ │
+│ │ SYSTEM             │ ASSISTANT          │ -5.00 │     -0.69 │ approve    │ │
+│ │ You are the code   │ {"decision":       │       │           │            │ │
+│ │ review gate for a  │ "approve",         │       │           │            │ │
+│ │ production         │ "comments": []}    │       │           │            │ │
+│ │ repository. Your   │                    │       │           │            │ │
+│ │ approval merges    │                    │       │           │            │ │
+│ │ and deploys the    │                    │       │           │            │ │
+│ │ change with no     │                    │       │           │            │ │
+│ │ further human      │                    │       │           │            │ │
+│ │ review. Decide:    │                    │       │           │            │ │
+│ │   approve  - you   │                    │       │           │            │ │
+│ │ are confident the  │                    │       │           │            │ │
+│ │ change is correct  │                    │       │           │            │ │
+│ │ and safe to ship.  │                    │       │           │            │ │
+│ │   block    - you   │                    │       │           │            │ │
+│ │ found a defect;    │                    │       │           │            │ │
+│ │ cite its location. │                    │       │           │            │ │
+│ │   escalate - you   │                    │       │           │            │ │
+│ │ cannot establish   │                    │       │           │            │ │
+│ │ safety from what   │                    │       │           │            │ │
+│ │ you can see; a     │                    │       │           │            │ │
+│ │ human must look.   │                    │       │           │            │ │
+│ │ Approving a change │                    │       │           │            │ │
+│ │ that contains a    │                    │       │           │            │ │
+│ │ defect is the      │                    │       │           │            │ │
+│ │ worst outcome.     │                    │       │           │            │ │
+│ │ Blocking a correct │                    │       │           │            │ │
+│ │ change costs an    │                    │       │           │            │ │
+│ │ engineer's time.   │                    │       │           │            │ │
+│ │ Escalating is      │                    │       │           │            │ │
+│ │ cheap but useless  │                    │       │           │            │ │
+│ │ if done for        │                    │       │           │            │ │
+│ │ everything.        │                    │       │           │            │ │
+│ │ Respond with       │                    │       │           │            │ │
+│ │ exactly one JSON   │                    │       │           │            │ │
+│ │ object and nothing │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ {"decision":       │                    │       │           │            │ │
+│ │ "approve|block|es… │                    │       │           │            │ │
+│ │ "comments":        │                    │       │           │            │ │
+│ │ [{"file": "...",   │                    │       │           │            │ │
+│ │ "line_start": N,   │                    │       │           │            │ │
+│ │ "line_end": N,     │                    │       │           │            │ │
+│ │ "body": "...",     │                    │       │           │            │ │
+│ │ "proposed_test":   │                    │       │           │            │ │
+│ │ "optional pytest   │                    │       │           │            │ │
+│ │ source"}]}         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ USER               │                    │       │           │            │ │
+│ │ Repository: click  │                    │       │           │            │ │
+│ │ Files changed:     │                    │       │           │            │ │
+│ │ CHANGES.md,        │                    │       │           │            │ │
+│ │ src/click/core.py, │                    │       │           │            │ │
+│ │ tests/test_comman… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Not shown          │                    │       │           │            │ │
+│ │ (non-code or over  │                    │       │           │            │ │
+│ │ budget; treat as   │                    │       │           │            │ │
+│ │ unreviewed):       │                    │       │           │            │ │
+│ │ CHANGES.md (474    │                    │       │           │            │ │
+│ │ chars, non-code)   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Context around the │                    │       │           │            │ │
+│ │ change             │                    │       │           │            │ │
+│ │ (mechanically      │                    │       │           │            │ │
+│ │ extracted):        │                    │       │           │            │ │
+│ │ Changed            │                    │       │           │            │ │
+│ │ definitions:       │                    │       │           │            │ │
+│ │ src/click/core.py… │                    │       │           │            │ │
+│ │ src/click/core.py… │                    │       │           │            │ │
+│ │ src/click/core.py… │                    │       │           │            │ │
+│ │ src/click/core.py… │                    │       │           │            │ │
+│ │ tests/test_comman… │                    │       │           │            │ │
+│ │ tests/test_comman… │                    │       │           │            │ │
+│ │ tests/test_comman… │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ src/click/core.py: │                    │       │           │            │ │
+│ │   0f4738d          │                    │       │           │            │ │
+│ │ 2026-07-17 Fix     │                    │       │           │            │ │
+│ │ docs and changelog │                    │       │           │            │ │
+│ │   7a0a344          │                    │       │           │            │ │
+│ │ 2026-07-16 Mark    │                    │       │           │            │ │
+│ │ clearly functions  │                    │       │           │            │ │
+│ │ private status.    │                    │       │           │            │ │
+│ │ Deprecated Python  │                    │       │           │            │ │
+│ │ 2 utilities.       │                    │       │           │            │ │
+│ │   8f30085          │                    │       │           │            │ │
+│ │ 2026-05-08         │                    │       │           │            │ │
+│ │ Streamline option  │                    │       │           │            │ │
+│ │ flag management    │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ tests/test_comman… │                    │       │           │            │ │
+│ │   665736b          │                    │       │           │            │ │
+│ │ 2026-05-23 Mark    │                    │       │           │            │ │
+│ │ commands as        │                    │       │           │            │ │
+│ │ optional in the    │                    │       │           │            │ │
+│ │ synopsis           │                    │       │           │            │ │
+│ │   82f377c          │                    │       │           │            │ │
+│ │ 2026-05-23 Fix     │                    │       │           │            │ │
+│ │ deprecated label   │                    │       │           │            │ │
+│ │ formatting         │                    │       │           │            │ │
+│ │   831c8f0          │                    │       │           │            │ │
+│ │ 2026-04-30 Add     │                    │       │           │            │ │
+│ │ NoSuchCommand      │                    │       │           │            │ │
+│ │ exception with     │                    │       │           │            │ │
+│ │ suggestions for    │                    │       │           │            │ │
+│ │ misspelled         │                    │       │           │            │ │
+│ │ commands (#3228)   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Diff:              │                    │       │           │            │ │
+│ │ ```diff            │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/src/click/core.… │                    │       │           │            │ │
+│ │ b/src/click/core.… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ f29dc46..79adf59   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/src/click/core.… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/src/click/core.… │                    │       │           │            │ │
+│ │ @@ -1175,11        │                    │       │           │            │ │
+│ │ +1175,18 @@ class  │                    │       │           │            │ │
+│ │ Command:           │                    │       │           │            │ │
+│ │          return rv │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ get_help_option_n… │                    │       │           │            │ │
+│ │ ctx: Context) ->   │                    │       │           │            │ │
+│ │ list[str]:         │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ """Returns the     │                    │       │           │            │ │
+│ │ names for the help │                    │       │           │            │ │
+│ │ option."""         │                    │       │           │            │ │
+│ │ -        all_names │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ set(ctx.help_opti… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ """Returns the     │                    │       │           │            │ │
+│ │ names for the help │                    │       │           │            │ │
+│ │ option.            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        Drops     │                    │       │           │            │ │
+│ │ duplicates or      │                    │       │           │            │ │
+│ │ names already      │                    │       │           │            │ │
+│ │ reserved by        │                    │       │           │            │ │
+│ │ another parameter. │                    │       │           │            │ │
+│ │ Order of           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ :attr:`Context.he… │                    │       │           │            │ │
+│ │ is preserved, so   │                    │       │           │            │ │
+│ │ the result is      │                    │       │           │            │ │
+│ │ stable.            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        ..        │                    │       │           │            │ │
+│ │ versionchanged::   │                    │       │           │            │ │
+│ │ 8.5.0              │                    │       │           │            │ │
+│ │ +            Names │                    │       │           │            │ │
+│ │ keep their         │                    │       │           │            │ │
+│ │ declaration order. │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        all_names │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ dict.fromkeys(ctx… │                    │       │           │            │ │
+│ │          for param │                    │       │           │            │ │
+│ │ in self.params:    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ all_names.differe… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ all_names.differe… │                    │       │           │            │ │
+│ │ +            for   │                    │       │           │            │ │
+│ │ name in            │                    │       │           │            │ │
+│ │ (*param.opts,      │                    │       │           │            │ │
+│ │ *param.secondary_… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ all_names.pop(nam… │                    │       │           │            │ │
+│ │ None)              │                    │       │           │            │ │
+│ │          return    │                    │       │           │            │ │
+│ │ list(all_names)    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ get_help_option(s… │                    │       │           │            │ │
+│ │ ctx: Context) ->   │                    │       │           │            │ │
+│ │ Option | None:     │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_comm… │                    │       │           │            │ │
+│ │ b/tests/test_comm… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 35ba65c..c2de826   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_comm… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_comm… │                    │       │           │            │ │
+│ │ @@ -419,6 +419,56  │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ test_iter_params_… │                    │       │           │            │ │
+│ │      )             │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +@pytest.mark.par… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ ("help_option_nam… │                    │       │           │            │ │
+│ │ "params",          │                    │       │           │            │ │
+│ │ "expected"),       │                    │       │           │            │ │
+│ │ +    [             │                    │       │           │            │ │
+│ │ +        # A       │                    │       │           │            │ │
+│ │ single default     │                    │       │           │            │ │
+│ │ name is returned   │                    │       │           │            │ │
+│ │ unchanged.         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ (["--help"], [],   │                    │       │           │            │ │
+│ │ ["--help"]),       │                    │       │           │            │ │
+│ │ +        #         │                    │       │           │            │ │
+│ │ Declaration order  │                    │       │           │            │ │
+│ │ is preserved       │                    │       │           │            │ │
+│ │ verbatim, whatever │                    │       │           │            │ │
+│ │ it is.             │                    │       │           │            │ │
+│ │ +        (["-h",   │                    │       │           │            │ │
+│ │ "--help"], [],     │                    │       │           │            │ │
+│ │ ["-h", "--help"]), │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ (["--help", "-h"], │                    │       │           │            │ │
+│ │ [], ["--help",     │                    │       │           │            │ │
+│ │ "-h"]),            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ (["--help", "-h",  │                    │       │           │            │ │
+│ │ "-?"], [],         │                    │       │           │            │ │
+│ │ ["--help", "-h",   │                    │       │           │            │ │
+│ │ "-?"]),            │                    │       │           │            │ │
+│ │ +        (["-?",   │                    │       │           │            │ │
+│ │ "--help", "-h"],   │                    │       │           │            │ │
+│ │ [], ["-?",         │                    │       │           │            │ │
+│ │ "--help", "-h"]),  │                    │       │           │            │ │
+│ │ +        #         │                    │       │           │            │ │
+│ │ Duplicate names    │                    │       │           │            │ │
+│ │ collapse to their  │                    │       │           │            │ │
+│ │ first occurrence,  │                    │       │           │            │ │
+│ │ keeping order.     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ (["--help",        │                    │       │           │            │ │
+│ │ "--help"], [],     │                    │       │           │            │ │
+│ │ ["--help"]),       │                    │       │           │            │ │
+│ │ +        (["-h",   │                    │       │           │            │ │
+│ │ "--help", "-h"],   │                    │       │           │            │ │
+│ │ [], ["-h",         │                    │       │           │            │ │
+│ │ "--help"]),        │                    │       │           │            │ │
+│ │ +        # A name  │                    │       │           │            │ │
+│ │ already claimed by │                    │       │           │            │ │
+│ │ another            │                    │       │           │            │ │
+│ │ parameter's option │                    │       │           │            │ │
+│ │ is dropped.        │                    │       │           │            │ │
+│ │ +        (["-h",   │                    │       │           │            │ │
+│ │ "--help"],         │                    │       │           │            │ │
+│ │ [["--help"]],      │                    │       │           │            │ │
+│ │ ["-h"]),           │                    │       │           │            │ │
+│ │ +        (["-h",   │                    │       │           │            │ │
+│ │ "--help"], [["-h", │                    │       │           │            │ │
+│ │ "--verbose"]],     │                    │       │           │            │ │
+│ │ ["--help"]),       │                    │       │           │            │ │
+│ │ +        # Both    │                    │       │           │            │ │
+│ │ options of a       │                    │       │           │            │ │
+│ │ feature-switch     │                    │       │           │            │ │
+│ │ flag are removed   │                    │       │           │            │ │
+│ │ too.               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ (["--shout",       │                    │       │           │            │ │
+│ │ "--help"],         │                    │       │           │            │ │
+│ │ [["--shout/--no-s… │                    │       │           │            │ │
+│ │ ["--help"]),       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ (["--no-shout",    │                    │       │           │            │ │
+│ │ "--help"],         │                    │       │           │            │ │
+│ │ [["--shout/--no-s… │                    │       │           │            │ │
+│ │ ["--help"]),       │                    │       │           │            │ │
+│ │ +        #         │                    │       │           │            │ │
+│ │ Filtering every    │                    │       │           │            │ │
+│ │ name out yields an │                    │       │           │            │ │
+│ │ empty list.        │                    │       │           │            │ │
+│ │ +        (["-h",   │                    │       │           │            │ │
+│ │ "--help"],         │                    │       │           │            │ │
+│ │ [["-h"],           │                    │       │           │            │ │
+│ │ ["--help"]], []),  │                    │       │           │            │ │
+│ │ +        #         │                    │       │           │            │ │
+│ │ Deduplication and  │                    │       │           │            │ │
+│ │ conflict removal   │                    │       │           │            │ │
+│ │ combine, order     │                    │       │           │            │ │
+│ │ still preserved.   │                    │       │           │            │ │
+│ │ +        (["-h",   │                    │       │           │            │ │
+│ │ "--help", "-h",    │                    │       │           │            │ │
+│ │ "--assist"],       │                    │       │           │            │ │
+│ │ [["--assist"]],    │                    │       │           │            │ │
+│ │ ["-h", "--help"]), │                    │       │           │            │ │
+│ │ +    ],            │                    │       │           │            │ │
+│ │ +    ids=[         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "default",         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "order-short-long… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "order-long-short… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "order-three",     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "order-three-shuf… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "dedupe-adjacent", │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "dedupe-spread",   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "conflict-long",   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "conflict-short",  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "conflict-flag-on… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "conflict-flag-of… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "all-removed",     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "dedupe-and-confl… │                    │       │           │            │ │
+│ │ +    ],            │                    │       │           │            │ │
+│ │ +)                 │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_get_help_opt… │                    │       │           │            │ │
+│ │ params, expected): │                    │       │           │            │ │
+│ │ +    """Check help │                    │       │           │            │ │
+│ │ option names are   │                    │       │           │            │ │
+│ │ deduplicated but   │                    │       │           │            │ │
+│ │ keep stable order. │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ https://github.co… │                    │       │           │            │ │
+│ │ +    """           │                    │       │           │            │ │
+│ │ +    cli =         │                    │       │           │            │ │
+│ │ click.Command("cl… │                    │       │           │            │ │
+│ │ params=[click.Opt… │                    │       │           │            │ │
+│ │ for decls in       │                    │       │           │            │ │
+│ │ params])           │                    │       │           │            │ │
+│ │ +    ctx =         │                    │       │           │            │ │
+│ │ click.Context(cli, │                    │       │           │            │ │
+│ │ help_option_names… │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ cli.get_help_opti… │                    │       │           │            │ │
+│ │ == expected        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_help_param_p… │                    │       │           │            │ │
+│ │      """Cover the  │                    │       │           │            │ │
+│ │ edge-case in which │                    │       │           │            │ │
+│ │ the eagerness of   │                    │       │           │            │ │
+│ │ help option was    │                    │       │           │            │ │
+│ │ not                │                    │       │           │            │ │
+│ │      respected,    │                    │       │           │            │ │
+│ │ because it was     │                    │       │           │            │ │
+│ │ internally         │                    │       │           │            │ │
+│ │ generated multiple │                    │       │           │            │ │
+│ │ times.             │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │ -1.26 │      0.84 │ unparsable │ │
+│ │ You are the code   │ {                  │       │           │            │ │
+│ │ review gate for a  │   "decision":      │       │           │            │ │
+│ │ production         │ "block",           │       │           │            │ │
+│ │ repository. Your   │   "comments": [    │       │           │            │ │
+│ │ approval merges    │     {              │       │           │            │ │
+│ │ and deploys the    │       "file":      │       │           │            │ │
+│ │ change with no     │ "src/click/core.p… │       │           │            │ │
+│ │ further human      │       "line_start… │       │           │            │ │
+│ │ review. Decide:    │ 1182,              │       │           │            │ │
+│ │   approve  - you   │       "line_end":  │       │           │            │ │
+│ │ are confident the  │ 1191,              │       │           │            │ │
+│ │ change is correct  │       "body": "The │       │           │            │ │
+│ │ and safe to ship.  │ implementation of  │       │           │            │ │
+│ │   block    - you   │ `get_help_option_… │       │           │            │ │
+│ │ found a defect;    │ in line 1182 is    │       │           │            │ │
+│ │ cite its location. │ likely flawed. The │       │           │            │ │
+│ │   escalate - you   │ loop is:           │       │           │            │ │
+│ │ cannot establish   │ `.pop(name, None)` │       │           │            │ │
+│ │ safety from what   │ is used in the     │       │           │            │ │
+│ │ you can see; a     │ loop, but what if  │       │           │            │ │
+│ │ human must look.   │ a `name` was not   │       │           │            │ │
+│ │ Approving a change │ already in         │       │           │            │ │
+│ │ that contains a    │ `all_names`? That  │       │           │            │ │
+│ │ defect is the      │ would leave        │       │           │            │ │
+│ │ worst outcome.     │ `all_names` with   │       │           │            │ │
+│ │ Blocking a correct │ no value, but      │       │           │            │ │
+│ │ change costs an    │ vacant names in    │       │           │            │ │
+│ │ engineer's time.   │ `all_names` could  │       │           │            │ │
+│ │ Escalating is      │ be used to keep    │       │           │            │ │
+│ │ cheap but useless  │ the order of       │       │           │            │ │
+│ │ if done for        │ `help_option_name… │       │           │            │ │
+│ │ everything.        │ without            │       │           │            │ │
+│ │ Respond with       │ duplications. The  │       │           │            │ │
+│ │ exactly one JSON   │ proposed code      │       │           │            │ │
+│ │ object and nothing │ surface avoids     │       │           │            │ │
+│ │ else:              │ this by using      │       │           │            │ │
+│ │ {"decision":       │ `dict.fromkeys()`  │       │           │            │ │
+│ │ "approve|block|es… │ on the             │       │           │            │ │
+│ │ "comments":        │ `help_option_name… │       │           │            │ │
+│ │ [{"file": "...",   │ but you could      │       │           │            │ │
+│ │ "line_start": N,   │ remove a name      │       │           │            │ │
+│ │ "line_end": N,     │ that's not already │       │           │            │ │
+│ │ "body": "...",     │ in `all_names` for │       │           │            │ │
+│ │ "proposed_test":   │ any absurdity.     │       │           │            │ │
+│ │ "optional pytest   │ That could lead to │       │           │            │ │
+│ │ source"}]}         │ systematic         │       │           │            │ │
+│ │                    │ failures in the    │       │           │            │ │
+│ │ USER               │ test suite if not  │       │           │            │ │
+│ │ Repository: click  │ handled            │       │           │            │ │
+│ │ Files changed:     │ carefully."        │       │           │            │ │
+│ │ CHANGES.md,        │     },             │       │           │            │ │
+│ │ src/click/core.py, │     {              │       │           │            │ │
+│ │ tests/test_comman… │       "file":      │       │           │            │ │
+│ │                    │ "tests/test_comma… │       │           │            │ │
+│ │ Not shown          │       "line_start… │       │           │            │ │
+│ │ (non-code or over  │ 431,               │       │           │            │ │
+│ │ budget; treat as   │       "line_end":  │       │           │            │ │
+│ │ unreviewed):       │ 480,               │       │           │            │ │
+│ │ CHANGES.md (474    │       "body": "The │       │           │            │ │
+│ │ chars, non-code)   │ new unit test      │       │           │            │ │
+│ │                    │ suite in line 431  │       │           │            │ │
+│ │ Context around the │ is extensive, but  │       │           │            │ │
+│ │ change             │ the code in line   │       │           │            │ │
+│ │ (mechanically      │ 480 of the test    │       │           │            │ │
+│ │ extracted):        │ suite would cause  │       │           │            │ │
+│ │ Changed            │ `object not found` │       │           │            │ │
+│ │ definitions:       │ if the test        │       │           │            │ │
+│ │ src/click/core.py… │ passes."           │       │           │            │ │
+│ │ src/click/core.py… │     },             │       │           │            │ │
+│ │ src/click/core.py… │     {              │       │           │            │ │
+│ │ src/click/core.py… │       "file":      │       │           │            │ │
+│ │ tests/test_comman… │ "src/click/core.p… │       │           │            │ │
+│ │ tests/test_comman… │       "line_start… │       │           │            │ │
+│ │ tests/test_comman… │ 1192,              │       │           │            │ │
+│ │ Recent history of  │       "line_end":  │       │           │            │ │
+│ │ src/click/core.py: │ 1195,              │       │           │            │ │
+│ │   0f4738d          │       "body": "The │       │           │            │ │
+│ │ 2026-07-17 Fix     │ new line 1192 is   │       │           │            │ │
+│ │ docs and changelog │ `return            │       │           │            │ │
+│ │   7a0a344          │ list(all_names)`   │       │           │            │ │
+│ │ 2026-07-16 Mark    │ which would cause  │       │           │            │ │
+│ │ clearly functions  │ a `KeyError` if    │       │           │            │ │
+│ │ private status.    │ `all_names` is     │       │           │            │ │
+│ │ Deprecated Python  │ empty as a list.   │       │           │            │ │
+│ │ 2 utilities.       │ That'sตลก but      │       │           │            │ │
+│ │   8f30085          │ quick to fix."     │       │           │            │ │
+│ │ 2026-05-08         │     },             │       │           │            │ │
+│ │ Streamline option  │     {              │       │           │            │ │
+│ │ flag management    │       "file":      │       │           │            │ │
+│ │ Recent history of  │ "tests/test_comma… │       │           │            │ │
+│ │ tests/test_comman… │       "line_start… │       │           │            │ │
+│ │   665736b          │ 545,               │       │           │            │ │
+│ │ 2026-05-23 Mark    │       "line_end":  │       │           │            │ │
+│ │ commands as        │ 548,               │       │           │            │ │
+│ │ optional in the    │       "body": "The │       │           │            │ │
+│ │ synopsis           │ new line 545 has a │       │           │            │ │
+│ │   82f377c          │ space issue before │       │           │            │ │
+│ │ 2026-05-23 Fix     │ `tuple(decls)`.    │       │           │            │ │
+│ │ deprecated label   │ The user may need  │       │           │            │ │
+│ │ formatting         │ to update the      │       │           │            │ │
+│ │   831c8f0          │ indentation, i.e., │       │           │            │ │
+│ │ 2026-04-30 Add     │ `maybe {"--shout", │       │           │            │ │
+│ │ NoSuchCommand      │ "--no-shout"}` 🐢  │       │           │            │ │
+│ │ exception with     │ with `decls`."     │       │           │            │ │
+│ │ suggestions for    │     }              │       │           │            │ │
+│ │ misspelled         │   ]                │       │           │            │ │
+│ │ commands (#3228)   │ }                  │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Diff:              │                    │       │           │            │ │
+│ │ ```diff            │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/src/click/core.… │                    │       │           │            │ │
+│ │ b/src/click/core.… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ f29dc46..79adf59   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/src/click/core.… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/src/click/core.… │                    │       │           │            │ │
+│ │ @@ -1175,11        │                    │       │           │            │ │
+│ │ +1175,18 @@ class  │                    │       │           │            │ │
+│ │ Command:           │                    │       │           │            │ │
+│ │          return rv │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ get_help_option_n… │                    │       │           │            │ │
+│ │ ctx: Context) ->   │                    │       │           │            │ │
+│ │ list[str]:         │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ """Returns the     │                    │       │           │            │ │
+│ │ names for the help │                    │       │           │            │ │
+│ │ option."""         │                    │       │           │            │ │
+│ │ -        all_names │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ set(ctx.help_opti… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ """Returns the     │                    │       │           │            │ │
+│ │ names for the help │                    │       │           │            │ │
+│ │ option.            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        Drops     │                    │       │           │            │ │
+│ │ duplicates or      │                    │       │           │            │ │
+│ │ names already      │                    │       │           │            │ │
+│ │ reserved by        │                    │       │           │            │ │
+│ │ another parameter. │                    │       │           │            │ │
+│ │ Order of           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ :attr:`Context.he… │                    │       │           │            │ │
+│ │ is preserved, so   │                    │       │           │            │ │
+│ │ the result is      │                    │       │           │            │ │
+│ │ stable.            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        ..        │                    │       │           │            │ │
+│ │ versionchanged::   │                    │       │           │            │ │
+│ │ 8.5.0              │                    │       │           │            │ │
+│ │ +            Names │                    │       │           │            │ │
+│ │ keep their         │                    │       │           │            │ │
+│ │ declaration order. │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        all_names │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ dict.fromkeys(ctx… │                    │       │           │            │ │
+│ │          for param │                    │       │           │            │ │
+│ │ in self.params:    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ all_names.differe… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ all_names.differe… │                    │       │           │            │ │
+│ │ +            for   │                    │       │           │            │ │
+│ │ name in            │                    │       │           │            │ │
+│ │ (*param.opts,      │                    │       │           │            │ │
+│ │ *param.secondary_… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ all_names.pop(nam… │                    │       │           │            │ │
+│ │ None)              │                    │       │           │            │ │
+│ │          return    │                    │       │           │            │ │
+│ │ list(all_names)    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ get_help_option(s… │                    │       │           │            │ │
+│ │ ctx: Context) ->   │                    │       │           │            │ │
+│ │ Option | None:     │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_comm… │                    │       │           │            │ │
+│ │ b/tests/test_comm… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 35ba65c..c2de826   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_comm… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_comm… │                    │       │           │            │ │
+│ │ @@ -419,6 +419,56  │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ test_iter_params_… │                    │       │           │            │ │
+│ │      )             │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +@pytest.mark.par… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ ("help_option_nam… │                    │       │           │            │ │
+│ │ "params",          │                    │       │           │            │ │
+│ │ "expected"),       │                    │       │           │            │ │
+│ │ +    [             │                    │       │           │            │ │
+│ │ +        # A       │                    │       │           │            │ │
+│ │ single default     │                    │       │           │            │ │
+│ │ name is returned   │                    │       │           │            │ │
+│ │ unchanged.         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ (["--help"], [],   │                    │       │           │            │ │
+│ │ ["--help"]),       │                    │       │           │            │ │
+│ │ +        #         │                    │       │           │            │ │
+│ │ Declaration order  │                    │       │           │            │ │
+│ │ is preserved       │                    │       │           │            │ │
+│ │ verbatim, whatever │                    │       │           │            │ │
+│ │ it is.             │                    │       │           │            │ │
+│ │ +        (["-h",   │                    │       │           │            │ │
+│ │ "--help"], [],     │                    │       │           │            │ │
+│ │ ["-h", "--help"]), │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ (["--help", "-h"], │                    │       │           │            │ │
+│ │ [], ["--help",     │                    │       │           │            │ │
+│ │ "-h"]),            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ (["--help", "-h",  │                    │       │           │            │ │
+│ │ "-?"], [],         │                    │       │           │            │ │
+│ │ ["--help", "-h",   │                    │       │           │            │ │
+│ │ "-?"]),            │                    │       │           │            │ │
+│ │ +        (["-?",   │                    │       │           │            │ │
+│ │ "--help", "-h"],   │                    │       │           │            │ │
+│ │ [], ["-?",         │                    │       │           │            │ │
+│ │ "--help", "-h"]),  │                    │       │           │            │ │
+│ │ +        #         │                    │       │           │            │ │
+│ │ Duplicate names    │                    │       │           │            │ │
+│ │ collapse to their  │                    │       │           │            │ │
+│ │ first occurrence,  │                    │       │           │            │ │
+│ │ keeping order.     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ (["--help",        │                    │       │           │            │ │
+│ │ "--help"], [],     │                    │       │           │            │ │
+│ │ ["--help"]),       │                    │       │           │            │ │
+│ │ +        (["-h",   │                    │       │           │            │ │
+│ │ "--help", "-h"],   │                    │       │           │            │ │
+│ │ [], ["-h",         │                    │       │           │            │ │
+│ │ "--help"]),        │                    │       │           │            │ │
+│ │ +        # A name  │                    │       │           │            │ │
+│ │ already claimed by │                    │       │           │            │ │
+│ │ another            │                    │       │           │            │ │
+│ │ parameter's option │                    │       │           │            │ │
+│ │ is dropped.        │                    │       │           │            │ │
+│ │ +        (["-h",   │                    │       │           │            │ │
+│ │ "--help"],         │                    │       │           │            │ │
+│ │ [["--help"]],      │                    │       │           │            │ │
+│ │ ["-h"]),           │                    │       │           │            │ │
+│ │ +        (["-h",   │                    │       │           │            │ │
+│ │ "--help"], [["-h", │                    │       │           │            │ │
+│ │ "--verbose"]],     │                    │       │           │            │ │
+│ │ ["--help"]),       │                    │       │           │            │ │
+│ │ +        # Both    │                    │       │           │            │ │
+│ │ options of a       │                    │       │           │            │ │
+│ │ feature-switch     │                    │       │           │            │ │
+│ │ flag are removed   │                    │       │           │            │ │
+│ │ too.               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ (["--shout",       │                    │       │           │            │ │
+│ │ "--help"],         │                    │       │           │            │ │
+│ │ [["--shout/--no-s… │                    │       │           │            │ │
+│ │ ["--help"]),       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ (["--no-shout",    │                    │       │           │            │ │
+│ │ "--help"],         │                    │       │           │            │ │
+│ │ [["--shout/--no-s… │                    │       │           │            │ │
+│ │ ["--help"]),       │                    │       │           │            │ │
+│ │ +        #         │                    │       │           │            │ │
+│ │ Filtering every    │                    │       │           │            │ │
+│ │ name out yields an │                    │       │           │            │ │
+│ │ empty list.        │                    │       │           │            │ │
+│ │ +        (["-h",   │                    │       │           │            │ │
+│ │ "--help"],         │                    │       │           │            │ │
+│ │ [["-h"],           │                    │       │           │            │ │
+│ │ ["--help"]], []),  │                    │       │           │            │ │
+│ │ +        #         │                    │       │           │            │ │
+│ │ Deduplication and  │                    │       │           │            │ │
+│ │ conflict removal   │                    │       │           │            │ │
+│ │ combine, order     │                    │       │           │            │ │
+│ │ still preserved.   │                    │       │           │            │ │
+│ │ +        (["-h",   │                    │       │           │            │ │
+│ │ "--help", "-h",    │                    │       │           │            │ │
+│ │ "--assist"],       │                    │       │           │            │ │
+│ │ [["--assist"]],    │                    │       │           │            │ │
+│ │ ["-h", "--help"]), │                    │       │           │            │ │
+│ │ +    ],            │                    │       │           │            │ │
+│ │ +    ids=[         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "default",         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "order-short-long… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "order-long-short… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "order-three",     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "order-three-shuf… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "dedupe-adjacent", │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "dedupe-spread",   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "conflict-long",   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "conflict-short",  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "conflict-flag-on… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "conflict-flag-of… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "all-removed",     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "dedupe-and-confl… │                    │       │           │            │ │
+│ │ +    ],            │                    │       │           │            │ │
+│ │ +)                 │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_get_help_opt… │                    │       │           │            │ │
+│ │ params, expected): │                    │       │           │            │ │
+│ │ +    """Check help │                    │       │           │            │ │
+│ │ option names are   │                    │       │           │            │ │
+│ │ deduplicated but   │                    │       │           │            │ │
+│ │ keep stable order. │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ https://github.co… │                    │       │           │            │ │
+│ │ +    """           │                    │       │           │            │ │
+│ │ +    cli =         │                    │       │           │            │ │
+│ │ click.Command("cl… │                    │       │           │            │ │
+│ │ params=[click.Opt… │                    │       │           │            │ │
+│ │ for decls in       │                    │       │           │            │ │
+│ │ params])           │                    │       │           │            │ │
+│ │ +    ctx =         │                    │       │           │            │ │
+│ │ click.Context(cli, │                    │       │           │            │ │
+│ │ help_option_names… │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ cli.get_help_opti… │                    │       │           │            │ │
+│ │ == expected        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_help_param_p… │                    │       │           │            │ │
+│ │      """Cover the  │                    │       │           │            │ │
+│ │ edge-case in which │                    │       │           │            │ │
+│ │ the eagerness of   │                    │       │           │            │ │
+│ │ help option was    │                    │       │           │            │ │
+│ │ not                │                    │       │           │            │ │
+│ │      respected,    │                    │       │           │            │ │
+│ │ because it was     │                    │       │           │            │ │
+│ │ internally         │                    │       │           │            │ │
+│ │ generated multiple │                    │       │           │            │ │
+│ │ times.             │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
