@@ -117,7 +117,9 @@ def main():
             continue
         repo = WORK / "repos" / m["repo"]
         src_lines = git(repo, "show", f"{m['sha']}:{m['file']}").splitlines()
-        if m["line"] in docstring_lines(src_lines) or m["original"].lstrip().startswith("#") or ">>>" in m["original"]:
+        from review.mine.mutate import NON_BEHAVIOR
+        if (m["line"] in docstring_lines(src_lines) or m["original"].lstrip().startswith("#") or ">>>" in m["original"]
+                or NON_BEHAVIOR.match(m["original"])):
             docs_dropped += 1; continue          # docs-only mutation: no behavior change, not a bug (label sheet, Oct 20)
         mid = f"mut__{m['repo']}__{m['sha'][:8]}__{m['line']}__{m['operator']}"
         content = git(repo, "show", f"{m['sha']}:{m['file']}").splitlines(keepends=True)

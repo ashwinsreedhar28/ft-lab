@@ -54,6 +54,8 @@ OPS = [
     ("slice_drop_last", r"\[:-1\]", "[:]"), ("range_n_minus1", r"range\((\w+)\)", r"range(\1 - 1)"),
 ]
 NON_CODE_DIRS = ("scripts/", "docs/", "docs_src/", "examples/", "benchmarks/", "benches/", "tools/", "setup.py")
+# lines whose change is never a behavioral bug: version strings, __all__ exports, logging text, type-only lines
+NON_BEHAVIOR = re.compile(r"^\s*(__version__|__all__|VERSION|version)\s*[:=]|^\s*(logger|log|logging)\.\w+\(|^\s*(from|import) ")
 STATEMENT_OPS = {"return_none", "raise_pass"}   # rewrite a whole statement: only safe on a line that starts one
 SKIP_LINE = re.compile(r"^\s*(#|\"\"\"|'''|import |from |@|def |class |pass$|\.\.\.$|$)")
 
@@ -292,7 +294,8 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
         src_lines = git(repo, "show", f"{pr['sha']}:{f}").splitlines()
         doc = docstring_lines(src_lines)
         # same filter for operator AND LLM candidates: no docstrings, doctest prompts, or comment lines
-        lines = [(n, t) for n, t in lines if not SKIP_LINE.match(t) and n not in doc and ">>>" not in t and not t.lstrip().startswith("#")]
+        lines = [(n, t) for n, t in lines if not SKIP_LINE.match(t) and n not in doc and ">>>" not in t and not t.lstrip().startswith("#")
+                 and not NON_BEHAVIOR.match(t)]
         if not lines:
             continue
         rel = related_tests(repo, pr["sha"], f, pr["test_files"], tuple(r.get("exclude_paths", [])))
