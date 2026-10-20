@@ -352,12 +352,17 @@ def main():
                 if d.get("status") != "baseline_empty":      # env failures are retried after a repos.yaml fix
                     done.add(d["sha"])
     prs = []
+    from review.mine.bisect import unshallow
     for name in cfg:
         if a.repo and name != a.repo:
             continue
         repo = WORK / "repos" / name
-        if (repo / ".git").exists():
-            prs += clean_prs(repo, a.since, a.max_lines, tuple(cfg[name].get("exclude_paths", [])))
+        if not (repo / ".git").exists():                 # repos added after the scan: clone now
+            print(f"{name:10s} cloning …", flush=True)
+            import subprocess
+            subprocess.run(["git", "clone", "-q", cfg[name]["url"], str(repo)], check=True)
+        unshallow(repo, cfg[name]["url"])                # --since reaches back further than the scan's shallow clone
+        prs += clean_prs(repo, a.since, a.max_lines, tuple(cfg[name].get("exclude_paths", [])))
     prs = [p for p in prs if p["sha"] not in done]
     rng.shuffle(prs)
     if a.limit:
