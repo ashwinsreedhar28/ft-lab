@@ -1,399 +1,399 @@
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/src/click/except… │                     │       │           │          │ │
-│ │ @@ -23,6 +23,15 @@  │                     │       │           │          │ │
-│ │ def                 │                     │       │           │          │ │
-│ │ _join_param_hints(… │                     │       │           │          │ │
-│ │ cabc.Sequence[str]  │                     │       │           │          │ │
-│ │ | str | None) ->    │                     │       │           │          │ │
-│ │ str | None          │                     │       │           │          │ │
-│ │      return         │                     │       │           │          │ │
-│ │ param_hint          │                     │       │           │          │ │
+│ │ -    by             │                     │       │           │          │ │
+│ │ statistics.median(… │                     │       │           │          │ │
+│ │ -    """            │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ -    # This recipe  │                     │       │           │          │ │
+│ │ differs from the    │                     │       │           │          │ │
+│ │ one in the heapq    │                     │       │           │          │ │
+│ │ docs in that        │                     │       │           │          │ │
+│ │ -    # eliminates   │                     │       │           │          │ │
+│ │ the len() tests in  │                     │       │           │          │ │
+│ │ favor of two        │                     │       │           │          │ │
+│ │ updates per loop,   │                     │       │           │          │ │
+│ │ -    # one for the  │                     │       │           │          │ │
+│ │ even case and the   │                     │       │           │          │ │
+│ │ other for the case  │                     │       │           │          │ │
+│ │ where               │                     │       │           │          │ │
+│ │ -    # the lo       │                     │       │           │          │ │
+│ │ max-heap has one    │                     │       │           │          │ │
+│ │ more element than   │                     │       │           │          │ │
+│ │ the hi min-heap.    │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ -    read =         │                     │       │           │          │ │
+│ │ iter(iterable).__n… │                     │       │           │          │ │
+│ │ +    read =         │                     │       │           │          │ │
+│ │ iterator.__next__   │                     │       │           │          │ │
+│ │      lo = []  #     │                     │       │           │          │ │
+│ │ max-heap            │                     │       │           │          │ │
+│ │      hi = []  #     │                     │       │           │          │ │
+│ │ min-heap (same size │                     │       │           │          │ │
+│ │ as or one smaller   │                     │       │           │          │ │
+│ │ than lo)            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -1367,10         │                     │       │           │          │ │
+│ │ +1349,10 @@ def     │                     │       │           │          │ │
+│ │ running_median(ite… │                     │       │           │          │ │
+│ │ # pragma: no cover  │                     │       │           │          │ │
+│ │              yield  │                     │       │           │          │ │
+│ │ (lo[0] + hi[0]) / 2 │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
+│ │ -def                │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ # pragma: no cover  │                     │       │           │          │ │
+│ │ -    # Backport of  │                     │       │           │          │ │
+│ │ running_median()    │                     │       │           │          │ │
+│ │ for Python 3.13 and │                     │       │           │          │ │
+│ │ prior.              │                     │       │           │          │ │
 │ │ +def                │                     │       │           │          │ │
-│ │ _format_possibilit… │                     │       │           │          │ │
-│ │ list[str]) -> str:  │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ # pragma: no cover  │                     │       │           │          │ │
+│ │ +    "Backport of   │                     │       │           │          │ │
+│ │ non-windowed        │                     │       │           │          │ │
+│ │ running_median()    │                     │       │           │          │ │
+│ │ for Python 3.13 and │                     │       │           │          │ │
+│ │ prior."             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    read =         │                     │       │           │          │ │
+│ │ iter(iterable).__n… │                     │       │           │          │ │
+│ │ +    read =         │                     │       │           │          │ │
+│ │ iterator.__next__   │                     │       │           │          │ │
+│ │      lo = []  #     │                     │       │           │          │ │
+│ │ max-heap (actually  │                     │       │           │          │ │
+│ │ a minheap with      │                     │       │           │          │ │
+│ │ negated values)     │                     │       │           │          │ │
+│ │      hi = []  #     │                     │       │           │          │ │
+│ │ min-heap (same size │                     │       │           │          │ │
+│ │ as or one smaller   │                     │       │           │          │ │
+│ │ than lo)            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -1383,6 +1365,72 │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ # pragma: no cover  │                     │       │           │          │ │
+│ │              yield  │                     │       │           │          │ │
+│ │ (hi[0] - lo[0]) / 2 │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -if not             │                     │       │           │          │ │
+│ │ _max_heap_availabl… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ running_median.__d… │                     │       │           │          │ │
+│ │ -    running_median │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ _sorted_window(ite… │                     │       │           │          │ │
+│ │ k):  # pragma: no   │                     │       │           │          │ │
+│ │ cover               │                     │       │           │          │ │
+│ │ +    "Yield windows │                     │       │           │          │ │
+│ │ in sorted order"    │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ possibility_str =   │                     │       │           │          │ │
-│ │ ", ".join(repr(p)   │                     │       │           │          │ │
-│ │ for p in            │                     │       │           │          │ │
-│ │ sorted(possibiliti… │                     │       │           │          │ │
+│ │ +    # This simple  │                     │       │           │          │ │
+│ │ implementation is   │                     │       │           │          │ │
+│ │ reasonably fast     │                     │       │           │          │ │
+│ │ with two O(1) deque │                     │       │           │          │ │
+│ │ +    # updates and  │                     │       │           │          │ │
+│ │ two O(log k) data   │                     │       │           │          │ │
+│ │ comparisons per     │                     │       │           │          │ │
+│ │ iteration.          │                     │       │           │          │ │
+│ │ However,            │                     │       │           │          │ │
+│ │ +    # it also has  │                     │       │           │          │ │
+│ │ two O(k) steps, a   │                     │       │           │          │ │
+│ │ list insertion and  │                     │       │           │          │ │
+│ │ a list deletion.    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    # Grant Jenks' │                     │       │           │          │ │
+│ │ work on             │                     │       │           │          │ │
+│ │ SortedCollections   │                     │       │           │          │ │
+│ │ showed that those   │                     │       │           │          │ │
+│ │ two steps           │                     │       │           │          │ │
+│ │ +    # have a very  │                     │       │           │          │ │
+│ │ low constant factor │                     │       │           │          │ │
+│ │ because they are    │                     │       │           │          │ │
+│ │ implemented with    │                     │       │           │          │ │
+│ │ +    # highly       │                     │       │           │          │ │
+│ │ optimized C         │                     │       │           │          │ │
+│ │ memmoves that shift │                     │       │           │          │ │
+│ │ the data pointers   │                     │       │           │          │ │
+│ │ without             │                     │       │           │          │ │
+│ │ +    # needing to   │                     │       │           │          │ │
+│ │ touch the           │                     │       │           │          │ │
+│ │ underlying data     │                     │       │           │          │ │
+│ │ with reference      │                     │       │           │          │ │
+│ │ counts.             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    # This         │                     │       │           │          │ │
+│ │ function could be   │                     │       │           │          │ │
+│ │ reimplemented with  │                     │       │           │          │ │
+│ │ SortedCollections,  │                     │       │           │          │ │
+│ │ blist               │                     │       │           │          │ │
+│ │ +    # some other   │                     │       │           │          │ │
+│ │ binary tree, or an  │                     │       │           │          │ │
+│ │ IndexableSkipList   │                     │       │           │          │ │
+│ │ all of which have   │                     │       │           │          │ │
+│ │ +    # O(k)         │                     │       │           │          │ │
+│ │ insertions and      │                     │       │           │          │ │
+│ │ deletions, albiet   │                     │       │           │          │ │
+│ │ with a larger       │                     │       │           │          │ │
+│ │ constant            │                     │       │           │          │ │
+│ │ +    # factor. For  │                     │       │           │          │ │
+│ │ very large window   │                     │       │           │          │ │
+│ │ sizes, this might   │                     │       │           │          │ │
+│ │ matter.             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    history =      │                     │       │           │          │ │
+│ │ deque()             │                     │       │           │          │ │
+│ │ +    window = []    │                     │       │           │          │ │
+│ │ +    for x in       │                     │       │           │          │ │
+│ │ iterator:           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ history.append(x)   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ insort_left(window, │                     │       │           │          │ │
+│ │ x)                  │                     │       │           │          │ │
+│ │ +        if         │                     │       │           │          │ │
+│ │ len(window) > k:    │                     │       │           │          │ │
+│ │ +            i =    │                     │       │           │          │ │
+│ │ bisect_left(window, │                     │       │           │          │ │
+│ │ history.popleft())  │                     │       │           │          │ │
+│ │ +            del    │                     │       │           │          │ │
+│ │ window[i]           │                     │       │           │          │ │
+│ │ +        yield      │                     │       │           │          │ │
+│ │ window              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ _running_median_wi… │                     │       │           │          │ │
+│ │ window):            │                     │       │           │          │ │
+│ │ +    "Yield median  │                     │       │           │          │ │
+│ │ of values in a      │                     │       │           │          │ │
+│ │ sliding window."    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    for data in    │                     │       │           │          │ │
+│ │ _sorted_window(ite… │                     │       │           │          │ │
+│ │ k=window):          │                     │       │           │          │ │
+│ │ +        n =        │                     │       │           │          │ │
+│ │ len(data)           │                     │       │           │          │ │
+│ │ +        if n % 2   │                     │       │           │          │ │
+│ │ == 1:               │                     │       │           │          │ │
+│ │ +            yield  │                     │       │           │          │ │
+│ │ data[n // 2]        │                     │       │           │          │ │
+│ │ +        else:      │                     │       │           │          │ │
+│ │ +            i = n  │                     │       │           │          │ │
+│ │ // 2                │                     │       │           │          │ │
+│ │ +            yield  │                     │       │           │          │ │
+│ │ (data[i - 1] +      │                     │       │           │          │ │
+│ │ data[i]) / 2        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ running_median(ite… │                     │       │           │          │ │
+│ │ *, window=None):  # │                     │       │           │          │ │
+│ │ pragma: no cover    │                     │       │           │          │ │
+│ │ +    """Cumulative  │                     │       │           │          │ │
+│ │ median of values    │                     │       │           │          │ │
+│ │ seen so far or      │                     │       │           │          │ │
+│ │ values in a sliding │                     │       │           │          │ │
+│ │ window.             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    For example:   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        >>>        │                     │       │           │          │ │
+│ │ list(running_media… │                     │       │           │          │ │
+│ │ 9.0, 4.0, 12.0,     │                     │       │           │          │ │
+│ │ 8.0, 9.0]))         │                     │       │           │          │ │
+│ │ +        [5.0, 7.0, │                     │       │           │          │ │
+│ │ 5.0, 7.0, 8.0, 8.5] │                     │       │           │          │ │
+│ │ +        >>>        │                     │       │           │          │ │
+│ │ list(running_media… │                     │       │           │          │ │
+│ │ 9.0, 4.0, 12.0,     │                     │       │           │          │ │
+│ │ 8.0, 9.0],          │                     │       │           │          │ │
+│ │ window=3))          │                     │       │           │          │ │
+│ │ +        [5.0, 7.0, │                     │       │           │          │ │
+│ │ 5.0, 9.0, 8.0, 9.0] │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    Supports       │                     │       │           │          │ │
+│ │ numeric types such  │                     │       │           │          │ │
+│ │ as int, float,      │                     │       │           │          │ │
+│ │ Decimal, and        │                     │       │           │          │ │
+│ │ Fraction,           │                     │       │           │          │ │
+│ │ +    but not        │                     │       │           │          │ │
+│ │ complex numbers     │                     │       │           │          │ │
+│ │ which are           │                     │       │           │          │ │
+│ │ unorderable.        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    On version     │                     │       │           │          │ │
+│ │ Python 3.13 and     │                     │       │           │          │ │
+│ │ prior, max-heaps    │                     │       │           │          │ │
+│ │ are simulated with  │                     │       │           │          │ │
+│ │ +    negative       │                     │       │           │          │ │
+│ │ values. The         │                     │       │           │          │ │
+│ │ negation causes     │                     │       │           │          │ │
+│ │ Decimal inputs to   │                     │       │           │          │ │
+│ │ apply context       │                     │       │           │          │ │
+│ │ +    rounding,      │                     │       │           │          │ │
+│ │ making the results  │                     │       │           │          │ │
+│ │ slightly different  │                     │       │           │          │ │
+│ │ than that obtained  │                     │       │           │          │ │
+│ │ +    by             │                     │       │           │          │ │
+│ │ statistics.median(… │                     │       │           │          │ │
+│ │ +    """            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    iterator =     │                     │       │           │          │ │
+│ │ iter(iterable)      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    if window is   │                     │       │           │          │ │
+│ │ not None:           │                     │       │           │          │ │
+│ │ +        window =   │                     │       │           │          │ │
+│ │ index(window)       │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ _running_median_wi… │                     │       │           │          │ │
+│ │ window)             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    if not         │                     │       │           │          │ │
+│ │ _max_heap_availabl… │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
 │ │ +    return         │                     │       │           │          │ │
-│ │ ngettext(           │                     │       │           │          │ │
-│ │ +        "Did you   │                     │       │           │          │ │
-│ │ mean                │                     │       │           │          │ │
-│ │ {possibility}?",    │                     │       │           │          │ │
-│ │ +        "(Did you  │                     │       │           │          │ │
-│ │ mean one of:        │                     │       │           │          │ │
-│ │ {possibilities}?)", │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ len(possibilities), │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ ).format(possibili… │                     │       │           │          │ │
-│ │ possibilities=poss… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │  class              │                     │       │           │          │ │
-│ │ ClickException(Exc… │                     │       │           │          │ │
-│ │      """An          │                     │       │           │          │ │
-│ │ exception that      │                     │       │           │          │ │
-│ │ Click can handle    │                     │       │           │          │ │
-│ │ and show to the     │                     │       │           │          │ │
-│ │ user."""            │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ @@ -210,8 +219,7 @@ │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ MissingParameter(B… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  class              │                     │       │           │          │ │
-│ │ NoSuchOption(Usage… │                     │       │           │          │ │
-│ │ -    """Raised if   │                     │       │           │          │ │
-│ │ click attempted to  │                     │       │           │          │ │
-│ │ handle an option    │                     │       │           │          │ │
-│ │ that does not       │                     │       │           │          │ │
-│ │ -    exist.         │                     │       │           │          │ │
-│ │ +    """Raised if   │                     │       │           │          │ │
-│ │ Click attempted to  │                     │       │           │          │ │
-│ │ handle an option    │                     │       │           │          │ │
-│ │ that does not       │                     │       │           │          │ │
-│ │ exist.              │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      ..             │                     │       │           │          │ │
-│ │ versionadded:: 4.0  │                     │       │           │          │ │
-│ │      """            │                     │       │           │          │ │
-│ │ @@ -220,27 +228,51  │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_recip… │                     │       │           │          │ │
+│ │ b/tests/test_recip… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 2fa703d..ac7c662    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_recip… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_recip… │                     │       │           │          │ │
+│ │ @@ -1451,7 +1451,7  │                     │       │           │          │ │
 │ │ @@ class            │                     │       │           │          │ │
-│ │ NoSuchOption(Usage… │                     │       │           │          │ │
-│ │          self,      │                     │       │           │          │ │
-│ │          option_na… │                     │       │           │          │ │
-│ │ str,                │                     │       │           │          │ │
-│ │          message:   │                     │       │           │          │ │
-│ │ str | None = None,  │                     │       │           │          │ │
+│ │ RunningMedianTests… │                     │       │           │          │ │
+│ │              #      │                     │       │           │          │ │
+│ │ Apply unary plus to │                     │       │           │          │ │
+│ │ force context       │                     │       │           │          │ │
+│ │ rounding.           │                     │       │           │          │ │
+│ │              [+Dec… │                     │       │           │          │ │
+│ │ 500)) for _ in      │                     │       │           │          │ │
+│ │ range(500)],        │                     │       │           │          │ │
+│ │              [      │                     │       │           │          │ │
 │ │ -                   │                     │       │           │          │ │
-│ │ possibilities:      │                     │       │           │          │ │
-│ │ cabc.Sequence[str]  │                     │       │           │          │ │
-│ │ | None = None,      │                     │       │           │          │ │
+│ │ Fraction(random.ra… │                     │       │           │          │ │
+│ │ 500),               │                     │       │           │          │ │
+│ │ random.randrange(1… │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ possibilities:      │                     │       │           │          │ │
-│ │ cabc.Iterable[str]  │                     │       │           │          │ │
-│ │ | None = None,      │                     │       │           │          │ │
-│ │          ctx:       │                     │       │           │          │ │
-│ │ Context | None =    │                     │       │           │          │ │
-│ │ None,               │                     │       │           │          │ │
-│ │      ) -> None:     │                     │       │           │          │ │
-│ │          if message │                     │       │           │          │ │
-│ │ is None:            │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ message = _("No     │                     │       │           │          │ │
-│ │ such option:        │                     │       │           │          │ │
-│ │ {name}").format(na… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ message = _("No     │                     │       │           │          │ │
-│ │ such option         │                     │       │           │          │ │
-│ │ {name!r}.").format… │                     │       │           │          │ │
+│ │ Fraction(random.ra… │                     │       │           │          │ │
+│ │ 500),               │                     │       │           │          │ │
+│ │ random.randrange(1, │                     │       │           │          │ │
+│ │ 500))               │                     │       │           │          │ │
+│ │                  f… │                     │       │           │          │ │
+│ │ _ in range(500)     │                     │       │           │          │ │
+│ │              ],     │                     │       │           │          │ │
+│ │          ]:         │                     │       │           │          │ │
+│ │ @@ -1463,13         │                     │       │           │          │ │
+│ │ +1463,37 @@ class   │                     │       │           │          │ │
+│ │ RunningMedianTests… │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
-│ │          super()._… │                     │       │           │          │ │
-│ │ ctx)                │                     │       │           │          │ │
-│ │          self.opti… │                     │       │           │          │ │
-│ │ = option_name       │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ self.possibilities  │                     │       │           │          │ │
-│ │ = possibilities     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ self.possibilities: │                     │       │           │          │ │
-│ │ list[str] | None =  │                     │       │           │          │ │
-│ │ None                │                     │       │           │          │ │
-│ │ +        if         │                     │       │           │          │ │
-│ │ possibilities:      │                     │       │           │          │ │
-│ │ +            from   │                     │       │           │          │ │
-│ │ difflib import      │                     │       │           │          │ │
-│ │ get_close_matches   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ self.possibilities  │                     │       │           │          │ │
-│ │ =                   │                     │       │           │          │ │
-│ │ get_close_matches(… │                     │       │           │          │ │
-│ │ possibilities)      │                     │       │           │          │ │
+│ │          self.asse… │                     │       │           │          │ │
+│ │ [])  # Empty input  │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ format_message(sel… │                     │       │           │          │ │
-│ │ -> str:             │                     │       │           │          │ │
-│ │          if not     │                     │       │           │          │ │
-│ │ self.possibilities: │                     │       │           │          │ │
-│ │              return │                     │       │           │          │ │
-│ │ self.message        │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ f"{self.message}    │                     │       │           │          │ │
-│ │ {_format_possibili… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +class              │                     │       │           │          │ │
-│ │ NoSuchCommand(Usag… │                     │       │           │          │ │
-│ │ +    """Raised if   │                     │       │           │          │ │
-│ │ Click attempted to  │                     │       │           │          │ │
-│ │ handle a command    │                     │       │           │          │ │
-│ │ that does not       │                     │       │           │          │ │
-│ │ exist."""           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    def __init__(  │                     │       │           │          │ │
-│ │ +        self,      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ command_name: str,  │                     │       │           │          │ │
-│ │ +        message:   │                     │       │           │          │ │
-│ │ str | None = None,  │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ possibilities:      │                     │       │           │          │ │
-│ │ cabc.Iterable[str]  │                     │       │           │          │ │
-│ │ | None = None,      │                     │       │           │          │ │
-│ │ +        ctx:       │                     │       │           │          │ │
-│ │ Context | None =    │                     │       │           │          │ │
-│ │ None,               │                     │       │           │          │ │
-│ │ +    ) -> None:     │                     │       │           │          │ │
-│ │ +        if message │                     │       │           │          │ │
-│ │ is None:            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ message = _("No     │                     │       │           │          │ │
-│ │ such command        │                     │       │           │          │ │
-│ │ {name!r}.").format… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ super().__init__(m… │                     │       │           │          │ │
-│ │ ctx)                │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ self.command_name = │                     │       │           │          │ │
-│ │ command_name        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ self.possibilities: │                     │       │           │          │ │
-│ │ list[str] | None =  │                     │       │           │          │ │
-│ │ None                │                     │       │           │          │ │
-│ │ +        if         │                     │       │           │          │ │
-│ │ possibilities:      │                     │       │           │          │ │
-│ │ +            from   │                     │       │           │          │ │
-│ │ difflib import      │                     │       │           │          │ │
-│ │ get_close_matches   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ possibility_str =   │                     │       │           │          │ │
-│ │ ",                  │                     │       │           │          │ │
-│ │ ".join(sorted(self… │                     │       │           │          │ │
-│ │ -        suggest =  │                     │       │           │          │ │
-│ │ ngettext(           │                     │       │           │          │ │
-│ │ -            "Did   │                     │       │           │          │ │
-│ │ you mean            │                     │       │           │          │ │
-│ │ {possibility}?",    │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ "(Possible options: │                     │       │           │          │ │
-│ │ {possibilities})",  │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ len(self.possibili… │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ ).format(possibili… │                     │       │           │          │ │
-│ │ possibilities=poss… │                     │       │           │          │ │
-│ │ -        return     │                     │       │           │          │ │
-│ │ f"{self.message}    │                     │       │           │          │ │
-│ │ {suggest}"          │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ self.possibilities  │                     │       │           │          │ │
-│ │ =                   │                     │       │           │          │ │
-│ │ get_close_matches(… │                     │       │           │          │ │
-│ │ possibilities)      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
 │ │ +    def            │                     │       │           │          │ │
-│ │ format_message(sel… │                     │       │           │          │ │
-│ │ -> str:             │                     │       │           │          │ │
-│ │ +        if not     │                     │       │           │          │ │
-│ │ self.possibilities: │                     │       │           │          │ │
-│ │ +            return │                     │       │           │          │ │
-│ │ self.message        │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ f"{self.message}    │                     │       │           │          │ │
-│ │ {_format_possibili… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  class              │                     │       │           │          │ │
-│ │ BadOptionUsage(Usa… │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/src/click/parser… │                     │       │           │          │ │
-│ │ b/src/click/parser… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ dc3026a..8ea69ac    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/src/click/parser… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/src/click/parser… │                     │       │           │          │ │
-│ │ @@ -360,10 +360,7   │                     │       │           │          │ │
-│ │ @@ class            │                     │       │           │          │ │
-│ │ _OptionParser:      │                     │       │           │          │ │
-│ │          self, opt: │                     │       │           │          │ │
-│ │ str,                │                     │       │           │          │ │
-│ │ explicit_value: str │                     │       │           │          │ │
-│ │ | None, state:      │                     │       │           │          │ │
-│ │ _ParsingState       │                     │       │           │          │ │
-│ │      ) -> None:     │                     │       │           │          │ │
-│ │          if opt not │                     │       │           │          │ │
-│ │ in self._long_opt:  │                     │       │           │          │ │
-│ │ -            from   │                     │       │           │          │ │
-│ │ difflib import      │                     │       │           │          │ │
-│ │ get_close_matches   │                     │       │           │          │ │
+│ │ test_vs_statistics… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ running_median =    │                     │       │           │          │ │
+│ │ mi.running_median   │                     │       │           │          │ │
+│ │ +        size = 10  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        for data   │                     │       │           │          │ │
+│ │ in [                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ random.choices(ran… │                     │       │           │          │ │
+│ │ 500), k=500),       │                     │       │           │          │ │
+│ │ +            #      │                     │       │           │          │ │
+│ │ Apply unary plus to │                     │       │           │          │ │
+│ │ force context       │                     │       │           │          │ │
+│ │ rounding.           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ [+Decimal(random.u… │                     │       │           │          │ │
+│ │ 500)) for _ in      │                     │       │           │          │ │
+│ │ range(500)],        │                     │       │           │          │ │
+│ │ +            [      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ Fraction(random.ra… │                     │       │           │          │ │
+│ │ 500),               │                     │       │           │          │ │
+│ │ random.randrange(1, │                     │       │           │          │ │
+│ │ 500))               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ for _ in range(500) │                     │       │           │          │ │
+│ │ +            ],     │                     │       │           │          │ │
+│ │ +        ]:         │                     │       │           │          │ │
+│ │ +            with   │                     │       │           │          │ │
+│ │ self.subTest(data=… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ iterator =          │                     │       │           │          │ │
+│ │ running_median(ite… │                     │       │           │          │ │
+│ │ window=size)        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ for k, rm in        │                     │       │           │          │ │
+│ │ enumerate(iterator, │                     │       │           │          │ │
+│ │ start=1):           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ expected =          │                     │       │           │          │ │
+│ │ statistics.median(… │                     │       │           │          │ │
+│ │ k - size) : k])     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self.assertEqual(r… │                     │       │           │          │ │
+│ │ expected)           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self.assertEqual(t… │                     │       │           │          │ │
+│ │ type(expected))     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self.assertEqual(l… │                     │       │           │          │ │
+│ │ [])  # Empty input  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ test_error_cases(s… │                     │       │           │          │ │
+│ │          running_m… │                     │       │           │          │ │
+│ │ = mi.running_median │                     │       │           │          │ │
+│ │          with       │                     │       │           │          │ │
+│ │ self.assertRaises(… │                     │       │           │          │ │
 │ │ -                   │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ possibilities =     │                     │       │           │          │ │
-│ │ get_close_matches(… │                     │       │           │          │ │
-│ │ self._long_opt)     │                     │       │           │          │ │
-│ │ -            raise  │                     │       │           │          │ │
-│ │ NoSuchOption(opt,   │                     │       │           │          │ │
-│ │ possibilities=poss… │                     │       │           │          │ │
-│ │ ctx=self.ctx)       │                     │       │           │          │ │
-│ │ +            raise  │                     │       │           │          │ │
-│ │ NoSuchOption(opt,   │                     │       │           │          │ │
-│ │ possibilities=self… │                     │       │           │          │ │
-│ │ ctx=self.ctx)       │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          option =   │                     │       │           │          │ │
-│ │ self._long_opt[opt] │                     │       │           │          │ │
-│ │          if         │                     │       │           │          │ │
-│ │ option.takes_value: │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_comma… │                     │       │           │          │ │
-│ │ b/tests/test_comma… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ f26529a..ddce905    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/tests/test_comma… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_comma… │                     │       │           │          │ │
-│ │ @@ -573,3 +573,35   │                     │       │           │          │ │
-│ │ @@ def              │                     │       │           │          │ │
-│ │ test_abort_excepti… │                     │       │           │          │ │
-│ │ exc):               │                     │       │           │          │ │
-│ │      assert         │                     │       │           │          │ │
-│ │ rv.exit_code == 1   │                     │       │           │          │ │
-│ │      assert         │                     │       │           │          │ │
-│ │ isinstance(rv.exce… │                     │       │           │          │ │
-│ │ exc)                │                     │       │           │          │ │
-│ │      assert         │                     │       │           │          │ │
-│ │ rv.exception.__cau… │                     │       │           │          │ │
-│ │ == ("catch me!",)   │                     │       │           │          │ │
+│ │ list(running_media… │                     │       │           │          │ │
+│ │ # No iterable input │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
+│ │ running_median(123… │                     │       │           │          │ │
+│ │ # Non-iterable      │                     │       │           │          │ │
+│ │ input               │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ self.assertRaises(… │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ test_unknown_comma… │                     │       │           │          │ │
-│ │ +    result =       │                     │       │           │          │ │
-│ │ runner.invoke(clic… │                     │       │           │          │ │
-│ │ "unknown")          │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ result.exception    │                     │       │           │          │ │
-│ │ +    assert "No     │                     │       │           │          │ │
-│ │ such command        │                     │       │           │          │ │
-│ │ 'unknown'." in      │                     │       │           │          │ │
-│ │ result.output       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +@pytest.mark.para… │                     │       │           │          │ │
-│ │ +    ("value",      │                     │       │           │          │ │
-│ │ "expect"),          │                     │       │           │          │ │
-│ │ +    [              │                     │       │           │          │ │
-│ │ +        ("pause",  │                     │       │           │          │ │
-│ │ "Did you mean       │                     │       │           │          │ │
-│ │ 'push'?"),          │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ ("decline", "(Did   │                     │       │           │          │ │
-│ │ you mean one of:    │                     │       │           │          │ │
-│ │ 'declare',          │                     │       │           │          │ │
-│ │ 'refine'?)"),       │                     │       │           │          │ │
-│ │ +    ],             │                     │       │           │          │ │
-│ │ +)                  │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ test_suggest_possi… │                     │       │           │          │ │
-│ │ value, expect):     │                     │       │           │          │ │
-│ │ +    cli =          │                     │       │           │          │ │
-│ │ click.Group()       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    @cli.command() │                     │       │           │          │ │
-│ │ +    def push():    │                     │       │           │          │ │
-│ │ +        pass       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    @cli.command() │                     │       │           │          │ │
-│ │ +    def declare(): │                     │       │           │          │ │
-│ │ +        pass       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    @cli.command() │                     │       │           │          │ │
-│ │ +    def refine():  │                     │       │           │          │ │
-│ │ +        pass       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    result =       │                     │       │           │          │ │
-│ │ runner.invoke(cli,  │                     │       │           │          │ │
-│ │ [value])            │                     │       │           │          │ │
-│ │ +    assert expect  │                     │       │           │          │ │
-│ │ in result.output    │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_optio… │                     │       │           │          │ │
-│ │ b/tests/test_optio… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 1d90d29..50992e2    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/tests/test_optio… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_optio… │                     │       │           │          │ │
-│ │ @@ -141,15 +141,15  │                     │       │           │          │ │
-│ │ @@ def              │                     │       │           │          │ │
-│ │ test_unknown_optio… │                     │       │           │          │ │
-│ │ unknown_flag):      │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      result =       │                     │       │           │          │ │
-│ │ runner.invoke(cli,  │                     │       │           │          │ │
-│ │ [unknown_flag])     │                     │       │           │          │ │
-│ │      assert         │                     │       │           │          │ │
-│ │ result.exception    │                     │       │           │          │ │
-│ │ -    assert f"No    │                     │       │           │          │ │
-│ │ such option:        │                     │       │           │          │ │
-│ │ {unknown_flag}" in  │                     │       │           │          │ │
-│ │ result.output       │                     │       │           │          │ │
-│ │ +    assert f"No    │                     │       │           │          │ │
-│ │ such option         │                     │       │           │          │ │
-│ │ '{unknown_flag}'."  │                     │       │           │          │ │
-│ │ in result.output    │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  @pytest.mark.para… │                     │       │           │          │ │
-│ │      ("value",      │                     │       │           │          │ │
-│ │ "expect"),          │                     │       │           │          │ │
-│ │      [              │                     │       │           │          │ │
-│ │ -        ("--cat",  │                     │       │           │          │ │
-│ │ "Did you mean       │                     │       │           │          │ │
-│ │ --count?"),         │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ ("--bounds",        │                     │       │           │          │ │
-│ │ "(Possible options: │                     │       │           │          │ │
-│ │ --bound,            │                     │       │           │          │ │
-│ │ --count)"),         │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ ("--bount",         │                     │       │           │          │ │
-│ │ "(Possible options: │                     │       │           │          │ │
-│ │ --bound,            │                     │       │           │          │ │
-│ │ --count)"),         │                     │       │           │          │ │
-│ │ +        ("--cat",  │                     │       │           │          │ │
-│ │ "Did you mean       │                     │       │           │          │ │
-│ │ '--count'?"),       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ ("--bounds", "(Did  │                     │       │           │          │ │
-│ │ you mean one of:    │                     │       │           │          │ │
-│ │ '--bound',          │                     │       │           │          │ │
-│ │ '--count'?)"),      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ ("--bount", "(Did   │                     │       │           │          │ │
-│ │ you mean one of:    │                     │       │           │          │ │
-│ │ '--bound',          │                     │       │           │          │ │
-│ │ '--count'?)"),      │                     │       │           │          │ │
-│ │      ],             │                     │       │           │          │ │
-│ │  )                  │                     │       │           │          │ │
-│ │  def                │                     │       │           │          │ │
-│ │ test_suggest_possi… │                     │       │           │          │ │
-│ │ value, expect):     │                     │       │           │          │ │
+│ │ running_median([],  │                     │       │           │          │ │
+│ │ window='abc')  #    │                     │       │           │          │ │
+│ │ Wrong type for      │                     │       │           │          │ │
+│ │ window size         │                     │       │           │          │ │
+│ │          with       │                     │       │           │          │ │
+│ │ self.assertRaises(… │                     │       │           │          │ │
+│ │              list(… │                     │       │           │          │ │
+│ │ + 4j, 5 - 7j]))  #  │                     │       │           │          │ │
+│ │ Unorderable input   │                     │       │           │          │ │
+│ │ type                │                     │       │           │          │ │
+│ │          with       │                     │       │           │          │ │
+│ │ self.assertRaises(… │                     │       │           │          │ │
+│ │              list(  │                     │       │           │          │ │
+│ │                  r… │                     │       │           │          │ │
+│ │ 'def', 'ghi'])      │                     │       │           │          │ │
+│ │ -            )  #   │                     │       │           │          │ │
+│ │ Type that doesn't   │                     │       │           │          │ │
+│ │ support division    │                     │       │           │          │ │
+│ │ +            )  #   │                     │       │           │          │ │
+│ │ Input type that     │                     │       │           │          │ │
+│ │ doesn't support     │                     │       │           │          │ │
+│ │ division            │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
 │ │ ```                 │                     │       │           │          │ │
 │ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
