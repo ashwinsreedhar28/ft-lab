@@ -1,400 +1,400 @@
-│ │ more_itertools/mo… │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ more_itertools/mo… │                    │       │           │            │ │
-│ │   b8fe920          │                    │       │           │            │ │
-│ │ 2026-01-03 Add     │                    │       │           │            │ │
-│ │ random ordered     │                    │       │           │            │ │
-│ │ combinatoric       │                    │       │           │            │ │
-│ │ functions          │                    │       │           │            │ │
-│ │   ce676d2          │                    │       │           │            │ │
-│ │ 2026-09-04 Do not  │                    │       │           │            │ │
-│ │ yield an empty     │                    │       │           │            │ │
-│ │ list for an empty  │                    │       │           │            │ │
-│ │ iterable when      │                    │       │           │            │ │
-│ │ maxsplit is 0      │                    │       │           │            │ │
-│ │   7847d43          │                    │       │           │            │ │
-│ │ 2026-09-03 Don't   │                    │       │           │            │ │
-│ │ mask TypeError     │                    │       │           │            │ │
-│ │ raised while       │                    │       │           │            │ │
-│ │ iterating in       │                    │       │           │            │ │
-│ │ value_chain        │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Diff:              │                    │       │           │            │ │
-│ │ ```diff            │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/more_itertools/… │                    │       │           │            │ │
-│ │ b/more_itertools/… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ edb94d1..bd44cac   │                    │       │           │            │ │
-│ │ 100755             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/more_itertools/… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/more_itertools/… │                    │       │           │            │ │
-│ │ @@ -5672,9 +5672,6 │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ random_ordered_co… │                    │       │           │            │ │
-│ │ r):                │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ random_ordered_co… │                    │       │           │            │ │
-│ │ r):                │                    │       │           │            │ │
-│ │      "Return       │                    │       │           │            │ │
-│ │ :func:`combinatio… │                    │       │           │            │ │
-│ │ tuples in randomly │                    │       │           │            │ │
-│ │ shuffled order."   │                    │       │           │            │ │
-│ │      sequence =    │                    │       │           │            │ │
-│ │ tuple(iterable)    │                    │       │           │            │ │
-│ │ -    if not        │                    │       │           │            │ │
-│ │ sequence:          │                    │       │           │            │ │
-│ │ -        yield ()  │                    │       │           │            │ │
-│ │ -        return    │                    │       │           │            │ │
-│ │ -    n =           │                    │       │           │            │ │
-│ │ comb(len(sequence) │                    │       │           │            │ │
-│ │ + r - 1, r)        │                    │       │           │            │ │
-│ │ +    n =           │                    │       │           │            │ │
-│ │ comb(len(sequence) │                    │       │           │            │ │
-│ │ + r + 1, r) if     │                    │       │           │            │ │
-│ │ sequence else 0 if │                    │       │           │            │ │
-│ │ r else 1           │                    │       │           │            │ │
-│ │      for index in  │                    │       │           │            │ │
-│ │ _random_ordered_i… │                    │       │           │            │ │
-│ │          yield     │                    │       │           │            │ │
-│ │ nth_combination_w… │                    │       │           │            │ │
-│ │ r, index)          │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
-│ │ SYSTEM             │ ASSISTANT          │ -1.20 │     -1.19 │ unparsable │ │
-│ │ You are the code   │ {"decision":       │       │           │            │ │
-│ │ review gate for a  │ "block",           │       │           │            │ │
-│ │ production         │ "comments":        │       │           │            │ │
-│ │ repository. Your   │ [{"file":          │       │           │            │ │
-│ │ approval merges    │ "more_itertools/m… │       │           │            │ │
-│ │ and deploys the    │ "line_start":      │       │           │            │ │
-│ │ change with no     │ 5678, "line_end":  │       │           │            │ │
-│ │ further human      │ 5687, "body":      │       │           │            │ │
-│ │ review. Decide:    │ "Referenced        │       │           │            │ │
-│ │   approve  - you   │ function           │       │           │            │ │
-│ │ are confident the  │ calculating the    │       │           │            │ │
-│ │ change is correct  │ number of          │       │           │            │ │
-│ │ and safe to ship.  │ combinations with  │       │           │            │ │
-│ │   block    - you   │ replacement is     │       │           │            │ │
-│ │ found a defect;    │ incorrect for the  │       │           │            │ │
-│ │ cite its location. │ case when the      │       │           │            │ │
-│ │   escalate - you   │ argument is the    │       │           │            │ │
-│ │ cannot establish   │ empty sequence and │       │           │            │ │
-│ │ safety from what   │ r is also the      │       │           │            │ │
-│ │ you can see; a     │ empty sequence     │       │           │            │ │
-│ │ human must look.   │ (the latter case   │       │           │            │ │
-│ │ Approving a change │ is also supported  │       │           │            │ │
-│ │ that contains a    │ in the original    │       │           │            │ │
-│ │ defect is the      │ function).         │       │           │            │ │
-│ │ worst outcome.     │ "+(len(sequence) + │       │           │            │ │
-│ │ Blocking a correct │ r + 1 choose r) is │       │           │            │ │
-│ │ change costs an    │ not correct.       │       │           │            │ │
-│ │ engineer's time.   │ That's the reason  │       │           │            │ │
-│ │ Escalating is      │ the function       │       │           │            │ │
-│ │ cheap but useless  │ diverges from the  │       │           │            │ │
-│ │ if done for        │ actual formula (n  │       │           │            │ │
-│ │ everything.        │ + r - 1 choose     │       │           │            │ │
-│ │ Respond with       │ r).+"}]}           │       │           │            │ │
-│ │ exactly one JSON   │                    │       │           │            │ │
-│ │ object and nothing │                    │       │           │            │ │
-│ │ else:              │                    │       │           │            │ │
-│ │ {"decision":       │                    │       │           │            │ │
-│ │ "approve|block|es… │                    │       │           │            │ │
-│ │ "comments":        │                    │       │           │            │ │
-│ │ [{"file": "...",   │                    │       │           │            │ │
-│ │ "line_start": N,   │                    │       │           │            │ │
-│ │ "line_end": N,     │                    │       │           │            │ │
-│ │ "body": "...",     │                    │       │           │            │ │
-│ │ "proposed_test":   │                    │       │           │            │ │
-│ │ "optional pytest   │                    │       │           │            │ │
-│ │ source"}]}         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ USER               │                    │       │           │            │ │
-│ │ Repository:        │                    │       │           │            │ │
-│ │ more-itertools     │                    │       │           │            │ │
-│ │ Files changed:     │                    │       │           │            │ │
-│ │ more_itertools/mo… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Context around the │                    │       │           │            │ │
-│ │ change             │                    │       │           │            │ │
-│ │ (mechanically      │                    │       │           │            │ │
-│ │ extracted):        │                    │       │           │            │ │
-│ │ Changed            │                    │       │           │            │ │
-│ │ definitions:       │                    │       │           │            │ │
-│ │ more_itertools/mo… │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ more_itertools/mo… │                    │       │           │            │ │
-│ │   b8fe920          │                    │       │           │            │ │
-│ │ 2026-01-03 Add     │                    │       │           │            │ │
-│ │ random ordered     │                    │       │           │            │ │
-│ │ combinatoric       │                    │       │           │            │ │
-│ │ functions          │                    │       │           │            │ │
-│ │   ce676d2          │                    │       │           │            │ │
-│ │ 2026-09-04 Do not  │                    │       │           │            │ │
-│ │ yield an empty     │                    │       │           │            │ │
-│ │ list for an empty  │                    │       │           │            │ │
-│ │ iterable when      │                    │       │           │            │ │
-│ │ maxsplit is 0      │                    │       │           │            │ │
-│ │   7847d43          │                    │       │           │            │ │
-│ │ 2026-09-03 Don't   │                    │       │           │            │ │
-│ │ mask TypeError     │                    │       │           │            │ │
-│ │ raised while       │                    │       │           │            │ │
-│ │ iterating in       │                    │       │           │            │ │
-│ │ value_chain        │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Diff:              │                    │       │           │            │ │
-│ │ ```diff            │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/more_itertools/… │                    │       │           │            │ │
-│ │ b/more_itertools/… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ edb94d1..bd44cac   │                    │       │           │            │ │
-│ │ 100755             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/more_itertools/… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/more_itertools/… │                    │       │           │            │ │
-│ │ @@ -5672,9 +5672,6 │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ random_ordered_co… │                    │       │           │            │ │
-│ │ r):                │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ random_ordered_co… │                    │       │           │            │ │
-│ │ r):                │                    │       │           │            │ │
-│ │      "Return       │                    │       │           │            │ │
-│ │ :func:`combinatio… │                    │       │           │            │ │
-│ │ tuples in randomly │                    │       │           │            │ │
-│ │ shuffled order."   │                    │       │           │            │ │
-│ │      sequence =    │                    │       │           │            │ │
-│ │ tuple(iterable)    │                    │       │           │            │ │
-│ │ -    if not        │                    │       │           │            │ │
-│ │ sequence:          │                    │       │           │            │ │
-│ │ -        yield ()  │                    │       │           │            │ │
-│ │ -        return    │                    │       │           │            │ │
-│ │ -    n =           │                    │       │           │            │ │
-│ │ comb(len(sequence) │                    │       │           │            │ │
-│ │ + r - 1, r)        │                    │       │           │            │ │
-│ │ +    n =           │                    │       │           │            │ │
-│ │ comb(len(sequence) │                    │       │           │            │ │
-│ │ + r + 1, r) if     │                    │       │           │            │ │
-│ │ sequence else 0 if │                    │       │           │            │ │
-│ │ r else 1           │                    │       │           │            │ │
-│ │      for index in  │                    │       │           │            │ │
-│ │ _random_ordered_i… │                    │       │           │            │ │
-│ │          yield     │                    │       │           │            │ │
-│ │ nth_combination_w… │                    │       │           │            │ │
-│ │ r, index)          │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
-╰──────────────────────────────────────────────────────────────────────────────╯
- 42%|████▏     | 50/120 [1:05:22<1:00:56, 52.24s/it]step 50  reward=-0.387  reward_std=2.257  kl=0.002  mean_length=98.250  clipped_ratio=0.000  step_time=21.402  loss=0.008  gate=-0.387
-                                                     42%|████▏     | 50/120 [1:05:22<1:00:56, 52.24s/it]{'loss': '0.008106', 'grad_norm': '0.3285', 'learning_rate': '1e-05', 'num_tokens': '2.921e+06', 'completions/mean_length': '98.25', 'completions/min_length': '12', 'completions/max_length': '227', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '98.25', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '227', 'rewards/gate/mean': '-0.3875', 'rewards/gate/std': '2.257', 'reward': '-0.3875', 'reward_std': '2.257', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.1562', 'review/escalate_frac': '0.03125', 'review/mean_tokens': '98.25', 'review/unparsable_frac': '0.1875', 'sampling/sampling_logp_difference/mean': '0.0174', 'sampling/sampling_logp_difference/max': '0.2825', 'sampling/importance_sampling_ratio/min': '0.4086', 'sampling/importance_sampling_ratio/mean': '1.104', 'sampling/importance_sampling_ratio/max': '2.075', 'kl': '0.001654', 'entropy': '1.237', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '21.4', 'epoch': '0.7692'}
-╭────────────────────────────────── Step 50 ───────────────────────────────────╮
-│ ┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
-│ ┃ Prompt               ┃ Completion          ┃ gate ┃ Advantage ┃ decision ┃ │
-│ ┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
-│ │ SYSTEM               │ ASSISTANT           │ 1.50 │      0.50 │ block    │ │
-│ │ You are the code     │ {"decision":        │      │           │          │ │
-│ │ review gate for a    │ "block",            │      │           │          │ │
-│ │ production           │ "comments":         │      │           │          │ │
-│ │ repository. Your     │ [{"file":           │      │           │          │ │
-│ │ approval merges and  │ "starlette/__init_… │      │           │          │ │
-│ │ deploys the change   │ "line_start": 1,    │      │           │          │ │
-│ │ with no further      │ "line_end": 1,      │      │           │          │ │
-│ │ human review.        │ "body": "Releasing  │      │           │          │ │
-│ │ Decide:              │ the version to      │      │           │          │ │
-│ │   approve  - you are │ 0.84.0 at the same  │      │           │          │ │
-│ │ confident the change │ time that you're    │      │           │          │ │
-│ │ is correct and safe  │ pendulum-izing the  │      │           │          │ │
-│ │ to ship.             │ changelog. 0.84.0   │      │           │          │ │
-│ │   block    - you     │ is the current      │      │           │          │ │
-│ │ found a defect; cite │ minor release, and  │      │           │          │ │
-│ │ its location.        │ 0.84.0 is the       │      │           │          │ │
-│ │   escalate - you     │ version box. This   │      │           │          │ │
-│ │ cannot establish     │ is a major version  │      │           │          │ │
-│ │ safety from what you │ jump."}]}           │      │           │          │ │
-│ │ can see; a human     │                     │      │           │          │ │
-│ │ must look.           │                     │      │           │          │ │
-│ │ Approving a change   │                     │      │           │          │ │
-│ │ that contains a      │                     │      │           │          │ │
-│ │ defect is the worst  │                     │      │           │          │ │
-│ │ outcome. Blocking a  │                     │      │           │          │ │
-│ │ correct change costs │                     │      │           │          │ │
-│ │ an engineer's time.  │                     │      │           │          │ │
-│ │ Escalating is cheap  │                     │      │           │          │ │
-│ │ but useless if done  │                     │      │           │          │ │
-│ │ for everything.      │                     │      │           │          │ │
-│ │ Respond with exactly │                     │      │           │          │ │
-│ │ one JSON object and  │                     │      │           │          │ │
-│ │ nothing else:        │                     │      │           │          │ │
-│ │ {"decision":         │                     │      │           │          │ │
-│ │ "approve|block|esca… │                     │      │           │          │ │
-│ │ "comments":          │                     │      │           │          │ │
-│ │ [{"file": "...",     │                     │      │           │          │ │
-│ │ "line_start": N,     │                     │      │           │          │ │
-│ │ "line_end": N,       │                     │      │           │          │ │
-│ │ "body": "...",       │                     │      │           │          │ │
-│ │ "proposed_test":     │                     │      │           │          │ │
-│ │ "optional pytest     │                     │      │           │          │ │
-│ │ source"}]}           │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │ USER                 │                     │      │           │          │ │
-│ │ Repository:          │                     │      │           │          │ │
-│ │ starlette            │                     │      │           │          │ │
-│ │ Files changed:       │                     │      │           │          │ │
-│ │ docs/release-notes.… │                     │      │           │          │ │
-│ │ mkdocs.yml,          │                     │      │           │          │ │
-│ │ starlette/__init__.… │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │ Not shown (non-code  │                     │      │           │          │ │
-│ │ or over budget;      │                     │      │           │          │ │
-│ │ treat as             │                     │      │           │          │ │
-│ │ unreviewed):         │                     │      │           │          │ │
-│ │ docs/release-notes.… │                     │      │           │          │ │
-│ │ (523 chars,          │                     │      │           │          │ │
-│ │ non-code)            │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │ Diff:                │                     │      │           │          │ │
-│ │ ```diff              │                     │      │           │          │ │
-│ │ diff --git           │                     │      │           │          │ │
-│ │ a/mkdocs.yml         │                     │      │           │          │ │
-│ │ b/mkdocs.yml         │                     │      │           │          │ │
-│ │ index                │                     │      │           │          │ │
-│ │ ee8d095..2aa208b     │                     │      │           │          │ │
-│ │ 100644               │                     │      │           │          │ │
-│ │ --- a/mkdocs.yml     │                     │      │           │          │ │
-│ │ +++ b/mkdocs.yml     │                     │      │           │          │ │
-│ │ @@ -98,5 +98,5 @@    │                     │      │           │          │ │
-│ │ plugins:             │                     │      │           │          │ │
-│ │              show_s… │                     │      │           │          │ │
-│ │ true                 │                     │      │           │          │ │
-│ │              show_s… │                     │      │           │          │ │
-│ │ false                │                     │      │           │          │ │
-│ │              signat… │                     │      │           │          │ │
-│ │ true                 │                     │      │           │          │ │
-│ │ -          import:   │                     │      │           │          │ │
-│ │ +                    │                     │      │           │          │ │
-│ │ inventories:         │                     │      │           │          │ │
-│ │              - url:  │                     │      │           │          │ │
-│ │ https://docs.python… │                     │      │           │          │ │
-│ │ diff --git           │                     │      │           │          │ │
-│ │ a/starlette/__init_… │                     │      │           │          │ │
-│ │ b/starlette/__init_… │                     │      │           │          │ │
-│ │ index                │                     │      │           │          │ │
-│ │ 1eb5f60..3047a38     │                     │      │           │          │ │
-│ │ 100644               │                     │      │           │          │ │
-│ │ ---                  │                     │      │           │          │ │
-│ │ a/starlette/__init_… │                     │      │           │          │ │
-│ │ +++                  │                     │      │           │          │ │
-│ │ b/starlette/__init_… │                     │      │           │          │ │
-│ │ @@ -1 +1 @@          │                     │      │           │          │ │
-│ │ -__version__ =       │                     │      │           │          │ │
-│ │ "0.47.3"             │                     │      │           │          │ │
-│ │ +__version__ =       │                     │      │           │          │ │
-│ │ "0.84.0"             │                     │      │           │          │ │
-│ │ ```                  │                     │      │           │          │ │
-│ ├──────────────────────┼─────────────────────┼──────┼───────────┼──────────┤ │
-│ │ SYSTEM               │ ASSISTANT           │ 1.50 │      0.50 │ block    │ │
-│ │ You are the code     │ {"decision":        │      │           │          │ │
-│ │ review gate for a    │ "block",            │      │           │          │ │
-│ │ production           │ "comments":         │      │           │          │ │
-│ │ repository. Your     │ [{"file":           │      │           │          │ │
-│ │ approval merges and  │ "mkdocs.yml",       │      │           │          │ │
-│ │ deploys the change   │ "line_start": 100,  │      │           │          │ │
-│ │ with no further      │ "line_end": 100,    │      │           │          │ │
-│ │ human review.        │ "body": "Use of     │      │           │          │ │
-│ │ Decide:              │ inventory plugin    │      │           │          │ │
-│ │   approve  - you are │ (inventories) in    │      │           │          │ │
-│ │ confident the change │ mkdocs.yml does not │      │           │          │ │
-│ │ is correct and safe  │ match updated       │      │           │          │ │
-│ │ to ship.             │ plugin list. The    │      │           │          │ │
-│ │   block    - you     │ plugin is not in    │      │           │          │ │
-│ │ found a defect; cite │ the current         │      │           │          │ │
-│ │ its location.        │ list."}, {"file":   │      │           │          │ │
-│ │   escalate - you     │ "starlette/__init_… │      │           │          │ │
-│ │ cannot establish     │ "line_start": 1,    │      │           │          │ │
-│ │ safety from what you │ "line_end": 1,      │      │           │          │ │
-│ │ can see; a human     │ "body": "This       │      │           │          │ │
-│ │ must look.           │ change introduces   │      │           │          │ │
-│ │ Approving a change   │ an incorrect        │      │           │          │ │
-│ │ that contains a      │ version number      │      │           │          │ │
-│ │ defect is the worst  │ (0.84.0). The       │      │           │          │ │
-│ │ outcome. Blocking a  │ project will appear │      │           │          │ │
-│ │ correct change costs │ to be a major new   │      │           │          │ │
-│ │ an engineer's time.  │ release (0.84.0)    │      │           │          │ │
-│ │ Escalating is cheap  │ for an otherwise    │      │           │          │ │
-│ │ but useless if done  │ invisible update    │      │           │          │ │
-│ │ for everything.      │ (0.47.3) that would │      │           │          │ │
-│ │ Respond with exactly │ not logically       │      │           │          │ │
-│ │ one JSON object and  │ change the version  │      │           │          │ │
-│ │ nothing else:        │ to such a large     │      │           │          │ │
-│ │ {"decision":         │ number. It will     │      │           │          │ │
-│ │ "approve|block|esca… │ also likely confuse │      │           │          │ │
-│ │ "comments":          │ users and break     │      │           │          │ │
-│ │ [{"file": "...",     │ existing CI         │      │           │          │ │
-│ │ "line_start": N,     │ pipelines. Be sure  │      │           │          │ │
-│ │ "line_end": N,       │ version numbers are │      │           │          │ │
-│ │ "body": "...",       │ correct."}]}        │      │           │          │ │
-│ │ "proposed_test":     │                     │      │           │          │ │
-│ │ "optional pytest     │                     │      │           │          │ │
-│ │ source"}]}           │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │ USER                 │                     │      │           │          │ │
-│ │ Repository:          │                     │      │           │          │ │
-│ │ starlette            │                     │      │           │          │ │
-│ │ Files changed:       │                     │      │           │          │ │
-│ │ docs/release-notes.… │                     │      │           │          │ │
-│ │ mkdocs.yml,          │                     │      │           │          │ │
-│ │ starlette/__init__.… │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │ Not shown (non-code  │                     │      │           │          │ │
-│ │ or over budget;      │                     │      │           │          │ │
-│ │ treat as             │                     │      │           │          │ │
-│ │ unreviewed):         │                     │      │           │          │ │
-│ │ docs/release-notes.… │                     │      │           │          │ │
-│ │ (523 chars,          │                     │      │           │          │ │
-│ │ non-code)            │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │ Diff:                │                     │      │           │          │ │
-│ │ ```diff              │                     │      │           │          │ │
-│ │ diff --git           │                     │      │           │          │ │
-│ │ a/mkdocs.yml         │                     │      │           │          │ │
-│ │ b/mkdocs.yml         │                     │      │           │          │ │
-│ │ index                │                     │      │           │          │ │
-│ │ ee8d095..2aa208b     │                     │      │           │          │ │
-│ │ 100644               │                     │      │           │          │ │
-│ │ --- a/mkdocs.yml     │                     │      │           │          │ │
-│ │ +++ b/mkdocs.yml     │                     │      │           │          │ │
-│ │ @@ -98,5 +98,5 @@    │                     │      │           │          │ │
-│ │ plugins:             │                     │      │           │          │ │
-│ │              show_s… │                     │      │           │          │ │
-│ │ true                 │                     │      │           │          │ │
-│ │              show_s… │                     │      │           │          │ │
-│ │ false                │                     │      │           │          │ │
-│ │              signat… │                     │      │           │          │ │
-│ │ true                 │                     │      │           │          │ │
-│ │ -          import:   │                     │      │           │          │ │
-│ │ +                    │                     │      │           │          │ │
-│ │ inventories:         │                     │      │           │          │ │
-│ │              - url:  │                     │      │           │          │ │
-│ │ https://docs.python… │                     │      │           │          │ │
-│ │ diff --git           │                     │      │           │          │ │
-│ │ a/starlette/__init_… │                     │      │           │          │ │
-│ │ b/starlette/__init_… │                     │      │           │          │ │
-│ │ index                │                     │      │           │          │ │
-│ │ 1eb5f60..3047a38     │                     │      │           │          │ │
-│ │ 100644               │                     │      │           │          │ │
-│ │ ---                  │                     │      │           │          │ │
-│ │ a/starlette/__init_… │                     │      │           │          │ │
-│ │ +++                  │                     │      │           │          │ │
-│ │ b/starlette/__init_… │                     │      │           │          │ │
-│ │ @@ -1 +1 @@          │                     │      │           │          │ │
-│ │ -__version__ =       │                     │      │           │          │ │
-│ │ "0.47.3"             │                     │      │           │          │ │
-│ │ +__version__ =       │                     │      │           │          │ │
-│ │ "0.84.0"             │                     │      │           │          │ │
-│ │ ```                  │                     │      │           │          │ │
-│ └──────────────────────┴─────────────────────┴──────┴───────────┴──────────┘ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/src/structlog/de… │                     │       │           │          │ │
+│ │ b/src/structlog/de… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 0f08d7a..3a581af    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/src/structlog/de… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/src/structlog/de… │                     │       │           │          │ │
+│ │ @@ -494,7 +494,16   │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ better_traceback(s… │                     │       │           │          │ │
+│ │ TextIO, exc_info:   │                     │       │           │          │ │
+│ │ ExcInfo) -> None:   │                     │       │           │          │ │
+│ │      Used by        │                     │       │           │          │ │
+│ │ default if          │                     │       │           │          │ │
+│ │ *better-exceptions* │                     │       │           │          │ │
+│ │ is installed and    │                     │       │           │          │ │
+│ │ Rich is absent.     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      ..             │                     │       │           │          │ │
+│ │ versionadded::      │                     │       │           │          │ │
+│ │ 21.2.0              │                     │       │           │          │ │
+│ │ +    ..             │                     │       │           │          │ │
+│ │ deprecated:: 26.1.0 │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ *better-exceptions* │                     │       │           │          │ │
+│ │ support is          │                     │       │           │          │ │
+│ │ deprecated and will │                     │       │           │          │ │
+│ │ be removed in a     │                     │       │           │          │ │
+│ │ +       future      │                     │       │           │          │ │
+│ │ release. Use Rich   │                     │       │           │          │ │
+│ │ instead.            │                     │       │           │          │ │
+│ │      """            │                     │       │           │          │ │
+│ │ +    warnings.warn( │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "better-exceptions  │                     │       │           │          │ │
+│ │ support is          │                     │       │           │          │ │
+│ │ deprecated and will │                     │       │           │          │ │
+│ │ be removed "        │                     │       │           │          │ │
+│ │ +        "in a      │                     │       │           │          │ │
+│ │ future release. Use │                     │       │           │          │ │
+│ │ Rich instead.",     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ DeprecationWarning, │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ stacklevel=2,       │                     │       │           │          │ │
+│ │ +    )              │                     │       │           │          │ │
+│ │      sio.write("\n" │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "".join(better_exc… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -502,6 +511,12   │                     │       │           │          │ │
+│ │ @@ if rich is not   │                     │       │           │          │ │
+│ │ None:               │                     │       │           │          │ │
+│ │      default_excep… │                     │       │           │          │ │
+│ │ = rich_traceback    │                     │       │           │          │ │
+│ │  elif               │                     │       │           │          │ │
+│ │ better_exceptions   │                     │       │           │          │ │
+│ │ is not None:        │                     │       │           │          │ │
+│ │      default_excep… │                     │       │           │          │ │
+│ │ = better_traceback  │                     │       │           │          │ │
+│ │ +    warnings.warn( │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "better-exceptions  │                     │       │           │          │ │
+│ │ support is          │                     │       │           │          │ │
+│ │ deprecated and will │                     │       │           │          │ │
+│ │ be removed "        │                     │       │           │          │ │
+│ │ +        "in a      │                     │       │           │          │ │
+│ │ future release. Use │                     │       │           │          │ │
+│ │ Rich instead.",     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ DeprecationWarning, │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ stacklevel=2,       │                     │       │           │          │ │
+│ │ +    )              │                     │       │           │          │ │
+│ │  else:              │                     │       │           │          │ │
+│ │      default_excep… │                     │       │           │          │ │
+│ │ = plain_traceback   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -511,8 +526,8 @@ │                     │       │           │          │ │
+│ │ class               │                     │       │           │          │ │
+│ │ ConsoleRenderer:    │                     │       │           │          │ │
+│ │      Render         │                     │       │           │          │ │
+│ │ ``event_dict``      │                     │       │           │          │ │
+│ │ nicely aligned,     │                     │       │           │          │ │
+│ │ possibly in colors, │                     │       │           │          │ │
+│ │ and ordered.        │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      If             │                     │       │           │          │ │
+│ │ ``event_dict``      │                     │       │           │          │ │
+│ │ contains a true-ish │                     │       │           │          │ │
+│ │ ``exc_info`` key,   │                     │       │           │          │ │
+│ │ it will be rendered │                     │       │           │          │ │
+│ │ -    *after* the    │                     │       │           │          │ │
+│ │ log line. If Rich_  │                     │       │           │          │ │
+│ │ or                  │                     │       │           │          │ │
+│ │ better-exceptions_  │                     │       │           │          │ │
+│ │ are present, in     │                     │       │           │          │ │
+│ │ colors              │                     │       │           │          │ │
+│ │ -    and with extra │                     │       │           │          │ │
+│ │ context.            │                     │       │           │          │ │
+│ │ +    *after* the    │                     │       │           │          │ │
+│ │ log line. If Rich_  │                     │       │           │          │ │
+│ │ is present, in      │                     │       │           │          │ │
+│ │ colors and with     │                     │       │           │          │ │
+│ │ extra               │                     │       │           │          │ │
+│ │ +    context.       │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      Tip:           │                     │       │           │          │ │
+│ │          Since      │                     │       │           │          │ │
+│ │ `ConsoleRenderer`   │                     │       │           │          │ │
+│ │ is mainly a         │                     │       │           │          │ │
+│ │ development helper, │                     │       │           │          │ │
+│ │ it is less          │                     │       │           │          │ │
+│ │ @@ -558,12 +573,10  │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ ConsoleRenderer:    │                     │       │           │          │ │
+│ │              are    │                     │       │           │          │ │
+│ │ passed.             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          exception… │                     │       │           │          │ │
+│ │ -            A      │                     │       │           │          │ │
+│ │ callable to render  │                     │       │           │          │ │
+│ │ ``exc_infos``. If   │                     │       │           │          │ │
+│ │ Rich_ or            │                     │       │           │          │ │
+│ │ better-exceptions_  │                     │       │           │          │ │
+│ │ -            are    │                     │       │           │          │ │
+│ │ installed, they are │                     │       │           │          │ │
+│ │ used for            │                     │       │           │          │ │
+│ │ pretty-printing by  │                     │       │           │          │ │
+│ │ default (rich_      │                     │       │           │          │ │
+│ │ -            taking │                     │       │           │          │ │
+│ │ precedence). You    │                     │       │           │          │ │
+│ │ can also manually   │                     │       │           │          │ │
+│ │ set it to           │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ `plain_traceback`,  │                     │       │           │          │ │
+│ │ `better_traceback`, │                     │       │           │          │ │
+│ │ an instance of      │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ `RichTracebackForm… │                     │       │           │          │ │
+│ │ like                │                     │       │           │          │ │
+│ │ `rich_traceback`,   │                     │       │           │          │ │
+│ │ or implement your   │                     │       │           │          │ │
+│ │ -            own.   │                     │       │           │          │ │
+│ │ +            A      │                     │       │           │          │ │
+│ │ callable to render  │                     │       │           │          │ │
+│ │ ``exc_infos``. If   │                     │       │           │          │ │
+│ │ Rich_ is installed, │                     │       │           │          │ │
+│ │ it is               │                     │       │           │          │ │
+│ │ +            used   │                     │       │           │          │ │
+│ │ for pretty-printing │                     │       │           │          │ │
+│ │ by default. You can │                     │       │           │          │ │
+│ │ also manually set   │                     │       │           │          │ │
+│ │ it                  │                     │       │           │          │ │
+│ │ +            to     │                     │       │           │          │ │
+│ │ `plain_traceback`,  │                     │       │           │          │ │
+│ │ an instance of      │                     │       │           │          │ │
+│ │ `RichTracebackForm… │                     │       │           │          │ │
+│ │ like                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ `rich_traceback`,   │                     │       │           │          │ │
+│ │ and implement your  │                     │       │           │          │ │
+│ │ own.                │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          sort_keys: │                     │       │           │          │ │
+│ │              Wheth… │                     │       │           │          │ │
+│ │ to sort keys when   │                     │       │           │          │ │
+│ │ formatting. `True`  │                     │       │           │          │ │
+│ │ by default. Ignored │                     │       │           │          │ │
+│ │ if                  │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_dev.py │                     │       │           │          │ │
+│ │ b/tests/test_dev.py │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 7c6a20b..45b0756    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_dev.py │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_dev.py │                     │       │           │          │ │
+│ │ @@ -865,10 +865,22  │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ TestBetterTracebac… │                     │       │           │          │ │
+│ │          try:       │                     │       │           │          │ │
+│ │              0 / 0  │                     │       │           │          │ │
+│ │          except     │                     │       │           │          │ │
+│ │ ZeroDivisionError:  │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ dev.better_traceba… │                     │       │           │          │ │
+│ │ sys.exc_info())     │                     │       │           │          │ │
+│ │ +            with   │                     │       │           │          │ │
+│ │ pytest.warns(Depre… │                     │       │           │          │ │
+│ │ match="better-exce… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ dev.better_traceba… │                     │       │           │          │ │
+│ │ sys.exc_info())     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          assert     │                     │       │           │          │ │
+│ │ sio.getvalue().sta… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_deprecation_w… │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ better_traceback    │                     │       │           │          │ │
+│ │ emits a             │                     │       │           │          │ │
+│ │ DeprecationWarning. │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        sio =      │                     │       │           │          │ │
+│ │ StringIO()          │                     │       │           │          │ │
+│ │ +        try:       │                     │       │           │          │ │
+│ │ +            0 / 0  │                     │       │           │          │ │
+│ │ +        except     │                     │       │           │          │ │
+│ │ ZeroDivisionError:  │                     │       │           │          │ │
+│ │ +            with   │                     │       │           │          │ │
+│ │ pytest.warns(Depre… │                     │       │           │          │ │
+│ │ match="better-exce… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ dev.better_traceba… │                     │       │           │          │ │
+│ │ sys.exc_info())     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  class              │                     │       │           │          │ │
+│ │ TestLogLevelColumn… │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ test_no_style(self… │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.50 │     -0.16 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "more_itertools/re… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 45,   │       │           │          │ │
+│ │ with no further     │ "line_end": 46,     │       │           │          │ │
+│ │ human review.       │ "body": "Tail only  │       │           │          │ │
+│ │ Decide:             │ checks for n >= 0,  │       │           │          │ │
+│ │   approve  - you    │ but it does not     │       │           │          │ │
+│ │ are confident the   │ check that the      │       │           │          │ │
+│ │ change is correct   │ iterable is not a   │       │           │          │ │
+│ │ and safe to ship.   │ generator. This     │       │           │          │ │
+│ │   block    - you    │ means that, for     │       │           │          │ │
+│ │ found a defect;     │ example, the        │       │           │          │ │
+│ │ cite its location.  │ test_sized_less     │       │           │          │ │
+│ │   escalate - you    │ test would fail     │       │           │          │ │
+│ │ cannot establish    │ when the input is a │       │           │          │ │
+│ │ safety from what    │ generator, so these │       │           │          │ │
+│ │ you can see; a      │ tests would pass    │       │           │          │ │
+│ │ human must look.    │ despite the         │       │           │          │ │
+│ │ Approving a change  │ function being      │       │           │          │ │
+│ │ that contains a     │ wrong for           │       │           │          │ │
+│ │ defect is the worst │ generators. That's  │       │           │          │ │
+│ │ outcome. Blocking a │ not acceptable: it  │       │           │          │ │
+│ │ correct change      │ must fail for any   │       │           │          │ │
+│ │ costs an engineer's │ unbounded iterable, │       │           │          │ │
+│ │ time. Escalating is │ including           │       │           │          │ │
+│ │ cheap but useless   │ generators, and the │       │           │          │ │
+│ │ if done for         │ tests must reflect  │       │           │          │ │
+│ │ everything.         │ that."}]}           │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ more-itertools      │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │ tests/test_recipes… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │ tests/test_recipes… │                     │       │           │          │ │
+│ │ tests/test_recipes… │                     │       │           │          │ │
+│ │ tests/test_recipes… │                     │       │           │          │ │
+│ │ tests/test_recipes… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │   43decdd           │                     │       │           │          │ │
+│ │ 2026-06-17 Support  │                     │       │           │          │ │
+│ │ negative start/stop │                     │       │           │          │ │
+│ │ in iter_index for   │                     │       │           │          │ │
+│ │ general iterables   │                     │       │           │          │ │
+│ │   6294fa6           │                     │       │           │          │ │
+│ │ 2026-04-08 Move     │                     │       │           │          │ │
+│ │ running statistics  │                     │       │           │          │ │
+│ │ to recipes          │                     │       │           │          │ │
+│ │   2fcf9ef           │                     │       │           │          │ │
+│ │ 2026-04-02 Changes  │                     │       │           │          │ │
+│ │ for version 11.0.1  │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ tests/test_recipes… │                     │       │           │          │ │
+│ │   67d3104           │                     │       │           │          │ │
+│ │ 2026-06-17 Prepare  │                     │       │           │          │ │
+│ │ PR 1182 for merging │                     │       │           │          │ │
+│ │   43decdd           │                     │       │           │          │ │
+│ │ 2026-06-17 Support  │                     │       │           │          │ │
+│ │ negative start/stop │                     │       │           │          │ │
+│ │ in iter_index for   │                     │       │           │          │ │
+│ │ general iterables   │                     │       │           │          │ │
+│ │   52cfcfe           │                     │       │           │          │ │
+│ │ 2026-04-02 Revert   │                     │       │           │          │ │
+│ │ "Remove pairwise()" │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/r… │                     │       │           │          │ │
+│ │ b/more_itertools/r… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ ce22bdc..5c2b4bc    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/r… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/r… │                     │       │           │          │ │
+│ │ @@ -152,6 +152,9 @@ │                     │       │           │          │ │
+│ │ def tail(n,         │                     │       │           │          │ │
+│ │ iterable):          │                     │       │           │          │ │
+│ │      ['E', 'F',     │                     │       │           │          │ │
+│ │ 'G']                │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      """            │                     │       │           │          │ │
+│ │ +    if n < 0:      │                     │       │           │          │ │
+│ │ +        raise      │                     │       │           │          │ │
+│ │ ValueError('n must  │                     │       │           │          │ │
+│ │ be at least 0')     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │      try:           │                     │       │           │          │ │
+│ │          size =     │                     │       │           │          │ │
+│ │ len(iterable)       │                     │       │           │          │ │
+│ │      except         │                     │       │           │          │ │
+│ │ TypeError:          │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_recip… │                     │       │           │          │ │
+│ │ b/tests/test_recip… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 15d54fc..d8b0c0a    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_recip… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_recip… │                     │       │           │          │ │
+│ │ @@ -96,6 +96,10 @@  │                     │       │           │          │ │
+│ │ class               │                     │       │           │          │ │
+│ │ TailTests(TestCase… │                     │       │           │          │ │
+│ │          """Length  │                     │       │           │          │ │
+│ │ of sized iterable   │                     │       │           │          │ │
+│ │ is less than        │                     │       │           │          │ │
+│ │ requested tail"""   │                     │       │           │          │ │
+│ │          self.asse… │                     │       │           │          │ │
+│ │ 'ABCDEFG')),        │                     │       │           │          │ │
+│ │ list('ABCDEFG'))    │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_sized_negativ… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ """Negative tail    │                     │       │           │          │ │
+│ │ sizes should raise  │                     │       │           │          │ │
+│ │ for sized           │                     │       │           │          │ │
+│ │ iterables."""       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self.assertRaises(… │                     │       │           │          │ │
+│ │ lambda:             │                     │       │           │          │ │
+│ │ list(mi.tail(-1,    │                     │       │           │          │ │
+│ │ 'ABCDEFG')))        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  class              │                     │       │           │          │ │
+│ │ ConsumeTests(TestC… │                     │       │           │          │ │
+│ │      """Tests for   │                     │       │           │          │ │
+│ │ ``consume()``"""    │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
