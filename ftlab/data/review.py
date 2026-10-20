@@ -24,7 +24,7 @@ DEFAULT_CONDITION = "diff+graph"
 
 
 def _rows(spec: DataSpec):
-    paths = spec.extra.get("tasks", ["review/bench/tasks.jsonl"])
+    paths = spec.extra.get("tasks", ["review/bench/public_tasks.jsonl"])
     rows = []
     for p in paths:
         rows += [json.loads(l) for l in Path(p).read_text().splitlines() if l.strip()]
@@ -36,6 +36,8 @@ def _split(spec: DataSpec, rows):
     if sf:
         s = json.loads(Path(sf).read_text())
         return [r for r in rows if r["id"] in set(s["train"])], [r for r in rows if r["id"] in set(s["eval"])]
+    if all("split" in r for r in rows):          # assemble.py rows carry their split (by PR hash)
+        return [r for r in rows if r["split"] == "train"], [r for r in rows if r["split"] == "eval"]
     shwin = {"emberserve", "aether", "serverless-lakehouse"}
     return [r for r in rows if r["repo"] not in shwin], [r for r in rows if r["repo"] in shwin]
 

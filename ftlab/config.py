@@ -44,6 +44,7 @@ class RunConfig:
     system_prompt: str | None = None
     enable_thinking: bool = False
     grpo: dict[str, Any] = field(default_factory=dict)   # -> trl.GRPOConfig(**grpo)
+    sft: dict[str, Any] = field(default_factory=dict)    # -> trl.SFTConfig(**sft)   (ftlab/sft.py)
 
     def resolved_output_dir(self) -> Path:
         return Path(self.output_dir.replace("${name}", self.name))
