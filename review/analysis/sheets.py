@@ -91,8 +91,10 @@ def ai_note(t: dict, before: str, after: str, ctx: str, probe: str) -> str:
                   f"A test that fails on the changed line and passes on the original:\n{probe[:2000]}\n\n"
                   "In at most 3 short sentences, plain English, for a code reviewer: (1) what the original line does, "
                   "(2) what the changed line does instead, (3) the concrete input or situation where the two behave differently. "
-                  "Do NOT say whether it is a bug or whether to block; describe only.")
-        text, _, _ = call("claude-haiku-5-5", "You explain one-line code changes neutrally and concretely.", [{"role": "user", "content": prompt}], 400)
+                  "Then on a final line write exactly one of: SUGGEST: yes (clearly wrong, a reviewer should block) / "
+                  "SUGGEST: arguable (wrong only in an edge case) / SUGGEST: no (same observable behavior, or not code). "
+                  "The human decides; your suggestion is a starting point.")
+        text, _, _ = call("claude-haiku-5-5", "You explain one-line code changes concretely for a reviewer.", [{"role": "user", "content": prompt}], 450)
         return text.strip()
     except Exception as e:  # noqa: BLE001
         return f"(note unavailable: {type(e).__name__})"
@@ -121,6 +123,10 @@ def labels_html(tasks_path: str, n: int, seed: int):
             for l in ctx)
         probe = t.get("probe_source") or ""
         note = ai_note(t, before, after, "\n".join(ctx), probe) if (before or after) else ""
+        suggest = ""
+        m_s = __import__("re").search(r"SUGGEST:\s*(yes|arguable|no)", note, __import__("re").I)
+        if m_s:
+            suggest = m_s.group(1).lower(); note = note[: m_s.start()].rstrip()
         doc = ""
         m = __import__("re").search(r'"""(.*?)"""', probe, __import__("re").S)
         if m: doc = m.group(1).strip()
@@ -135,9 +141,10 @@ def labels_html(tasks_path: str, n: int, seed: int):
 <details><summary>context (±12 lines of the PR diff; mutated line highlighted)</summary><pre class="ctx">{ctx_html}</pre></details>
 <details><summary>guard probe (fails on the mutant, passes on the original)</summary><pre>{_html_escape(probe[:3000])}</pre></details>
 <div class="verdict">
-<label><input type="radio" name="v{i}" value="yes"> yes, a reviewer should block this</label>
-<label><input type="radio" name="v{i}" value="arguable"> arguable (wrong only in an edge case)</label>
-<label><input type="radio" name="v{i}" value="no"> no, not a bug (same behavior)</label>
+<label><input type="radio" name="v{i}" value="yes" {'checked data-suggested="1"' if suggest == 'yes' else ''}> yes, a reviewer should block this</label>
+<label><input type="radio" name="v{i}" value="arguable" {'checked data-suggested="1"' if suggest == 'arguable' else ''}> arguable (wrong only in an edge case)</label>
+<label><input type="radio" name="v{i}" value="no" {'checked data-suggested="1"' if suggest == 'no' else ''}> no, not a bug (same behavior)</label>
+{f'<span class="sug">AI suggests <b>{suggest}</b> (pre-selected; change it if you disagree)</span>' if suggest else ''}
 <input type="text" class="why" id="w{i}" placeholder="why (one line)">
 </div>
 </section>""")
@@ -152,6 +159,7 @@ pre{{background:#f6f6f6;padding:8px;border-radius:4px;white-space:pre-wrap;font-
 pre.mut{{background:#fde8e2}} pre.ctx div.mut{{background:#f9c9bd}} pre.ctx div.add{{color:#1a7f37}} pre.ctx div.del{{color:#9a1b1b}}
 .hint{{background:#eef5ff;padding:6px 10px;border-radius:4px;font-size:13.5px}}
 .note{{background:#f3f0ff;padding:6px 10px;border-radius:4px;font-size:13.5px;white-space:pre-wrap}}
+.sug{{font-size:12.5px;color:#5b4b9a}}
 details{{margin:6px 0}} summary{{cursor:pointer;color:#444;font-size:13px}}
 .verdict{{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:8px}} .verdict label{{font-size:14px}}
 .why{{flex:1;min-width:240px;padding:4px 6px}}
@@ -165,7 +173,8 @@ For each: <b>would you block this line in review?</b> You are not finding the bu
 {''.join(items)}
 <textarea id="out" readonly></textarea>
 <script>
-function collect(){{const o={{}};document.querySelectorAll('section').forEach(s=>{{const id=s.dataset.id;const r=s.querySelector('input[type=radio]:checked');if(r)o[id]={{verdict:r.value,why:s.querySelector('.why').value}};}});return o;}}
+function collect(){{const o={{}};document.querySelectorAll('section').forEach(s=>{{const id=s.dataset.id;const r=s.querySelector('input[type=radio]:checked');const sg=s.querySelector('input[data-suggested]');if(r)o[id]={{verdict:r.value,why:s.querySelector('.why').value,suggested:sg?sg.value:null,confirmed:!!s.dataset.touched}};}});return o;}}
+document.addEventListener('click',e=>{{const s=e.target.closest&&e.target.closest('section');if(s&&e.target.matches('input[type=radio]'))s.dataset.touched='1';}});
 function refresh(){{const o=collect();document.getElementById('count').textContent=Object.keys(o).length+'/{len(sample)}';try{{localStorage.setItem('labelsheet',JSON.stringify(o));}}catch(e){{}}}}
 function exportJson(){{const j=JSON.stringify(collect(),null,1);document.getElementById('out').value=j;navigator.clipboard&&navigator.clipboard.writeText(j).catch(()=>{{}});}}
 document.addEventListener('change',refresh);document.addEventListener('input',refresh);
@@ -213,7 +222,13 @@ def tally():
     pj = OUT / "label_verdicts.json"
     p = OUT / "label_sheet.md"
     if pj.exists():
-        v = [x.get("verdict", "") for x in json.loads(pj.read_text()).values()]
+        data = json.loads(pj.read_text())
+        v = [x.get("verdict", "") for x in data.values()]
+        sug = [(x.get("suggested"), x.get("verdict")) for x in data.values() if x.get("suggested")]
+        if sug:
+            agree = sum(1 for a, b in sug if a == b)
+            conf = sum(1 for x in data.values() if x.get("confirmed"))
+            print(f"AI suggestion present on {len(sug)}: human agreed on {agree} ({agree / len(sug):.0%}); explicitly clicked {conf}")
     elif p.exists():
         v = re.findall(r"^verdict:\s*(\w+)", p.read_text(), re.M)
     else:
