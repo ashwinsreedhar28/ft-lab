@@ -92,7 +92,7 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--op-cap", type=float, default=0.15,
                     help="max share of TRAIN operator mutants any one operator may hold (bool_and_or was 24%%); excess is dropped")
-    ap.add_argument("--decoys", type=int, default=60,
+    ap.add_argument("--decoys", type=int, default=0,
                     help="extra unpaired clean PRs (train only) whose added lines contain the tokens the leakage probe ranked highest; "
                          "token-matched negatives, so `or`/`>=`/`!=` stop predicting the label")
     ap.add_argument("--decoy-tokens", default="or,>=,<=,!=,True,None,not")
@@ -161,6 +161,19 @@ def main():
     for op, ts in by_op.items():
         if len(ts) > cap:
             rng.shuffle(ts); dropped.update(t["id"] for t in ts[cap:])
+    # direction balance: for each symmetric operator pair (and<->or, <-><=, True<->False, ...) equalize the two
+    # directions in train, so the token the swap introduces appears in bug lines equally often either way and
+    # stops predicting the label. This is the paired-design fix; unpaired decoys made the probe worse.
+    PAIRS = [("bool_and_or", "bool_or_and"), ("rel_lt_le", "rel_le_lt"), ("rel_gt_ge", "rel_ge_gt"), ("rel_eq_ne", "rel_ne_eq"),
+             ("not_drop", "not_add"), ("is_none_flip", "is_not_none_flip"), ("plus1_minus1", "minus1_plus1"),
+             ("true_false", "false_true"), ("zero_one", "one_zero"), ("continue_break", "break_continue")]
+    kept = {t["id"] for t in train_ops} - dropped
+    for a_op, b_op in PAIRS:
+        xa = [t for t in train_ops if t["operator"] == a_op and t["id"] in kept]
+        xb = [t for t in train_ops if t["operator"] == b_op and t["id"] in kept]
+        big, small = (xa, xb) if len(xa) > len(xb) else (xb, xa)
+        if len(big) > len(small) + 2:               # allow a little slack; exact balance isn't needed
+            rng.shuffle(big); dropped.update(t["id"] for t in big[len(small) + 2:])
     tasks = [t for t in tasks if t["id"] not in dropped]
     # token-matched decoys: unpaired clean PRs from the same repos whose ADDED lines carry the leaking tokens
     if a.decoys:
@@ -185,7 +198,8 @@ def main():
                           "head_sha": pr["sha"], "diff": d, "files": files_of(repo := WORK / "repos" / name, pr["sha"]), "split": "train",
                           "oracle": [], "probe_source": "", "gold_hunks": [], "neighborhood": neighborhood(repo, pr["sha"]),
                           "fix_sha": "", "source": "decoy", "operator": "", "uncovered": [], "covered_frac": None, **hf})
-        print(f"operator cap {a.op_cap:.2f}: dropped {len(dropped)} train op mutants; decoys added: {min(len(pool), a.decoys)} of {len(pool)} candidates")
+        print(f"decoys added: {min(len(pool), a.decoys)} of {len(pool)} candidates")
+    print(f"operator cap {a.op_cap:.2f} + direction balance: dropped {len(dropped)} train op mutants")
     rng.shuffle(tasks)
     (out / "public_tasks.jsonl").write_text("".join(json.dumps(t) + "\n" for t in tasks))
     for split in ("train", "eval"):
