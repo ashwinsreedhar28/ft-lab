@@ -289,7 +289,10 @@ def process_pr(pr: dict, cfg: dict, per_pr: int, llm: bool, timeout: int, rng: r
     rows = []
     for f in pr["code_files"][:2]:
         lines = added_lines(repo, pr["sha"], f)
-        lines = [(n, t) for n, t in lines if not SKIP_LINE.match(t)]
+        src_lines = git(repo, "show", f"{pr['sha']}:{f}").splitlines()
+        doc = docstring_lines(src_lines)
+        # same filter for operator AND LLM candidates: no docstrings, doctest prompts, or comment lines
+        lines = [(n, t) for n, t in lines if not SKIP_LINE.match(t) and n not in doc and ">>>" not in t and not t.lstrip().startswith("#")]
         if not lines:
             continue
         rel = related_tests(repo, pr["sha"], f, pr["test_files"], tuple(r.get("exclude_paths", [])))

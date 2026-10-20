@@ -110,11 +110,15 @@ def main():
         f = WORK / p
         return [json.loads(l) for l in f.read_text().splitlines() if l.strip()] if f.exists() else []
 
-    tasks, seen_clean = [], set()
+    from review.mine.mutate import docstring_lines
+    tasks, seen_clean, docs_dropped = [], set(), 0
     for m in rows("mutants.jsonl"):
         if m.get("status") != "positive" or m["repo"] not in cfg:
             continue
         repo = WORK / "repos" / m["repo"]
+        src_lines = git(repo, "show", f"{m['sha']}:{m['file']}").splitlines()
+        if m["line"] in docstring_lines(src_lines) or m["original"].lstrip().startswith("#") or ">>>" in m["original"]:
+            docs_dropped += 1; continue          # docs-only mutation: no behavior change, not a bug (label sheet, Oct 20)
         mid = f"mut__{m['repo']}__{m['sha'][:8]}__{m['line']}__{m['operator']}"
         content = git(repo, "show", f"{m['sha']}:{m['file']}").splitlines(keepends=True)
         nl = "\n" if content[m["line"] - 1].endswith("\n") else ""
@@ -199,6 +203,7 @@ def main():
                           "oracle": [], "probe_source": "", "gold_hunks": [], "neighborhood": neighborhood(repo, pr["sha"]),
                           "fix_sha": "", "source": "decoy", "operator": "", "uncovered": [], "covered_frac": None, **hf})
         print(f"decoys added: {min(len(pool), a.decoys)} of {len(pool)} candidates")
+    print(f"docstring/comment mutants dropped: {docs_dropped}")
     print(f"operator cap {a.op_cap:.2f} + direction balance: dropped {len(dropped)} train op mutants")
     rng.shuffle(tasks)
     (out / "public_tasks.jsonl").write_text("".join(json.dumps(t) + "\n" for t in tasks))
