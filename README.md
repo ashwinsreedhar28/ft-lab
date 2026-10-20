@@ -189,9 +189,30 @@ introduced token appear in bug lines equally often either way; operator AUROC 0.
 the cost of 34 train mutants. What remains is the mutated line's meaning, which a reviewer is supposed
 to notice. The post-training op-vs-llm gap is the control for anything a linear probe cannot see.
 
-**Bench v3 (Oct 20):** 240 mutants (120 op / 120 llm) from 10 repos + 2 real + their clean originals →
-**380 tasks** after balancing: eval 118 (70 bugs: 29 op, 39 llm, 2 real; 48 clean), train 262 (137
-bugs; 125 clean). Split by PR hash. Five repos carry weight (click, pydantic, more-itertools, starlette,
-fastapi).
-Human checks pending: label-noise sheet (22 items) and failure taxonomy (Sonnet's 7 approvals, both
-models' blocked cleans) in `review/analysis/`.
+**Label check (Oct 20).** A 22-item sheet of mutants reviewed by hand (would you block this line?)
+found **66 % label noise** on the first bench: docstring and comment lines mutated (`>>>` → `>=>>`),
+`__version__` strings, two equivalent mutants. The mechanical fix (never mutate docstrings, comments,
+doctest prompts, version/import/logging lines) removed **140 of 240 mutants**, and the operator
+"leak" went with them (AUROC 0.48 / 0.53 / 0.52). A second 22-item sheet on the cleaned bench,
+AI-suggested and human-confirmed (21/22 agreement, one override): **9 % noise**. One caveat on
+record: a real bisected regression was confirmed "no code changed" by the human following a wrong
+AI note; the executable oracle wins for scoring, and that case is the known failure mode of
+AI-assisted labeling.
+
+**Bench v4 (Oct 20): 189 tasks.** 100 behavioral mutants (36 op / 62 llm after direction balance)
++ 2 real + clean originals. Eval 61 (35 bugs: 13 op, 20 llm, 2 real; 26 clean), train 128.
+
+**Frozen harness on the cleaned eval (re-scored from the pub2 runs):**
+
+| model | bugs approved | auto-ship | escalate | block precision | strong probe | $/PR |
+|---|---|---|---|---|---|---|
+| Sonnet 5.5 | **1/35** (op 0/13, llm 1/20, real 0/2) | 0.46 | 0.23 | 0.91 | 0.00 | 0.030 |
+| Haiku 5.5 | 2/35 (op 1/13, llm 0/20, real 1/2) | 0.27 | 0.34 | 0.87 | 0.00 | 0.016 |
+
+The earlier "Sonnet approved 32 %" was label noise: the approved items were docstring and version
+mutants, and approving them was right. On single-line *behavioral* bugs the frontier harness blocks
+85–92 % and ships 1 in 35, which bounds the rate at roughly 3–15 % at this size. Two things did not
+change: no probe has reproduced an oracle in any run on either bench, so the blocks come from reading
+the diff, not testing it; and the own-repo `36f4e93` case (probe-licensed approval of a 447-line
+PR) stands. Single-line mutants are the easy end of the distribution; the real-PR end is where the
+gate still fails, and that is the next bench to grow.
