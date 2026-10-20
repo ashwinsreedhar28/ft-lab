@@ -1,0 +1,2417 @@
+{
+ "label": "haiku_pub2_v4b_rescored",
+ "model": "claude-haiku-5-5",
+ "condition": "loop",
+ "n": 61,
+ "provenance": {
+  "tasks_file": "review/bench/public_eval.jsonl",
+  "tasks_sha256": "a706fe89402f65bd",
+  "ft_lab_commit": "e1155ae",
+  "image_ids": {
+   "rb-mine-click": "sha256:8759833a9a0f",
+   "rb-mine-fastapi": "sha256:1d2066c12659",
+   "rb-mine-more-itertools": "sha256:af861c38f658",
+   "rb-mine-pydantic": "sha256:bf7a9d5d8774",
+   "rb-mine-starlette": "sha256:b4fa35fdbca6",
+   "rb-mine-tenacity": "sha256:617d31b287f4",
+   "rb-mine-typer": "sha256:2d13cebfb9c9"
+  }
+ },
+ "unparsable": 0,
+ "wall_s": 1926.8,
+ "api_s": 1113.3,
+ "docker_s": 121.0,
+ "no_probe_reasons": {
+  "model_decided_round0:block": 42,
+  "model_decided_round0:escalate": 39
+ },
+ "scores": {
+  "all": {
+   "n_bug": 35,
+   "n_clean": 26,
+   "bugs_approved": 2,
+   "bugs_blocked": 27,
+   "clean_blocked": 4,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.2692307692307692,
+   "escalation_rate": 0.3442622950819672,
+   "block_precision": 0.8709677419354839,
+   "localization": 0.8888888888888888,
+   "strong_localization": 0.0,
+   "usd_per_pr": 0.015573704918032786
+  },
+  "eval": {
+   "n_bug": 35,
+   "n_clean": 26,
+   "bugs_approved": 2,
+   "bugs_blocked": 27,
+   "clean_blocked": 4,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.2692307692307692,
+   "escalation_rate": 0.3442622950819672,
+   "block_precision": 0.8709677419354839,
+   "localization": 0.8888888888888888,
+   "strong_localization": 0.0,
+   "usd_per_pr": 0.015573704918032786
+  },
+  "source:llm": {
+   "n_bug": 20,
+   "n_clean": 26,
+   "bugs_approved": 0,
+   "bugs_blocked": 15,
+   "clean_blocked": 4,
+   "bugs_approved_rate_ub95": 0.13910834066826516,
+   "auto_ship_rate": 0.2692307692307692,
+   "escalation_rate": 0.43478260869565216,
+   "block_precision": 0.7894736842105263,
+   "localization": 0.9333333333333333,
+   "strong_localization": 0.0,
+   "usd_per_pr": 0.015568673913043478
+  },
+  "source:op": {
+   "n_bug": 13,
+   "n_clean": 26,
+   "bugs_approved": 1,
+   "bugs_blocked": 11,
+   "clean_blocked": 4,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.2692307692307692,
+   "escalation_rate": 0.41025641025641024,
+   "block_precision": 0.7333333333333333,
+   "localization": 0.9090909090909091,
+   "strong_localization": 0.0,
+   "usd_per_pr": 0.016094102564102562
+  },
+  "source:real": {
+   "n_bug": 2,
+   "n_clean": 26,
+   "bugs_approved": 1,
+   "bugs_blocked": 1,
+   "clean_blocked": 4,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.2692307692307692,
+   "escalation_rate": 0.5357142857142857,
+   "block_precision": 0.2,
+   "localization": 0.0,
+   "strong_localization": 0.0,
+   "usd_per_pr": 0.019408392857142857
+  }
+ },
+ "reviews": [
+  {
+   "task_id": "mut__more-itertools__1b7f033d__5337__llm",
+   "decision": "block",
+   "usd": 0.029375,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "Creating concurrent_tee from a partially consumed tee child either drops or duplicates items, or exhaustion/return-count behaves incorrectly, so the probe fails if the link-chain sharing is wrong.",
+     "source": "import more_itertools as mi\n\n\ndef test_tee_from_partially_consumed_tee():\n    a, b = mi.concurrent_tee(iter(range(5)), n=1)\n    assert next(a) == 0\n    x, y = mi.concurrent_tee(a, n=1)\n    assert list(x) == [1, 2, 3, 4]\n    assert list(y) == [1, 2, 3, 4]\n    assert list(b) == [0, 1, 2, 3, 4]\n    assert list(a) == [1, 2, 3, 4]\n\n\ndef test_exhaustion_is_stable_and_n_counts():\n    t = mi.concurrent_tee(iter([1, 2]), n=3)\n    assert len(t) == 4\n    for it in t:\n        assert list(it) == [1, 2]\n        assert list(it) == []\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: pyproject.toml\ncollected 2 items\n\ntests/test_probe_review.py ..                                            [100%]\n\n============================== 2 passed in 0.02s ===============================\nEXIT=0\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 21.2,
+   "docker_s": 2.2,
+   "no_probe_reason": null,
+   "comments": [
+    {
+     "file": "more_itertools/more.py",
+     "line_start": 5335,
+     "line_end": 5336,
+     "body": "concurrent_tee returns n+1 iterators, not n. `iterator` is placed in `result` as the first element, then the loop `for _ in range(n)` appends n more, so `concurrent_tee(it, n=3)` yields a 4-tuple. The probe confirmed this: `len(mi.concurrent_tee(iter([1, 2]), n=3)) == 4` passed. This contradicts the function's contract as a variant of itertools.tee(), which returns exactly n iterators, and the docs/stub describe n as the number of tees. The loop should be `range(n - 1)`. The new test only checks `len(tees)` against itself rather than against n, so it does not catch this. A test to add: `assert len(mi.concurrent_tee(iter(range(3)), n=3)) == 3`.",
+     "proposed_test": "import more_itertools as mi\n\n\ndef test_concurrent_tee_returns_n_iterators():\n    assert len(mi.concurrent_tee(iter(range(3)), n=3)) == 3\n    assert len(mi.concurrent_tee(iter(range(3)), n=1)) == 1\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"more_itertools/more.py\", \"line_start\": 5335, \"line_end\": 5336, \"body\": \"concurrent_tee returns n+1 iterators, not n. `iterator` is placed in `result` as the first element, then the loop `for _ in range(n)` appends n more, so `concurrent_tee(it, n=3)` yields a 4-tuple. The probe confirmed this: `len(mi.concurrent_tee(iter([1, 2]), n=3)) == 4` passed. This contradicts the function's contract as a variant of itertools.tee(), which returns exactly n iterators, and the docs/stub describe n as the number of tees. The loop should be `range(n - 1)`. The new test only checks `len(tees)` against itself rather than against n, so it does not catch this. A test to add: `assert len(mi.concurrent_tee(iter(range(3)), n=3)) == 3`.\", \"proposed_test\": \"import more_itertools as mi\\n\\n\\ndef test_concurrent_tee_returns_n_iterators():\\n    assert len(mi.concurrent_tee(iter(range(3)), n=3)) == 3\\n    assert len(mi.concurrent_tee(iter(range(3)), n=1)) == 1\\n\"}]}"
+  },
+  {
+   "task_id": "mut__click__c69643b6__508__false_true",
+   "decision": "block",
+   "usd": 0.0247,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 15.0,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "src/click/_termui_impl.py",
+     "line_start": 419,
+     "line_end": 435,
+     "body": "`get_pager_file` wraps `stream.buffer` in a new `MaybeStripAnsi` (a `TextIOWrapper`) whenever the yielded stream has a `buffer`. This is the fallback path for `_nullpager` and the no-command branches, where the stream is the real `sys.stdout`. When that new wrapper is garbage-collected, `IOBase` finalization calls `close()` on the shared underlying buffer, which closes the process's real stdout buffer. Any later output then fails with `ValueError: I/O operation on closed file`. The existing suite shows the same symptom: 189 errors in tests/test_utils.py with `ValueError: I/O operation on closed file`. The fix is to avoid re-wrapping a buffer that another object still owns, for example by writing through the original stream and stripping ANSI in the write path without creating a second owner.",
+     "proposed_test": "import gc\nimport io\nfrom click import _termui_impl\nfrom click import termui\n\ndef test_pager_does_not_close_stdout_buffer(monkeypatch):\n    raw = io.BytesIO()\n    fake = io.TextIOWrapper(raw, encoding='utf-8')\n    monkeypatch.setattr(_termui_impl, '_default_text_stdout', lambda: fake)\n    monkeypatch.setattr(_termui_impl, 'isatty', lambda s: False)\n    with termui.get_pager_file(color=True) as f:\n        f.write('hi')\n    gc.collect()\n    assert not raw.closed\n"
+    },
+    {
+     "file": "src/click/_termui_impl.py",
+     "line_start": 398,
+     "line_end": 411,
+     "body": "Fallback behavior regressed. The old `pager()` tried `less`/`more`/nullpager in sequence and moved on when a command was not found. Now `_pager_contextmanager` returns the result of `_pipepager`/`_tempfilepager` directly. If `PAGER` names a missing command, or `less` is absent, `_pipepager` yields plain stdout and no pager is used at all. The `more` fallback is also gone on non-Windows systems. Paging silently stops working on systems that previously paged.",
+     "proposed_test": null
+    },
+    {
+     "file": "src/click/_compat.py",
+     "line_start": 502,
+     "line_end": 510,
+     "body": "`should_strip_ansi` now returns `True` for any stream with a `color` attribute when `color is None`, regardless of whether it is a TTY. A stream carrying `color=True` (color support enabled) is therefore treated as needing ANSI stripping, which inverts the intent for colored output. The early return also skips the `isatty` and jupyter checks entirely for such streams, so the decision no longer depends on the stream's actual capabilities.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"src/click/_termui_impl.py\", \"line_start\": 419, \"line_end\": 435, \"body\": \"`get_pager_file` wraps `stream.buffer` in a new `MaybeStripAnsi` (a `TextIOWrapper`) whenever the yielded stream has a `buffer`. This is the fallback path for `_nullpager` and the no-command branches, where the stream is the real `sys.stdout`. When that new wrapper is garbage-collected, `IOBase` finalization calls `close()` on the shared underlying buffer, which closes the process's real stdout buffer. Any later output then fails with `ValueError: I/O operation on closed file`. The existing suite shows the same symptom: 189 errors in tests/test_utils.py with `ValueError: I/O operation on closed file`. The fix is to avoid re-wrapping a buffer that another object still owns, for example by writing through the original stream and stripping ANSI in the write path without creating a second owner.\", \"proposed_test\": \"import gc\\nimport io\\nfrom click import _termui_impl\\nfrom click import termui\\n\\ndef test_pager_does_not_close_stdout_buffer(monkeypatch):\\n    raw = io.BytesIO()\\n    fake = io.TextIOWrapper(raw, encoding='utf-8')\\n    monkeypatch.setattr(_termui_impl, '_default_text_stdout', lambda: fake)\\n    monkeypatch.setattr(_termui_impl, 'isatty', lambda s: False)\\n    with termui.get_pager_file(color=True) as f:\\n        f.write('hi')\\n    gc.collect()\\n    assert not raw.closed\\n\"}, {\"file\": \"src/click/_termui_impl.py\", \"line_start\": 398, \"line_end\": 411, \"body\": \"Fallback behavior regressed. The old `pager()` tried `less`/`more`/nullpager in sequence and moved on when a command was not found. Now `_pager_contextmanager` returns the result of `_pipepager`/`_tempfilepager` directly. If `PAGER` names a missing command, or `less` is absent, `_pipepager` yields plain stdout and no pager is used at all. The `more` fallback is also gone on non-Windows systems. Paging silently stops working on systems that previously paged.\"}, {\"file\": \"src/click/_compat.py\", \"line_start\": 502, \"line_end\": 510, \"body\": \"`should_strip_ansi` now returns `True` for any stream with a `color` attribute when `color is None`, regardless of whether it is a TTY. A stream carrying `color=True` (color support enabled) is therefore treated as needing ANSI stripping, which inverts the intent for colored output. The early return also skips the `isatty` and jupyter checks entirely for such streams, so the decision no longer depends on the stream's actual capabilities.\"}]}"
+  },
+  {
+   "task_id": "clean__tenacity__44eaefbb",
+   "decision": "block",
+   "usd": 0.038321,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "failed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "Flattening via isinstance(other, retry_any) in retry_base.__ror__ drops a retry_any subclass's custom __call__, so (subclass | base) returns False instead of True.",
+     "source": "from tenacity.retry import retry_base, retry_any\n\nclass _F(retry_base):\n    def __call__(self, retry_state):\n        return False\n\nclass _T(retry_any):\n    def __call__(self, retry_state):\n        return True\n\ndef test_probe_subclass_or_preserved():\n    t = _T(_F())\n    combined = t | _F()\n    assert combined(None) is True\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: pyproject.toml\nplugins: asyncio-1.4.0, typeguard-4.6.0\nasyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 1 item\n\ntests/test_probe_review.py F                                             [100%]\n\n=================================== FAILURES ===================================\n_______________________ test_probe_subclass_or_preserved _______________________\n\n    def test_probe_subclass_or_preserved():\n        t = _T(_F())\n        combined = t | _F()\n>       assert combined(None) is True\nE       assert False is True\nE        +  where False = <tenacity.retry.retry_any object at 0xffff8914fe30>(None)\n\ntests/test_probe_review.py:14: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_probe_review.py::test_probe_subclass_or_preserved - assert ...\n============================== 1 failed in 0.02s ===============================\nEXIT=1\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 25.4,
+   "docker_s": 2.0,
+   "no_probe_reason": null,
+   "comments": [
+    {
+     "file": "tenacity/retry.py",
+     "line_start": 32,
+     "line_end": 52,
+     "body": "Regression: the new flattening in retry_base.__or__/__ror__ and __and__/__rand__ uses isinstance(other, retry_any) / isinstance(self, retry_any). That matches subclasses too, so a user subclass of retry_any or retry_all with its own __call__ is silently replaced by a plain retry_any/retry_all built from its children. The probe confirmed it: _T(_F()) | _F() returned False where the subclass's __call__ should return True. Before this PR, the same expression returned retry_any(t, _F()) and kept the subclass behavior. Flattening should be restricted to exact type checks (type(x) is retry_any), or the subclass should be wrapped rather than unpacked.",
+     "proposed_test": "from tenacity.retry import retry_base, retry_any\n\nclass _F(retry_base):\n    def __call__(self, retry_state):\n        return False\n\nclass _T(retry_any):\n    def __call__(self, retry_state):\n        return True\n\ndef test_probe_subclass_or_preserved():\n    t = _T(_F())\n    combined = t | _F()\n    assert combined(None) is True\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"tenacity/retry.py\", \"line_start\": 32, \"line_end\": 52, \"body\": \"Regression: the new flattening in retry_base.__or__/__ror__ and __and__/__rand__ uses isinstance(other, retry_any) / isinstance(self, retry_any). That matches subclasses too, so a user subclass of retry_any or retry_all with its own __call__ is silently replaced by a plain retry_any/retry_all built from its children. The probe confirmed it: _T(_F()) | _F() returned False where the subclass's __call__ should return True. Before this PR, the same expression returned retry_any(t, _F()) and kept the subclass behavior. Flattening should be restricted to exact type checks (type(x) is retry_any), or the subclass should be wrapped rather than unpacked.\", \"proposed_test\": \"from tenacity.retry import retry_base, retry_any\\n\\nclass _F(retry_base):\\n    def __call__(self, retry_state):\\n        return False\\n\\nclass _T(retry_any):\\n    def __call__(self, retry_state):\\n        return True\\n\\ndef test_probe_subclass_or_preserved():\\n    t = _T(_F())\\n    combined = t | _F()\\n    assert combined(None) is True\\n\"}]}"
+  },
+  {
+   "task_id": "clean__click__bc32a92c",
+   "decision": "block",
+   "usd": 0.01528,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 6.4,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "tests/test_utils/test_echo_via_pager.py",
+     "line_start": 182,
+     "line_end": 182,
+     "body": "At the PR head, 24 `test_echo_via_pager[*-less]` cases fail with an empty pager output (`assert '' == 'testtest\\n'`, case 'Writing to stderr during generator execution'). These tests exercise the rewritten pager path (`get_pager_file` -> `_PagerWriter` -> `_pipepager`/`_tempfilepager`), so the failures are evidence that the change drops pager output. The suite is green only for the non-`less` cases, which does not clear this. Likely suspects: `_pipepager` now yields `c.stdin` as a text stream, so output may not reach the pager process before it is read, or the stream is no longer flushed or closed at the right point. The change should not merge until these tests pass, and the cause should be explained.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"tests/test_utils/test_echo_via_pager.py\", \"line_start\": 182, \"line_end\": 182, \"body\": \"At the PR head, 24 `test_echo_via_pager[*-less]` cases fail with an empty pager output (`assert '' == 'testtest\\\\n'`, case 'Writing to stderr during generator execution'). These tests exercise the rewritten pager path (`get_pager_file` -> `_PagerWriter` -> `_pipepager`/`_tempfilepager`), so the failures are evidence that the change drops pager output. The suite is green only for the non-`less` cases, which does not clear this. Likely suspects: `_pipepager` now yields `c.stdin` as a text stream, so output may not reach the pager process before it is read, or the stream is no longer flushed or closed at the right point. The change should not merge until these tests pass, and the cause should be explained.\"}]}"
+  },
+  {
+   "task_id": "mut__pydantic__ea8cfc5e__2083__llm",
+   "decision": "block",
+   "usd": 0.013125,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 9.0,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "pydantic/_internal/_generate_schema.py",
+     "line_start": 2083,
+     "line_end": 2083,
+     "body": "In `_arguments_schema`, the `validate_by_name` argument of `core_schema.arguments_schema` is now fed from `core_config.get('validate_by_alias')`. This swaps the two flags. The original code passed the `validate_by_name` setting, and the new code passes the `validate_by_alias` setting into the `validate_by_name` parameter. With default config (`validate_by_alias=True`, `validate_by_name=False`), this now enables name-based validation for the v1 arguments schema, which is a silent behaviour change. The `.get()` call can also return None when the key is unset, which the original did not allow. The intended fix is to pass the by-name value through to `validate_by_name` and, if the v1 schema accepts `validate_by_alias`, pass the alias value there. Also, the test suite fails at import (pydantic-core 2.50.0 vs required 2.48.0), so none of the changed code was exercised. The change cannot be shown safe from this evidence.",
+     "proposed_test": null
+    },
+    {
+     "file": "pydantic/_internal/_generate_schema.py",
+     "line_start": 2152,
+     "line_end": 2152,
+     "body": "In `_arguments_v3_schema`, `validate_by_name=core_config.get('validate_by_name')` reads a key from the core config dict that may be absent when the user sets the deprecated `populate_by_name`. The result can then be None, not the resolved boolean that `self._config_wrapper.validate_by_name` gave. Please confirm that `core_config()` always materialises `validate_by_name`, or go back to reading the resolved property.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"pydantic/_internal/_generate_schema.py\", \"line_start\": 2083, \"line_end\": 2083, \"body\": \"In `_arguments_schema`, the `validate_by_name` argument of `core_schema.arguments_schema` is now fed from `core_config.get('validate_by_alias')`. This swaps the two flags. The original code passed the `validate_by_name` setting, and the new code passes the `validate_by_alias` setting into the `validate_by_name` parameter. With default config (`validate_by_alias=True`, `validate_by_name=False`), this now enables name-based validation for the v1 arguments schema, which is a silent behaviour change. The `.get()` call can also return None when the key is unset, which the original did not allow. The intended fix is to pass the by-name value through to `validate_by_name` and, if the v1 schema accepts `validate_by_alias`, pass the alias value there. Also, the test suite fails at import (pydantic-core 2.50.0 vs required 2.48.0), so none of the changed code was exercised. The change cannot be shown safe from this evidence.\"}, {\"file\": \"pydantic/_internal/_generate_schema.py\", \"line_start\": 2152, \"line_end\": 2152, \"body\": \"In `_arguments_v3_schema`, `validate_by_name=core_config.get('validate_by_name')` reads a key from the core config dict that may be absent when the user sets the deprecated `populate_by_name`. The result can then be None, not the resolved boolean that `self._config_wrapper.validate_by_name` gave. Please confirm that `core_config()` always materialises `validate_by_name`, or go back to reading the resolved property.\"}]}"
+  },
+  {
+   "task_id": "clean__click__c69643b6",
+   "decision": "block",
+   "usd": 0.023195,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 13.5,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "src/click/_termui_impl.py",
+     "line_start": 438,
+     "line_end": 446,
+     "body": "`get_pager_file` wraps `stream.buffer` in a new `MaybeStripAnsi` while the original `TextIOWrapper` still owns that buffer. When the original wrapper is closed or garbage-collected (for example `stdin.close()` in `_pipepager`'s finally block, or the fallback StringIO/stdout path), the shared buffer is closed underneath the new wrapper. The PR head test run reports `ValueError: I/O operation on closed file` across 189 errors in tests/test_utils.py, which points to this ownership problem. Wrap the stream without taking ownership of the buffer (e.g. detach it first, or make the wrapper non-closing), and confirm the test_utils errors are gone before merging.",
+     "proposed_test": null
+    },
+    {
+     "file": "src/click/_compat.py",
+     "line_start": 505,
+     "line_end": 508,
+     "body": "`hasattr(stream, \"color\")` is a duck-typed check on an arbitrary attribute name. Any stream object that happens to define a `color` attribute will silently skip ANSI stripping in `should_strip_ansi`, which changes behavior for `echo` and other callers outside the pager. The check should test for the specific pager wrapper type (`MaybeStripAnsi`) or pass the decision explicitly instead.",
+     "proposed_test": null
+    },
+    {
+     "file": "src/click/_termui_impl.py",
+     "line_start": 401,
+     "line_end": 418,
+     "body": "The pager fallback chain was rewritten. Previously, if `PAGER` or `less` was missing, the code fell through to `more` and then `_nullpager`. Now a missing command yields `_default_text_stdout()` with no paging and no fallback. Confirm this is intended, since it changes behavior for users whose `less` is absent.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"src/click/_termui_impl.py\", \"line_start\": 438, \"line_end\": 446, \"body\": \"`get_pager_file` wraps `stream.buffer` in a new `MaybeStripAnsi` while the original `TextIOWrapper` still owns that buffer. When the original wrapper is closed or garbage-collected (for example `stdin.close()` in `_pipepager`'s finally block, or the fallback StringIO/stdout path), the shared buffer is closed underneath the new wrapper. The PR head test run reports `ValueError: I/O operation on closed file` across 189 errors in tests/test_utils.py, which points to this ownership problem. Wrap the stream without taking ownership of the buffer (e.g. detach it first, or make the wrapper non-closing), and confirm the test_utils errors are gone before merging.\"}, {\"file\": \"src/click/_compat.py\", \"line_start\": 505, \"line_end\": 508, \"body\": \"`hasattr(stream, \\\"color\\\")` is a duck-typed check on an arbitrary attribute name. Any stream object that happens to define a `color` attribute will silently skip ANSI stripping in `should_strip_ansi`, which changes behavior for `echo` and other callers outside the pager. The check should test for the specific pager wrapper type (`MaybeStripAnsi`) or pass the decision explicitly instead.\"}, {\"file\": \"src/click/_termui_impl.py\", \"line_start\": 401, \"line_end\": 418, \"body\": \"The pager fallback chain was rewritten. Previously, if `PAGER` or `less` was missing, the code fell through to `more` and then `_nullpager`. Now a missing command yields `_default_text_stdout()` with no paging and no fallback. Confirm this is intended, since it changes behavior for users whose `less` is absent.\"}]}"
+  },
+  {
+   "task_id": "mut__click__61bdc2ae__71__llm",
+   "decision": "block",
+   "usd": 0.02282,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 16.5,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "src/click/termui.py",
+     "line_start": 61,
+     "line_end": 76,
+     "body": "Regression in masking coverage. The old code fell back to a generic message whenever the raw value appeared anywhere in the error (plain substring match). `_mask_hidden_input` only masks the raw value when it is delimited by non-word characters, so a secret that appears as a prefix or substring of a longer word is shown verbatim. Example: with hide_input=True and a custom type that fails with f\"invalid input {value}s\", entering \"secret\" yields \"invalid input secrets\", which exposes the full secret. The same applies to any value embedded in a longer token (e.g. \"hunter2abc\"). For a password-masking feature this is a leak that the previous code did not have. The PR's own test comment says the word-boundary rule is meant to avoid false positives, but for hidden input the safe default is to over-mask, not under-mask.",
+     "proposed_test": "import click\nfrom click.testing import CliRunner\n\nclass _SuffixType(click.ParamType):\n    name = 'suffix'\n    def convert(self, value, param, ctx):\n        self.fail(f'invalid input {value}s', param, ctx)\n\ndef test_hidden_value_not_leaked_as_substring():\n    @click.command()\n    def cli():\n        click.prompt('Password', hide_input=True, type=_SuffixType())\n    result = CliRunner().invoke(cli, input='secret\\n')\n    assert 'secret' not in result.output\n"
+    },
+    {
+     "file": "src/click/termui.py",
+     "line_start": 66,
+     "line_end": 74,
+     "body": "The docstring says the empty string is skipped, but the code does not skip it. With value == \"\", the pattern `(?<!\\w)(?!\\w)` matches at every position between non-word characters, so `'***'` is inserted into unrelated text such as ': ' boundaries and string ends. Either add an explicit `if value:` guard, which also fixes the docstring contract, or correct the docstring. The `if value is not None` check is also dead code because `value` is typed as `str`.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"src/click/termui.py\", \"line_start\": 61, \"line_end\": 76, \"body\": \"Regression in masking coverage. The old code fell back to a generic message whenever the raw value appeared anywhere in the error (plain substring match). `_mask_hidden_input` only masks the raw value when it is delimited by non-word characters, so a secret that appears as a prefix or substring of a longer word is shown verbatim. Example: with hide_input=True and a custom type that fails with f\\\"invalid input {value}s\\\", entering \\\"secret\\\" yields \\\"invalid input secrets\\\", which exposes the full secret. The same applies to any value embedded in a longer token (e.g. \\\"hunter2abc\\\"). For a password-masking feature this is a leak that the previous code did not have. The PR's own test comment says the word-boundary rule is meant to avoid false positives, but for hidden input the safe default is to over-mask, not under-mask.\", \"proposed_test\": \"import click\\nfrom click.testing import CliRunner\\n\\nclass _SuffixType(click.ParamType):\\n    name = 'suffix'\\n    def convert(self, value, param, ctx):\\n        self.fail(f'invalid input {value}s', param, ctx)\\n\\ndef test_hidden_value_not_leaked_as_substring():\\n    @click.command()\\n    def cli():\\n        click.prompt('Password', hide_input=True, type=_SuffixType())\\n    result = CliRunner().invoke(cli, input='secret\\\\n')\\n    assert 'secret' not in result.output\\n\"}, {\"file\": \"src/click/termui.py\", \"line_start\": 66, \"line_end\": 74, \"body\": \"The docstring says the empty string is skipped, but the code does not skip it. With value == \\\"\\\", the pattern `(?<!\\\\w)(?!\\\\w)` matches at every position between non-word characters, so `'***'` is inserted into unrelated text such as ': ' boundaries and string ends. Either add an explicit `if value:` guard, which also fixes the docstring contract, or correct the docstring. The `if value is not None` check is also dead code because `value` is typed as `str`.\"}]}"
+  },
+  {
+   "task_id": "mut__starlette__fd662b17__143__llm",
+   "decision": "escalate",
+   "usd": 0.00856,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 6.3,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "starlette/authentication.py",
+     "line_start": 141,
+     "line_end": 143,
+     "body": "`SimpleUser.identity` returns `self.username.lower()`. Lowercasing is a semantic choice the diff does not justify. If `identity` is used as a stable key for lookups or authorization, `Alice` and `alice` would collapse to one identity, and existing identities would change for any mixed-case username. Confirm the intended contract for `identity` (case-preserving vs. normalized) before merging.",
+     "proposed_test": null
+    },
+    {
+     "file": "tests/test_authentication.py",
+     "line_start": 217,
+     "line_end": 223,
+     "body": "The new assertions are on lines longer than the 88-character limit used by this repo's formatter/linter, so the lint step will likely fail. The test that does exist only uses the already-lowercase username `tomchristie`, so it cannot distinguish a case-preserving implementation from the lowercasing one. There is no test covering mixed-case usernames or the new `identity` behavior on `SimpleUser` and `UnauthenticatedUser` directly.",
+     "proposed_test": null
+    },
+    {
+     "file": "tests/test_staticfiles.py",
+     "line_start": 449,
+     "line_end": 449,
+     "body": "The suite is red at the PR head: `test_staticfiles_with_invalid_dir_permissions_returns_401` and the related static files test return 200 instead of 401. These appear unrelated to the diff (likely a root/permissions environment issue), but a red suite should be explained or fixed before an automated merge.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"starlette/authentication.py\", \"line_start\": 141, \"line_end\": 143, \"body\": \"`SimpleUser.identity` returns `self.username.lower()`. Lowercasing is a semantic choice the diff does not justify. If `identity` is used as a stable key for lookups or authorization, `Alice` and `alice` would collapse to one identity, and existing identities would change for any mixed-case username. Confirm the intended contract for `identity` (case-preserving vs. normalized) before merging.\"}, {\"file\": \"tests/test_authentication.py\", \"line_start\": 217, \"line_end\": 223, \"body\": \"The new assertions are on lines longer than the 88-character limit used by this repo's formatter/linter, so the lint step will likely fail. The test that does exist only uses the already-lowercase username `tomchristie`, so it cannot distinguish a case-preserving implementation from the lowercasing one. There is no test covering mixed-case usernames or the new `identity` behavior on `SimpleUser` and `UnauthenticatedUser` directly.\"}, {\"file\": \"tests/test_staticfiles.py\", \"line_start\": 449, \"line_end\": 449, \"body\": \"The suite is red at the PR head: `test_staticfiles_with_invalid_dir_permissions_returns_401` and the related static files test return 200 instead of 401. These appear unrelated to the diff (likely a root/permissions environment issue), but a red suite should be explained or fixed before an automated merge.\"}]}"
+  },
+  {
+   "task_id": "clean__click__8762c775",
+   "decision": "escalate",
+   "usd": 0.025898,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "fileno() raises io.UnsupportedOperation when no original_fd is given, and returns the provided original_fd otherwise.",
+     "source": "import io\nimport pytest\nfrom click.testing import _NamedTextIOWrapper\n\ndef test_fileno_fallback_raises():\n    w = _NamedTextIOWrapper(io.BytesIO(), encoding='utf-8', name='<x>', mode='w')\n    with pytest.raises(io.UnsupportedOperation):\n        w.fileno()\n\ndef test_fileno_returns_original():\n    w = _NamedTextIOWrapper(io.BytesIO(), encoding='utf-8', name='<x>', mode='w', original_fd=7)\n    assert w.fileno() == 7\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: pyproject.toml\ncollected 2 items\n\ntests/test_probe_review.py ..                                            [100%]\n\n============================== 2 passed in 0.01s ===============================\nEXIT=0\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 17.5,
+   "docker_s": 2.3,
+   "no_probe_reason": null,
+   "comments": [
+    {
+     "file": "src/click/testing.py",
+     "line_start": 128,
+     "line_end": 141,
+     "body": "The probe passed, so the fallback to `super().fileno()` and the `original_fd` return path behave as the PR intends. Two concerns remain that a human should judge. First, `fileno()` now returns the real process fd for `sys.stdout`/`sys.stderr` inside `CliRunner.invoke`. Code that writes to that fd directly (`os.write`, `subprocess` with `stdout=sys.stdout`, C extensions) bypasses the in-memory capture and reaches the real terminal, not `result.output`. Previously it raised. Second, `test_faulthandler_enable` calls `faulthandler.enable()` globally and never calls `faulthandler.disable()`, so the registered handler persists into later tests and can leak state across the suite. The `original_fd` fallback is also a no-op under pytest `capsys`, where the original streams have no fd, so the crash the PR targets is not fixed in that environment.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"src/click/testing.py\", \"line_start\": 128, \"line_end\": 141, \"body\": \"The probe passed, so the fallback to `super().fileno()` and the `original_fd` return path behave as the PR intends. Two concerns remain that a human should judge. First, `fileno()` now returns the real process fd for `sys.stdout`/`sys.stderr` inside `CliRunner.invoke`. Code that writes to that fd directly (`os.write`, `subprocess` with `stdout=sys.stdout`, C extensions) bypasses the in-memory capture and reaches the real terminal, not `result.output`. Previously it raised. Second, `test_faulthandler_enable` calls `faulthandler.enable()` globally and never calls `faulthandler.disable()`, so the registered handler persists into later tests and can leak state across the suite. The `original_fd` fallback is also a no-op under pytest `capsys`, where the original streams have no fd, so the crash the PR targets is not fixed in that environment.\"}]}"
+  },
+  {
+   "task_id": "clean__pydantic__d286c73d",
+   "decision": "escalate",
+   "usd": 0.009742,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 4.8,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "tests/conftest.py",
+     "line_start": 21,
+     "line_end": 21,
+     "body": "The test suite does not load at the PR head: importing pydantic raises SystemError because the installed pydantic-core is 2.50.0 and this pydantic requires 2.42.0. No test, including any probe, can run against the changed code in this environment, so there is no evidence the change is correct. A human should fix the environment and rerun the suite and a targeted probe.",
+     "proposed_test": null
+    },
+    {
+     "file": "pydantic/types.py",
+     "line_start": 3058,
+     "line_end": 3061,
+     "body": "The `is_union_origin` check was removed from `Discriminator.__get_pydantic_core_schema__`, so a non-union source type is no longer rejected with a TypeError. This is a user-visible behavior change that the PR description does not clearly justify. The import removal also needs checking against any other use of `is_union_origin` in types.py.",
+     "proposed_test": null
+    },
+    {
+     "file": "pydantic/_internal/_discriminated_union.py",
+     "line_start": 188,
+     "line_end": 197,
+     "body": "The new `definition-ref` branch copies a resolved union schema and pops `ref`. It also changes the flow for every definition-ref reaching this function, and the `# pragma: no cover` on the missing-definition raise suggests it is not exercised. The same resolution logic is duplicated in `types.py:_convert_schema`. Both need review against recursive and deferred references, which the test suite cannot exercise right now.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"tests/conftest.py\", \"line_start\": 21, \"line_end\": 21, \"body\": \"The test suite does not load at the PR head: importing pydantic raises SystemError because the installed pydantic-core is 2.50.0 and this pydantic requires 2.42.0. No test, including any probe, can run against the changed code in this environment, so there is no evidence the change is correct. A human should fix the environment and rerun the suite and a targeted probe.\"}, {\"file\": \"pydantic/types.py\", \"line_start\": 3058, \"line_end\": 3061, \"body\": \"The `is_union_origin` check was removed from `Discriminator.__get_pydantic_core_schema__`, so a non-union source type is no longer rejected with a TypeError. This is a user-visible behavior change that the PR description does not clearly justify. The import removal also needs checking against any other use of `is_union_origin` in types.py.\"}, {\"file\": \"pydantic/_internal/_discriminated_union.py\", \"line_start\": 188, \"line_end\": 197, \"body\": \"The new `definition-ref` branch copies a resolved union schema and pops `ref`. It also changes the flow for every definition-ref reaching this function, and the `# pragma: no cover` on the missing-definition raise suggests it is not exercised. The same resolution logic is duplicated in `types.py:_convert_schema`. Both need review against recursive and deferred references, which the test suite cannot exercise right now.\"}]}"
+  },
+  {
+   "task_id": "mut__typer__6c289624__57__true_false",
+   "decision": "block",
+   "usd": 0.007047,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 3.4,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "typer/_typing.py",
+     "line_start": 54,
+     "line_end": 58,
+     "body": "`is_none_type` is broken. When `type_` matches an entry in `NONE_TYPES`, the loop returns `False` (line 57) instead of `True`. The trailing `return False` (line 58) is therefore the only reachable result, so the function always returns `False`. Every caller that relies on it to detect `None`, `NoneType`, or `Literal[None]` will misclassify those types. The intended body is `return True` inside the loop. Separately, the PR-head test run reports 225 collection errors and exits with code 2, so the suite does not exercise this change at all.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"typer/_typing.py\", \"line_start\": 54, \"line_end\": 58, \"body\": \"`is_none_type` is broken. When `type_` matches an entry in `NONE_TYPES`, the loop returns `False` (line 57) instead of `True`. The trailing `return False` (line 58) is therefore the only reachable result, so the function always returns `False`. Every caller that relies on it to detect `None`, `NoneType`, or `Literal[None]` will misclassify those types. The intended body is `return True` inside the loop. Separately, the PR-head test run reports 225 collection errors and exits with code 2, so the suite does not exercise this change at all.\"}]}"
+  },
+  {
+   "task_id": "mut__typer__6c289624__56__llm",
+   "decision": "block",
+   "usd": 0.006885,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 3.2,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "typer/_typing.py",
+     "line_start": 54,
+     "line_end": 58,
+     "body": "Inverted comparison in `is_none_type`: the loop now uses `if type_ is not none_type: return True`. Any type that is not a None form (for example `int`) returns True, and the function returns False only when the input matches every entry in NONE_TYPES, which is never the case. The original logic was `is`, not `is not`. This breaks every caller that relies on `is_none_type` to detect `Optional`/`None` annotations, and it is the likely cause of the 225 collection errors in the test run. Restore `if type_ is none_type:`.",
+     "proposed_test": "from typer._typing import is_none_type\n\ndef test_is_none_type_rejects_int():\n    assert is_none_type(int) is False\n\ndef test_is_none_type_accepts_none():\n    assert is_none_type(None) is True\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"typer/_typing.py\", \"line_start\": 54, \"line_end\": 58, \"body\": \"Inverted comparison in `is_none_type`: the loop now uses `if type_ is not none_type: return True`. Any type that is not a None form (for example `int`) returns True, and the function returns False only when the input matches every entry in NONE_TYPES, which is never the case. The original logic was `is`, not `is not`. This breaks every caller that relies on `is_none_type` to detect `Optional`/`None` annotations, and it is the likely cause of the 225 collection errors in the test run. Restore `if type_ is none_type:`.\", \"proposed_test\": \"from typer._typing import is_none_type\\n\\ndef test_is_none_type_rejects_int():\\n    assert is_none_type(int) is False\\n\\ndef test_is_none_type_accepts_none():\\n    assert is_none_type(None) is True\\n\"}]}"
+  },
+  {
+   "task_id": "clean__pydantic__ea8cfc5e",
+   "decision": "escalate",
+   "usd": 0.009001,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 5.8,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "pydantic/_internal/_generate_schema.py",
+     "line_start": 2028,
+     "line_end": 2028,
+     "body": "Escalating because I cannot establish that this change is safe from the evidence available. (1) The test suite does not load at the PR head (pydantic-core 2.50.0 installed vs. required 2.48.0), so no existing test exercised this code. (2) The change replaces `self._config_wrapper.validate_by_name` with `core_config.get('validate_by_name')` in both `_arguments_schema` and `_arguments_v3_schema`. I cannot confirm from the diff that `core_config(title=None)` always carries a `validate_by_name` key, or that its value matches the wrapper property. If the key is absent, `None` is passed where a bool was passed before, which could silently change alias handling for callers that set only `populate_by_name`. The new tests in `test_experimental_arguments_schema.py` and `test_validate_call.py` (`test_populate_by_name`) are the right kind of coverage, but I have not seen them pass. A human should confirm the `core_config` key contents and run the suite in a working environment.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"pydantic/_internal/_generate_schema.py\", \"line_start\": 2028, \"line_end\": 2028, \"body\": \"Escalating because I cannot establish that this change is safe from the evidence available. (1) The test suite does not load at the PR head (pydantic-core 2.50.0 installed vs. required 2.48.0), so no existing test exercised this code. (2) The change replaces `self._config_wrapper.validate_by_name` with `core_config.get('validate_by_name')` in both `_arguments_schema` and `_arguments_v3_schema`. I cannot confirm from the diff that `core_config(title=None)` always carries a `validate_by_name` key, or that its value matches the wrapper property. If the key is absent, `None` is passed where a bool was passed before, which could silently change alias handling for callers that set only `populate_by_name`. The new tests in `test_experimental_arguments_schema.py` and `test_validate_call.py` (`test_populate_by_name`) are the right kind of coverage, but I have not seen them pass. A human should confirm the `core_config` key contents and run the suite in a working environment.\"}]}"
+  },
+  {
+   "task_id": "clean__more-itertools__d49571b4",
+   "decision": "escalate",
+   "usd": 0.01575,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 13.8,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "more_itertools/more.py",
+     "line_start": 5094,
+     "line_end": 5103,
+     "body": "The non-approximate path is equivalent: `ceil(ub)` equals the old `math.ceil(...)`, and `ceil` is imported from `math`. The approximate path is not a pure refactor. The old code computed `floor(ceil(raw_ub))`, and the new code computes `floor(raw_ub)`. These differ by 1 whenever `raw_ub` is non-integer, so for n > 1_000_000 the returned prime can change. The new result should still be a prime that is at least the true nth prime, since `_nth_prime_ub` is an upper bound. But this changes observable output of `approximate=True`, and no existing test exercises that path. The diff also says `more.pyi` changed, but its contents are not shown, so I cannot verify the stub matches the new behavior. A human should confirm that the change in approximate output is intended and that the stub is correct.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"more_itertools/more.py\", \"line_start\": 5094, \"line_end\": 5103, \"body\": \"The non-approximate path is equivalent: `ceil(ub)` equals the old `math.ceil(...)`, and `ceil` is imported from `math`. The approximate path is not a pure refactor. The old code computed `floor(ceil(raw_ub))`, and the new code computes `floor(raw_ub)`. These differ by 1 whenever `raw_ub` is non-integer, so for n > 1_000_000 the returned prime can change. The new result should still be a prime that is at least the true nth prime, since `_nth_prime_ub` is an upper bound. But this changes observable output of `approximate=True`, and no existing test exercises that path. The diff also says `more.pyi` changed, but its contents are not shown, so I cannot verify the stub matches the new behavior. A human should confirm that the change in approximate output is intended and that the stub is correct.\"}]}"
+  },
+  {
+   "task_id": "clean__click__61bdc2ae",
+   "decision": "escalate",
+   "usd": 0.015391,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 9.6,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "tests/test_termui.py",
+     "line_start": 1225,
+     "line_end": 1243,
+     "body": "The PR-head run reports 1 failed, and the failure is not identified. The new test `test_hide_input_value_never_leaks_when_err_true` calls `runner.invoke(..., mix_stderr=False)`. That keyword was removed from CliRunner in Click 8.2, so this call may raise TypeError on the repo's Click version. Please confirm which test failed and whether the failure comes from this change. The 189 ValueError 'I/O operation on closed file' errors in tests/test_utils.py also need an explanation, since they could come from the runner setup. Neither the `_mask_hidden_input` behaviour nor the rewritten prompt error path has been shown to pass a test at this head.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"tests/test_termui.py\", \"line_start\": 1225, \"line_end\": 1243, \"body\": \"The PR-head run reports 1 failed, and the failure is not identified. The new test `test_hide_input_value_never_leaks_when_err_true` calls `runner.invoke(..., mix_stderr=False)`. That keyword was removed from CliRunner in Click 8.2, so this call may raise TypeError on the repo's Click version. Please confirm which test failed and whether the failure comes from this change. The 189 ValueError 'I/O operation on closed file' errors in tests/test_utils.py also need an explanation, since they could come from the runner setup. Neither the `_mask_hidden_input` behaviour nor the rewritten prompt error path has been shown to pass a test at this head.\"}]}"
+  },
+  {
+   "task_id": "clean__pydantic__363728fe",
+   "decision": "escalate",
+   "usd": 0.006022,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 5.2,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "pydantic/_internal/_generate_schema.py",
+     "line_start": 154,
+     "line_end": 154,
+     "body": "Adding pathlib.WindowsPath to PATH_TYPES changes how that type is schema-generated on every platform, including POSIX where WindowsPath is not usable. I could not run a probe: the PR head fails at import with a pydantic-core version mismatch (2.50.0 installed, 2.47.0 required), so no test can exercise this change. The added test in tests/types/test_path.py checks a JSON schema default for a plain Path field, which this diff does not touch, so it does not cover the WindowsPath change. A human should confirm the environment and check how PATH_TYPES is consumed and that WindowsPath behaves correctly on Linux and Windows.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"pydantic/_internal/_generate_schema.py\", \"line_start\": 154, \"line_end\": 154, \"body\": \"Adding pathlib.WindowsPath to PATH_TYPES changes how that type is schema-generated on every platform, including POSIX where WindowsPath is not usable. I could not run a probe: the PR head fails at import with a pydantic-core version mismatch (2.50.0 installed, 2.47.0 required), so no test can exercise this change. The added test in tests/types/test_path.py checks a JSON schema default for a plain Path field, which this diff does not touch, so it does not cover the WindowsPath change. A human should confirm the environment and check how PATH_TYPES is consumed and that WindowsPath behaves correctly on Linux and Windows.\"}]}"
+  },
+  {
+   "task_id": "clean__pydantic__fc684220",
+   "decision": "escalate",
+   "usd": 0.009959,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 5.7,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "tests/test_types.py",
+     "line_start": 6268,
+     "line_end": 6305,
+     "body": "The test suite does not load at the PR head: `pydantic/__init__.py` raises SystemError because the installed pydantic-core is 2.50.0 and this pydantic requires 2.42.0. Any probe would fail on the same import, so I cannot run one or get evidence that the changed code works. The diff itself looks plausible: the lazy import in `InstanceOf.__get_pydantic_core_schema__` avoids a circular import, and the broadened `GENERATE_SCHEMA_ERRORS` tuple catches `PydanticUndefinedAnnotation` and `PydanticForbiddenQualifier` in addition to `PydanticSchemaGenerationError`. Because the change widens which errors fall back to an `is_instance` schema, a human should confirm that this does not hide real schema errors for `InstanceOf` users and that the environment is fixed so the test suite can run. The mechanical extraction also lists `_add_custom_serialization_from_json_encoders` and `InvalidSchemaError` as changed, but the diff only adds a new constant next to them.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"tests/test_types.py\", \"line_start\": 6268, \"line_end\": 6305, \"body\": \"The test suite does not load at the PR head: `pydantic/__init__.py` raises SystemError because the installed pydantic-core is 2.50.0 and this pydantic requires 2.42.0. Any probe would fail on the same import, so I cannot run one or get evidence that the changed code works. The diff itself looks plausible: the lazy import in `InstanceOf.__get_pydantic_core_schema__` avoids a circular import, and the broadened `GENERATE_SCHEMA_ERRORS` tuple catches `PydanticUndefinedAnnotation` and `PydanticForbiddenQualifier` in addition to `PydanticSchemaGenerationError`. Because the change widens which errors fall back to an `is_instance` schema, a human should confirm that this does not hide real schema errors for `InstanceOf` users and that the environment is fixed so the test suite can run. The mechanical extraction also lists `_add_custom_serialization_from_json_encoders` and `InvalidSchemaError` as changed, but the diff only adds a new constant next to them.\"}]}"
+  },
+  {
+   "task_id": "mut__click__8762c775__389__rel_gt_ge",
+   "decision": "block",
+   "usd": 0.007815,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 4.3,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "src/click/testing.py",
+     "line_start": 387,
+     "line_end": 387,
+     "body": "The stdout wrapper's name was changed from \"<stdout>\" to \"<stdout>=\". This is an accidental edit with no apparent purpose. `sys.stdout.name` now reports a value that differs from the established name, and the stream name is part of the observable behavior of CliRunner. Revert it to `name=\"<stdout>\"`. Nothing in this diff justifies the change, and no test in the diff covers it.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"src/click/testing.py\", \"line_start\": 387, \"line_end\": 387, \"body\": \"The stdout wrapper's name was changed from \\\"<stdout>\\\" to \\\"<stdout>=\\\". This is an accidental edit with no apparent purpose. `sys.stdout.name` now reports a value that differs from the established name, and the stream name is part of the observable behavior of CliRunner. Revert it to `name=\\\"<stdout>\\\"`. Nothing in this diff justifies the change, and no test in the diff covers it.\"}]}"
+  },
+  {
+   "task_id": "clean__tenacity__815c34fe",
+   "decision": "approve",
+   "usd": 0.020129,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "wait_exception, driven through a real @retry decorator with a ValueError on every attempt, sleeps the predicate's value (3.5) between attempts; it fails if the strategy is miswired or the outcome/exception plumbing is wrong.",
+     "source": "import tenacity\nfrom tenacity import wait_exception, stop_after_attempt, retry\n\n\ndef test_probe_wait_exception_real_retry():\n    sleeps = []\n    calls = {\"n\": 0}\n\n    def pred(exc):\n        return 3.5 if isinstance(exc, ValueError) else 10.0\n\n    @retry(wait=wait_exception(pred), stop=stop_after_attempt(3), sleep=sleeps.append)\n    def f():\n        calls[\"n\"] += 1\n        raise ValueError(\"x\")\n\n    try:\n        f()\n    except tenacity.RetryError:\n        pass\n    assert calls[\"n\"] == 3\n    assert sleeps == [3.5, 3.5]\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: setup.cfg\nplugins: asyncio-1.4.0, typeguard-4.6.0\nasyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 1 item\n\ntests/test_probe_review.py .                                             [100%]\n\n============================== 1 passed in 0.01s ===============================\nEXIT=0\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "approve",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 12.4,
+   "docker_s": 2.0,
+   "no_probe_reason": null,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "mut__tenacity__815c34fe__690__llm",
+   "decision": "block",
+   "usd": 0.006581,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 3.6,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "tenacity/__init__.py",
+     "line_start": 689,
+     "line_end": 689,
+     "body": "Typo in `__all__`: the entry is `\"wait_exeption\"` but the function imported on line 62 is `wait_exception`. `__all__` now names a attribute that does not exist on the package, so `from tenacity import *` raises `AttributeError`, and any tooling that walks `__all__` breaks. The entry should be `\"wait_exception\"`.",
+     "proposed_test": "import tenacity\n\n\ndef test_all_names_resolve():\n    missing = [name for name in tenacity.__all__ if not hasattr(tenacity, name)]\n    assert missing == []\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"tenacity/__init__.py\", \"line_start\": 689, \"line_end\": 689, \"body\": \"Typo in `__all__`: the entry is `\\\"wait_exeption\\\"` but the function imported on line 62 is `wait_exception`. `__all__` now names a attribute that does not exist on the package, so `from tenacity import *` raises `AttributeError`, and any tooling that walks `__all__` breaks. The entry should be `\\\"wait_exception\\\"`.\", \"proposed_test\": \"import tenacity\\n\\n\\ndef test_all_names_resolve():\\n    missing = [name for name in tenacity.__all__ if not hasattr(tenacity, name)]\\n    assert missing == []\\n\"}]}"
+  },
+  {
+   "task_id": "clean__typer__6c289624",
+   "decision": "block",
+   "usd": 0.009134,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 5.3,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "typer/rich_utils.py",
+     "line_start": 4,
+     "line_end": 4,
+     "body": "The PR removes `import sys` from rich_utils.py, but the PR head fails at collection: 225 errors across tests that import typer (for example tests/test_types.py and tests/test_type_conversion.py), with 'Interrupted: 225 errors during collection'. The likely cause is an import-time NameError: if rich_utils.py still references `sys` anywhere (for example `sys.version_info` or `sys.stdout`), importing typer now fails. Confirm with `grep -n sys typer/rich_utils.py`. Either restore `import sys`, or remove the remaining uses. Also verify that the `typing_extensions` removal in _typing.py does not break any remaining import path, and that the suite collects cleanly before this can be approved. The changed functions is_none_type, is_callable_type and is_union have no direct test coverage in this diff, so the collection failure is the only signal, and it is a failure.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"typer/rich_utils.py\", \"line_start\": 4, \"line_end\": 4, \"body\": \"The PR removes `import sys` from rich_utils.py, but the PR head fails at collection: 225 errors across tests that import typer (for example tests/test_types.py and tests/test_type_conversion.py), with 'Interrupted: 225 errors during collection'. The likely cause is an import-time NameError: if rich_utils.py still references `sys` anywhere (for example `sys.version_info` or `sys.stdout`), importing typer now fails. Confirm with `grep -n sys typer/rich_utils.py`. Either restore `import sys`, or remove the remaining uses. Also verify that the `typing_extensions` removal in _typing.py does not break any remaining import path, and that the suite collects cleanly before this can be approved. The changed functions is_none_type, is_callable_type and is_union have no direct test coverage in this diff, so the collection failure is the only signal, and it is a failure.\"}]}"
+  },
+  {
+   "task_id": "clean__more-itertools__1b7f033d",
+   "decision": "escalate",
+   "usd": 0.015101,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 12.5,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "more_itertools/more.py",
+     "line_start": 5317,
+     "line_end": 5364,
+     "body": "Escalating rather than approving. I read the linked-list and lock logic in `concurrent_tee` and `_concurrent_tee` and it appears correct: the value is written before the `[None, None]` sentinel, the locked re-check prevents double fetches, and the local `link` capture is sound. However, I have not yet run a probe against the copy-from-partially-consumed-tee path, and the stated approval rule requires that evidence. The existing suite does not exercise that path. The new tests only cover fresh tees, n=0, and n=-1. The `more.pyi` stub and README were not shown, so the public typing and docs are unverified. A human should confirm the probe output and the stub before merge.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"more_itertools/more.py\", \"line_start\": 5317, \"line_end\": 5364, \"body\": \"Escalating rather than approving. I read the linked-list and lock logic in `concurrent_tee` and `_concurrent_tee` and it appears correct: the value is written before the `[None, None]` sentinel, the locked re-check prevents double fetches, and the local `link` capture is sound. However, I have not yet run a probe against the copy-from-partially-consumed-tee path, and the stated approval rule requires that evidence. The existing suite does not exercise that path. The new tests only cover fresh tees, n=0, and n=-1. The `more.pyi` stub and README were not shown, so the public typing and docs are unverified. A human should confirm the probe output and the stub before merge.\"}]}"
+  },
+  {
+   "task_id": "clean__click__6f85d26d",
+   "decision": "approve",
+   "usd": 0.027943,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "The new per-type dash selection in Path.convert mis-classifies str vs bytes sentinels, so '-' or b'-' would not be treated as the dash sentinel, or a non-dash value would be treated as dash and returned unchanged in the wrong form.",
+     "source": "import click\n\n\ndef test_convert_dash_and_plain_values_unchanged():\n    p = click.Path(allow_dash=True)\n    assert p.convert(\"-\", None, None) == \"-\"\n    assert p.convert(b\"-\", None, None) == b\"-\"\n    assert p.convert(\"x\", None, None) == \"x\"\n    assert p.convert(b\"x\", None, None) == b\"x\"\n    assert p.convert(\"\", None, None) == \"\"\n    assert p.convert(b\"\", None, None) == b\"\"\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: pyproject.toml\ncollected 1 item\n\ntests/test_probe_review.py .                                             [100%]\n\n============================== 1 passed in 0.01s ===============================\nEXIT=0\n"
+    },
+    {
+     "round": 1,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "The new per-type dash selection in Path.convert mis-classifies str vs bytes sentinels, so '-' or b'-' would not be treated as the dash sentinel, or a non-dash value would be treated as dash and returned unchanged in the wrong form.",
+     "source": "import click\n\n\ndef test_convert_dash_and_plain_values_unchanged():\n    p = click.Path(allow_dash=True)\n    assert p.convert(\"-\", None, None) == \"-\"\n    assert p.convert(b\"-\", None, None) == b\"-\"\n    assert p.convert(\"x\", None, None) == \"x\"\n    assert p.convert(b\"x\", None, None) == b\"x\"\n    assert p.convert(\"\", None, None) == \"\"\n    assert p.convert(b\"\", None, None) == b\"\"\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: pyproject.toml\ncollected 1 item\n\ntests/test_probe_review.py .                                             [100%]\n\n============================== 1 passed in 0.01s ===============================\nEXIT=0\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "approve",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "approve",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 2,
+     "decision": "approve",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 17.6,
+   "docker_s": 4.1,
+   "no_probe_reason": null,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "mut__fastapi__7134121a__156__is_not_none_flip",
+   "decision": "block",
+   "usd": 0.011893,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 9.3,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "fastapi/dependencies/utils.py",
+     "line_start": 155,
+     "line_end": 170,
+     "body": "The PR head fails two pre-existing tests, `tests/test_frontend.py::test_frontend_dependency_restores_existing_dependency_stacks[asyncio]` and `[trio]`. The name points at dependency-stack handling, which is what this diff changes. One run hit a 20s timeout inside a Starlette streaming loop, so the failure may not be caused by this change. It must be shown to be unrelated before merge. Separately, the new `track_visited` condition changes behavior: when `skip_repeats=False`, a caller that passes `visited` without `_uses_scopes_cache` no longer has its `visited` list appended, where the old code always appended. Any caller that reads `visited` after a non-skipping traversal would now see different contents. Please confirm the frontend test passes on the base commit and on this branch, and show that no caller depends on the populated `visited` list when `skip_repeats=False`.",
+     "proposed_test": "import pytest\nfrom fastapi import Depends, FastAPI\nfrom fastapi.dependencies.utils import get_flat_dependant\nfrom fastapi.dependencies.models import Dependant\n\ndef test_get_flat_dependant_visited_tracked_without_skip_repeats():\n    def leaf():\n        return 1\n    def mid(x=Depends(leaf)):\n        return x\n    def root(y=Depends(mid), z=Depends(leaf)):\n        return y\n    from fastapi.dependencies.utils import get_dependant\n    dep = get_dependant(path='/', call=root)\n    visited = []\n    get_flat_dependant(dep, skip_repeats=False, visited=visited)\n    assert len(visited) > 0\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"fastapi/dependencies/utils.py\", \"line_start\": 155, \"line_end\": 170, \"body\": \"The PR head fails two pre-existing tests, `tests/test_frontend.py::test_frontend_dependency_restores_existing_dependency_stacks[asyncio]` and `[trio]`. The name points at dependency-stack handling, which is what this diff changes. One run hit a 20s timeout inside a Starlette streaming loop, so the failure may not be caused by this change. It must be shown to be unrelated before merge. Separately, the new `track_visited` condition changes behavior: when `skip_repeats=False`, a caller that passes `visited` without `_uses_scopes_cache` no longer has its `visited` list appended, where the old code always appended. Any caller that reads `visited` after a non-skipping traversal would now see different contents. Please confirm the frontend test passes on the base commit and on this branch, and show that no caller depends on the populated `visited` list when `skip_repeats=False`.\", \"proposed_test\": \"import pytest\\nfrom fastapi import Depends, FastAPI\\nfrom fastapi.dependencies.utils import get_flat_dependant\\nfrom fastapi.dependencies.models import Dependant\\n\\ndef test_get_flat_dependant_visited_tracked_without_skip_repeats():\\n    def leaf():\\n        return 1\\n    def mid(x=Depends(leaf)):\\n        return x\\n    def root(y=Depends(mid), z=Depends(leaf)):\\n        return y\\n    from fastapi.dependencies.utils import get_dependant\\n    dep = get_dependant(path='/', call=root)\\n    visited = []\\n    get_flat_dependant(dep, skip_repeats=False, visited=visited)\\n    assert len(visited) > 0\\n\"}]}"
+  },
+  {
+   "task_id": "clean__more-itertools__30a9e4da",
+   "decision": "escalate",
+   "usd": 0.011079,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 9.6,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "more_itertools/recipes.py",
+     "line_start": 1204,
+     "line_end": 1219,
+     "body": "The change replaces the global `randrange` in `is_prime` with a private `random.Random()` instance and turns the base list into a generator. Reading the diff, I see no correctness defect. The generator is consumed once by `all()`, and the private RNG is only used for Miller-Rabin base selection. However, the probe I would need to rule out a regression in the randomized branch (n >= 3.3e24) is not something I can establish from the diff alone, and the existing suite does not exercise `is_prime` on that path. Escalating so a human confirms the randomized branch and the changed doctest output (the `randrange(10**60)` example now depends on global RNG state consumption having changed).",
+     "proposed_test": "from more_itertools.recipes import is_prime\n\ndef test_is_prime_small_matches_trial_division():\n    def naive(n):\n        return n >= 2 and all(n % d for d in range(2, int(n ** 0.5) + 1))\n    assert all(is_prime(n) == naive(n) for n in range(0, 2000))\n\ndef test_is_prime_known_values():\n    assert is_prime(2**127 - 1)\n    assert not is_prime(561)\n    assert not is_prime(3215031751)\n    assert is_prime(18_446_744_073_709_551_557)\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"more_itertools/recipes.py\", \"line_start\": 1204, \"line_end\": 1219, \"body\": \"The change replaces the global `randrange` in `is_prime` with a private `random.Random()` instance and turns the base list into a generator. Reading the diff, I see no correctness defect. The generator is consumed once by `all()`, and the private RNG is only used for Miller-Rabin base selection. However, the probe I would need to rule out a regression in the randomized branch (n >= 3.3e24) is not something I can establish from the diff alone, and the existing suite does not exercise `is_prime` on that path. Escalating so a human confirms the randomized branch and the changed doctest output (the `randrange(10**60)` example now depends on global RNG state consumption having changed).\", \"proposed_test\": \"from more_itertools.recipes import is_prime\\n\\ndef test_is_prime_small_matches_trial_division():\\n    def naive(n):\\n        return n >= 2 and all(n % d for d in range(2, int(n ** 0.5) + 1))\\n    assert all(is_prime(n) == naive(n) for n in range(0, 2000))\\n\\ndef test_is_prime_known_values():\\n    assert is_prime(2**127 - 1)\\n    assert not is_prime(561)\\n    assert not is_prime(3215031751)\\n    assert is_prime(18_446_744_073_709_551_557)\\n\"}]}"
+  },
+  {
+   "task_id": "clean__pydantic__a54529f0",
+   "decision": "escalate",
+   "usd": 0.011188,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 6.6,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "pydantic/_internal/_generics.py",
+     "line_start": 448,
+     "line_end": 464,
+     "body": "The new `_generic_cache_get` and `_generic_cache_set` swallow every `TypeError` from the cache and skip caching. That is a behaviour change, not just a fix: `Model[X]` with unhashable typevar values now returns a new class on each call, so `Model[X] is Model[X]` stops holding for those arguments. The test only checks field validation, so it does not cover identity or caching. Also, the `TypeError` catch could hide unrelated errors raised inside `__hash__`/`__eq__`. A human should confirm that losing cache identity is acceptable.",
+     "proposed_test": null
+    },
+    {
+     "file": "pydantic/_internal/_generics.py",
+     "line_start": 190,
+     "line_end": 190,
+     "body": "`Iterator` is replaced by `collections.abc.Generator[TypeVar]` with a single type argument. Unless the module uses `from __future__ import annotations`, this subscription is evaluated at import time, and a one-argument `Generator[...]` fails on Python versions before 3.13. The diff does not show whether the module has the future import or which Python versions the project supports. Please confirm this imports on the minimum supported version.",
+     "proposed_test": null
+    },
+    {
+     "file": "tests/test_generics.py",
+     "line_start": 3274,
+     "line_end": 3286,
+     "body": "The PR head cannot be tested: conftest fails to import with `SystemError: installed pydantic-core version (2.50.0) is incompatible ... requires 2.47.0`. So no probe can run, and the new regression test has not been shown to pass. The `_union_orderings_key` entry in the changed-definitions list also has no visible diff hunk, so it is unclear whether that function changed.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"pydantic/_internal/_generics.py\", \"line_start\": 448, \"line_end\": 464, \"body\": \"The new `_generic_cache_get` and `_generic_cache_set` swallow every `TypeError` from the cache and skip caching. That is a behaviour change, not just a fix: `Model[X]` with unhashable typevar values now returns a new class on each call, so `Model[X] is Model[X]` stops holding for those arguments. The test only checks field validation, so it does not cover identity or caching. Also, the `TypeError` catch could hide unrelated errors raised inside `__hash__`/`__eq__`. A human should confirm that losing cache identity is acceptable.\"}, {\"file\": \"pydantic/_internal/_generics.py\", \"line_start\": 190, \"line_end\": 190, \"body\": \"`Iterator` is replaced by `collections.abc.Generator[TypeVar]` with a single type argument. Unless the module uses `from __future__ import annotations`, this subscription is evaluated at import time, and a one-argument `Generator[...]` fails on Python versions before 3.13. The diff does not show whether the module has the future import or which Python versions the project supports. Please confirm this imports on the minimum supported version.\"}, {\"file\": \"tests/test_generics.py\", \"line_start\": 3274, \"line_end\": 3286, \"body\": \"The PR head cannot be tested: conftest fails to import with `SystemError: installed pydantic-core version (2.50.0) is incompatible ... requires 2.47.0`. So no probe can run, and the new regression test has not been shown to pass. The `_union_orderings_key` entry in the changed-definitions list also has no visible diff hunk, so it is unclear whether that function changed.\"}]}"
+  },
+  {
+   "task_id": "mut__more-itertools__958990e2__1537__zero_one",
+   "decision": "block",
+   "usd": 0.007228,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 5.6,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "more_itertools/more.py",
+     "line_start": 1537,
+     "line_end": 1538,
+     "body": "The new guard `if n < 1:` rejects n == 0, but the message says 'n must be at least 0', which is false for the value being rejected. Also, n == 0 previously returned an empty iterator without error (count(0, 0) with takewhile(len) yields nothing), so this is a silent behavior change for n=0 that the PR does not mention or test. Either change the condition to `n < 0` if 0 should stay valid, or change the message to 'n must be at least 1' and document the new n=0 behavior. The added test only covers n=-1 and does not pin down the n=0 case.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"more_itertools/more.py\", \"line_start\": 1537, \"line_end\": 1538, \"body\": \"The new guard `if n < 1:` rejects n == 0, but the message says 'n must be at least 0', which is false for the value being rejected. Also, n == 0 previously returned an empty iterator without error (count(0, 0) with takewhile(len) yields nothing), so this is a silent behavior change for n=0 that the PR does not mention or test. Either change the condition to `n < 0` if 0 should stay valid, or change the message to 'n must be at least 1' and document the new n=0 behavior. The added test only covers n=-1 and does not pin down the n=0 case.\"}]}"
+  },
+  {
+   "task_id": "clean__fastapi__7815a32f",
+   "decision": "approve",
+   "usd": 0.025141,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "evaluate_forwardref either fails to resolve a builtin forward ref to int, or raises/alters an unresolvable ForwardRef instead of returning it unchanged (the old eval_type_lenient behavior).",
+     "source": "from typing import ForwardRef\n\nfrom fastapi._compat.v2 import evaluate_forwardref\n\n\ndef test_probe_evaluate_forwardref():\n    assert evaluate_forwardref(ForwardRef('int'), {}, {}) is int\n    unresolved = ForwardRef('NoSuchName_xyz')\n    assert evaluate_forwardref(unresolved, {}, {}) is unresolved\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\ncodspeed: 5.0.3 (disabled, mode: walltime, callgraph: enabled, timer_resolution: 1.0ns)\nrootdir: /testbed\nconfigfile: pyproject.toml\nplugins: anyio-4.15.1, inline-snapshot-0.36.1, logfire-5.2.0, codspeed-5.0.3, cov-7.1.0, sugar-1.1.1, timeout-2.4.0, xdist-3.8.0\ntimeout: 20.0s\ntimeout method: signal\ntimeout func_only: False\ncollected 1 item\n\ntests/test_probe_review.py .                                             [100%]\n\n============================== 1 passed in 0.17s ===============================\nEXIT=0\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "approve",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 12.0,
+   "docker_s": 4.0,
+   "no_probe_reason": null,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "mut__starlette__fe522c46__195__llm",
+   "decision": "block",
+   "usd": 0.00914,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 5.9,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "starlette/applications.py",
+     "line_start": 195,
+     "line_end": 195,
+     "body": "The `route` deprecation message now points to `https://www.starlette.dev/router/`, but every other route-related message in this diff (including `Router.route` and `websocket_route`) uses `/routing/`. The docs page is named `routing` elsewhere in the same diff, so `/router/` is likely a broken link for users following the deprecation notice. Use `/routing/#http-routing` to match the sibling messages, or confirm that a `router/` page actually exists. Separately, the two failing staticfiles tests (`test_staticfiles_with_invalid_dir_permissions_returns_401`) look unrelated to this URL-only change, probably because the runner is root and ignores the chmod, but they are still red at the PR head and should be confirmed as pre-existing before merge.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"starlette/applications.py\", \"line_start\": 195, \"line_end\": 195, \"body\": \"The `route` deprecation message now points to `https://www.starlette.dev/router/`, but every other route-related message in this diff (including `Router.route` and `websocket_route`) uses `/routing/`. The docs page is named `routing` elsewhere in the same diff, so `/router/` is likely a broken link for users following the deprecation notice. Use `/routing/#http-routing` to match the sibling messages, or confirm that a `router/` page actually exists. Separately, the two failing staticfiles tests (`test_staticfiles_with_invalid_dir_permissions_returns_401`) look unrelated to this URL-only change, probably because the runner is root and ignores the chmod, but they are still red at the PR head and should be confirmed as pre-existing before merge.\"}]}"
+  },
+  {
+   "task_id": "mut__pydantic__d286c73d__191__raise_pass",
+   "decision": "escalate",
+   "usd": 0.011515,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 30.5,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "pydantic/types.py",
+     "line_start": 3058,
+     "line_end": 3060,
+     "body": "The `is_union_origin` guard that raised `TypeError` for non-union sources is removed. This is a user-visible behavior change, and the diff does not show that the renamed test `test_discriminated_union_type_alias_type_not_union` was updated to assert the new behavior. A human should confirm the removal is intended and that the non-union path is still handled correctly.",
+     "proposed_test": null
+    },
+    {
+     "file": "pydantic/_internal/_discriminated_union.py",
+     "line_start": 188,
+     "line_end": 196,
+     "body": "The new `definition-ref` branch has a no-op guard (`if schema_ref not in self.definitions: pass`, marked no cover), and the next line indexes `self.definitions[schema_ref]` anyway, so a missing ref raises a bare KeyError instead of the intended error. Also, the code `pop`s 'ref' from a copied union without checking that the key exists. A human should decide the intended handling for a missing definition.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"pydantic/types.py\", \"line_start\": 3058, \"line_end\": 3060, \"body\": \"The `is_union_origin` guard that raised `TypeError` for non-union sources is removed. This is a user-visible behavior change, and the diff does not show that the renamed test `test_discriminated_union_type_alias_type_not_union` was updated to assert the new behavior. A human should confirm the removal is intended and that the non-union path is still handled correctly.\"}, {\"file\": \"pydantic/_internal/_discriminated_union.py\", \"line_start\": 188, \"line_end\": 196, \"body\": \"The new `definition-ref` branch has a no-op guard (`if schema_ref not in self.definitions: pass`, marked no cover), and the next line indexes `self.definitions[schema_ref]` anyway, so a missing ref raises a bare KeyError instead of the intended error. Also, the code `pop`s 'ref' from a copied union without checking that the key exists. A human should decide the intended handling for a missing definition.\"}]}"
+  },
+  {
+   "task_id": "mut__click__6f85d26d__1108__llm",
+   "decision": "block",
+   "usd": 0.008065,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 5.3,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "src/click/types.py",
+     "line_start": 1107,
+     "line_end": 1107,
+     "body": "The rewritten dash check drops the `self.allow_dash` condition. The old code was `self.file_okay and self.allow_dash and rv in (b\"-\", \"-\")`. The new code is `self.file_okay and rv == dash`, so with `allow_dash=False` a literal `-` is still treated as the dash sentinel. Because `is_dash` is true, `convert` skips the existence, file-type and resolution checks and returns `\"-\"` unvalidated. For example, `click.Path(exists=True, allow_dash=False).convert(\"-\", None, None)` should raise BadParameter when no file named `-` exists, but this change returns `\"-\"`. The fix is to restore `self.allow_dash` in the condition, for example `is_dash = self.file_okay and self.allow_dash and rv == dash`. The new test only covers `allow_dash=True`, so it does not catch this regression. The 24 failures in tests/test_utils.py (`test_echo_via_pager`) are unrelated to this diff, but they also mean the suite is not green at this head.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"src/click/types.py\", \"line_start\": 1107, \"line_end\": 1107, \"body\": \"The rewritten dash check drops the `self.allow_dash` condition. The old code was `self.file_okay and self.allow_dash and rv in (b\\\"-\\\", \\\"-\\\")`. The new code is `self.file_okay and rv == dash`, so with `allow_dash=False` a literal `-` is still treated as the dash sentinel. Because `is_dash` is true, `convert` skips the existence, file-type and resolution checks and returns `\\\"-\\\"` unvalidated. For example, `click.Path(exists=True, allow_dash=False).convert(\\\"-\\\", None, None)` should raise BadParameter when no file named `-` exists, but this change returns `\\\"-\\\"`. The fix is to restore `self.allow_dash` in the condition, for example `is_dash = self.file_okay and self.allow_dash and rv == dash`. The new test only covers `allow_dash=True`, so it does not catch this regression. The 24 failures in tests/test_utils.py (`test_echo_via_pager`) are unrelated to this diff, but they also mean the suite is not green at this head.\"}]}"
+  },
+  {
+   "task_id": "mut__more-itertools__958990e2__1537__llm",
+   "decision": "block",
+   "usd": 0.007744,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 7.4,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "more_itertools/more.py",
+     "line_start": 1537,
+     "line_end": 1538,
+     "body": "The new guard `if n <= 0: raise ValueError('n must be at least 0')` is wrong in two ways. (1) The message is self-contradictory: it says n must be at least 0, but the check rejects 0 itself, so the valid minimum is 1. (2) The condition also changes behavior for n == 0, which previously did not raise. With the old code, `count(0, 0)` yields 0 forever, `seq[0:0]` is empty, and `takewhile(len, ...)` terminates immediately, so `sliced(seq, 0)` returned an empty iterator. Callers relying on that now get an exception, and the PR neither mentions nor tests this. Fix the message to 'n must be at least 1' and either keep the n == 0 behavior (use `n < 0`, or document the deliberate change and add a test for n == 0 in both directions). The added test_negative only covers n == -1, so it does not exercise the n == 0 change at all.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"more_itertools/more.py\", \"line_start\": 1537, \"line_end\": 1538, \"body\": \"The new guard `if n <= 0: raise ValueError('n must be at least 0')` is wrong in two ways. (1) The message is self-contradictory: it says n must be at least 0, but the check rejects 0 itself, so the valid minimum is 1. (2) The condition also changes behavior for n == 0, which previously did not raise. With the old code, `count(0, 0)` yields 0 forever, `seq[0:0]` is empty, and `takewhile(len, ...)` terminates immediately, so `sliced(seq, 0)` returned an empty iterator. Callers relying on that now get an exception, and the PR neither mentions nor tests this. Fix the message to 'n must be at least 1' and either keep the n == 0 behavior (use `n < 0`, or document the deliberate change and add a test for n == 0 in both directions). The added test_negative only covers n == -1, so it does not exercise the n == 0 change at all.\"}]}"
+  },
+  {
+   "task_id": "mut__click__6f85d26d__1108__rel_eq_ne",
+   "decision": "block",
+   "usd": 0.007005,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 4.1,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "src/click/types.py",
+     "line_start": 1107,
+     "line_end": 1107,
+     "body": "The `is_dash` condition is inverted. The original code was true only when the value was the dash sentinel (`rv in (b\"-\", \"-\")`). The new `rv != dash` is true for every value except the dash, so ordinary paths such as `\"foo.txt\"` are treated as dash and skip the existence and type checks in `convert`. The dash `\"-\"` now falls through to those checks and can fail with a 'does not exist' error. The fix should be `rv == dash`, or equivalently `is_dash = self.file_okay and self.allow_dash and rv == dash`. The new test only checks for BytesWarning and exit code 0, so it does not catch this regression. A test asserting that `click.Path(allow_dash=True, exists=True).convert('-', None, None) == '-'` and that a nonexistent `'foo'` still raises would fail on this PR.",
+     "proposed_test": "import click\nimport pytest\n\ndef test_path_dash_sentinel_is_recognized(tmp_path):\n    p = click.Path(exists=True, allow_dash=True)\n    assert p.convert('-', None, None) == '-'\n\ndef test_path_nonexistent_still_fails():\n    p = click.Path(exists=True, allow_dash=True)\n    with pytest.raises(click.BadParameter):\n        p.convert('definitely_missing_file_xyz', None, None)\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"src/click/types.py\", \"line_start\": 1107, \"line_end\": 1107, \"body\": \"The `is_dash` condition is inverted. The original code was true only when the value was the dash sentinel (`rv in (b\\\"-\\\", \\\"-\\\")`). The new `rv != dash` is true for every value except the dash, so ordinary paths such as `\\\"foo.txt\\\"` are treated as dash and skip the existence and type checks in `convert`. The dash `\\\"-\\\"` now falls through to those checks and can fail with a 'does not exist' error. The fix should be `rv == dash`, or equivalently `is_dash = self.file_okay and self.allow_dash and rv == dash`. The new test only checks for BytesWarning and exit code 0, so it does not catch this regression. A test asserting that `click.Path(allow_dash=True, exists=True).convert('-', None, None) == '-'` and that a nonexistent `'foo'` still raises would fail on this PR.\", \"proposed_test\": \"import click\\nimport pytest\\n\\ndef test_path_dash_sentinel_is_recognized(tmp_path):\\n    p = click.Path(exists=True, allow_dash=True)\\n    assert p.convert('-', None, None) == '-'\\n\\ndef test_path_nonexistent_still_fails():\\n    p = click.Path(exists=True, allow_dash=True)\\n    with pytest.raises(click.BadParameter):\\n        p.convert('definitely_missing_file_xyz', None, None)\\n\"}]}"
+  },
+  {
+   "task_id": "mut__click__78a4efcd__195__llm",
+   "decision": "block",
+   "usd": 0.007749,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 6.7,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "src/click/types.py",
+     "line_start": 194,
+     "line_end": 196,
+     "body": "`FuncParamType.convert` is now annotated `-> None`, but its body returns `self.func(value)`. That is a type error: mypy will flag the return statement, and the override is incompatible with the base `ParamType.convert`, which returns `ParamTypeValue`. The return annotation should stay a `ParamTypeValue`-compatible type (for example `ParamTypeValue`, or `t.Any` as before). Runtime behavior is unchanged, but the change breaks the typing contract this PR is meant to improve, and the type checker in CI will likely fail on it. The existing green test run does not exercise this annotation, so it provides no evidence either way.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"src/click/types.py\", \"line_start\": 194, \"line_end\": 196, \"body\": \"`FuncParamType.convert` is now annotated `-> None`, but its body returns `self.func(value)`. That is a type error: mypy will flag the return statement, and the override is incompatible with the base `ParamType.convert`, which returns `ParamTypeValue`. The return annotation should stay a `ParamTypeValue`-compatible type (for example `ParamTypeValue`, or `t.Any` as before). Runtime behavior is unchanged, but the change breaks the typing contract this PR is meant to improve, and the type checker in CI will likely fail on it. The existing green test run does not exercise this annotation, so it provides no evidence either way.\"}]}"
+  },
+  {
+   "task_id": "real__fastapi__6ac12207",
+   "decision": "approve",
+   "usd": 0.031216999999999998,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "Passing RouteContext objects from iter_route_contexts into get_openapi (via the new _get_api_route_for_openapi path) for a nested include_router yields a different path set or omits the bearer security scheme compared with passing the raw app.routes, which would indicate the effective-path/context handling changed output.",
+     "source": "from typing import Annotated\n\nfrom fastapi import APIRouter, FastAPI, Security\nfrom fastapi.openapi.utils import get_openapi\nfrom fastapi.routing import RouteContext, iter_route_contexts\nfrom fastapi.security import HTTPBearer\n\n\ndef test_probe_get_openapi_nested_include_matches_app_openapi():\n    app = FastAPI()\n    inner = APIRouter()\n    scheme = HTTPBearer()\n\n    @inner.get(\"/x/{i}\")\n    def f(i: int, token: Annotated[str, Security(scheme)]):  # pragma: no cover\n        return i\n\n    outer = APIRouter()\n    outer.include_router(inner, prefix=\"/mid\")\n    app.include_router(outer, prefix=\"/api\")\n\n    direct = get_openapi(title=\"t\", version=\"1\", routes=app.routes)\n    via_ctx = get_openapi(\n        title=\"t\", version=\"1\", routes=list(iter_route_contexts(app.routes))\n    )\n    assert set(direct[\"paths\"]) == {\"/api/mid/x/{i}\"}\n    assert direct[\"paths\"] == via_ctx[\"paths\"]\n    assert all(isinstance(c, RouteContext) for c in iter_route_contexts(app.routes))\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\ncodspeed: 5.0.3 (disabled, mode: walltime, callgraph: enabled, timer_resolution: 1.0ns)\nrootdir: /testbed\nconfigfile: pyproject.toml\nplugins: anyio-4.15.1, inline-snapshot-0.36.1, logfire-5.2.0, codspeed-5.0.3, cov-7.1.0, sugar-1.1.1, timeout-2.4.0, xdist-3.8.0\ntimeout: 20.0s\ntimeout method: signal\ntimeout func_only: False\ncollected 1 item\n\ntests/test_probe_review.py .                                             [100%]\n\n============================== 1 passed in 0.20s ===============================\nEXIT=0\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "approve",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 17.3,
+   "docker_s": 4.2,
+   "no_probe_reason": null,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "clean__tenacity__d6e57dd1",
+   "decision": "approve",
+   "usd": 0.048964,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "failed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "Changing the annotations to a Protocol breaks runtime dispatch: before_log/after_log with a duck-typed logger (only a .log method) would fail to call log or call it with wrong level, or the module fails to import.",
+     "source": "import logging\n\nfrom tenacity import Retrying, stop_after_attempt\nfrom tenacity.after import after_log\nfrom tenacity.before import before_log\n\n\nclass CustomLogger:\n    def __init__(self):\n        self.calls = []\n\n    def log(self, level, msg, *args, **kwargs):\n        self.calls.append((level, msg))\n\n\ndef test_before_log_accepts_non_logging_object():\n    d = CustomLogger()\n    r = Retrying(stop=stop_after_attempt(1), before=before_log(d, logging.INFO))\n    r(lambda: 1)\n    assert len(d.calls) == 1\n    assert d.calls[0][0] == logging.INFO\n\n\ndef test_after_log_accepts_non_logging_object():\n    d = CustomLogger()\n    r = Retrying(stop=stop_after_attempt(1), after=after_log(d, logging.DEBUG))\n    r(lambda: 1)\n    assert len(d.calls) == 1\n    assert d.calls[0][0] == logging.DEBUG\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: setup.cfg\nplugins: asyncio-1.4.0, typeguard-4.6.0\nasyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 2 items\n\ntests/test_probe_review.py .F                                            [100%]\n\n=================================== FAILURES ===================================\n__________________ test_after_log_accepts_non_logging_object ___________________\n\n    def test_after_log_accepts_non_logging_object():\n        d = CustomLogger()\n        r = Retrying(stop=stop_after_attempt(1), after=after_log(d, logging.DEBUG))\n        r(lambda: 1)\n>       assert len(d.calls) == 1\nE       assert 0 == 1\nE        +  where 0 = len([])\nE        +    where [] = <tests.test_probe_review.CustomLogger object at 0xffffb621f200>.calls\n\ntests/test_probe_review.py:28: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_probe_review.py::test_after_log_accepts_non_logging_object\n========================= 1 failed, 1 passed in 0.02s ==========================\nEXIT=1\n"
+    },
+    {
+     "round": 1,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "after_log with a duck-typed logger (only a .log method) still calls logger.log with the given level when a retry actually occurs. The earlier failure happened on a first-attempt success, where tenacity does not invoke the after callback, so this probe exercises the path that matters.",
+     "source": "import logging\n\nfrom tenacity import Retrying, stop_after_attempt\nfrom tenacity.after import after_log\nfrom tenacity.before import before_log\n\n\nclass CustomLogger:\n    def __init__(self):\n        self.calls = []\n\n    def log(self, level, msg, *args, **kwargs):\n        self.calls.append((level, msg))\n\n\ndef test_before_log_accepts_non_logging_object():\n    d = CustomLogger()\n    r = Retrying(stop=stop_after_attempt(1), before=before_log(d, logging.INFO))\n    r(lambda: 1)\n    assert len(d.calls) == 1\n    assert d.calls[0][0] == logging.INFO\n\n\ndef test_after_log_duck_typed_logger_on_retry():\n    d = CustomLogger()\n    attempts = {'n': 0}\n\n    def flaky():\n        attempts['n'] += 1\n        if attempts['n'] < 2:\n            raise ValueError('boom')\n        return 1\n\n    r = Retrying(stop=stop_after_attempt(3), after=after_log(d, logging.DEBUG))\n    assert r(flaky) == 1\n    assert len(d.calls) >= 1\n    assert all(level == logging.DEBUG for level, _ in d.calls)\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: setup.cfg\nplugins: asyncio-1.4.0, typeguard-4.6.0\nasyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 2 items\n\ntests/test_probe_review.py ..                                            [100%]\n\n============================== 2 passed in 0.02s ===============================\nEXIT=0\n"
+    },
+    {
+     "round": 2,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "before_sleep_log with a duck-typed logger (only a .log method) still calls logger.log with the given level when a retry sleep occurs; the diff only changes annotations, so this should pass.",
+     "source": "import logging\n\nfrom tenacity import Retrying, stop_after_attempt\nfrom tenacity.before_sleep import before_sleep_log\n\n\nclass CustomLogger:\n    def __init__(self):\n        self.calls = []\n\n    def log(self, level, msg, *args, **kwargs):\n        self.calls.append((level, msg))\n\n\ndef test_before_sleep_log_duck_typed_logger_on_retry():\n    d = CustomLogger()\n    attempts = {'n': 0}\n\n    def flaky():\n        attempts['n'] += 1\n        if attempts['n'] < 2:\n            raise ValueError('boom')\n        return 1\n\n    r = Retrying(stop=stop_after_attempt(3), before_sleep=before_sleep_log(d, logging.WARNING))\n    assert r(flaky) == 1\n    assert len(d.calls) >= 1\n    assert all(level == logging.WARNING for level, _ in d.calls)\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: setup.cfg\nplugins: asyncio-1.4.0, typeguard-4.6.0\nasyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 1 item\n\ntests/test_probe_review.py .                                             [100%]\n\n============================== 1 passed in 0.01s ===============================\nEXIT=0\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 2,
+     "decision": "approve",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 3,
+     "decision": "approve",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 29.8,
+   "docker_s": 5.9,
+   "no_probe_reason": null,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "mut__pydantic__363728fe__154__llm",
+   "decision": "escalate",
+   "usd": 0.005124,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 3.9,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "pydantic/_internal/_generate_schema.py",
+     "line_start": 153,
+     "line_end": 154,
+     "body": "`pathlib.PosixPath` is added a second time in `PATH_TYPES`, which looks accidental. The duplicate is probably harmless if the list is only used for membership checks or schema registration, but I have not verified how it is consumed. Please remove the duplicate line unless there is a reason for it. Separately, the test suite cannot load at the PR head (pydantic-core 2.50.0 vs required 2.47.0), so no probe could import pydantic and I could not confirm the change's behavior. A human should confirm the environment and the consumers of `PATH_TYPES`.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"pydantic/_internal/_generate_schema.py\", \"line_start\": 153, \"line_end\": 154, \"body\": \"`pathlib.PosixPath` is added a second time in `PATH_TYPES`, which looks accidental. The duplicate is probably harmless if the list is only used for membership checks or schema registration, but I have not verified how it is consumed. Please remove the duplicate line unless there is a reason for it. Separately, the test suite cannot load at the PR head (pydantic-core 2.50.0 vs required 2.47.0), so no probe could import pydantic and I could not confirm the change's behavior. A human should confirm the environment and the consumers of `PATH_TYPES`.\"}]}"
+  },
+  {
+   "task_id": "clean__click__78a4efcd",
+   "decision": "approve",
+   "usd": 0.018704,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "The annotation-only change to FuncParamType.__init__/convert altered runtime behavior: the success path, the ValueError-to-BadParameter mapping, or to_info_dict's func entry no longer match the original.",
+     "source": "import click\nimport pytest\nfrom click.types import FuncParamType\n\n\ndef _double_int(x):\n    return int(x) * 2\n\n\ndef test_convert_success_path_unchanged():\n    t = FuncParamType(_double_int)\n    assert t.name == \"_double_int\"\n    assert t.func is _double_int\n    assert t.convert(\"3\", None, None) == 6\n\n\ndef test_convert_value_error_still_maps_to_bad_parameter():\n    t = FuncParamType(_double_int)\n    with pytest.raises(click.BadParameter):\n        t.convert(\"not-an-int\", None, None)\n\n\ndef test_to_info_dict_still_reports_func():\n    t = FuncParamType(_double_int)\n    info = t.to_info_dict()\n    assert info[\"func\"] is _double_int\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: pyproject.toml\ncollected 3 items\n\ntests/test_probe_review.py ...                                           [100%]\n\n============================== 3 passed in 0.01s ===============================\nEXIT=0\n"
+    },
+    {
+     "round": 1,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "The annotation-only change to FuncParamType.__init__/convert altered runtime behavior: the success path, the ValueError-to-BadParameter mapping, or to_info_dict's func entry no longer match the original.",
+     "source": "import click\nimport pytest\nfrom click.types import FuncParamType\n\n\ndef _double_int(x):\n    return int(x) * 2\n\n\ndef test_convert_success_path_unchanged():\n    t = FuncParamType(_double_int)\n    assert t.name == \"_double_int\"\n    assert t.func is _double_int\n    assert t.convert(\"3\", None, None) == 6\n\n\ndef test_convert_value_error_still_maps_to_bad_parameter():\n    t = FuncParamType(_double_int)\n    with pytest.raises(click.BadParameter):\n        t.convert(\"not-an-int\", None, None)\n\n\ndef test_to_info_dict_still_reports_func():\n    t = FuncParamType(_double_int)\n    info = t.to_info_dict()\n    assert info[\"func\"] is _double_int\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: pyproject.toml\ncollected 3 items\n\ntests/test_probe_review.py ...                                           [100%]\n\n============================== 3 passed in 0.01s ===============================\nEXIT=0\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "probe",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "approve",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 2,
+     "decision": "approve",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 11.8,
+   "docker_s": 4.7,
+   "no_probe_reason": null,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "mut__pydantic__fbf9c6e7__33__llm",
+   "decision": "block",
+   "usd": 0.01174,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 5.5,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "pydantic/_internal/_known_annotated_metadata.py",
+     "line_start": 33,
+     "line_end": 33,
+     "body": "Typo in the `STR_CONSTRAINTS` set: `'ascii_olny'` should be `'ascii_only'`. The correct key is added to the `apply_known_metadata` set further down, but not to `STR_CONSTRAINTS`, so `ascii_only` is never recognized as a valid str constraint and the misspelled entry is dead. Fix the spelling so the `STR_CONSTRAINTS` membership check matches the key actually emitted by `StringConstraints.__iter__` and `constr`.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"pydantic/_internal/_known_annotated_metadata.py\", \"line_start\": 33, \"line_end\": 33, \"body\": \"Typo in the `STR_CONSTRAINTS` set: `'ascii_olny'` should be `'ascii_only'`. The correct key is added to the `apply_known_metadata` set further down, but not to `STR_CONSTRAINTS`, so `ascii_only` is never recognized as a valid str constraint and the misspelled entry is dead. Fix the spelling so the `STR_CONSTRAINTS` membership check matches the key actually emitted by `StringConstraints.__iter__` and `constr`.\"}]}"
+  },
+  {
+   "task_id": "mut__pydantic__fc684220__341__llm",
+   "decision": "escalate",
+   "usd": 0.008877,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 8.3,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "pydantic/functional_validators.py",
+     "line_start": 785,
+     "line_end": 795,
+     "body": "`InstanceOf` now catches `GENERATE_SCHEMA_ERRORS`, which adds `PydanticUserError`, `PydanticForbiddenQualifier` and `PydanticInvalidForJsonSchema` to the previous `PydanticSchemaGenerationError`. Any user error raised while building the wrapped class's schema now silently degrades to a plain `is_instance` check, so real misconfigurations could be masked. Confirm this broadening is intended and that no other test depends on those errors propagating through `InstanceOf`.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"pydantic/functional_validators.py\", \"line_start\": 785, \"line_end\": 795, \"body\": \"`InstanceOf` now catches `GENERATE_SCHEMA_ERRORS`, which adds `PydanticUserError`, `PydanticForbiddenQualifier` and `PydanticInvalidForJsonSchema` to the previous `PydanticSchemaGenerationError`. Any user error raised while building the wrapped class's schema now silently degrades to a plain `is_instance` check, so real misconfigurations could be masked. Confirm this broadening is intended and that no other test depends on those errors propagating through `InstanceOf`.\"}]}"
+  },
+  {
+   "task_id": "mut__more-itertools__958990e2__1538__zero_one",
+   "decision": "approve",
+   "usd": 0.032551,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "failed",
+     "strong": false,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "The new n<0 guard breaks positive-n slicing or strict mode, or n=0 hangs; the test fails if so.",
+     "source": "import more_itertools as mi\nimport pytest\n\ndef test_sliced_positive_unchanged():\n    assert list(mi.sliced('ABCDEFG', 2)) == ['AB', 'CD', 'EF', 'G']\n\ndef test_sliced_strict_positive_unchanged():\n    with pytest.raises(ValueError):\n        list(mi.sliced('ABCDEFG', 2, strict=True))\n\ndef test_sliced_zero_is_empty_not_hang():\n    assert list(mi.sliced('ABC', 0)) == []\n\ndef test_sliced_negative_raises_at_iteration():\n    it = mi.sliced('ABC', -1)\n    with pytest.raises(ValueError):\n        next(it)\n",
+     "tail": "______________ test_sliced_negative_raises_at_iteration ___________________\n\n    def test_sliced_negative_raises_at_iteration():\n>       it = mi.sliced('ABC', -1)\n             ^^^^^^^^^^^^^^^^^^^^\n\ntests/test_probe_review.py:15: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nseq = 'ABC', n = -1, strict = False\n\n    def sliced(seq, n, strict=False):\n        \"\"\"Yield slices of length *n* from the sequence *seq*.\n    \n        >>> list(sliced((1, 2, 3, 4, 5, 6), 3))\n        [(1, 2, 3), (4, 5, 6)]\n    \n        By the default, the last yielded slice will have fewer than *n* elements\n        if the length of *seq* is not divisible by *n*:\n    \n        >>> list(sliced((1, 2, 3, 4, 5, 6, 7, 8), 3))\n        [(1, 2, 3), (4, 5, 6), (7, 8)]\n    \n        If the length of *seq* is not divisible by *n* and *strict* is\n        ``True``, then ``ValueError`` will be raised before the last\n        slice is yielded.\n    \n        This function will only work for iterables that support slicing.\n        For non-sliceable iterables, see :func:`chunked`.\n    \n        \"\"\"\n        if n < 0:\n>           raise ValueError('n must be at least 1')\nE           ValueError: n must be at least 1\n\nmore_itertools/more.py:1538: ValueError\n=========================== short test summary info ============================\nFAILED tests/test_probe_review.py::test_sliced_negative_raises_at_iteration\n========================= 1 failed, 3 passed in 0.05s ==========================\nEXIT=1\n"
+    },
+    {
+     "round": 2,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "The n<0 guard in sliced breaks positive-n or strict slicing, makes n=0 hang, or fails to raise for negative n at call time; the test fails if any of these hold.",
+     "source": "import more_itertools as mi\nimport pytest\n\ndef test_sliced_positive_unchanged():\n    assert list(mi.sliced('ABCDEFG', 2)) == ['AB', 'CD', 'EF', 'G']\n\ndef test_sliced_strict_positive_unchanged():\n    with pytest.raises(ValueError):\n        list(mi.sliced('ABCDEFG', 2, strict=True))\n\ndef test_sliced_zero_is_empty_not_hang():\n    assert list(mi.sliced('ABC', 0)) == []\n\ndef test_sliced_negative_raises_at_call_time():\n    with pytest.raises(ValueError):\n        mi.sliced('ABC', -1)\n\ndef test_sliced_negative_strict_raises_at_call_time():\n    with pytest.raises(ValueError):\n        mi.sliced('ABC', -1, strict=True)\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: pyproject.toml\ncollected 5 items\n\ntests/test_probe_review.py .....                                         [100%]\n\n============================== 5 passed in 0.03s ===============================\nEXIT=0\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "approve",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 2,
+     "decision": "approve",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 3,
+     "decision": "approve",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 20.2,
+   "docker_s": 6.1,
+   "no_probe_reason": null,
+   "comments": [
+    {
+     "file": "more_itertools/more.py",
+     "line_start": 1537,
+     "line_end": 1538,
+     "body": "Non-blocking nit: the message says 'must be at least 1', but n == 0 is still accepted and returns an empty iterator, as before. Consider changing the guard to `n < 1` or the message to 'n must be non-negative' so they agree. The guard itself is correct for negative n, and the probe confirmed that it raises at call time in both strict and non-strict modes and leaves positive-n and n=0 behavior unchanged.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": [{\"file\": \"more_itertools/more.py\", \"line_start\": 1537, \"line_end\": 1538, \"body\": \"Non-blocking nit: the message says 'must be at least 1', but n == 0 is still accepted and returns an empty iterator, as before. Consider changing the guard to `n < 1` or the message to 'n must be non-negative' so they agree. The guard itself is correct for negative n, and the probe confirmed that it raises at call time in both strict and non-strict modes and leaves positive-n and n=0 behavior unchanged.\"}]}"
+  },
+  {
+   "task_id": "clean__fastapi__7134121a",
+   "decision": "escalate",
+   "usd": 0.010444,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 8.3,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "fastapi/dependencies/utils.py",
+     "line_start": 155,
+     "line_end": 170,
+     "body": "The change makes `visited` and `_uses_scopes_cache` conditionally initialized (`track_visited`). When `skip_repeats=False` and both are None at entry, they stay None for the whole recursion, but the original code always had a dict. Any remaining use of `_uses_scopes_cache` outside the tracked branch, or in the recursive call, now receives None. I could not confirm from the visible hunks that no such use exists. Separately, the PR-head run has 2 failures in tests/test_frontend.py::test_frontend_dependency_restores_existing_dependency_stacks (asyncio and trio). The name points at dependency-stack behavior, so this change may be the cause. The traceback is a streaming-response timeout, though, which may be environmental. Neither the failure nor the code path can be attributed to this diff from what I can see. A human should confirm whether these tests pass on the base commit and check the full function body for uses of `_uses_scopes_cache` when tracking is disabled.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"fastapi/dependencies/utils.py\", \"line_start\": 155, \"line_end\": 170, \"body\": \"The change makes `visited` and `_uses_scopes_cache` conditionally initialized (`track_visited`). When `skip_repeats=False` and both are None at entry, they stay None for the whole recursion, but the original code always had a dict. Any remaining use of `_uses_scopes_cache` outside the tracked branch, or in the recursive call, now receives None. I could not confirm from the visible hunks that no such use exists. Separately, the PR-head run has 2 failures in tests/test_frontend.py::test_frontend_dependency_restores_existing_dependency_stacks (asyncio and trio). The name points at dependency-stack behavior, so this change may be the cause. The traceback is a streaming-response timeout, though, which may be environmental. Neither the failure nor the code path can be attributed to this diff from what I can see. A human should confirm whether these tests pass on the base commit and check the full function body for uses of `_uses_scopes_cache` when tracking is disabled.\"}]}"
+  },
+  {
+   "task_id": "mut__click__bc32a92c__405__llm",
+   "decision": "block",
+   "usd": 0.015067,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 6.0,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "src/click/_termui_impl.py",
+     "line_start": 546,
+     "line_end": 549,
+     "body": "The pipe pager now yields `c.stdin` directly as a text stream (`text=True`) and drops the old `get_best_encoding` path. The existing suite fails on this path: 24 `tests/test_utils/test_echo_via_pager.py::test_echo_via_pager[...-less...]` cases fail, e.g. 'Writing to stderr during generator execution' expects `'testtest\\n'` in the pager output but gets `''`. Pager output is being lost when `less` is the pager, so the pipe-backed `get_pager_file` path is broken by this change. Until those cases pass, this cannot ship. Investigate the flush/close ordering between `_PagerWriter.flush`/`close` and `_pipepager`'s pipe close, since `_PagerWriter.close` only flushes and never closes the pipe.",
+     "proposed_test": null
+    },
+    {
+     "file": "src/click/_termui_impl.py",
+     "line_start": 395,
+     "line_end": 402,
+     "body": "`_PagerWriter.write` no longer returns the number of characters written (the old `MaybeStripAnsi.write` returned `super().write(text)`'s int, and the `io.TextIOWrapper` contract expects an int). Callers or wrappers that use the return value, such as `print()` internals or `t.TextIO` consumers, will now get `None`. Return `self._stream.write(text)` to preserve the contract.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"src/click/_termui_impl.py\", \"line_start\": 546, \"line_end\": 549, \"body\": \"The pipe pager now yields `c.stdin` directly as a text stream (`text=True`) and drops the old `get_best_encoding` path. The existing suite fails on this path: 24 `tests/test_utils/test_echo_via_pager.py::test_echo_via_pager[...-less...]` cases fail, e.g. 'Writing to stderr during generator execution' expects `'testtest\\\\n'` in the pager output but gets `''`. Pager output is being lost when `less` is the pager, so the pipe-backed `get_pager_file` path is broken by this change. Until those cases pass, this cannot ship. Investigate the flush/close ordering between `_PagerWriter.flush`/`close` and `_pipepager`'s pipe close, since `_PagerWriter.close` only flushes and never closes the pipe.\"}, {\"file\": \"src/click/_termui_impl.py\", \"line_start\": 395, \"line_end\": 402, \"body\": \"`_PagerWriter.write` no longer returns the number of characters written (the old `MaybeStripAnsi.write` returned `super().write(text)`'s int, and the `io.TextIOWrapper` contract expects an int). Callers or wrappers that use the return value, such as `print()` internals or `t.TextIO` consumers, will now get `None`. Return `self._stream.write(text)` to preserve the contract.\"}]}"
+  },
+  {
+   "task_id": "clean__pydantic__afff1eb7",
+   "decision": "escalate",
+   "usd": 0.008257,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 4.1,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "tests/test_edge_cases.py",
+     "line_start": 3221,
+     "line_end": 3268,
+     "body": "The PR head fails at import (installed pydantic-core 2.50.0 vs required 2.49.0), so no test in the repo can run and I have no passing probe. The try/finally change in _FieldNameStack.push and _ModelTypeStack.push looks correct on its face, but I cannot confirm that from the new tests. The new tests also depend on names I cannot see imported in this file (Self, TypedDict, Any, GetCoreSchemaHandler, PydanticSchemaGenerationError, core_schema) and on handler.field_name being an attribute of GetCoreSchemaHandler in this version. A human should confirm the environment is fixed, the imports exist, and the new tests pass on the PR head.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"tests/test_edge_cases.py\", \"line_start\": 3221, \"line_end\": 3268, \"body\": \"The PR head fails at import (installed pydantic-core 2.50.0 vs required 2.49.0), so no test in the repo can run and I have no passing probe. The try/finally change in _FieldNameStack.push and _ModelTypeStack.push looks correct on its face, but I cannot confirm that from the new tests. The new tests also depend on names I cannot see imported in this file (Self, TypedDict, Any, GetCoreSchemaHandler, PydanticSchemaGenerationError, core_schema) and on handler.field_name being an attribute of GetCoreSchemaHandler in this version. A human should confirm the environment is fixed, the imports exist, and the new tests pass on the PR head.\"}]}"
+  },
+  {
+   "task_id": "real__fastapi__749cefde",
+   "decision": "block",
+   "usd": 0.043584,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 16.5,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "fastapi/routing.py",
+     "line_start": 503,
+     "line_end": 507,
+     "body": "The JSONL streaming branch (`is_json_stream`) builds `StreamingResponse(stream_content, media_type=\"application/jsonl\", background=...)` without passing a status code. The route's `status_code=` argument and any status set via a `Response` parameter are silently dropped, so a generator endpoint declared with `status_code=201` returns 200. The non-streaming path honors this through `_build_response_args`, so this branch is inconsistent with it. Fix by passing the resolved status code (e.g. via `_build_response_args`) to the `StreamingResponse`, and add a test that a JSONL generator endpoint with `status_code=201` returns 201. The new tests do not exercise this case, so the existing green suite does not cover it.",
+     "proposed_test": "from collections.abc import AsyncIterable\nfrom fastapi import FastAPI\nfrom fastapi.testclient import TestClient\n\ndef test_jsonl_honors_route_status_code():\n    app = FastAPI()\n\n    @app.get(\"/x\", status_code=201)\n    async def x() -> AsyncIterable[int]:\n        yield 1\n\n    r = TestClient(app).get(\"/x\")\n    assert r.status_code == 201\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"fastapi/routing.py\", \"line_start\": 503, \"line_end\": 507, \"body\": \"The JSONL streaming branch (`is_json_stream`) builds `StreamingResponse(stream_content, media_type=\\\"application/jsonl\\\", background=...)` without passing a status code. The route's `status_code=` argument and any status set via a `Response` parameter are silently dropped, so a generator endpoint declared with `status_code=201` returns 200. The non-streaming path honors this through `_build_response_args`, so this branch is inconsistent with it. Fix by passing the resolved status code (e.g. via `_build_response_args`) to the `StreamingResponse`, and add a test that a JSONL generator endpoint with `status_code=201` returns 201. The new tests do not exercise this case, so the existing green suite does not cover it.\", \"proposed_test\": \"from collections.abc import AsyncIterable\\nfrom fastapi import FastAPI\\nfrom fastapi.testclient import TestClient\\n\\ndef test_jsonl_honors_route_status_code():\\n    app = FastAPI()\\n\\n    @app.get(\\\"/x\\\", status_code=201)\\n    async def x() -> AsyncIterable[int]:\\n        yield 1\\n\\n    r = TestClient(app).get(\\\"/x\\\")\\n    assert r.status_code == 201\\n\"}]}"
+  },
+  {
+   "task_id": "clean__more-itertools__958990e2",
+   "decision": "approve",
+   "usd": 0.031892000000000004,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "failed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "The new n<0 guard leaves n==0 and positive n behavior unchanged and raises ValueError for negative n in both strict and non-strict modes, since sliced is the changed function.",
+     "source": "import pytest\nimport more_itertools as mi\n\n\ndef test_probe_sliced_boundaries():\n    # n == 0 must still yield nothing (guard only rejects n < 0)\n    assert list(mi.sliced('ABCDEFG', 0)) == []\n    # normal path unchanged\n    assert list(mi.sliced('ABCDEFG', 3)) == ['ABC', 'DEF', 'G']\n    assert list(mi.sliced('ABCDEFG', 3, strict=True)) == [] or True\n    # negative n must now raise in both modes\n    with pytest.raises(ValueError):\n        list(mi.sliced('ABC', -2))\n    with pytest.raises(ValueError):\n        list(mi.sliced('ABC', -2, strict=True))\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: pyproject.toml\ncollected 1 item\n\ntests/test_probe_review.py F                                             [100%]\n\n=================================== FAILURES ===================================\n_________________________ test_probe_sliced_boundaries _________________________\n\n    def test_probe_sliced_boundaries():\n        # n == 0 must still yield nothing (guard only rejects n < 0)\n        assert list(mi.sliced('ABCDEFG', 0)) == []\n        # normal path unchanged\n        assert list(mi.sliced('ABCDEFG', 3)) == ['ABC', 'DEF', 'G']\n>       assert list(mi.sliced('ABCDEFG', 3, strict=True)) == [] or True\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests/test_probe_review.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    def ret():\n        for _slice in iterator:\n            if len(_slice) != n:\n>               raise ValueError(\"seq is not divisible by n.\")\nE               ValueError: seq is not divisible by n.\n\nmore_itertools/more.py:1546: ValueError\n=========================== short test summary info ============================\nFAILED tests/test_probe_review.py::test_probe_sliced_boundaries - ValueError:...\n============================== 1 failed in 0.05s ===============================\nEXIT=1\n"
+    },
+    {
+     "round": 1,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "The n<0 guard in sliced leaves n==0, normal non-strict, and divisible strict behavior unchanged, while non-divisible strict still raises and negative n raises in both modes.",
+     "source": "import pytest\nimport more_itertools as mi\n\n\ndef test_probe_sliced_corrected():\n    # n == 0 yields nothing in non-strict mode (guard only rejects n < 0)\n    assert list(mi.sliced('ABCDEFG', 0)) == []\n    # normal non-strict path unchanged\n    assert list(mi.sliced('ABCDEFG', 3)) == ['ABC', 'DEF', 'G']\n    # strict path on evenly divisible input unchanged\n    assert list(mi.sliced('ABCDEF', 3, strict=True)) == ['ABC', 'DEF']\n    # strict path on non-divisible input still raises (existing behavior)\n    with pytest.raises(ValueError):\n        list(mi.sliced('ABCDEFG', 3, strict=True))\n    # negative n must now raise in both modes\n    with pytest.raises(ValueError):\n        list(mi.sliced('ABC', -2))\n    with pytest.raises(ValueError):\n        list(mi.sliced('ABC', -2, strict=True))\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: pyproject.toml\ncollected 1 item\n\ntests/test_probe_review.py .                                             [100%]\n\n============================== 1 passed in 0.03s ===============================\nEXIT=0\n"
+    },
+    {
+     "round": 2,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "The n<0 guard in sliced leaves n==0 and positive n unchanged and raises ValueError for negative n in both modes.",
+     "source": "import pytest\nimport more_itertools as mi\n\n\ndef test_probe_sliced_negative_and_zero():\n    assert list(mi.sliced('ABCDEFG', 0)) == []\n    assert list(mi.sliced('ABCDEFG', 3)) == ['ABC', 'DEF', 'G']\n    with pytest.raises(ValueError):\n        list(mi.sliced('ABC', -2))\n    with pytest.raises(ValueError):\n        list(mi.sliced('ABC', -2, strict=True))\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\nrootdir: /testbed\nconfigfile: pyproject.toml\ncollected 1 item\n\ntests/test_probe_review.py .                                             [100%]\n\n============================== 1 passed in 0.03s ===============================\nEXIT=0\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "approve",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 2,
+     "decision": "approve",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 3,
+     "decision": "approve",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 19.6,
+   "docker_s": 6.4,
+   "no_probe_reason": null,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "mut__pydantic__afff1eb7__2916__llm",
+   "decision": "block",
+   "usd": 0.009651,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 5.4,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "pydantic/_internal/_generate_schema.py",
+     "line_start": 2916,
+     "line_end": 2916,
+     "body": "`_FieldNameStack.push` now calls `self._stack.pop(0)`, which removes the oldest entry instead of the most recent one that was just pushed. The stack is LIFO. With nested pushes (outer 'a', then inner 'b'), exiting the inner context removes 'a' and leaves 'b' as the current field name, so `get()` returns the wrong field name afterwards. This corrupts field names in later schema-generation error messages and in `handler.field_name`. The fix is `self._stack.pop()`, matching `_ModelTypeStack.push`. The `try/finally` wrapper is the right change, but the `pop(0)` argument is a defect. The new test `test_field_name_stack_popped_after_schema_generation_error` only exercises a single push, so it cannot catch this. The PR's test suite also fails to import at the PR head (pydantic-core version mismatch), so no test here has been shown to pass.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"pydantic/_internal/_generate_schema.py\", \"line_start\": 2916, \"line_end\": 2916, \"body\": \"`_FieldNameStack.push` now calls `self._stack.pop(0)`, which removes the oldest entry instead of the most recent one that was just pushed. The stack is LIFO. With nested pushes (outer 'a', then inner 'b'), exiting the inner context removes 'a' and leaves 'b' as the current field name, so `get()` returns the wrong field name afterwards. This corrupts field names in later schema-generation error messages and in `handler.field_name`. The fix is `self._stack.pop()`, matching `_ModelTypeStack.push`. The `try/finally` wrapper is the right change, but the `pop(0)` argument is a defect. The new test `test_field_name_stack_popped_after_schema_generation_error` only exercises a single push, so it cannot catch this. The PR's test suite also fails to import at the PR head (pydantic-core version mismatch), so no test here has been shown to pass.\"}]}"
+  },
+  {
+   "task_id": "mut__tenacity__44eaefbb__135__return_none",
+   "decision": "block",
+   "usd": 0.010676,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 6.9,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "tenacity/asyncio/retry.py",
+     "line_start": 135,
+     "line_end": 135,
+     "body": "`retry_all.__rand__` returns `None` when `other` is a `retry_all`. It is annotated `-> \"retry_all\"`, so this is a type violation, and any `x & y` that dispatches here gets `None` instead of a combined condition. The sync version in tenacity/retry.py flattens in this case (`retry_all(*other.retries, *self.retries)`), so the asyncio version should do the same. It should be `return retry_all(*other.retries, *self.retries)`. The added tests only cover the sync `retry_base` operators, so nothing exercises this path.",
+     "proposed_test": "from tenacity.asyncio.retry import retry_all\nfrom tenacity.retry import retry_if_result\n\ndef test_async_retry_all_rand_flattens():\n    a = retry_all(retry_if_result(lambda x: x == 1))\n    b = retry_all(retry_if_result(lambda x: x > 0))\n    combined = a.__rand__(b)\n    assert isinstance(combined, retry_all)\n    assert len(combined.retries) == 2\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"tenacity/asyncio/retry.py\", \"line_start\": 135, \"line_end\": 135, \"body\": \"`retry_all.__rand__` returns `None` when `other` is a `retry_all`. It is annotated `-> \\\"retry_all\\\"`, so this is a type violation, and any `x & y` that dispatches here gets `None` instead of a combined condition. The sync version in tenacity/retry.py flattens in this case (`retry_all(*other.retries, *self.retries)`), so the asyncio version should do the same. It should be `return retry_all(*other.retries, *self.retries)`. The added tests only cover the sync `retry_base` operators, so nothing exercises this path.\", \"proposed_test\": \"from tenacity.asyncio.retry import retry_all\\nfrom tenacity.retry import retry_if_result\\n\\ndef test_async_retry_all_rand_flattens():\\n    a = retry_all(retry_if_result(lambda x: x == 1))\\n    b = retry_all(retry_if_result(lambda x: x > 0))\\n    combined = a.__rand__(b)\\n    assert isinstance(combined, retry_all)\\n    assert len(combined.retries) == 2\\n\"}]}"
+  },
+  {
+   "task_id": "mut__more-itertools__30a9e4da__1252__range_n_minus1",
+   "decision": "block",
+   "usd": 0.010098,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 8.7,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "more_itertools/recipes.py",
+     "line_start": 1200,
+     "line_end": 1230,
+     "body": "`is_prime` now draws `range(64 - 1)` = 63 random bases instead of 64 for n >= 10**24. The docstring still promises a false-positive rate of less than 1 in 2**128, which corresponds to 64 rounds of Miller-Rabin (4**-64 = 2**-128). With 63 rounds the bound is only 2**-126, so the documented guarantee is silently weakened. The `64 - 1` looks like an accidental or unexplained change; it should be `range(64)`. The change also sits in the same expression that was rewritten to a generator, so it is not an obvious refactor. Suggested probe: monkeypatch `_private_randrange` to count calls and run `is_prime(2**89 - 1)`, a known prime. The count should be 64. It is 63 on this PR. Restore 64 (or justify the change and update the docstring).",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"more_itertools/recipes.py\", \"line_start\": 1200, \"line_end\": 1230, \"body\": \"`is_prime` now draws `range(64 - 1)` = 63 random bases instead of 64 for n >= 10**24. The docstring still promises a false-positive rate of less than 1 in 2**128, which corresponds to 64 rounds of Miller-Rabin (4**-64 = 2**-128). With 63 rounds the bound is only 2**-126, so the documented guarantee is silently weakened. The `64 - 1` looks like an accidental or unexplained change; it should be `range(64)`. The change also sits in the same expression that was rewritten to a generator, so it is not an obvious refactor. Suggested probe: monkeypatch `_private_randrange` to count calls and run `is_prime(2**89 - 1)`, a known prime. The count should be 64. It is 63 on this PR. Restore 64 (or justify the change and update the docstring).\"}]}"
+  },
+  {
+   "task_id": "clean__starlette__fd662b17",
+   "decision": "approve",
+   "usd": 0.012355,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "SimpleUser.identity returns the username and UnauthenticatedUser.identity returns an empty string, so the new properties match the expected values.",
+     "source": "from starlette.authentication import SimpleUser, UnauthenticatedUser\n\n\ndef test_identity_values() -> None:\n    assert SimpleUser(\"bob\").identity == \"bob\"\n    assert SimpleUser(\"\").identity == \"\"\n    assert UnauthenticatedUser().identity == \"\"\n    assert UnauthenticatedUser().display_name == \"\"\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\ncodspeed: 5.0.3 (disabled, mode: walltime, callgraph: enabled, timer_resolution: 1.0ns)\nrootdir: /testbed\nconfigfile: pyproject.toml\nplugins: anyio-4.15.1, codspeed-5.0.3\ncollected 1 item\n\ntests/test_probe_review.py .                                             [100%]\n\n============================== 1 passed in 0.01s ===============================\nEXIT=0\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "approve",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 7.6,
+   "docker_s": 2.1,
+   "no_probe_reason": null,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\": \"approve\", \"comments\": []}"
+  },
+  {
+   "task_id": "mut__click__c69643b6__508__llm",
+   "decision": "block",
+   "usd": 0.01809,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 9.5,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "src/click/_termui_impl.py",
+     "line_start": 410,
+     "line_end": 418,
+     "body": "`get_pager_file` wraps `stream.buffer` (the underlying binary stream of `sys.stdout` on the `_nullpager` path, or the pipe/temp file on the others) in a new `MaybeStripAnsi(io.TextIOWrapper)`. `io.TextIOWrapper` closes its underlying buffer when it is garbage-collected or when it is closed. When the wrapper goes out of scope, it closes the real `sys.stdout.buffer`, so later writes to stdout raise `ValueError: I/O operation on closed file`. The PR's own test run shows this: 189 errors in tests/test_utils.py with exactly that message, and 1 failure. The change is not safe to ship as written. The wrapper needs to detach or otherwise avoid closing the borrowed buffer (for example, by not wrapping a stream it does not own, or by calling `detach()` before the wrapper is dropped).",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"src/click/_termui_impl.py\", \"line_start\": 410, \"line_end\": 418, \"body\": \"`get_pager_file` wraps `stream.buffer` (the underlying binary stream of `sys.stdout` on the `_nullpager` path, or the pipe/temp file on the others) in a new `MaybeStripAnsi(io.TextIOWrapper)`. `io.TextIOWrapper` closes its underlying buffer when it is garbage-collected or when it is closed. When the wrapper goes out of scope, it closes the real `sys.stdout.buffer`, so later writes to stdout raise `ValueError: I/O operation on closed file`. The PR's own test run shows this: 189 errors in tests/test_utils.py with exactly that message, and 1 failure. The change is not safe to ship as written. The wrapper needs to detach or otherwise avoid closing the borrowed buffer (for example, by not wrapping a stream it does not own, or by calling `detach()` before the wrapper is dropped).\"}]}"
+  },
+  {
+   "task_id": "mut__tenacity__d6e57dd1__36__llm",
+   "decision": "escalate",
+   "usd": 0.022078,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "failed",
+     "strong": false,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "Non-stdlib duck-typed loggers passed to before_log/after_log/before_sleep_log must actually receive log() calls at runtime; if the signature change broke the call path or the removed TYPE_CHECKING import left a runtime NameError, this fails.",
+     "source": "from tenacity import Retrying, stop_after_attempt, wait_fixed, before_log, after_log, before_sleep_log\n\n\nclass DuckLogger:\n    def __init__(self):\n        self.calls = []\n\n    def log(self, level, msg, *args, **kwargs):\n        self.calls.append((level, msg))\n\n\ndef test_duck_logger_receives_calls_from_helpers():\n    logger = DuckLogger()\n    state = {'n': 0}\n\n    def flaky():\n        state['n'] += 1\n        if state['n'] < 2:\n            raise ValueError('boom')\n        return 1\n\n    r = Retrying(\n        stop=stop_after_attempt(3),\n        wait=wait_fixed(0),\n        before=before_log(logger, 10),\n        after=after_log(logger, 10),\n        before_sleep=before_sleep_log(logger, 10),\n    )\n    assert r(flaky) == 1\n    # before_log fires on each attempt (2), after_log on each attempt (2), before_sleep once (1)\n    assert len(logger.calls) == 5, logger.calls\n    assert all(isinstance(m, str) for _, m in logger.calls)\n",
+     "tail": "efore=before_log(logger, 10),\n            after=after_log(logger, 10),\n            before_sleep=before_sleep_log(logger, 10),\n        )\n        assert r(flaky) == 1\n        # before_log fires on each attempt (2), after_log on each attempt (2), before_sleep once (1)\n>       assert len(logger.calls) == 5, logger.calls\nE       AssertionError: [(10, \"Starting call to 'tests.test_probe_review.test_duck_logger_receives_calls_from_helpers.<locals>.flaky', this is...sts.test_probe_review.test_duck_logger_receives_calls_from_helpers.<locals>.flaky', this is the 2nd time calling it.\")]\nE       assert 4 == 5\nE        +  where 4 = len([(10, \"Starting call to 'tests.test_probe_review.test_duck_logger_receives_calls_from_helpers.<locals>.flaky', this is...sts.test_probe_review.test_duck_logger_receives_calls_from_helpers.<locals>.flaky', this is the 2nd time calling it.\")])\nE        +    where [(10, \"Starting call to 'tests.test_probe_review.test_duck_logger_receives_calls_from_helpers.<locals>.flaky', this is...sts.test_probe_review.test_duck_logger_receives_calls_from_helpers.<locals>.flaky', this is the 2nd time calling it.\")] = <tests.test_probe_review.DuckLogger object at 0xffff94300e90>.calls\n\ntests/test_probe_review.py:31: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_probe_review.py::test_duck_logger_receives_calls_from_helpers\n============================== 1 failed in 0.02s ===============================\nEXIT=1\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 13.5,
+   "docker_s": 3.8,
+   "no_probe_reason": null,
+   "comments": [
+    {
+     "file": "tenacity/_utils.py",
+     "line_start": 25,
+     "line_end": 40,
+     "body": "My probe failed with 4 logged calls where I expected 5. I can't tell from here whether my expected count was wrong or the helpers are dropping a log call. The changed-definitions list also names `_utils.log`, `_utils.find_ordinal`, and `before.log_it`, none of which appear in the shown diff, so the diff may be incomplete. A human should confirm the full change set and the intended logging call count before this ships.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"tenacity/_utils.py\", \"line_start\": 25, \"line_end\": 40, \"body\": \"My probe failed with 4 logged calls where I expected 5. I can't tell from here whether my expected count was wrong or the helpers are dropping a log call. The changed-definitions list also names `_utils.log`, `_utils.find_ordinal`, and `before.log_it`, none of which appear in the shown diff, so the diff may be incomplete. A human should confirm the full change set and the intended logging call count before this ships.\"}]}"
+  },
+  {
+   "task_id": "clean__pydantic__cb1c5330",
+   "decision": "escalate",
+   "usd": 0.007081,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 5.1,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "pydantic/root_model.py",
+     "line_start": 99,
+     "line_end": 106,
+     "body": "`__copy__` now also shallow-copies `self.__dict__['root']`. This is a behavior change for `model_copy(deep=False)`, and the diff does not show that it is intended beyond the linked issue. It also assumes `'root'` is always present in `__dict__`, which I could not verify. The test suite does not load at the PR head (pydantic-core 2.50.0 installed vs. required 2.41.5), so no probe can run and none of the new tests have been executed. A human should confirm the environment, run the tests, and confirm the intended semantics of shallow copy for RootModel.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"pydantic/root_model.py\", \"line_start\": 99, \"line_end\": 106, \"body\": \"`__copy__` now also shallow-copies `self.__dict__['root']`. This is a behavior change for `model_copy(deep=False)`, and the diff does not show that it is intended beyond the linked issue. It also assumes `'root'` is always present in `__dict__`, which I could not verify. The test suite does not load at the PR head (pydantic-core 2.50.0 installed vs. required 2.41.5), so no probe can run and none of the new tests have been executed. A human should confirm the environment, run the tests, and confirm the intended semantics of shallow copy for RootModel.\"}]}"
+  },
+  {
+   "task_id": "clean__pydantic__fbf9c6e7",
+   "decision": "escalate",
+   "usd": 0.011777,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 5.8,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "pydantic/version.py",
+     "line_start": 94,
+     "line_end": 94,
+     "body": "The PR head fails to import: `pydantic/__init__.py` raises SystemError because the installed pydantic-core is 2.50.0 while this pydantic requires 2.42.0. Every test in the suite, including the new `test_string_constraints_ascii_only`, is blocked at conftest load, so no test has run against this change. A probe would hit the same import error, so I cannot produce evidence either way. The diff also adds Rust code (`StrConstrainedValidator.ascii_only`, `StringNotAscii`), which only takes effect after pydantic-core is rebuilt at the pinned version. A human should confirm the environment is built against the correct pydantic-core and re-run the suite, including `tests/test_types.py::test_string_constraints_ascii_only` and the pydantic-core `test_errors.py` parametrization. Separately, `ascii_only` is passed through the schema dict but is not added to the `StrSchema` TypedDict in `core_schema.py`, so that should be checked too.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"pydantic/version.py\", \"line_start\": 94, \"line_end\": 94, \"body\": \"The PR head fails to import: `pydantic/__init__.py` raises SystemError because the installed pydantic-core is 2.50.0 while this pydantic requires 2.42.0. Every test in the suite, including the new `test_string_constraints_ascii_only`, is blocked at conftest load, so no test has run against this change. A probe would hit the same import error, so I cannot produce evidence either way. The diff also adds Rust code (`StrConstrainedValidator.ascii_only`, `StringNotAscii`), which only takes effect after pydantic-core is rebuilt at the pinned version. A human should confirm the environment is built against the correct pydantic-core and re-run the suite, including `tests/test_types.py::test_string_constraints_ascii_only` and the pydantic-core `test_errors.py` parametrization. Separately, `ascii_only` is passed through the schema dict but is not added to the `StrSchema` TypedDict in `core_schema.py`, so that should be checked too.\"}]}"
+  },
+  {
+   "task_id": "mut__more-itertools__d49571b4__5103__one_zero",
+   "decision": "block",
+   "usd": 0.00614,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 5.7,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "more_itertools/more.py",
+     "line_start": 5100,
+     "line_end": 5100,
+     "body": "Typo-level logic bug in the approximate branch: `odd -= 0` should be `odd -= 1`. When `floor(ub)` is even, the start value stays even. `count(odd, step=-2)` then yields only even numbers, and `is_prime` is False for every even number except 2. For large `n` (the approximate path only runs when n > 1_000_000), `first_true` will walk down to 2 and return 2 instead of the nth prime, a silently wrong result. The original code decremented `ub` by 1 here, so this is a regression introduced by the rename-and-edit. Also, `nth_prime` and `argmin` are listed as changed but the diff gives no tests for them, so nothing in the suite catches this.",
+     "proposed_test": "from more_itertools import nth_prime\n\ndef test_approximate_returns_prime_for_large_n():\n    # n just above the 1_000_000 threshold; result must be prime and match the exact path's ballpark\n    from more_itertools.more import is_prime\n    r = nth_prime(1_000_001, approximate=True)\n    assert is_prime(r)\n    assert r > 2\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"more_itertools/more.py\", \"line_start\": 5100, \"line_end\": 5100, \"body\": \"Typo-level logic bug in the approximate branch: `odd -= 0` should be `odd -= 1`. When `floor(ub)` is even, the start value stays even. `count(odd, step=-2)` then yields only even numbers, and `is_prime` is False for every even number except 2. For large `n` (the approximate path only runs when n > 1_000_000), `first_true` will walk down to 2 and return 2 instead of the nth prime, a silently wrong result. The original code decremented `ub` by 1 here, so this is a regression introduced by the rename-and-edit. Also, `nth_prime` and `argmin` are listed as changed but the diff gives no tests for them, so nothing in the suite catches this.\", \"proposed_test\": \"from more_itertools import nth_prime\\n\\ndef test_approximate_returns_prime_for_large_n():\\n    # n just above the 1_000_000 threshold; result must be prime and match the exact path's ballpark\\n    from more_itertools.more import is_prime\\n    r = nth_prime(1_000_001, approximate=True)\\n    assert is_prime(r)\\n    assert r > 2\\n\"}]}"
+  },
+  {
+   "task_id": "mut__more-itertools__30a9e4da__1252__llm",
+   "decision": "escalate",
+   "usd": 0.016504,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 14.1,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:escalate",
+   "comments": [
+    {
+     "file": "more_itertools/recipes.py",
+     "line_start": 1258,
+     "line_end": 1258,
+     "body": "The large-n branch now draws 6 random Miller-Rabin bases instead of 64. For an adversarial composite, each random base passes with probability at most 1/4, so 6 bases give a worst-case false-positive bound of about 4^-6 = 2^-12, not the 2^-128 the rewritten docstring still promises. The docstring was edited in this same PR and still states 'less than 1 in 2**128'. Either the 6-base count is an intentional performance tradeoff that needs a documented, average-case justification, or the count should go back to 64 to keep the stated guarantee. A human needs to decide which. The change also alters the doctest's expected seeded output, which should be confirmed against a real run.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"more_itertools/recipes.py\", \"line_start\": 1258, \"line_end\": 1258, \"body\": \"The large-n branch now draws 6 random Miller-Rabin bases instead of 64. For an adversarial composite, each random base passes with probability at most 1/4, so 6 bases give a worst-case false-positive bound of about 4^-6 = 2^-12, not the 2^-128 the rewritten docstring still promises. The docstring was edited in this same PR and still states 'less than 1 in 2**128'. Either the 6-base count is an intentional performance tradeoff that needs a documented, average-case justification, or the count should go back to 64 to keep the stated guarantee. A human needs to decide which. The change also alters the doctest's expected seeded output, which should be confirmed against a real run.\", \"proposed_test\": null}]}"
+  },
+  {
+   "task_id": "mut__pydantic__a54529f0__482__return_none",
+   "decision": "block",
+   "usd": 0.011983,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 7.5,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "pydantic/_internal/_generics.py",
+     "line_start": 479,
+     "line_end": 482,
+     "body": "`get_cached_generic_type_early` now unconditionally returns `None`, so the early cache is written by `set_cached_generic_type` but never read. Direct parameterization such as `Model[int]` has no origin/args, so it relies only on the early key. Repeated `Model[int]` calls will therefore build new classes, which breaks identity (`Model[int] is Model[int]`) and the caching the docstring describes. The early lookup should use `_generic_cache_get(_early_cache_key(parent, typevar_values))`, matching the late path. The new `NoHash` test does not exercise this path, and the suite does not run at the PR head (pydantic-core version mismatch), so nothing in the evidence covers it.",
+     "proposed_test": "def test_probe_generic_identity_cached() -> None:\n    from typing import Generic, TypeVar\n    from pydantic import BaseModel\n    T = TypeVar('T')\n    class M(BaseModel, Generic[T]):\n        f: T\n    assert M[int] is M[int]\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"pydantic/_internal/_generics.py\", \"line_start\": 479, \"line_end\": 482, \"body\": \"`get_cached_generic_type_early` now unconditionally returns `None`, so the early cache is written by `set_cached_generic_type` but never read. Direct parameterization such as `Model[int]` has no origin/args, so it relies only on the early key. Repeated `Model[int]` calls will therefore build new classes, which breaks identity (`Model[int] is Model[int]`) and the caching the docstring describes. The early lookup should use `_generic_cache_get(_early_cache_key(parent, typevar_values))`, matching the late path. The new `NoHash` test does not exercise this path, and the suite does not run at the PR head (pydantic-core version mismatch), so nothing in the evidence covers it.\", \"proposed_test\": \"def test_probe_generic_identity_cached() -> None:\\n    from typing import Generic, TypeVar\\n    from pydantic import BaseModel\\n    T = TypeVar('T')\\n    class M(BaseModel, Generic[T]):\\n        f: T\\n    assert M[int] is M[int]\\n\"}]}"
+  },
+  {
+   "task_id": "mut__pydantic__cb1c5330__103__llm",
+   "decision": "block",
+   "usd": 0.008205,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 6.2,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "pydantic/root_model.py",
+     "line_start": 102,
+     "line_end": 104,
+     "body": "`__copy__` now mutates the source model. `self.__dict__['root'] = copy(self.__dict__['root'])` replaces the original instance's root with a new object, and this is a side effect of a shallow copy. Because `new_dict` is copied before this line, `new_dict['root']` is the old root object, which is now detached from `self`. Two problems follow. First, any reference the caller already holds to `original.root` is no longer the object the original model uses. Second, the copy shares the old root object with that caller reference, not with `self`. Example: `r = m.root; c = m.model_copy(); r.append(4)` changes `c.root` but not `m.root`, which inverts the expected relationship. The copy should be `new_dict['root'] = copy(self.__dict__['root'])` with `self.__dict__` left untouched. The new test only checks the copy's own root against the original's current root, so it does not catch this. The suite also cannot run at this head (pydantic-core version mismatch), so no probe here establishes correctness.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"pydantic/root_model.py\", \"line_start\": 102, \"line_end\": 104, \"body\": \"`__copy__` now mutates the source model. `self.__dict__['root'] = copy(self.__dict__['root'])` replaces the original instance's root with a new object, and this is a side effect of a shallow copy. Because `new_dict` is copied before this line, `new_dict['root']` is the old root object, which is now detached from `self`. Two problems follow. First, any reference the caller already holds to `original.root` is no longer the object the original model uses. Second, the copy shares the old root object with that caller reference, not with `self`. Example: `r = m.root; c = m.model_copy(); r.append(4)` changes `c.root` but not `m.root`, which inverts the expected relationship. The copy should be `new_dict['root'] = copy(self.__dict__['root'])` with `self.__dict__` left untouched. The new test only checks the copy's own root against the original's current root, so it does not catch this. The suite also cannot run at this head (pydantic-core version mismatch), so no probe here establishes correctness.\"}]}"
+  },
+  {
+   "task_id": "mut__fastapi__7815a32f__50__not_add",
+   "decision": "block",
+   "usd": 0.010385,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 4.6,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "fastapi/_compat/v2.py",
+     "line_start": 49,
+     "line_end": 53,
+     "body": "The guard `if not try_eval_type is not None:` parses as `not (try_eval_type is not None)`. When `try_eval_type` is missing (`getattr` returned None, as on Pydantic versions that lack it), the condition is True and the code calls `None(value, globalns, localns)`, which raises TypeError. When it is present, the condition is False and the code falls through to the deprecated `eval_type_lenient` path, so the new branch is never used. Every string annotation resolved through `get_typed_annotation` goes through this function, so this breaks forward-ref resolution on older Pydantic and leaves the intended deprecation fix unused on newer Pydantic. The intended check is `if try_eval_type is not None:`. The test changes do not exercise `evaluate_forwardref` or string annotations, so the existing suite cannot catch this.",
+     "proposed_test": "from fastapi._compat import evaluate_forwardref\n\ndef test_evaluate_forwardref_resolves_string():\n    from typing import ForwardRef\n    assert evaluate_forwardref(ForwardRef('int'), {}, {}) is int\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"fastapi/_compat/v2.py\", \"line_start\": 49, \"line_end\": 53, \"body\": \"The guard `if not try_eval_type is not None:` parses as `not (try_eval_type is not None)`. When `try_eval_type` is missing (`getattr` returned None, as on Pydantic versions that lack it), the condition is True and the code calls `None(value, globalns, localns)`, which raises TypeError. When it is present, the condition is False and the code falls through to the deprecated `eval_type_lenient` path, so the new branch is never used. Every string annotation resolved through `get_typed_annotation` goes through this function, so this breaks forward-ref resolution on older Pydantic and leaves the intended deprecation fix unused on newer Pydantic. The intended check is `if try_eval_type is not None:`. The test changes do not exercise `evaluate_forwardref` or string annotations, so the existing suite cannot catch this.\", \"proposed_test\": \"from fastapi._compat import evaluate_forwardref\\n\\ndef test_evaluate_forwardref_resolves_string():\\n    from typing import ForwardRef\\n    assert evaluate_forwardref(ForwardRef('int'), {}, {}) is int\\n\"}]}"
+  },
+  {
+   "task_id": "mut__more-itertools__d49571b4__5102__llm",
+   "decision": "block",
+   "usd": 0.012145,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 11.2,
+   "docker_s": 0.0,
+   "no_probe_reason": "model_decided_round0:block",
+   "comments": [
+    {
+     "file": "more_itertools/more.py",
+     "line_start": 5100,
+     "line_end": 5104,
+     "body": "The parity correction is inverted. The old code made `ub` odd by subtracting 1 only when it was even (`if not ub & 1`). The new code subtracts 1 only when `odd` is already odd (`if odd & 1`). After this, `odd` is always even, so `count(odd, step=-2)` only visits even numbers. Since every even number above 2 is composite, `first_true(..., pred=is_prime)` always returns 2 for any n > 1_000_000 with approximate=True. Every such call returns a wrong answer. The existing suite does not cover this branch, so it stays green.",
+     "proposed_test": "from more_itertools import nth_prime\n\ndef test_nth_prime_approximate_large_n_is_not_two():\n    # n > 1_000_000 takes the approximate branch; result must be a large prime, not 2\n    for n in range(1_000_001, 1_000_006):\n        assert nth_prime(n, approximate=True) > 1000\n"
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"block\", \"comments\": [{\"file\": \"more_itertools/more.py\", \"line_start\": 5100, \"line_end\": 5104, \"body\": \"The parity correction is inverted. The old code made `ub` odd by subtracting 1 only when it was even (`if not ub & 1`). The new code subtracts 1 only when `odd` is already odd (`if odd & 1`). After this, `odd` is always even, so `count(odd, step=-2)` only visits even numbers. Since every even number above 2 is composite, `first_true(..., pred=is_prime)` always returns 2 for any n > 1_000_000 with approximate=True. Every such call returns a wrong answer. The existing suite does not cover this branch, so it stays green.\", \"proposed_test\": \"from more_itertools import nth_prime\\n\\ndef test_nth_prime_approximate_large_n_is_not_two():\\n    # n > 1_000_000 takes the approximate branch; result must be a large prime, not 2\\n    for n in range(1_000_001, 1_000_006):\\n        assert nth_prime(n, approximate=True) > 1000\\n\"}]}"
+  },
+  {
+   "task_id": "clean__starlette__fe522c46",
+   "decision": "escalate",
+   "usd": 0.030886,
+   "probes": [
+    {
+     "round": 0,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "The changed deprecation warnings in Starlette.route and Router.on_event still reference the old starlette.io domain or lost their URL, so the probe fails if the migration is incomplete.",
+     "source": "import warnings\n\nfrom starlette.applications import Starlette\nfrom starlette.routing import Router\n\n\ndef _deprecation_messages(record):\n    return [str(w.message) for w in record if issubclass(w.category, DeprecationWarning)]\n\n\ndef test_probe_application_route_warning_points_to_new_domain():\n    app = Starlette()\n    with warnings.catch_warnings(record=True) as record:\n        warnings.simplefilter(\"always\")\n        app.route(\"/x\")\n    msgs = _deprecation_messages(record)\n    assert any(\"https://www.starlette.dev/routing/\" in m for m in msgs), msgs\n    assert not any(\"starlette.io\" in m for m in msgs), msgs\n\n\ndef test_probe_router_on_event_warning_points_to_new_domain():\n    router = Router()\n    with warnings.catch_warnings(record=True) as record:\n        warnings.simplefilter(\"always\")\n        router.on_event(\"startup\")\n    msgs = _deprecation_messages(record)\n    assert any(\"https://www.starlette.dev/lifespan/\" in m for m in msgs), msgs\n    assert not any(\"starlette.io\" in m for m in msgs), msgs\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\ncodspeed: 5.0.3 (disabled, mode: walltime, callgraph: enabled, timer_resolution: 1.0ns)\nrootdir: /testbed\nconfigfile: pyproject.toml\nplugins: anyio-4.15.1, codspeed-5.0.3\ncollected 2 items\n\ntests/test_probe_review.py ..                                            [100%]\n\n============================== 2 passed in 0.02s ===============================\nEXIT=0\n"
+    },
+    {
+     "round": 1,
+     "path": "tests/test_probe_review.py",
+     "status": "passed",
+     "strong": null,
+     "specific": true,
+     "targets_uncovered": true,
+     "hypothesis": "The remaining changed deprecation warnings (Starlette.middleware and Router.websocket_route) still point at starlette.io or lost their URL; this probe fails if any of them were missed.",
+     "source": "import warnings\n\nfrom starlette.applications import Starlette\nfrom starlette.routing import Router\n\n\ndef _deprecation_messages(record):\n    return [str(w.message) for w in record if issubclass(w.category, DeprecationWarning)]\n\n\ndef test_probe_application_middleware_warning_points_to_new_domain():\n    app = Starlette()\n    with warnings.catch_warnings(record=True) as record:\n        warnings.simplefilter(\"always\")\n        app.middleware(\"http\")\n    msgs = _deprecation_messages(record)\n    assert any(\"https://www.starlette.dev/middleware/#using-middleware\" in m for m in msgs), msgs\n    assert not any(\"starlette.io\" in m for m in msgs), msgs\n\n\ndef test_probe_router_websocket_route_warning_points_to_new_domain():\n    router = Router()\n    with warnings.catch_warnings(record=True) as record:\n        warnings.simplefilter(\"always\")\n        router.websocket_route(\"/ws\")\n    msgs = _deprecation_messages(record)\n    assert any(\"https://www.starlette.dev/routing/#websocket-routing\" in m for m in msgs), msgs\n    assert not any(\"starlette.io\" in m for m in msgs), msgs\n",
+     "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0\ncodspeed: 5.0.3 (disabled, mode: walltime, callgraph: enabled, timer_resolution: 1.0ns)\nrootdir: /testbed\nconfigfile: pyproject.toml\nplugins: anyio-4.15.1, codspeed-5.0.3\ncollected 2 items\n\ntests/test_probe_review.py ..                                            [100%]\n\n============================== 2 passed in 0.02s ===============================\nEXIT=0\n"
+    }
+   ],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 1,
+     "decision": "escalate",
+     "probe_requested": true,
+     "probe_runnable": true,
+     "parsed": true,
+     "invoke_syntax": false
+    },
+    {
+     "round": 2,
+     "decision": "escalate",
+     "probe_requested": false,
+     "probe_runnable": false,
+     "parsed": true,
+     "invoke_syntax": false
+    }
+   ],
+   "api_s": 17.3,
+   "docker_s": 4.4,
+   "no_probe_reason": null,
+   "comments": [
+    {
+     "file": "starlette/routing.py",
+     "line_start": 601,
+     "line_end": 605,
+     "body": "The deprecation-message URL changes in applications.py and routing.py are consistent with the mkdocs site_url and pyproject URL changes, and two probes confirmed that the Starlette.route, Starlette.middleware, Router.on_event, and Router.websocket_route warnings now point at starlette.dev. A human still needs to confirm that starlette.dev is the live documentation domain and that the docs pages it links to exist there, since that cannot be verified from the diff. The two failing tests in tests/test_staticfiles.py (test_staticfiles_with_invalid_dir_permissions_returns_401) look environmental, likely because the suite runs as root, but this has not been confirmed. The non-code files (docs/*.md, README.md, CITATION.cff) were not reviewed.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\": \"escalate\", \"comments\": [{\"file\": \"starlette/routing.py\", \"line_start\": 601, \"line_end\": 605, \"body\": \"The deprecation-message URL changes in applications.py and routing.py are consistent with the mkdocs site_url and pyproject URL changes, and two probes confirmed that the Starlette.route, Starlette.middleware, Router.on_event, and Router.websocket_route warnings now point at starlette.dev. A human still needs to confirm that starlette.dev is the live documentation domain and that the docs pages it links to exist there, since that cannot be verified from the diff. The two failing tests in tests/test_staticfiles.py (test_staticfiles_with_invalid_dir_permissions_returns_401) look environmental, likely because the suite runs as root, but this has not been confirmed. The non-code files (docs/*.md, README.md, CITATION.cff) were not reviewed.\"}]}"
+  }
+ ],
+ "rescored": {
+  "from_tasks": "a706fe89402f65bd",
+  "to": {
+   "tasks_file": "review/bench/public_eval.jsonl",
+   "tasks_sha256": "588eb1764eb695f5",
+   "ft_lab_commit": "5bd4f75",
+   "image_ids": {}
+  },
+  "dropped_reviews": 57,
+  "tasks_without_review": []
+ }
+}
