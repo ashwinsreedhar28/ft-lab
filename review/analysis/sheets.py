@@ -183,7 +183,7 @@ For each: <b>would you block this line in review?</b> You are not finding the bu
 <textarea id="out" readonly></textarea>
 <script>
 function collect(){{const o={{}};document.querySelectorAll('section').forEach(s=>{{const id=s.dataset.id;const r=s.querySelector('input[type=radio]:checked');const sg=s.querySelector('input[data-suggested]');if(r)o[id]={{verdict:r.value,why:s.querySelector('.why').value,suggested:sg?sg.value:null,confirmed:!!s.dataset.touched}};}});return o;}}
-document.addEventListener('click',e=>{{const s=e.target.closest&&e.target.closest('section');if(s&&e.target.matches('input[type=radio]'))s.dataset.touched='1';}});
+document.addEventListener('change',e=>{{const s=e.target.closest&&e.target.closest('section');if(s&&e.target.matches('input[type=radio]'))s.dataset.touched='1';}});
 function refresh(){{const o=collect();document.getElementById('count').textContent=Object.keys(o).length+'/{len(sample)}';try{{localStorage.setItem('labelsheet',JSON.stringify(o));}}catch(e){{}}}}
 function exportJson(){{const j=JSON.stringify(collect(),null,1);document.getElementById('out').value=j;navigator.clipboard&&navigator.clipboard.writeText(j).catch(()=>{{}});}}
 document.addEventListener('change',refresh);document.addEventListener('input',refresh);
