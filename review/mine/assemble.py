@@ -17,6 +17,11 @@ Rows produced
   real__<repo>__<intro8>               kind=bug    bisected introducing commit; oracle = the fix's
                                        tests; fix_sha for strong localization.
 
+Leakage controls (train only; the eval stays as mined): --op-cap limits any one operator's share of
+train operator mutants; --decoys adds unpaired clean PRs whose added lines carry the tokens the leakage
+probe ranked highest (`or`, `>=`, `!=`, …), so the token stops predicting the label. Rerun `make leakage`
+after assembling; the target is AUROC < 0.6 on operator mutants.
+
 Split: --split repo (by repo, --eval-repos held out) once >=3 repos contribute; --split pr (default
 while one repo dominates): 20 % of clean PRs by sha hash, each mutant on the same side as its clean
 original, so no PR appears in both. Real positives are always eval. A model trained on mutants is reported on the
@@ -85,6 +90,12 @@ def main():
     ap.add_argument("--eval-repos", default="attrs,click")
     ap.add_argument("--out", default="review/bench")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--op-cap", type=float, default=0.15,
+                    help="max share of TRAIN operator mutants any one operator may hold (bool_and_or was 24%%); excess is dropped")
+    ap.add_argument("--decoys", type=int, default=60,
+                    help="extra unpaired clean PRs (train only) whose added lines contain the tokens the leakage probe ranked highest; "
+                         "token-matched negatives, so `or`/`>=`/`!=` stop predicting the label")
+    ap.add_argument("--decoy-tokens", default="or,>=,<=,!=,True,None,not")
     a = ap.parse_args()
     cfg = repos(); eval_repos = set(a.eval_repos.split(","))
 
@@ -138,7 +149,44 @@ def main():
                       "fix_sha": p["sha"], "source": "real", "operator": "", "uncovered": [], "covered_frac": None, **hf,
                       "bug_age_commits": p.get("bug_age_commits"), "boundary": p.get("boundary")})
 
-    random.Random(a.seed).shuffle(tasks)
+    rng = random.Random(a.seed)
+    # operator cap (train only): the leakage probe reached AUROC 0.68 on operator mutants at n=415 because a few
+    # operators dominate and their token is the only difference from the paired original
+    train_ops = [t for t in tasks if t["split"] == "train" and t.get("source") == "op"]
+    cap = max(1, int(a.op_cap * len(train_ops)))
+    by_op: dict[str, list] = {}
+    for t in train_ops:
+        by_op.setdefault(t["operator"], []).append(t)
+    dropped = set()
+    for op, ts in by_op.items():
+        if len(ts) > cap:
+            rng.shuffle(ts); dropped.update(t["id"] for t in ts[cap:])
+    tasks = [t for t in tasks if t["id"] not in dropped]
+    # token-matched decoys: unpaired clean PRs from the same repos whose ADDED lines carry the leaking tokens
+    if a.decoys:
+        from review.mine.mutate import clean_prs, NON_CODE_DIRS  # noqa: F401
+        toks = [x.strip() for x in a.decoy_tokens.split(",") if x.strip()]
+        have = {t["head_sha"] for t in tasks}
+        pool = []
+        for name in sorted({t["repo"] for t in tasks}):
+            repo = WORK / "repos" / name
+            for pr in clean_prs(repo, "2025-01-01", 400, tuple(cfg[name].get("exclude_paths", []))):
+                if pr["sha"] in have:
+                    continue
+                d = pr_diff(repo, pr["sha"])
+                added = "\n".join(l for l in d.splitlines() if l.startswith("+") and not l.startswith("+++"))
+                hits = sum(1 for tk in toks if f" {tk} " in added or f" {tk}\n" in added or f"({tk} " in added)
+                if hits >= 2:
+                    pool.append((name, pr, d))
+        rng.shuffle(pool)
+        for name, pr, d in pool[: a.decoys]:
+            hf = harness_fields(name, cfg)
+            tasks.append({"id": f"decoy__{name}__{pr['sha'][:8]}", "repo": name, "kind": "clean", "base_sha": pr["parent"],
+                          "head_sha": pr["sha"], "diff": d, "files": files_of(repo := WORK / "repos" / name, pr["sha"]), "split": "train",
+                          "oracle": [], "probe_source": "", "gold_hunks": [], "neighborhood": neighborhood(repo, pr["sha"]),
+                          "fix_sha": "", "source": "decoy", "operator": "", "uncovered": [], "covered_frac": None, **hf})
+        print(f"operator cap {a.op_cap:.2f}: dropped {len(dropped)} train op mutants; decoys added: {min(len(pool), a.decoys)} of {len(pool)} candidates")
+    rng.shuffle(tasks)
     (out / "public_tasks.jsonl").write_text("".join(json.dumps(t) + "\n" for t in tasks))
     for split in ("train", "eval"):
         (out / f"public_{split}.jsonl").write_text("".join(json.dumps(t) + "\n" for t in tasks if t["split"] == split))
