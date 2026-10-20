@@ -1,400 +1,400 @@
-│ │ +def               │                    │       │           │            │ │
-│ │ test_get_help_opt… │                    │       │           │            │ │
-│ │ params, expected): │                    │       │           │            │ │
-│ │ +    """Check help │                    │       │           │            │ │
-│ │ option names are   │                    │       │           │            │ │
-│ │ deduplicated but   │                    │       │           │            │ │
-│ │ keep stable order. │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ https://github.co… │                    │       │           │            │ │
-│ │ +    """           │                    │       │           │            │ │
-│ │ +    cli =         │                    │       │           │            │ │
-│ │ click.Command("cl… │                    │       │           │            │ │
-│ │ params=[click.Opt… │                    │       │           │            │ │
-│ │ for decls in       │                    │       │           │            │ │
-│ │ params])           │                    │       │           │            │ │
-│ │ +    ctx =         │                    │       │           │            │ │
-│ │ click.Context(cli, │                    │       │           │            │ │
-│ │ help_option_names… │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ cli.get_help_opti… │                    │       │           │            │ │
-│ │ == expected        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_help_param_p… │                    │       │           │            │ │
-│ │      """Cover the  │                    │       │           │            │ │
-│ │ edge-case in which │                    │       │           │            │ │
-│ │ the eagerness of   │                    │       │           │            │ │
-│ │ help option was    │                    │       │           │            │ │
-│ │ not                │                    │       │           │            │ │
-│ │      respected,    │                    │       │           │            │ │
-│ │ because it was     │                    │       │           │            │ │
-│ │ internally         │                    │       │           │            │ │
-│ │ generated multiple │                    │       │           │            │ │
-│ │ times.             │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
-│ │ SYSTEM             │ ASSISTANT          │ -1.26 │      0.84 │ unparsable │ │
-│ │ You are the code   │ {                  │       │           │            │ │
-│ │ review gate for a  │   "decision":      │       │           │            │ │
-│ │ production         │ "block",           │       │           │            │ │
-│ │ repository. Your   │   "comments": [    │       │           │            │ │
-│ │ approval merges    │     {              │       │           │            │ │
-│ │ and deploys the    │       "file":      │       │           │            │ │
-│ │ change with no     │ "src/click/core.p… │       │           │            │ │
-│ │ further human      │       "line_start… │       │           │            │ │
-│ │ review. Decide:    │ 1182,              │       │           │            │ │
-│ │   approve  - you   │       "line_end":  │       │           │            │ │
-│ │ are confident the  │ 1191,              │       │           │            │ │
-│ │ change is correct  │       "body": "The │       │           │            │ │
-│ │ and safe to ship.  │ implementation of  │       │           │            │ │
-│ │   block    - you   │ `get_help_option_… │       │           │            │ │
-│ │ found a defect;    │ in line 1182 is    │       │           │            │ │
-│ │ cite its location. │ likely flawed. The │       │           │            │ │
-│ │   escalate - you   │ loop is:           │       │           │            │ │
-│ │ cannot establish   │ `.pop(name, None)` │       │           │            │ │
-│ │ safety from what   │ is used in the     │       │           │            │ │
-│ │ you can see; a     │ loop, but what if  │       │           │            │ │
-│ │ human must look.   │ a `name` was not   │       │           │            │ │
-│ │ Approving a change │ already in         │       │           │            │ │
-│ │ that contains a    │ `all_names`? That  │       │           │            │ │
-│ │ defect is the      │ would leave        │       │           │            │ │
-│ │ worst outcome.     │ `all_names` with   │       │           │            │ │
-│ │ Blocking a correct │ no value, but      │       │           │            │ │
-│ │ change costs an    │ vacant names in    │       │           │            │ │
-│ │ engineer's time.   │ `all_names` could  │       │           │            │ │
-│ │ Escalating is      │ be used to keep    │       │           │            │ │
-│ │ cheap but useless  │ the order of       │       │           │            │ │
-│ │ if done for        │ `help_option_name… │       │           │            │ │
-│ │ everything.        │ without            │       │           │            │ │
-│ │ Respond with       │ duplications. The  │       │           │            │ │
-│ │ exactly one JSON   │ proposed code      │       │           │            │ │
-│ │ object and nothing │ surface avoids     │       │           │            │ │
-│ │ else:              │ this by using      │       │           │            │ │
-│ │ {"decision":       │ `dict.fromkeys()`  │       │           │            │ │
-│ │ "approve|block|es… │ on the             │       │           │            │ │
-│ │ "comments":        │ `help_option_name… │       │           │            │ │
-│ │ [{"file": "...",   │ but you could      │       │           │            │ │
-│ │ "line_start": N,   │ remove a name      │       │           │            │ │
-│ │ "line_end": N,     │ that's not already │       │           │            │ │
-│ │ "body": "...",     │ in `all_names` for │       │           │            │ │
-│ │ "proposed_test":   │ any absurdity.     │       │           │            │ │
-│ │ "optional pytest   │ That could lead to │       │           │            │ │
-│ │ source"}]}         │ systematic         │       │           │            │ │
-│ │                    │ failures in the    │       │           │            │ │
-│ │ USER               │ test suite if not  │       │           │            │ │
-│ │ Repository: click  │ handled            │       │           │            │ │
-│ │ Files changed:     │ carefully."        │       │           │            │ │
-│ │ CHANGES.md,        │     },             │       │           │            │ │
-│ │ src/click/core.py, │     {              │       │           │            │ │
-│ │ tests/test_comman… │       "file":      │       │           │            │ │
-│ │                    │ "tests/test_comma… │       │           │            │ │
-│ │ Not shown          │       "line_start… │       │           │            │ │
-│ │ (non-code or over  │ 431,               │       │           │            │ │
-│ │ budget; treat as   │       "line_end":  │       │           │            │ │
-│ │ unreviewed):       │ 480,               │       │           │            │ │
-│ │ CHANGES.md (474    │       "body": "The │       │           │            │ │
-│ │ chars, non-code)   │ new unit test      │       │           │            │ │
-│ │                    │ suite in line 431  │       │           │            │ │
-│ │ Context around the │ is extensive, but  │       │           │            │ │
-│ │ change             │ the code in line   │       │           │            │ │
-│ │ (mechanically      │ 480 of the test    │       │           │            │ │
-│ │ extracted):        │ suite would cause  │       │           │            │ │
-│ │ Changed            │ `object not found` │       │           │            │ │
-│ │ definitions:       │ if the test        │       │           │            │ │
-│ │ src/click/core.py… │ passes."           │       │           │            │ │
-│ │ src/click/core.py… │     },             │       │           │            │ │
-│ │ src/click/core.py… │     {              │       │           │            │ │
-│ │ src/click/core.py… │       "file":      │       │           │            │ │
-│ │ tests/test_comman… │ "src/click/core.p… │       │           │            │ │
-│ │ tests/test_comman… │       "line_start… │       │           │            │ │
-│ │ tests/test_comman… │ 1192,              │       │           │            │ │
-│ │ Recent history of  │       "line_end":  │       │           │            │ │
-│ │ src/click/core.py: │ 1195,              │       │           │            │ │
-│ │   0f4738d          │       "body": "The │       │           │            │ │
-│ │ 2026-07-17 Fix     │ new line 1192 is   │       │           │            │ │
-│ │ docs and changelog │ `return            │       │           │            │ │
-│ │   7a0a344          │ list(all_names)`   │       │           │            │ │
-│ │ 2026-07-16 Mark    │ which would cause  │       │           │            │ │
-│ │ clearly functions  │ a `KeyError` if    │       │           │            │ │
-│ │ private status.    │ `all_names` is     │       │           │            │ │
-│ │ Deprecated Python  │ empty as a list.   │       │           │            │ │
-│ │ 2 utilities.       │ That'sตลก but      │       │           │            │ │
-│ │   8f30085          │ quick to fix."     │       │           │            │ │
-│ │ 2026-05-08         │     },             │       │           │            │ │
-│ │ Streamline option  │     {              │       │           │            │ │
-│ │ flag management    │       "file":      │       │           │            │ │
-│ │ Recent history of  │ "tests/test_comma… │       │           │            │ │
-│ │ tests/test_comman… │       "line_start… │       │           │            │ │
-│ │   665736b          │ 545,               │       │           │            │ │
-│ │ 2026-05-23 Mark    │       "line_end":  │       │           │            │ │
-│ │ commands as        │ 548,               │       │           │            │ │
-│ │ optional in the    │       "body": "The │       │           │            │ │
-│ │ synopsis           │ new line 545 has a │       │           │            │ │
-│ │   82f377c          │ space issue before │       │           │            │ │
-│ │ 2026-05-23 Fix     │ `tuple(decls)`.    │       │           │            │ │
-│ │ deprecated label   │ The user may need  │       │           │            │ │
-│ │ formatting         │ to update the      │       │           │            │ │
-│ │   831c8f0          │ indentation, i.e., │       │           │            │ │
-│ │ 2026-04-30 Add     │ `maybe {"--shout", │       │           │            │ │
-│ │ NoSuchCommand      │ "--no-shout"}` 🐢  │       │           │            │ │
-│ │ exception with     │ with `decls`."     │       │           │            │ │
-│ │ suggestions for    │     }              │       │           │            │ │
-│ │ misspelled         │   ]                │       │           │            │ │
-│ │ commands (#3228)   │ }                  │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Diff:              │                    │       │           │            │ │
-│ │ ```diff            │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/src/click/core.… │                    │       │           │            │ │
-│ │ b/src/click/core.… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ f29dc46..79adf59   │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/src/click/core.… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/src/click/core.… │                    │       │           │            │ │
-│ │ @@ -1175,11        │                    │       │           │            │ │
-│ │ +1175,18 @@ class  │                    │       │           │            │ │
-│ │ Command:           │                    │       │           │            │ │
-│ │          return rv │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ get_help_option_n… │                    │       │           │            │ │
-│ │ ctx: Context) ->   │                    │       │           │            │ │
-│ │ list[str]:         │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ """Returns the     │                    │       │           │            │ │
-│ │ names for the help │                    │       │           │            │ │
-│ │ option."""         │                    │       │           │            │ │
-│ │ -        all_names │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ set(ctx.help_opti… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ """Returns the     │                    │       │           │            │ │
-│ │ names for the help │                    │       │           │            │ │
-│ │ option.            │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +        Drops     │                    │       │           │            │ │
-│ │ duplicates or      │                    │       │           │            │ │
-│ │ names already      │                    │       │           │            │ │
-│ │ reserved by        │                    │       │           │            │ │
-│ │ another parameter. │                    │       │           │            │ │
-│ │ Order of           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ :attr:`Context.he… │                    │       │           │            │ │
-│ │ is preserved, so   │                    │       │           │            │ │
-│ │ the result is      │                    │       │           │            │ │
-│ │ stable.            │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +        ..        │                    │       │           │            │ │
-│ │ versionchanged::   │                    │       │           │            │ │
-│ │ 8.5.0              │                    │       │           │            │ │
-│ │ +            Names │                    │       │           │            │ │
-│ │ keep their         │                    │       │           │            │ │
-│ │ declaration order. │                    │       │           │            │ │
-│ │ +        """       │                    │       │           │            │ │
-│ │ +        all_names │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ dict.fromkeys(ctx… │                    │       │           │            │ │
-│ │          for param │                    │       │           │            │ │
-│ │ in self.params:    │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ all_names.differe… │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ all_names.differe… │                    │       │           │            │ │
-│ │ +            for   │                    │       │           │            │ │
-│ │ name in            │                    │       │           │            │ │
-│ │ (*param.opts,      │                    │       │           │            │ │
-│ │ *param.secondary_… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ all_names.pop(nam… │                    │       │           │            │ │
-│ │ None)              │                    │       │           │            │ │
-│ │          return    │                    │       │           │            │ │
-│ │ list(all_names)    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ get_help_option(s… │                    │       │           │            │ │
-│ │ ctx: Context) ->   │                    │       │           │            │ │
-│ │ Option | None:     │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_comm… │                    │       │           │            │ │
-│ │ b/tests/test_comm… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 35ba65c..c2de826   │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_comm… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_comm… │                    │       │           │            │ │
-│ │ @@ -419,6 +419,56  │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ test_iter_params_… │                    │       │           │            │ │
-│ │      )             │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +@pytest.mark.par… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ ("help_option_nam… │                    │       │           │            │ │
-│ │ "params",          │                    │       │           │            │ │
-│ │ "expected"),       │                    │       │           │            │ │
-│ │ +    [             │                    │       │           │            │ │
-│ │ +        # A       │                    │       │           │            │ │
-│ │ single default     │                    │       │           │            │ │
-│ │ name is returned   │                    │       │           │            │ │
-│ │ unchanged.         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ (["--help"], [],   │                    │       │           │            │ │
-│ │ ["--help"]),       │                    │       │           │            │ │
-│ │ +        #         │                    │       │           │            │ │
-│ │ Declaration order  │                    │       │           │            │ │
-│ │ is preserved       │                    │       │           │            │ │
-│ │ verbatim, whatever │                    │       │           │            │ │
-│ │ it is.             │                    │       │           │            │ │
-│ │ +        (["-h",   │                    │       │           │            │ │
-│ │ "--help"], [],     │                    │       │           │            │ │
-│ │ ["-h", "--help"]), │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ (["--help", "-h"], │                    │       │           │            │ │
-│ │ [], ["--help",     │                    │       │           │            │ │
-│ │ "-h"]),            │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ (["--help", "-h",  │                    │       │           │            │ │
-│ │ "-?"], [],         │                    │       │           │            │ │
-│ │ ["--help", "-h",   │                    │       │           │            │ │
-│ │ "-?"]),            │                    │       │           │            │ │
-│ │ +        (["-?",   │                    │       │           │            │ │
-│ │ "--help", "-h"],   │                    │       │           │            │ │
-│ │ [], ["-?",         │                    │       │           │            │ │
-│ │ "--help", "-h"]),  │                    │       │           │            │ │
-│ │ +        #         │                    │       │           │            │ │
-│ │ Duplicate names    │                    │       │           │            │ │
-│ │ collapse to their  │                    │       │           │            │ │
-│ │ first occurrence,  │                    │       │           │            │ │
-│ │ keeping order.     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ (["--help",        │                    │       │           │            │ │
-│ │ "--help"], [],     │                    │       │           │            │ │
-│ │ ["--help"]),       │                    │       │           │            │ │
-│ │ +        (["-h",   │                    │       │           │            │ │
-│ │ "--help", "-h"],   │                    │       │           │            │ │
-│ │ [], ["-h",         │                    │       │           │            │ │
-│ │ "--help"]),        │                    │       │           │            │ │
-│ │ +        # A name  │                    │       │           │            │ │
-│ │ already claimed by │                    │       │           │            │ │
-│ │ another            │                    │       │           │            │ │
-│ │ parameter's option │                    │       │           │            │ │
-│ │ is dropped.        │                    │       │           │            │ │
-│ │ +        (["-h",   │                    │       │           │            │ │
-│ │ "--help"],         │                    │       │           │            │ │
-│ │ [["--help"]],      │                    │       │           │            │ │
-│ │ ["-h"]),           │                    │       │           │            │ │
-│ │ +        (["-h",   │                    │       │           │            │ │
-│ │ "--help"], [["-h", │                    │       │           │            │ │
-│ │ "--verbose"]],     │                    │       │           │            │ │
-│ │ ["--help"]),       │                    │       │           │            │ │
-│ │ +        # Both    │                    │       │           │            │ │
-│ │ options of a       │                    │       │           │            │ │
-│ │ feature-switch     │                    │       │           │            │ │
-│ │ flag are removed   │                    │       │           │            │ │
-│ │ too.               │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ (["--shout",       │                    │       │           │            │ │
-│ │ "--help"],         │                    │       │           │            │ │
-│ │ [["--shout/--no-s… │                    │       │           │            │ │
-│ │ ["--help"]),       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ (["--no-shout",    │                    │       │           │            │ │
-│ │ "--help"],         │                    │       │           │            │ │
-│ │ [["--shout/--no-s… │                    │       │           │            │ │
-│ │ ["--help"]),       │                    │       │           │            │ │
-│ │ +        #         │                    │       │           │            │ │
-│ │ Filtering every    │                    │       │           │            │ │
-│ │ name out yields an │                    │       │           │            │ │
-│ │ empty list.        │                    │       │           │            │ │
-│ │ +        (["-h",   │                    │       │           │            │ │
-│ │ "--help"],         │                    │       │           │            │ │
-│ │ [["-h"],           │                    │       │           │            │ │
-│ │ ["--help"]], []),  │                    │       │           │            │ │
-│ │ +        #         │                    │       │           │            │ │
-│ │ Deduplication and  │                    │       │           │            │ │
-│ │ conflict removal   │                    │       │           │            │ │
-│ │ combine, order     │                    │       │           │            │ │
-│ │ still preserved.   │                    │       │           │            │ │
-│ │ +        (["-h",   │                    │       │           │            │ │
-│ │ "--help", "-h",    │                    │       │           │            │ │
-│ │ "--assist"],       │                    │       │           │            │ │
-│ │ [["--assist"]],    │                    │       │           │            │ │
-│ │ ["-h", "--help"]), │                    │       │           │            │ │
-│ │ +    ],            │                    │       │           │            │ │
-│ │ +    ids=[         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "default",         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "order-short-long… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "order-long-short… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "order-three",     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "order-three-shuf… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "dedupe-adjacent", │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "dedupe-spread",   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "conflict-long",   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "conflict-short",  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "conflict-flag-on… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "conflict-flag-of… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "all-removed",     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "dedupe-and-confl… │                    │       │           │            │ │
-│ │ +    ],            │                    │       │           │            │ │
-│ │ +)                 │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_get_help_opt… │                    │       │           │            │ │
-│ │ params, expected): │                    │       │           │            │ │
-│ │ +    """Check help │                    │       │           │            │ │
-│ │ option names are   │                    │       │           │            │ │
-│ │ deduplicated but   │                    │       │           │            │ │
-│ │ keep stable order. │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ https://github.co… │                    │       │           │            │ │
-│ │ +    """           │                    │       │           │            │ │
-│ │ +    cli =         │                    │       │           │            │ │
-│ │ click.Command("cl… │                    │       │           │            │ │
-│ │ params=[click.Opt… │                    │       │           │            │ │
-│ │ for decls in       │                    │       │           │            │ │
-│ │ params])           │                    │       │           │            │ │
-│ │ +    ctx =         │                    │       │           │            │ │
-│ │ click.Context(cli, │                    │       │           │            │ │
-│ │ help_option_names… │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ cli.get_help_opti… │                    │       │           │            │ │
-│ │ == expected        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_help_param_p… │                    │       │           │            │ │
-│ │      """Cover the  │                    │       │           │            │ │
-│ │ edge-case in which │                    │       │           │            │ │
-│ │ the eagerness of   │                    │       │           │            │ │
-│ │ help option was    │                    │       │           │            │ │
-│ │ not                │                    │       │           │            │ │
-│ │      respected,    │                    │       │           │            │ │
-│ │ because it was     │                    │       │           │            │ │
-│ │ internally         │                    │       │           │            │ │
-│ │ generated multiple │                    │       │           │            │ │
-│ │ times.             │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
+│ │ with no further     │ "line_end": 154,    │       │           │          │ │
+│ │ human review.       │ "body":             │       │           │          │ │
+│ │ Decide:             │ "Partitioned        │       │           │          │ │
+│ │   approve  - you    │ cookies are only    │       │           │          │ │
+│ │ are confident the   │ supported in Python │       │           │          │ │
+│ │ change is correct   │ 3.14 and above."}]} │       │           │          │ │
+│ │ and safe to ship.   │                     │       │           │          │ │
+│ │   block    - you    │                     │       │           │          │ │
+│ │ found a defect;     │                     │       │           │          │ │
+│ │ cite its location.  │                     │       │           │          │ │
+│ │   escalate - you    │                     │       │           │          │ │
+│ │ cannot establish    │                     │       │           │          │ │
+│ │ safety from what    │                     │       │           │          │ │
+│ │ you can see; a      │                     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ starlette           │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ docs/responses.md,  │                     │       │           │          │ │
+│ │ starlette/response… │                     │       │           │          │ │
+│ │ tests/test_respons… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ docs/responses.md   │                     │       │           │          │ │
+│ │ (1548 chars,        │                     │       │           │          │ │
+│ │ non-code)           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ starlette/response… │                     │       │           │          │ │
+│ │ starlette/response… │                     │       │           │          │ │
+│ │ starlette/response… │                     │       │           │          │ │
+│ │ tests/test_respons… │                     │       │           │          │ │
+│ │ tests/test_respons… │                     │       │           │          │ │
+│ │ tests/test_respons… │                     │       │           │          │ │
+│ │ tests/test_respons… │                     │       │           │          │ │
+│ │ tests/test_respons… │                     │       │           │          │ │
+│ │ tests/test_respons… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ starlette/response… │                     │       │           │          │ │
+│ │   5cc4ddf           │                     │       │           │          │ │
+│ │ 2025-02-22 Raise    │                     │       │           │          │ │
+│ │ exception from      │                     │       │           │          │ │
+│ │ background task on  │                     │       │           │          │ │
+│ │ BaseHTTPMiddleware  │                     │       │           │          │ │
+│ │ (#2812)             │                     │       │           │          │ │
+│ │   a7d0b14           │                     │       │           │          │ │
+│ │ 2025-02-02 Bump the │                     │       │           │          │ │
+│ │ python-packages     │                     │       │           │          │ │
+│ │ group with 5        │                     │       │           │          │ │
+│ │ updates (#2860)     │                     │       │           │          │ │
+│ │   e7605e1           │                     │       │           │          │ │
+│ │ 2024-12-28 Drop     │                     │       │           │          │ │
+│ │ Python 3.8 (#2823)  │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ tests/test_respons… │                     │       │           │          │ │
+│ │   a7d0b14           │                     │       │           │          │ │
+│ │ 2025-02-02 Bump the │                     │       │           │          │ │
+│ │ python-packages     │                     │       │           │          │ │
+│ │ group with 5        │                     │       │           │          │ │
+│ │ updates (#2860)     │                     │       │           │          │ │
+│ │   e7605e1           │                     │       │           │          │ │
+│ │ 2024-12-28 Drop     │                     │       │           │          │ │
+│ │ Python 3.8 (#2823)  │                     │       │           │          │ │
+│ │   70a04ee           │                     │       │           │          │ │
+│ │ 2024-12-25 tests:   │                     │       │           │          │ │
+│ │ branches coverage   │                     │       │           │          │ │
+│ │ in `responses.py`,  │                     │       │           │          │ │
+│ │ `staticfiles.py`,   │                     │       │           │          │ │
+│ │ `templating.py`,    │                     │       │           │          │ │
+│ │ `middleware/wsgi.p… │                     │       │           │          │ │
+│ │ and `endpoints.py`  │                     │       │           │          │ │
+│ │ (#2804)             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/starlette/respon… │                     │       │           │          │ │
+│ │ b/starlette/respon… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 81e89fa..c956ff6    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/starlette/respon… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/starlette/respon… │                     │       │           │          │ │
+│ │ @@ -6,6 +6,7 @@     │                     │       │           │          │ │
+│ │ import json         │                     │       │           │          │ │
+│ │  import os          │                     │       │           │          │ │
+│ │  import re          │                     │       │           │          │ │
+│ │  import stat        │                     │       │           │          │ │
+│ │ +import sys         │                     │       │           │          │ │
+│ │  import typing      │                     │       │           │          │ │
+│ │  import warnings    │                     │       │           │          │ │
+│ │  from datetime      │                     │       │           │          │ │
+│ │ import datetime     │                     │       │           │          │ │
+│ │ @@ -97,6 +98,7 @@   │                     │       │           │          │ │
+│ │ class Response:     │                     │       │           │          │ │
+│ │          secure:    │                     │       │           │          │ │
+│ │ bool = False,       │                     │       │           │          │ │
+│ │          httponly:  │                     │       │           │          │ │
+│ │ bool = False,       │                     │       │           │          │ │
+│ │          samesite:  │                     │       │           │          │ │
+│ │ typing.Literal["la… │                     │       │           │          │ │
+│ │ "strict", "none"] | │                     │       │           │          │ │
+│ │ None = "lax",       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ partitioned: bool = │                     │       │           │          │ │
+│ │ False,              │                     │       │           │          │ │
+│ │      ) -> None:     │                     │       │           │          │ │
+│ │          cookie:    │                     │       │           │          │ │
+│ │ http.cookies.BaseC… │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ http.cookies.Simpl… │                     │       │           │          │ │
+│ │          cookie[ke… │                     │       │           │          │ │
+│ │ = value             │                     │       │           │          │ │
+│ │ @@ -122,6 +124,11   │                     │       │           │          │ │
+│ │ @@ class Response:  │                     │       │           │          │ │
+│ │                  "… │                     │       │           │          │ │
+│ │              ],     │                     │       │           │          │ │
+│ │ "samesite must be   │                     │       │           │          │ │
+│ │ either 'strict',    │                     │       │           │          │ │
+│ │ 'lax' or 'none'"    │                     │       │           │          │ │
+│ │              cooki… │                     │       │           │          │ │
+│ │ = samesite          │                     │       │           │          │ │
+│ │ +        if         │                     │       │           │          │ │
+│ │ partitioned:        │                     │       │           │          │ │
+│ │ +            if     │                     │       │           │          │ │
+│ │ sys.version_info <  │                     │       │           │          │ │
+│ │ (3, 14):            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ raise               │                     │       │           │          │ │
+│ │ ValueError("Partit… │                     │       │           │          │ │
+│ │ cookies are only    │                     │       │           │          │ │
+│ │ supported in Python │                     │       │           │          │ │
+│ │ 3.14 and above.")   │                     │       │           │          │ │
+│ │ # pragma: no cover  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cookie[key]["parti… │                     │       │           │          │ │
+│ │ = True  # pragma:   │                     │       │           │          │ │
+│ │ no cover            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │          cookie_val │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ cookie.output(head… │                     │       │           │          │ │
+│ │          self.raw_… │                     │       │           │          │ │
+│ │ cookie_val.encode(… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_respo… │                     │       │           │          │ │
+│ │ b/tests/test_respo… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 0a00e93..baf7c98    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_respo… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_respo… │                     │       │           │          │ │
+│ │ @@ -1,6 +1,7 @@     │                     │       │           │          │ │
+│ │  from __future__    │                     │       │           │          │ │
+│ │ import annotations  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  import datetime as │                     │       │           │          │ │
+│ │ dt                  │                     │       │           │          │ │
+│ │ +import sys         │                     │       │           │          │ │
+│ │  import time        │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ collections.abc     │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ AsyncGenerator,     │                     │       │           │          │ │
+│ │ AsyncIterator,      │                     │       │           │          │ │
+│ │ Iterator            │                     │       │           │          │ │
+│ │  from http.cookies  │                     │       │           │          │ │
+│ │ import SimpleCookie │                     │       │           │          │ │
+│ │ @@ -370,18 +371,37  │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ test_set_cookie(te… │                     │       │           │          │ │
+│ │ TestClientFactory,  │                     │       │           │          │ │
+│ │ monkeypatch:        │                     │       │           │          │ │
+│ │ pytest.             │                     │       │           │          │ │
+│ │              secur… │                     │       │           │          │ │
+│ │              httpo… │                     │       │           │          │ │
+│ │              sames… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ partitioned=True if │                     │       │           │          │ │
+│ │ sys.version_info >= │                     │       │           │          │ │
+│ │ (3, 14) else False, │                     │       │           │          │ │
+│ │          )          │                     │       │           │          │ │
+│ │          await      │                     │       │           │          │ │
+│ │ response(scope,     │                     │       │           │          │ │
+│ │ receive, send)      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ partitioned_text =  │                     │       │           │          │ │
+│ │ "Partitioned; " if  │                     │       │           │          │ │
+│ │ sys.version_info >= │                     │       │           │          │ │
+│ │ (3, 14) else ""     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │      client =       │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │      response =     │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │      assert         │                     │       │           │          │ │
+│ │ response.text ==    │                     │       │           │          │ │
+│ │ "Hello, world!"     │                     │       │           │          │ │
+│ │      assert (       │                     │       │           │          │ │
+│ │          response.… │                     │       │           │          │ │
+│ │ ==                  │                     │       │           │          │ │
+│ │ "mycookie=myvalue;  │                     │       │           │          │ │
+│ │ Domain=localhost;   │                     │       │           │          │ │
+│ │ expires=Thu, 22 Jan │                     │       │           │          │ │
+│ │ 2037 12:00:10 GMT;  │                     │       │           │          │ │
+│ │ "                   │                     │       │           │          │ │
+│ │ -        "HttpOnly; │                     │       │           │          │ │
+│ │ Max-Age=10; Path=/; │                     │       │           │          │ │
+│ │ SameSite=none;      │                     │       │           │          │ │
+│ │ Secure"             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ f"HttpOnly;         │                     │       │           │          │ │
+│ │ Max-Age=10;         │                     │       │           │          │ │
+│ │ {partitioned_text}… │                     │       │           │          │ │
+│ │ SameSite=none;      │                     │       │           │          │ │
+│ │ Secure"             │                     │       │           │          │ │
+│ │      )              │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +@pytest.mark.skip… │                     │       │           │          │ │
+│ │ >= (3, 14),         │                     │       │           │          │ │
+│ │ reason="Only        │                     │       │           │          │ │
+│ │ relevant for        │                     │       │           │          │ │
+│ │ <3.14")             │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_set_cookie_ra… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │ TestClientFactory,  │                     │       │           │          │ │
+│ │ +) -> None:  #      │                     │       │           │          │ │
+│ │ pragma: no cover    │                     │       │           │          │ │
+│ │ +    async def      │                     │       │           │          │ │
+│ │ app(scope: Scope,   │                     │       │           │          │ │
+│ │ receive: Receive,   │                     │       │           │          │ │
+│ │ send: Send) ->      │                     │       │           │          │ │
+│ │ None:               │                     │       │           │          │ │
+│ │ +        response = │                     │       │           │          │ │
+│ │ Response("Hello,    │                     │       │           │          │ │
+│ │ world!",            │                     │       │           │          │ │
+│ │ media_type="text/p… │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ pytest.raises(Valu… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ response.set_cooki… │                     │       │           │          │ │
+│ │ "myvalue",          │                     │       │           │          │ │
+│ │ partitioned=True)   │                     │       │           │          │ │
+│ │ +        await      │                     │       │           │          │ │
+│ │ response(scope,     │                     │       │           │          │ │
+│ │ receive, send)      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │ +    response =     │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.text ==    │                     │       │           │          │ │
+│ │ "Hello, world!"     │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.headers.g… │                     │       │           │          │ │
+│ │ is None             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │  def                │                     │       │           │          │ │
+│ │ test_set_cookie_pa… │                     │       │           │          │ │
+│ │ TestClientFactory)  │                     │       │           │          │ │
+│ │ -> None:            │                     │       │           │          │ │
+│ │      async def      │                     │       │           │          │ │
+│ │ app(scope: Scope,   │                     │       │           │          │ │
+│ │ receive: Receive,   │                     │       │           │          │ │
+│ │ send: Send) ->      │                     │       │           │          │ │
+│ │ None:               │                     │       │           │          │ │
+│ │          response = │                     │       │           │          │ │
+│ │ Response("Hello,    │                     │       │           │          │ │
+│ │ world!",            │                     │       │           │          │ │
+│ │ media_type="text/p… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │  1.50 │      0.00 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "starlette/__init_… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 1,    │       │           │          │ │
+│ │ with no further     │ "line_end": 1,      │       │           │          │ │
+│ │ human review.       │ "body": "Version    │       │           │          │ │
+│ │ Decide:             │ bump from 0.48.0 to │       │           │          │ │
+│ │   approve  - you    │ 0.94.0 implies a    │       │           │          │ │
+│ │ are confident the   │ non-trivial change. │       │           │          │ │
+│ │ change is correct   │ Releasing this      │       │           │          │ │
+│ │ and safe to ship.   │ version of the      │       │           │          │ │
+│ │   block    - you    │ library may         │       │           │          │ │
+│ │ found a defect;     │ conflict with       │       │           │          │ │
+│ │ cite its location.  │ downstream versions │       │           │          │ │
+│ │   escalate - you    │ such as the current │       │           │          │ │
+│ │ cannot establish    │ release of          │       │           │          │ │
+│ │ safety from what    │ starlette's         │       │           │          │ │
+│ │ you can see; a      │ dependencies."}]}   │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ starlette           │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ docs/release-notes… │                     │       │           │          │ │
+│ │ starlette/__init__… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ docs/release-notes… │                     │       │           │          │ │
+│ │ (767 chars,         │                     │       │           │          │ │
+│ │ non-code)           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/starlette/__init… │                     │       │           │          │ │
+│ │ b/starlette/__init… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 3158ac8..4bcb7a2    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/starlette/__init… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/starlette/__init… │                     │       │           │          │ │
+│ │ @@ -1 +1 @@         │                     │       │           │          │ │
+│ │ -__version__ =      │                     │       │           │          │ │
+│ │ "0.48.0"            │                     │       │           │          │ │
+│ │ +__version__ =      │                     │       │           │          │ │
+│ │ "0.94.0"            │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
