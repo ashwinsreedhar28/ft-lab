@@ -86,14 +86,19 @@ def ai_note(t: dict, before: str, after: str, ctx: str, probe: str) -> str:
         return ""
     try:
         from review.agent.loop import call
-        prompt = (f"Repo {t['repo']}, file {t['gold_hunks'][0]['file'] if t['gold_hunks'] else '?'}.\n"
-                  f"Original line:\n{before}\nChanged line:\n{after}\n\nSurrounding diff:\n{ctx[:3000]}\n\n"
-                  f"A test that fails on the changed line and passes on the original:\n{probe[:2000]}\n\n"
-                  "In at most 3 short sentences, plain English, for a code reviewer: (1) what the original line does, "
-                  "(2) what the changed line does instead, (3) the concrete input or situation where the two behave differently. "
-                  "Then on a final line write exactly one of: SUGGEST: yes (clearly wrong, a reviewer should block) / "
-                  "SUGGEST: arguable (wrong only in an edge case) / SUGGEST: no (same observable behavior, or not code). "
-                  "The human decides; your suggestion is a starting point.")
+        if before or after:
+            change = f"Original line:\n{before}\nChanged line:\n{after}"
+        else:
+            gh = ", ".join(f"{h['file']}:{h['line_start']}-{h['line_end']}" for h in t.get("gold_hunks", [])[:4])
+            change = f"Real bug-introducing commit. The bug lives in these hunks: {gh}. Oracle tests that fail on it: {', '.join(t.get('oracle', [])[:3])}"
+        prompt = (f"Repo {t['repo']}, file {t['gold_hunks'][0]['file'] if t['gold_hunks'] else '?'}.\n{change}\n\n"
+                  f"Surrounding diff:\n{ctx[:3500]}\n\n"
+                  + (f"A test that fails on the changed code and passes on the original:\n{probe[:2000]}\n\n" if probe else "")
+                  + "Write the reasoning a sharp reviewer would jot in a review comment: 1-2 short sentences, direct, no hedging, "
+                  "no preamble. Name what the change does and the concrete input where it goes wrong (or why it is harmless). "
+                  "Style examples: 'inverts the stdin check: `-` now fails the exists check and real paths skip it.' / "
+                  "'docs-only, no code path changes.' / 'argmax returns 3 either way; equivalent.'\n"
+                  "Then a final line, exactly one of: SUGGEST: yes (block it) / SUGGEST: arguable (edge case only) / SUGGEST: no (same behavior or not code).")
         text, _, _ = call("claude-haiku-5-5", "You explain one-line code changes concretely for a reviewer.", [{"role": "user", "content": prompt}], 450)
         return text.strip()
     except Exception as e:  # noqa: BLE001
@@ -122,7 +127,7 @@ def labels_html(tasks_path: str, n: int, seed: int):
             f'<div class="{ "mut" if (l.startswith("+") and l[1:] == after) else "add" if l.startswith("+") else "del" if l.startswith("-") else "" }">{_html_escape(l)}</div>'
             for l in ctx)
         probe = t.get("probe_source") or ""
-        note = ai_note(t, before, after, "\n".join(ctx), probe) if (before or after) else ""
+        note = ai_note(t, before, after, "\n".join(ctx), probe)
         suggest = ""
         m_s = __import__("re").search(r"SUGGEST:\s*(yes|arguable|no)", note, __import__("re").I)
         if m_s:
@@ -136,7 +141,7 @@ def labels_html(tasks_path: str, n: int, seed: int):
 <p class="where">{_html_escape(gh['file'])} line {gh['line_start']}</p>
 <table class="pair"><tr><th>original (clean PR)</th><th>mutated (the labeled bug)</th></tr>
 <tr><td><pre>{_html_escape(before) or '<i>real positive: see gold hunks</i>'}</pre></td><td><pre class="mut">{_html_escape(after) or '<i>see diff</i>'}</pre></td></tr></table>
-{f'<p class="note"><b>AI note (Haiku, descriptive only):</b> {_html_escape(note)}</p>' if note else ''}
+{f'<p class="note"><b>AI note (Haiku):</b> {_html_escape(note)}</p>' if note else ''}
 {f'<p class="hint"><b>probe says:</b> {_html_escape(doc)}</p>' if doc else ''}
 <details><summary>context (±12 lines of the PR diff; mutated line highlighted)</summary><pre class="ctx">{ctx_html}</pre></details>
 <details><summary>guard probe (fails on the mutant, passes on the original)</summary><pre>{_html_escape(probe[:3000])}</pre></details>
