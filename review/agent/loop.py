@@ -220,7 +220,9 @@ def suite_delta(task: dict, subdir: str, runs: dict) -> str:
     if fixed:
         lines.append("Fixed by this PR: " + ", ".join(fixed[:10]))
     if added:
-        lines.append(f"Tests added by this PR: {len(added)} ({', '.join(added[:8])}{'…' if len(added) > 8 else ''})")
+        added_fail = [t for t in added if h[t] in ("failed", "error")]
+        lines.append(f"Tests added by this PR: {len(added)} ({', '.join(added[:8])}{'…' if len(added) > 8 else ''})"
+                     + (f"; OF WHICH FAILING AT HEAD: {', '.join(added_fail[:8])}" if added_fail else "; all pass"))
     if gone:
         lines.append(f"Tests removed by this PR: {len(gone)}")
     return "\n".join(lines)
