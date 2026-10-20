@@ -97,18 +97,19 @@ def docstring_lines(src: list[str]) -> set[int]:
     a `>>>` doctest prompt mutated to `>=>>` passed the guard once (the probe parsed the docstring)."""
     inside, q, out = False, "", set()
     for i, line in enumerate(src, 1):
-        j, opened_here = 0, False
+        j, touched = 0, False
         while True:
             found = [(k, t) for t in ('"""', "'''") for k in [line.find(t, j)] if k >= 0]
             if not found:
                 break
             k, t = min(found)
             if not inside:
-                inside, q, opened_here = True, t, True
+                inside, q = True, t
             elif t == q:
                 inside = False
+            touched = True
             j = k + 3
-        if inside or opened_here:
+        if inside or touched:               # opening, interior, and closing lines all count
             out.add(i)
     return out
 
