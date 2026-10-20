@@ -63,6 +63,94 @@ def labels(tasks_path: str, n: int, seed: int):
     p = OUT / "label_sheet.md"; p.write_text("\n".join(out)); print(f"{len(sample)} items -> {p}")
 
 
+def _pair_lines(t: dict, orig: dict | None) -> tuple[str, str]:
+    """(original added line, mutated added line): the one line the mutant and its clean original disagree on."""
+    if not orig:
+        return "", ""
+    oa = [l[1:] for l in orig["diff"].splitlines() if l.startswith("+") and not l.startswith("+++")]
+    ma = [l[1:] for l in t["diff"].splitlines() if l.startswith("+") and not l.startswith("+++")]
+    before = [l for l in oa if l not in ma]
+    after = [l for l in ma if l not in oa]
+    return (before[0] if before else ""), (after[0] if after else "")
+
+
+def _html_escape(x: str) -> str:
+    return x.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def labels_html(tasks_path: str, n: int, seed: int):
+    """Browser version of the label sheet: before/after line, context, probe, verdict buttons, JSON export."""
+    tasks = [json.loads(l) for l in Path(tasks_path).read_text().splitlines() if l.strip()]
+    rng = random.Random(seed)
+    ops = [t for t in tasks if t.get("source") == "op"]; llms = [t for t in tasks if t.get("source") == "llm"]
+    real = [t for t in tasks if t.get("source") == "real"]
+    rng.shuffle(ops); rng.shuffle(llms)
+    sample = ops[: n // 2] + llms[: n - n // 2] + real
+    by_id = {t["id"]: t for t in tasks}
+    items = []
+    for i, t in enumerate(sample, 1):
+        orig = by_id.get(f"clean__{t['repo']}__{t['fix_sha'][:8]}") if t.get("source") in ("op", "llm") else None
+        before, after = _pair_lines(t, orig)
+        gh = t["gold_hunks"][0] if t["gold_hunks"] else {"file": "?", "line_start": 0}
+        # context: ±12 lines of the mutant diff around the mutated line
+        dl = t["diff"].splitlines()
+        idx = next((k for k, l in enumerate(dl) if l.startswith("+") and l[1:] == after), None) if after else None
+        ctx = dl[max(0, (idx or 0) - 12): (idx or 0) + 13] if idx is not None else dl[:40]
+        ctx_html = "".join(
+            f'<div class="{ "mut" if (l.startswith("+") and l[1:] == after) else "add" if l.startswith("+") else "del" if l.startswith("-") else "" }">{_html_escape(l)}</div>'
+            for l in ctx)
+        probe = t.get("probe_source") or ""
+        doc = ""
+        m = __import__("re").search(r'"""(.*?)"""', probe, __import__("re").S)
+        if m: doc = m.group(1).strip()
+        items.append(f"""
+<section id="it{i}" data-id="{_html_escape(t['id'])}">
+<h2>{i}. <code>{_html_escape(t['id'])}</code> <span class="tag">{t.get('source')} {t.get('operator') or ''}</span> <span class="tag">{t['repo']}</span></h2>
+<p class="where">{_html_escape(gh['file'])} line {gh['line_start']}</p>
+<table class="pair"><tr><th>original (clean PR)</th><th>mutated (the labeled bug)</th></tr>
+<tr><td><pre>{_html_escape(before) or '<i>real positive: see gold hunks</i>'}</pre></td><td><pre class="mut">{_html_escape(after) or '<i>see diff</i>'}</pre></td></tr></table>
+{f'<p class="hint"><b>probe says:</b> {_html_escape(doc)}</p>' if doc else ''}
+<details><summary>context (±12 lines of the PR diff; mutated line highlighted)</summary><pre class="ctx">{ctx_html}</pre></details>
+<details><summary>guard probe (fails on the mutant, passes on the original)</summary><pre>{_html_escape(probe[:3000])}</pre></details>
+<div class="verdict">
+<label><input type="radio" name="v{i}" value="yes"> yes, a reviewer should block this</label>
+<label><input type="radio" name="v{i}" value="arguable"> arguable (wrong only in an edge case)</label>
+<label><input type="radio" name="v{i}" value="no"> no, not a bug (same behavior)</label>
+<input type="text" class="why" id="w{i}" placeholder="why (one line)">
+</div>
+</section>""")
+    html = f"""<!doctype html><html><head><meta charset="utf-8"><title>Label-noise sheet</title>
+<style>
+body{{font:15px/1.45 -apple-system,system-ui,sans-serif;max-width:980px;margin:24px auto;padding:0 16px;color:#222}}
+h2{{font-size:16px;margin:28px 0 4px}} .tag{{font-size:12px;background:#eee;border-radius:4px;padding:1px 6px;margin-left:6px}}
+.where{{color:#666;margin:0 0 8px;font-size:13px}}
+table.pair{{width:100%;border-collapse:collapse}} table.pair th{{text-align:left;font-size:12px;color:#666;font-weight:600}}
+table.pair td{{width:50%;vertical-align:top;padding:4px 8px 4px 0}}
+pre{{background:#f6f6f6;padding:8px;border-radius:4px;white-space:pre-wrap;font-size:12.5px;margin:0}}
+pre.mut{{background:#fde8e2}} pre.ctx div.mut{{background:#f9c9bd}} pre.ctx div.add{{color:#1a7f37}} pre.ctx div.del{{color:#9a1b1b}}
+.hint{{background:#eef5ff;padding:6px 10px;border-radius:4px;font-size:13.5px}}
+details{{margin:6px 0}} summary{{cursor:pointer;color:#444;font-size:13px}}
+.verdict{{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:8px}} .verdict label{{font-size:14px}}
+.why{{flex:1;min-width:240px;padding:4px 6px}}
+#bar{{position:sticky;top:0;background:#fff;padding:10px 0;border-bottom:1px solid #ddd;display:flex;gap:12px;align-items:center}}
+button{{padding:6px 12px}} #out{{width:100%;height:80px;font-size:12px}}
+</style></head><body>
+<div id="bar"><b>Label-noise sheet</b> <span id="count">0/{len(sample)}</span>
+<button onclick="exportJson()">Copy verdicts as JSON</button> <span style="color:#666;font-size:13px">then paste into review/analysis/label_verdicts.json and run make sheet-tally</span></div>
+<p>{len(sample)} items: {len(ops[: n // 2])} operator mutants, {len(llms[: n - n // 2])} LLM-written mutants, {len(real)} real positives.
+For each: <b>would you block this line in review?</b> You are not finding the bug; it is marked. The question is only whether the change is wrong.</p>
+{''.join(items)}
+<textarea id="out" readonly></textarea>
+<script>
+function collect(){{const o={{}};document.querySelectorAll('section').forEach(s=>{{const id=s.dataset.id;const r=s.querySelector('input[type=radio]:checked');if(r)o[id]={{verdict:r.value,why:s.querySelector('.why').value}};}});return o;}}
+function refresh(){{const o=collect();document.getElementById('count').textContent=Object.keys(o).length+'/{len(sample)}';try{{localStorage.setItem('labelsheet',JSON.stringify(o));}}catch(e){{}}}}
+function exportJson(){{const j=JSON.stringify(collect(),null,1);document.getElementById('out').value=j;navigator.clipboard&&navigator.clipboard.writeText(j).catch(()=>{{}});}}
+document.addEventListener('change',refresh);document.addEventListener('input',refresh);
+try{{const saved=JSON.parse(localStorage.getItem('labelsheet')||'{{}}');document.querySelectorAll('section').forEach(s=>{{const v=saved[s.dataset.id];if(!v)return;const r=s.querySelector(`input[value=${{v.verdict}}]`);if(r)r.checked=true;s.querySelector('.why').value=v.why||'';}});refresh();}}catch(e){{}}
+</script></body></html>"""
+    p = OUT / "label_sheet.html"; p.write_text(html); print(f"{len(sample)} items -> {p}  (open in a browser)")
+
+
 def failures(result_paths: list[str], tasks_path: str):
     tasks = {t["id"]: t for t in (json.loads(l) for l in Path(tasks_path).read_text().splitlines() if l.strip())}
     out = ["# Failure sheet\n", "Every bug PR approved and every clean PR blocked, per run. Tag each `cause:` with one of: "
@@ -95,9 +183,15 @@ def failures(result_paths: list[str], tasks_path: str):
 
 def tally():
     import re
+    pj = OUT / "label_verdicts.json"
     p = OUT / "label_sheet.md"
-    if p.exists():
+    if pj.exists():
+        v = [x.get("verdict", "") for x in json.loads(pj.read_text()).values()]
+    elif p.exists():
         v = re.findall(r"^verdict:\s*(\w+)", p.read_text(), re.M)
+    else:
+        v = []
+    if v:
         from collections import Counter
         c = Counter(x.lower() for x in v if x)
         print(f"label sheet: {dict(c)}  filled {sum(c.values())}")
@@ -120,6 +214,7 @@ def main():
     args = ap.parse_args()
     if args.cmd == "labels":
         labels(args.tasks, args.n, args.seed)
+        labels_html(args.tasks, args.n, args.seed)
     elif args.cmd == "failures":
         failures(args.results, args.tasks)
     else:
