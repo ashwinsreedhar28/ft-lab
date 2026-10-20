@@ -56,3 +56,11 @@ def test_statement_ops_skip_continuation_lines():
     ms = op_mutants(lines, 5, random.Random(0), src)
     assert all(not (m["operator"] in ("return_none", "raise_pass") and m["line"] == 3) for m in ms)
     assert any(m["operator"] == "raise_pass" and m["line"] == 5 for m in ms)
+
+
+def test_operators_skip_docstrings_and_doctest_prompts():
+    from review.mine.mutate import docstring_lines
+    src = ['def f():', '    """Doc.', '', '        >>> f(1) > 2', '        True', '    """', '    return a > b  # x > y']
+    assert docstring_lines(src) == {2, 3, 4, 5, 6}
+    ms = op_mutants([(4, src[3]), (7, src[6])], 5, random.Random(0), src)
+    assert all(m["line"] == 7 for m in ms) and ms
