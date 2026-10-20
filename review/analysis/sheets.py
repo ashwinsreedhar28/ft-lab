@@ -78,6 +78,26 @@ def _html_escape(x: str) -> str:
     return x.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
+def ai_note(t: dict, before: str, after: str, ctx: str, probe: str) -> str:
+    """Haiku explains the two lines and names the input where they diverge. Description, not a verdict:
+    the yes/no stays with the human reviewer; the tally records that notes were AI-assisted."""
+    import os
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        return ""
+    try:
+        from review.agent.loop import call
+        prompt = (f"Repo {t['repo']}, file {t['gold_hunks'][0]['file'] if t['gold_hunks'] else '?'}.\n"
+                  f"Original line:\n{before}\nChanged line:\n{after}\n\nSurrounding diff:\n{ctx[:3000]}\n\n"
+                  f"A test that fails on the changed line and passes on the original:\n{probe[:2000]}\n\n"
+                  "In at most 3 short sentences, plain English, for a code reviewer: (1) what the original line does, "
+                  "(2) what the changed line does instead, (3) the concrete input or situation where the two behave differently. "
+                  "Do NOT say whether it is a bug or whether to block; describe only.")
+        text, _, _ = call("claude-haiku-5-5", "You explain one-line code changes neutrally and concretely.", [{"role": "user", "content": prompt}], 400)
+        return text.strip()
+    except Exception as e:  # noqa: BLE001
+        return f"(note unavailable: {type(e).__name__})"
+
+
 def labels_html(tasks_path: str, n: int, seed: int):
     """Browser version of the label sheet: before/after line, context, probe, verdict buttons, JSON export."""
     tasks = [json.loads(l) for l in Path(tasks_path).read_text().splitlines() if l.strip()]
@@ -100,6 +120,7 @@ def labels_html(tasks_path: str, n: int, seed: int):
             f'<div class="{ "mut" if (l.startswith("+") and l[1:] == after) else "add" if l.startswith("+") else "del" if l.startswith("-") else "" }">{_html_escape(l)}</div>'
             for l in ctx)
         probe = t.get("probe_source") or ""
+        note = ai_note(t, before, after, "\n".join(ctx), probe) if (before or after) else ""
         doc = ""
         m = __import__("re").search(r'"""(.*?)"""', probe, __import__("re").S)
         if m: doc = m.group(1).strip()
@@ -109,6 +130,7 @@ def labels_html(tasks_path: str, n: int, seed: int):
 <p class="where">{_html_escape(gh['file'])} line {gh['line_start']}</p>
 <table class="pair"><tr><th>original (clean PR)</th><th>mutated (the labeled bug)</th></tr>
 <tr><td><pre>{_html_escape(before) or '<i>real positive: see gold hunks</i>'}</pre></td><td><pre class="mut">{_html_escape(after) or '<i>see diff</i>'}</pre></td></tr></table>
+{f'<p class="note"><b>AI note (Haiku, descriptive only):</b> {_html_escape(note)}</p>' if note else ''}
 {f'<p class="hint"><b>probe says:</b> {_html_escape(doc)}</p>' if doc else ''}
 <details><summary>context (±12 lines of the PR diff; mutated line highlighted)</summary><pre class="ctx">{ctx_html}</pre></details>
 <details><summary>guard probe (fails on the mutant, passes on the original)</summary><pre>{_html_escape(probe[:3000])}</pre></details>
@@ -129,6 +151,7 @@ table.pair td{{width:50%;vertical-align:top;padding:4px 8px 4px 0}}
 pre{{background:#f6f6f6;padding:8px;border-radius:4px;white-space:pre-wrap;font-size:12.5px;margin:0}}
 pre.mut{{background:#fde8e2}} pre.ctx div.mut{{background:#f9c9bd}} pre.ctx div.add{{color:#1a7f37}} pre.ctx div.del{{color:#9a1b1b}}
 .hint{{background:#eef5ff;padding:6px 10px;border-radius:4px;font-size:13.5px}}
+.note{{background:#f3f0ff;padding:6px 10px;border-radius:4px;font-size:13.5px;white-space:pre-wrap}}
 details{{margin:6px 0}} summary{{cursor:pointer;color:#444;font-size:13px}}
 .verdict{{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:8px}} .verdict label{{font-size:14px}}
 .why{{flex:1;min-width:240px;padding:4px 6px}}
@@ -148,6 +171,10 @@ function exportJson(){{const j=JSON.stringify(collect(),null,1);document.getElem
 document.addEventListener('change',refresh);document.addEventListener('input',refresh);
 try{{const saved=JSON.parse(localStorage.getItem('labelsheet')||'{{}}');document.querySelectorAll('section').forEach(s=>{{const v=saved[s.dataset.id];if(!v)return;const r=s.querySelector(`input[value=${{v.verdict}}]`);if(r)r.checked=true;s.querySelector('.why').value=v.why||'';}});refresh();}}catch(e){{}}
 </script></body></html>"""
+    vj = OUT / "label_verdicts.json"
+    if vj.exists():
+        html = html.replace("try{const saved=JSON.parse(localStorage.getItem('labelsheet')||'{}');",
+                            "try{const saved=Object.assign(" + vj.read_text() + ",JSON.parse(localStorage.getItem('labelsheet')||'{}'));")
     p = OUT / "label_sheet.html"; p.write_text(html); print(f"{len(sample)} items -> {p}  (open in a browser)")
 
 
@@ -194,7 +221,7 @@ def tally():
     if v:
         from collections import Counter
         c = Counter(x.lower() for x in v if x)
-        print(f"label sheet: {dict(c)}  filled {sum(c.values())}")
+        print(f"label sheet: {dict(c)}  filled {sum(c.values())}  (verdicts by Ashwin; per-item AI notes shown, descriptive only)")
         if c:
             print(f"  label-noise estimate (no + arguable/2) / filled = {(c.get('no', 0) + c.get('arguable', 0) / 2) / max(sum(c.values()), 1):.2f}")
     p = OUT / "failure_sheet.md"
