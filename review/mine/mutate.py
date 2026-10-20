@@ -67,7 +67,8 @@ def clean_prs(repo: Path, since: str, max_lines: int, exclude: tuple[str, ...] =
         if FIX_RE.search(subj) or SKIP_RE.search(subj):
             continue
         files, n = [], 0
-        for ln in git(repo, "show", "--numstat", "--format=", sha).splitlines():
+        # --no-renames: a renamed file otherwise prints as `{old => new}/f.py`, which later git show calls choke on
+        for ln in git(repo, "show", "--numstat", "--no-renames", "--format=", sha).splitlines():
             p = ln.split("\t")
             if len(p) == 3 and p[0].isdigit() and p[1].isdigit():
                 n += int(p[0]) + int(p[1]); files.append(p[2])
