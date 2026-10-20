@@ -25,4 +25,1606 @@ train rows: 260  columns: ['prompt', 'kind', 'gold_hunks', 'task_id']
 Capturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:00<00:00, 28.19it/s]
 Capturing CUDA graphs (PIECEWISE):   0%|          | 0/11 [00:00<?, ?it/s]Capturing CUDA graphs (PIECEWISE):  27%|██▋       | 3/11 [00:00<00:00, 27.82it/s]Capturing CUDA graphs (PIECEWISE):  55%|█████▍    | 6/11 [00:00<00:00, 24.52it/s]Capturing CUDA graphs (PIECEWISE):  82%|████████▏ | 9/11 [00:00<00:00, 25.10it/s]Capturing CUDA graphs (PIECEWISE): 100%|██████████| 11/11 [00:00<00:00, 25.38it/s]
 Capturing CUDA graphs (FULL):   0%|          | 0/7 [00:00<?, ?it/s]Capturing CUDA graphs (FULL):  43%|████▎     | 3/7 [00:00<00:00, 29.84it/s]Capturing CUDA graphs (FULL):  86%|████████▌ | 6/7 [00:00<00:00, 29.84it/s]Capturing CUDA graphs (FULL): 100%|██████████| 7/7 [00:00<00:00, 29.88it/s]
-  0%|          | 0/120 [00:00<?, ?it/s]
+  0%|          | 0/120 [00:00<?, ?it/s]  1%|          | 1/120 [00:31<1:01:33, 31.04s/it]step 1  reward=-0.406  reward_std=1.768  kl=0.000  mean_length=106.156  clipped_ratio=0.000  step_time=29.733  loss=-0.053  gate=-0.406
+                                                   1%|          | 1/120 [00:31<1:01:33, 31.04s/it]{'loss': '-0.05304', 'grad_norm': '0.1967', 'learning_rate': '0', 'num_tokens': '3.72e+04', 'completions/mean_length': '106.2', 'completions/min_length': '12', 'completions/max_length': '292', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '106.2', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '292', 'rewards/gate/mean': '-0.4062', 'rewards/gate/std': '1.768', 'reward': '-0.4062', 'reward_std': '1.768', 'frac_reward_zero_std': '0.25', 'review/approve_bug_frac': '0.09375', 'review/escalate_frac': '0', 'review/mean_tokens': '106.2', 'review/unparsable_frac': '0.1562', 'sampling/sampling_logp_difference/mean': '0.01718', 'sampling/sampling_logp_difference/max': '0.4509', 'sampling/importance_sampling_ratio/min': '0.3612', 'sampling/importance_sampling_ratio/mean': '0.9658', 'sampling/importance_sampling_ratio/max': '1.575', 'kl': '0', 'entropy': '1.074', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '29.73', 'epoch': '0.01538'}
+╭─────────────────────────────────── Step 1 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.50 │      0.00 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "starlette/testcli… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 119,  │       │           │          │ │
+│ │ with no further     │ "line_end": 119,    │       │           │          │ │
+│ │ human review.       │ "body": "Workflow   │       │           │          │ │
+│ │ Decide:             │ used in `__enter__` │       │           │          │ │
+│ │   approve  - you    │ is not additive; it │       │           │          │ │
+│ │ are confident the   │ reduces available   │       │           │          │ │
+│ │ change is correct   │ data. This creates  │       │           │          │ │
+│ │ and safe to ship.   │ a conflict with the │       │           │          │ │
+│ │   block    - you    │ definition of       │       │           │          │ │
+│ │ found a defect;     │ `__enter__` in      │       │           │          │ │
+│ │ cite its location.  │ `WebSocketTestSess… │       │           │          │ │
+│ │   escalate - you    │                     │       │           │          │ │
+│ │ cannot establish    │                     │       │           │          │ │
+│ │ safety from what    │                     │       │           │          │ │
+│ │ you can see; a      │                     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ starlette           │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ starlette/testclie… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ starlette/testclie… │                     │       │           │          │ │
+│ │ starlette/testclie… │                     │       │           │          │ │
+│ │ starlette/testclie… │                     │       │           │          │ │
+│ │ starlette/testclie… │                     │       │           │          │ │
+│ │ starlette/testclie… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ starlette/testclie… │                     │       │           │          │ │
+│ │   9cb1553           │                     │       │           │          │ │
+│ │ 2026-05-30 Use same │                     │       │           │          │ │
+│ │ module              │                     │       │           │          │ │
+│ │ (httpx|httpx2) for  │                     │       │           │          │ │
+│ │ type checking as    │                     │       │           │          │ │
+│ │ for runtime (#3304) │                     │       │           │          │ │
+│ │   100f05a           │                     │       │           │          │ │
+│ │ 2026-05-26 Add      │                     │       │           │          │ │
+│ │ `httpx2` as a dev   │                     │       │           │          │ │
+│ │ dependency (#3295)  │                     │       │           │          │ │
+│ │   508023b           │                     │       │           │          │ │
+│ │ 2026-05-25 Support  │                     │       │           │          │ │
+│ │ httpx2 in the test  │                     │       │           │          │ │
+│ │ client (#3291)      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/starlette/testcl… │                     │       │           │          │ │
+│ │ b/starlette/testcl… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 524b62e..0461e24    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/starlette/testcl… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/starlette/testcl… │                     │       │           │          │ │
+│ │ @@ -11,14 +11,7 @@  │                     │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ collections.abc     │                     │       │           │          │ │
+│ │ import Awaitable,   │                     │       │           │          │ │
+│ │ Callable,           │                     │       │           │          │ │
+│ │ Generator,          │                     │       │           │          │ │
+│ │ Iterable, Mapping,  │                     │       │           │          │ │
+│ │ M                   │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ concurrent.futures  │                     │       │           │          │ │
+│ │ import Future       │                     │       │           │          │ │
+│ │  from contextlib    │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ AbstractContextMan… │                     │       │           │          │ │
+│ │  from types import  │                     │       │           │          │ │
+│ │ GeneratorType       │                     │       │           │          │ │
+│ │ -from typing import │                     │       │           │          │ │
+│ │ (                   │                     │       │           │          │ │
+│ │ -    TYPE_CHECKING, │                     │       │           │          │ │
+│ │ -    Any,           │                     │       │           │          │ │
+│ │ -    Literal,       │                     │       │           │          │ │
+│ │ -    TypedDict,     │                     │       │           │          │ │
+│ │ -    TypeGuard,     │                     │       │           │          │ │
+│ │ -    cast,          │                     │       │           │          │ │
+│ │ -)                  │                     │       │           │          │ │
+│ │ +from typing import │                     │       │           │          │ │
+│ │ TYPE_CHECKING, Any, │                     │       │           │          │ │
+│ │ Literal, TypedDict, │                     │       │           │          │ │
+│ │ TypeGuard, cast     │                     │       │           │          │ │
+│ │  from urllib.parse  │                     │       │           │          │ │
+│ │ import unquote,     │                     │       │           │          │ │
+│ │ urljoin             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  import anyio       │                     │       │           │          │ │
+│ │ @@ -49,13 +42,14 @@ │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │                  "… │                     │       │           │          │ │
+│ │ starlette.testclie… │                     │       │           │          │ │
+│ │ module requires the │                     │       │           │          │ │
+│ │ httpx2 package to   │                     │       │           │          │ │
+│ │ be installed.\n"    │                     │       │           │          │ │
+│ │                  "… │                     │       │           │          │ │
+│ │ can install this    │                     │       │           │          │ │
+│ │ with:\n"            │                     │       │           │          │ │
+│ │                  "  │                     │       │           │          │ │
+│ │ $ pip install       │                     │       │           │          │ │
+│ │ httpx2\n"           │                     │       │           │          │ │
+│ │ -            )      │                     │       │           │          │ │
+│ │ +            ) from │                     │       │           │          │ │
+│ │ None                │                     │       │           │          │ │
+│ │          else:      │                     │       │           │          │ │
+│ │              warni… │                     │       │           │          │ │
+│ │                  "… │                     │       │           │          │ │
+│ │ `httpx` with        │                     │       │           │          │ │
+│ │ `starlette.testcli… │                     │       │           │          │ │
+│ │ is deprecated;      │                     │       │           │          │ │
+│ │ install `httpx2`    │                     │       │           │          │ │
+│ │ instead.",          │                     │       │           │          │ │
+│ │                  S… │                     │       │           │          │ │
+│ │                  s… │                     │       │           │          │ │
+│ │              )      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │  _PortalFactoryType │                     │       │           │          │ │
+│ │ = Callable[[],      │                     │       │           │          │ │
+│ │ AbstractContextMan… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  ASGIInstance =     │                     │       │           │          │ │
+│ │ Callable[[Receive,  │                     │       │           │          │ │
+│ │ Send],              │                     │       │           │          │ │
+│ │ Awaitable[None]]    │                     │       │           │          │ │
+│ │ @@ -118,7 +112,7 @@ │                     │       │           │          │ │
+│ │ class               │                     │       │           │          │ │
+│ │ WebSocketTestSessi… │                     │       │           │          │ │
+│ │          self.port… │                     │       │           │          │ │
+│ │ = portal_factory    │                     │       │           │          │ │
+│ │          self.extr… │                     │       │           │          │ │
+│ │ = None              │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    def            │                     │       │           │          │ │
+│ │ __enter__(self) ->  │                     │       │           │          │ │
+│ │ WebSocketTestSessi… │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ __enter__(self) ->  │                     │       │           │          │ │
+│ │ Self:               │                     │       │           │          │ │
+│ │          with       │                     │       │           │          │ │
+│ │ contextlib.ExitSta… │                     │       │           │          │ │
+│ │ as stack:           │                     │       │           │          │ │
+│ │              self.… │                     │       │           │          │ │
+│ │ = portal =          │                     │       │           │          │ │
+│ │ stack.enter_contex… │                     │       │           │          │ │
+│ │              fut,   │                     │       │           │          │ │
+│ │ cs =                │                     │       │           │          │ │
+│ │ portal.start_task(… │                     │       │           │          │ │
+│ │ @@ -454,6 +448,7 @@ │                     │       │           │          │ │
+│ │ class               │                     │       │           │          │ │
+│ │ TestClient(httpx.C… │                     │       │           │          │ │
+│ │                  "… │                     │       │           │          │ │
+│ │ should not use the  │                     │       │           │          │ │
+│ │ 'timeout' argument  │                     │       │           │          │ │
+│ │ with the            │                     │       │           │          │ │
+│ │ TestClient. "       │                     │       │           │          │ │
+│ │                  "… │                     │       │           │          │ │
+│ │ https://github.com… │                     │       │           │          │ │
+│ │ for more            │                     │       │           │          │ │
+│ │ information.",      │                     │       │           │          │ │
+│ │                  D… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ stacklevel=2,       │                     │       │           │          │ │
+│ │              )      │                     │       │           │          │ │
+│ │          url =      │                     │       │           │          │ │
+│ │ self._merge_url(ur… │                     │       │           │          │ │
+│ │          return     │                     │       │           │          │ │
+│ │ super().request(    │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.50 │      0.00 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "starlette/testcli… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 206,  │       │           │          │ │
+│ │ with no further     │ "line_end": 206,    │       │           │          │ │
+│ │ human review.       │ "body": "Adding     │       │           │          │ │
+│ │ Decide:             │ `stacklevel=2` to   │       │           │          │ │
+│ │   approve  - you    │ the warning         │       │           │          │ │
+│ │ are confident the   │ introduces possible │       │           │          │ │
+│ │ change is correct   │ type issues with    │       │           │          │ │
+│ │ and safe to ship.   │ `DeprecationWarnin… │       │           │          │ │
+│ │   block    - you    │ and undefined       │       │           │          │ │
+│ │ found a defect;     │ behavior with       │       │           │          │ │
+│ │ cite its location.  │ `stacklevel=2` in   │       │           │          │ │
+│ │   escalate - you    │ Python. Unless the  │       │           │          │ │
+│ │ cannot establish    │ fix also defines    │       │           │          │ │
+│ │ safety from what    │ the correct         │       │           │          │ │
+│ │ you can see; a      │ `stacklevel=2` and  │       │           │          │ │
+│ │ human must look.    │ `stacklevel=2` in   │       │           │          │ │
+│ │ Approving a change  │ the future for      │       │           │          │ │
+│ │ that contains a     │ `DeprecationWarnin… │       │           │          │ │
+│ │ defect is the worst │ in traceback        │       │           │          │ │
+│ │ outcome. Blocking a │ processing, this    │       │           │          │ │
+│ │ correct change      │ warning will raise  │       │           │          │ │
+│ │ costs an engineer's │ an error. Perhaps   │       │           │          │ │
+│ │ time. Escalating is │ `type-checking`     │       │           │          │ │
+│ │ cheap but useless   │ with `from typing   │       │           │          │ │
+│ │ if done for         │ import              │       │           │          │ │
+│ │ everything.         │ TYPE_CHECKING`      │       │           │          │ │
+│ │ Respond with        │ stabilizes the      │       │           │          │ │
+│ │ exactly one JSON    │ code. However, the  │       │           │          │ │
+│ │ object and nothing  │ `starlette` dev     │       │           │          │ │
+│ │ else:               │ dependencies not    │       │           │          │ │
+│ │ {"decision":        │ including `httpx2`  │       │           │          │ │
+│ │ "approve|block|esc… │ and the use of      │       │           │          │ │
+│ │ "comments":         │ `httpx2` in the     │       │           │          │ │
+│ │ [{"file": "...",    │ `testclient.py`     │       │           │          │ │
+│ │ "line_start": N,    │ would otherwise not │       │           │          │ │
+│ │ "line_end": N,      │ be compatible with  │       │           │          │ │
+│ │ "body": "...",      │ future Python       │       │           │          │ │
+│ │ "proposed_test":    │ builds. The most    │       │           │          │ │
+│ │ "optional pytest    │ likely cause for    │       │           │          │ │
+│ │ source"}]}          │ the bug is that the │       │           │          │ │
+│ │                     │ type-checker        │       │           │          │ │
+│ │ USER                │ already treats      │       │           │          │ │
+│ │ Repository:         │ `DeprecationWarnin… │       │           │          │ │
+│ │ starlette           │ as a `UserWarning`  │       │           │          │ │
+│ │ Files changed:      │ and receives        │       │           │          │ │
+│ │ starlette/testclie… │ `stacklevel=2` as   │       │           │          │ │
+│ │                     │ invalid. Therefore, │       │           │          │ │
+│ │ Context around the  │ any subsequent      │       │           │          │ │
+│ │ change              │ change could also   │       │           │          │ │
+│ │ (mechanically       │ break the code."}]} │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ starlette/testclie… │                     │       │           │          │ │
+│ │ starlette/testclie… │                     │       │           │          │ │
+│ │ starlette/testclie… │                     │       │           │          │ │
+│ │ starlette/testclie… │                     │       │           │          │ │
+│ │ starlette/testclie… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ starlette/testclie… │                     │       │           │          │ │
+│ │   9cb1553           │                     │       │           │          │ │
+│ │ 2026-05-30 Use same │                     │       │           │          │ │
+│ │ module              │                     │       │           │          │ │
+│ │ (httpx|httpx2) for  │                     │       │           │          │ │
+│ │ type checking as    │                     │       │           │          │ │
+│ │ for runtime (#3304) │                     │       │           │          │ │
+│ │   100f05a           │                     │       │           │          │ │
+│ │ 2026-05-26 Add      │                     │       │           │          │ │
+│ │ `httpx2` as a dev   │                     │       │           │          │ │
+│ │ dependency (#3295)  │                     │       │           │          │ │
+│ │   508023b           │                     │       │           │          │ │
+│ │ 2026-05-25 Support  │                     │       │           │          │ │
+│ │ httpx2 in the test  │                     │       │           │          │ │
+│ │ client (#3291)      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/starlette/testcl… │                     │       │           │          │ │
+│ │ b/starlette/testcl… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 524b62e..0461e24    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/starlette/testcl… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/starlette/testcl… │                     │       │           │          │ │
+│ │ @@ -11,14 +11,7 @@  │                     │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ collections.abc     │                     │       │           │          │ │
+│ │ import Awaitable,   │                     │       │           │          │ │
+│ │ Callable,           │                     │       │           │          │ │
+│ │ Generator,          │                     │       │           │          │ │
+│ │ Iterable, Mapping,  │                     │       │           │          │ │
+│ │ M                   │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ concurrent.futures  │                     │       │           │          │ │
+│ │ import Future       │                     │       │           │          │ │
+│ │  from contextlib    │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ AbstractContextMan… │                     │       │           │          │ │
+│ │  from types import  │                     │       │           │          │ │
+│ │ GeneratorType       │                     │       │           │          │ │
+│ │ -from typing import │                     │       │           │          │ │
+│ │ (                   │                     │       │           │          │ │
+│ │ -    TYPE_CHECKING, │                     │       │           │          │ │
+│ │ -    Any,           │                     │       │           │          │ │
+│ │ -    Literal,       │                     │       │           │          │ │
+│ │ -    TypedDict,     │                     │       │           │          │ │
+│ │ -    TypeGuard,     │                     │       │           │          │ │
+│ │ -    cast,          │                     │       │           │          │ │
+│ │ -)                  │                     │       │           │          │ │
+│ │ +from typing import │                     │       │           │          │ │
+│ │ TYPE_CHECKING, Any, │                     │       │           │          │ │
+│ │ Literal, TypedDict, │                     │       │           │          │ │
+│ │ TypeGuard, cast     │                     │       │           │          │ │
+│ │  from urllib.parse  │                     │       │           │          │ │
+│ │ import unquote,     │                     │       │           │          │ │
+│ │ urljoin             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  import anyio       │                     │       │           │          │ │
+│ │ @@ -49,13 +42,14 @@ │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │                  "… │                     │       │           │          │ │
+│ │ starlette.testclie… │                     │       │           │          │ │
+│ │ module requires the │                     │       │           │          │ │
+│ │ httpx2 package to   │                     │       │           │          │ │
+│ │ be installed.\n"    │                     │       │           │          │ │
+│ │                  "… │                     │       │           │          │ │
+│ │ can install this    │                     │       │           │          │ │
+│ │ with:\n"            │                     │       │           │          │ │
+│ │                  "  │                     │       │           │          │ │
+│ │ $ pip install       │                     │       │           │          │ │
+│ │ httpx2\n"           │                     │       │           │          │ │
+│ │ -            )      │                     │       │           │          │ │
+│ │ +            ) from │                     │       │           │          │ │
+│ │ None                │                     │       │           │          │ │
+│ │          else:      │                     │       │           │          │ │
+│ │              warni… │                     │       │           │          │ │
+│ │                  "… │                     │       │           │          │ │
+│ │ `httpx` with        │                     │       │           │          │ │
+│ │ `starlette.testcli… │                     │       │           │          │ │
+│ │ is deprecated;      │                     │       │           │          │ │
+│ │ install `httpx2`    │                     │       │           │          │ │
+│ │ instead.",          │                     │       │           │          │ │
+│ │                  S… │                     │       │           │          │ │
+│ │                  s… │                     │       │           │          │ │
+│ │              )      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │  _PortalFactoryType │                     │       │           │          │ │
+│ │ = Callable[[],      │                     │       │           │          │ │
+│ │ AbstractContextMan… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  ASGIInstance =     │                     │       │           │          │ │
+│ │ Callable[[Receive,  │                     │       │           │          │ │
+│ │ Send],              │                     │       │           │          │ │
+│ │ Awaitable[None]]    │                     │       │           │          │ │
+│ │ @@ -118,7 +112,7 @@ │                     │       │           │          │ │
+│ │ class               │                     │       │           │          │ │
+│ │ WebSocketTestSessi… │                     │       │           │          │ │
+│ │          self.port… │                     │       │           │          │ │
+│ │ = portal_factory    │                     │       │           │          │ │
+│ │          self.extr… │                     │       │           │          │ │
+│ │ = None              │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    def            │                     │       │           │          │ │
+│ │ __enter__(self) ->  │                     │       │           │          │ │
+│ │ WebSocketTestSessi… │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ __enter__(self) ->  │                     │       │           │          │ │
+│ │ Self:               │                     │       │           │          │ │
+│ │          with       │                     │       │           │          │ │
+│ │ contextlib.ExitSta… │                     │       │           │          │ │
+│ │ as stack:           │                     │       │           │          │ │
+│ │              self.… │                     │       │           │          │ │
+│ │ = portal =          │                     │       │           │          │ │
+│ │ stack.enter_contex… │                     │       │           │          │ │
+│ │              fut,   │                     │       │           │          │ │
+│ │ cs =                │                     │       │           │          │ │
+│ │ portal.start_task(… │                     │       │           │          │ │
+│ │ @@ -454,6 +448,7 @@ │                     │       │           │          │ │
+│ │ class               │                     │       │           │          │ │
+│ │ TestClient(httpx.C… │                     │       │           │          │ │
+│ │                  "… │                     │       │           │          │ │
+│ │ should not use the  │                     │       │           │          │ │
+│ │ 'timeout' argument  │                     │       │           │          │ │
+│ │ with the            │                     │       │           │          │ │
+│ │ TestClient. "       │                     │       │           │          │ │
+│ │                  "… │                     │       │           │          │ │
+│ │ https://github.com… │                     │       │           │          │ │
+│ │ for more            │                     │       │           │          │ │
+│ │ information.",      │                     │       │           │          │ │
+│ │                  D… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ stacklevel=2,       │                     │       │           │          │ │
+│ │              )      │                     │       │           │          │ │
+│ │          url =      │                     │       │           │          │ │
+│ │ self._merge_url(ur… │                     │       │           │          │ │
+│ │          return     │                     │       │           │          │ │
+│ │ super().request(    │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+  2%|▏         | 2/120 [03:11<3:31:15, 107.42s/it]step 2  reward=-0.751  reward_std=1.552  kl=0.000  mean_length=144.312  clipped_ratio=0.000  step_time=153.519  loss=0.336  gate=-0.751
+                                                    2%|▏         | 2/120 [03:11<3:31:15, 107.42s/it]{'loss': '0.3358', 'grad_norm': '0.3673', 'learning_rate': '1e-06', 'num_tokens': '1.539e+05', 'completions/mean_length': '144.3', 'completions/min_length': '12', 'completions/max_length': '402', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '144.3', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '402', 'rewards/gate/mean': '-0.7513', 'rewards/gate/std': '1.552', 'reward': '-0.7513', 'reward_std': '1.552', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.09375', 'review/escalate_frac': '0', 'review/mean_tokens': '144.3', 'review/unparsable_frac': '0.1562', 'sampling/sampling_logp_difference/mean': '0.02075', 'sampling/sampling_logp_difference/max': '0.3319', 'sampling/importance_sampling_ratio/min': '0.2972', 'sampling/importance_sampling_ratio/mean': '1.02', 'sampling/importance_sampling_ratio/max': '2.292', 'kl': '0', 'entropy': '1.395', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '153.5', 'epoch': '0.03077'}
+╭─────────────────────────────────── Step 2 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┓ │
+│ ┃ Prompt             ┃ Completion         ┃  gate ┃ Advantage ┃ decision   ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━┩ │
+│ │ SYSTEM             │ ASSISTANT          │ -5.00 │     -1.14 │ approve    │ │
+│ │ You are the code   │ {"decision":       │       │           │            │ │
+│ │ review gate for a  │ "approve",         │       │           │            │ │
+│ │ production         │ "comments": []}    │       │           │            │ │
+│ │ repository. Your   │                    │       │           │            │ │
+│ │ approval merges    │                    │       │           │            │ │
+│ │ and deploys the    │                    │       │           │            │ │
+│ │ change with no     │                    │       │           │            │ │
+│ │ further human      │                    │       │           │            │ │
+│ │ review. Decide:    │                    │       │           │            │ │
+│ │   approve  - you   │                    │       │           │            │ │
+│ │ are confident the  │                    │       │           │            │ │
+│ │ change is correct  │                    │       │           │            │ │
+│ │ and safe to ship.  │                    │       │           │            │ │
+│ │   block    - you   │                    │       │           │            │ │
+│ │ found a defect;    │                    │       │           │            │ │
+│ │ cite its location. │                    │       │           │            │ │
+│ │   escalate - you   │                    │       │           │            │ │
+│ │ cannot establish   │                    │       │           │            │ │
+│ │ safety from what   │                    │       │           │            │ │
+│ │ you can see; a     │                    │       │           │            │ │
+│ │ human must look.   │                    │       │           │            │ │
+│ │ Approving a change │                    │       │           │            │ │
+│ │ that contains a    │                    │       │           │            │ │
+│ │ defect is the      │                    │       │           │            │ │
+│ │ worst outcome.     │                    │       │           │            │ │
+│ │ Blocking a correct │                    │       │           │            │ │
+│ │ change costs an    │                    │       │           │            │ │
+│ │ engineer's time.   │                    │       │           │            │ │
+│ │ Escalating is      │                    │       │           │            │ │
+│ │ cheap but useless  │                    │       │           │            │ │
+│ │ if done for        │                    │       │           │            │ │
+│ │ everything.        │                    │       │           │            │ │
+│ │ Respond with       │                    │       │           │            │ │
+│ │ exactly one JSON   │                    │       │           │            │ │
+│ │ object and nothing │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ {"decision":       │                    │       │           │            │ │
+│ │ "approve|block|es… │                    │       │           │            │ │
+│ │ "comments":        │                    │       │           │            │ │
+│ │ [{"file": "...",   │                    │       │           │            │ │
+│ │ "line_start": N,   │                    │       │           │            │ │
+│ │ "line_end": N,     │                    │       │           │            │ │
+│ │ "body": "...",     │                    │       │           │            │ │
+│ │ "proposed_test":   │                    │       │           │            │ │
+│ │ "optional pytest   │                    │       │           │            │ │
+│ │ source"}]}         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ USER               │                    │       │           │            │ │
+│ │ Repository:        │                    │       │           │            │ │
+│ │ starlette          │                    │       │           │            │ │
+│ │ Files changed:     │                    │       │           │            │ │
+│ │ docs/release-note… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Not shown          │                    │       │           │            │ │
+│ │ (non-code or over  │                    │       │           │            │ │
+│ │ budget; treat as   │                    │       │           │            │ │
+│ │ unreviewed):       │                    │       │           │            │ │
+│ │ docs/release-note… │                    │       │           │            │ │
+│ │ (512 chars,        │                    │       │           │            │ │
+│ │ non-code)          │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Diff:              │                    │       │           │            │ │
+│ │ ```diff            │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │ -1.20 │     -1.21 │ unparsable │ │
+│ │ You are the code   │ {                  │       │           │            │ │
+│ │ review gate for a  │   "decision":      │       │           │            │ │
+│ │ production         │ "block",           │       │           │            │ │
+│ │ repository. Your   │   "comments": [    │       │           │            │ │
+│ │ approval merges    │     {              │       │           │            │ │
+│ │ and deploys the    │       "file":      │       │           │            │ │
+│ │ change with no     │ "src/click/_textw… │       │           │            │ │
+│ │ further human      │       "line_start… │       │           │            │ │
+│ │ review. Decide:    │ 84,                │       │           │            │ │
+│ │   approve  - you   │       "line_end":  │       │           │            │ │
+│ │ are confident the  │ 93,                │       │           │            │ │
+│ │ change is correct  │       "body":      │       │           │            │ │
+│ │ and safe to ship.  │ "DEF:              │       │           │            │ │
+│ │   block    - you   │ `TextWrapper._wra… │       │           │            │ │
+│ │ found a defect;    │ is too deep and    │       │           │            │ │
+│ │ cite its location. │ not easy to trace  │       │           │            │ │
+│ │   escalate - you   │ with Python 3.12.  │       │           │            │ │
+│ │ cannot establish   │ Consider whether   │       │           │            │ │
+│ │ safety from what   │ it's premature     │       │           │            │ │
+│ │ you can see; a     │ optimization;      │       │           │            │ │
+│ │ human must look.   │ formalizing        │       │           │            │ │
+│ │ Approving a change │ functions `fit`,   │       │           │            │ │
+│ │ that contains a    │ `truncate`, and    │       │           │            │ │
+│ │ defect is the      │ `format` with      │       │           │            │ │
+│ │ worst outcome.     │ tests may be       │       │           │            │ │
+│ │ Blocking a correct │ better.\n\nAND:    │       │           │            │ │
+│ │ change costs an    │ The lines: `if     │       │           │            │ │
+│ │ engineer's time.   │ self.drop_whitesp… │       │           │            │ │
+│ │ Escalating is      │ and                │       │           │            │ │
+│ │ cheap but useless  │ chunks[-1].strip() │       │           │            │ │
+│ │ if done for        │ == "" and lines:`  │       │           │            │ │
+│ │ everything.        │ should be          │       │           │            │ │
+│ │ Respond with       │ rethought. This is │       │           │            │ │
+│ │ exactly one JSON   │ a descending same  │       │           │            │ │
+│ │ object and nothing │ line and overused  │       │           │            │ │
+│ │ else:              │ `and` operator     │       │           │            │ │
+│ │ {"decision":       │ (but that's        │       │           │            │ │
+│ │ "approve|block|es… │ fine);\nCaveat: It │       │           │            │ │
+│ │ "comments":        │ assumes `chunks`   │       │           │            │ │
+│ │ [{"file": "...",   │ is not empty.      │       │           │            │ │
+│ │ "line_start": N,   │ Suppose the lines' │       │           │            │ │
+│ │ "line_end": N,     │ `drop_whitespace`  │       │           │            │ │
+│ │ "body": "...",     │ flag is turned off │       │           │            │ │
+│ │ "proposed_test":   │ and `chunks` is    │       │           │            │ │
+│ │ "optional pytest   │ one line (possibly │       │           │            │ │
+│ │ source"}]}         │ `''` or `[' ']`).  │       │           │            │ │
+│ │                    │ \n\nBut contexts   │       │           │            │ │
+│ │ USER               │ are not known.     │       │           │            │ │
+│ │ Repository: click  │ GLOBAL THIS: I     │       │           │            │ │
+│ │ Files changed:     │ await the runner   │       │           │            │ │
+│ │ CHANGES.rst,       │ in                 │       │           │            │ │
+│ │ src/click/_textwr… │ `test_wrap_text_v… │       │           │            │ │
+│ │ src/click/formatt… │ What will this     │       │           │            │ │
+│ │ tests/test_format… │ test do? How do    │       │           │            │ │
+│ │                    │ the results        │       │           │            │ │
+│ │ Not shown          │ compare w/         │       │           │            │ │
+│ │ (non-code or over  │ expected answers?" │       │           │            │ │
+│ │ budget; treat as   │     }              │       │           │            │ │
+│ │ unreviewed):       │   ]                │       │           │            │ │
+│ │ CHANGES.rst (476   │ }                  │       │           │            │ │
+│ │ chars, non-code)   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Context around the │                    │       │           │            │ │
+│ │ change             │                    │       │           │            │ │
+│ │ (mechanically      │                    │       │           │            │ │
+│ │ extracted):        │                    │       │           │            │ │
+│ │ Changed            │                    │       │           │            │ │
+│ │ definitions:       │                    │       │           │            │ │
+│ │ src/click/_textwr… │                    │       │           │            │ │
+│ │ src/click/_textwr… │                    │       │           │            │ │
+│ │ src/click/_textwr… │                    │       │           │            │ │
+│ │ src/click/_textwr… │                    │       │           │            │ │
+│ │ src/click/_textwr… │                    │       │           │            │ │
+│ │ src/click/formatt… │                    │       │           │            │ │
+│ │ tests/test_format… │                    │       │           │            │ │
+│ │ tests/test_format… │                    │       │           │            │ │
+│ │ tests/test_format… │                    │       │           │            │ │
+│ │ tests/test_format… │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ src/click/_textwr… │                    │       │           │            │ │
+│ │   ec258fe          │                    │       │           │            │ │
+│ │ 2023-08-20 use     │                    │       │           │            │ │
+│ │ modern typing      │                    │       │           │            │ │
+│ │ features           │                    │       │           │            │ │
+│ │   ecdeb0c          │                    │       │           │            │ │
+│ │ 2022-05-02 enable  │                    │       │           │            │ │
+│ │ deferred           │                    │       │           │            │ │
+│ │ evaluation of      │                    │       │           │            │ │
+│ │ annotations        │                    │       │           │            │ │
+│ │   0103c95          │                    │       │           │            │ │
+│ │ 2021-04-23 add     │                    │       │           │            │ │
+│ │ typing annotations │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ src/click/formatt… │                    │       │           │            │ │
+│ │   5b9630f          │                    │       │           │            │ │
+│ │ 2026-05-08         │                    │       │           │            │ │
+│ │ Localisation of    │                    │       │           │            │ │
+│ │ more strings       │                    │       │           │            │ │
+│ │ (#2902)            │                    │       │           │            │ │
+│ │   a352c6e          │                    │       │           │            │ │
+│ │ 2025-07-31         │                    │       │           │            │ │
+│ │ Properly lazily    │                    │       │           │            │ │
+│ │ import shutil      │                    │       │           │            │ │
+│ │   f14b750          │                    │       │           │            │ │
+│ │ 2025-05-10 update  │                    │       │           │            │ │
+│ │ dev dependencies   │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ tests/test_format… │                    │       │           │            │ │
+│ │   1241aba          │                    │       │           │            │ │
+│ │ 2026-04-21 Use     │                    │       │           │            │ │
+│ │ non-shadowed help  │                    │       │           │            │ │
+│ │ option name in     │                    │       │           │            │ │
+│ │ error hint         │                    │       │           │            │ │
+│ │   4ece17a          │                    │       │           │            │ │
+│ │ 2025-01-12 Expand  │                    │       │           │            │ │
+│ │ `Choice` token     │                    │       │           │            │ │
+│ │ normalization +    │                    │       │           │            │ │
+│ │ make generic       │                    │       │           │            │ │
+│ │ (#2796)            │                    │       │           │            │ │
+│ │   589ca31          │                    │       │           │            │ │
+│ │ 2022-10-05 avoid   │                    │       │           │            │ │
+│ │ empty lines if     │                    │       │           │            │ │
+│ │ help text is empty │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Diff:              │                    │       │           │            │ │
+│ │ ```diff            │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/src/click/_text… │                    │       │           │            │ │
+│ │ b/src/click/_text… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 97fbee3..82840f2   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/src/click/_text… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/src/click/_text… │                    │       │           │            │ │
+│ │ @@ -4,8 +4,47 @@   │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ collections.abc as │                    │       │           │            │ │
+│ │ cabc               │                    │       │           │            │ │
+│ │  import textwrap   │                    │       │           │            │ │
+│ │  from contextlib   │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ contextmanager     │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +from ._compat     │                    │       │           │            │ │
+│ │ import _ansi_re    │                    │       │           │            │ │
+│ │ +from ._compat     │                    │       │           │            │ │
+│ │ import term_len    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ _truncate_visible… │                    │       │           │            │ │
+│ │ str, n: int) ->    │                    │       │           │            │ │
+│ │ str:               │                    │       │           │            │ │
+│ │ +    """Return the │                    │       │           │            │ │
+│ │ longest prefix of  │                    │       │           │            │ │
+│ │ ``text``           │                    │       │           │            │ │
+│ │ containing at most │                    │       │           │            │ │
+│ │ ``n`` visible      │                    │       │           │            │ │
+│ │ +    characters.   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    ANSI escape   │                    │       │           │            │ │
+│ │ sequences inside   │                    │       │           │            │ │
+│ │ the prefix are     │                    │       │           │            │ │
+│ │ kept intact and do │                    │       │           │            │ │
+│ │ not count          │                    │       │           │            │ │
+│ │ +    toward the    │                    │       │           │            │ │
+│ │ visible width. A   │                    │       │           │            │ │
+│ │ cut is never       │                    │       │           │            │ │
+│ │ placed inside an   │                    │       │           │            │ │
+│ │ escape sequence.   │                    │       │           │            │ │
+│ │ +    """           │                    │       │           │            │ │
+│ │ +    if n <= 0:    │                    │       │           │            │ │
+│ │ +        return "" │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    visible = 0   │                    │       │           │            │ │
+│ │ +    i = 0         │                    │       │           │            │ │
+│ │ +    cut = 0       │                    │       │           │            │ │
+│ │ +    end =         │                    │       │           │            │ │
+│ │ len(text)          │                    │       │           │            │ │
+│ │ +    while i <     │                    │       │           │            │ │
+│ │ end:               │                    │       │           │            │ │
+│ │ +        m =       │                    │       │           │            │ │
+│ │ _ansi_re.match(te… │                    │       │           │            │ │
+│ │ i)                 │                    │       │           │            │ │
+│ │ +        if m is   │                    │       │           │            │ │
+│ │ not None:          │                    │       │           │            │ │
+│ │ +            i =   │                    │       │           │            │ │
+│ │ m.end()            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ continue           │                    │       │           │            │ │
+│ │ +        visible   │                    │       │           │            │ │
+│ │ += 1               │                    │       │           │            │ │
+│ │ +        i += 1    │                    │       │           │            │ │
+│ │ +        cut = i   │                    │       │           │            │ │
+│ │ +        if        │                    │       │           │            │ │
+│ │ visible >= n:      │                    │       │           │            │ │
+│ │ +            break │                    │       │           │            │ │
+│ │ +    return        │                    │       │           │            │ │
+│ │ text[:cut]         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  class             │                    │       │           │            │ │
+│ │ TextWrapper(textw… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ """``textwrap.Tex… │                    │       │           │            │ │
+│ │ variant that       │                    │       │           │            │ │
+│ │ measures widths by │                    │       │           │            │ │
+│ │ visible            │                    │       │           │            │ │
+│ │ +    character     │                    │       │           │            │ │
+│ │ count.             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    ANSI escape   │                    │       │           │            │ │
+│ │ sequences embedded │                    │       │           │            │ │
+│ │ in chunks,         │                    │       │           │            │ │
+│ │ indents, or the    │                    │       │           │            │ │
+│ │ placeholder are    │                    │       │           │            │ │
+│ │ +    excluded from │                    │       │           │            │ │
+│ │ the width budget.  │                    │       │           │            │ │
+│ │ Without this,      │                    │       │           │            │ │
+│ │ styled help text   │                    │       │           │            │ │
+│ │ (a styled          │                    │       │           │            │ │
+│ │ +    ``Usage:``    │                    │       │           │            │ │
+│ │ prefix, a          │                    │       │           │            │ │
+│ │ colorized option   │                    │       │           │            │ │
+│ │ name, ...) would   │                    │       │           │            │ │
+│ │ be wrapped earlier │                    │       │           │            │ │
+│ │ +    than its      │                    │       │           │            │ │
+│ │ visible length     │                    │       │           │            │ │
+│ │ warrants and       │                    │       │           │            │ │
+│ │ tokens would split │                    │       │           │            │ │
+│ │ mid-word.          │                    │       │           │            │ │
+│ │ +    """           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ _handle_long_word( │                    │       │           │            │ │
+│ │          self,     │                    │       │           │            │ │
+│ │          reversed… │                    │       │           │            │ │
+│ │ list[str],         │                    │       │           │            │ │
+│ │ @@ -17,13 +56,111  │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ TextWrapper(textw… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          if        │                    │       │           │            │ │
+│ │ self.break_long_w… │                    │       │           │            │ │
+│ │              last  │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ reversed_chunks[-… │                    │       │           │            │ │
+│ │ -            cut = │                    │       │           │            │ │
+│ │ last[:space_left]  │                    │       │           │            │ │
+│ │ -            res = │                    │       │           │            │ │
+│ │ last[space_left:]  │                    │       │           │            │ │
+│ │ +            cut = │                    │       │           │            │ │
+│ │ _truncate_visible… │                    │       │           │            │ │
+│ │ space_left)        │                    │       │           │            │ │
+│ │ +            res = │                    │       │           │            │ │
+│ │ last[len(cut) :]   │                    │       │           │            │ │
+│ │              cur_… │                    │       │           │            │ │
+│ │              reve… │                    │       │           │            │ │
+│ │ = res              │                    │       │           │            │ │
+│ │          elif not  │                    │       │           │            │ │
+│ │ cur_line:          │                    │       │           │            │ │
+│ │              cur_… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ _wrap_chunks(self, │                    │       │           │            │ │
+│ │ chunks: list[str]) │                    │       │           │            │ │
+│ │ -> list[str]:      │                    │       │           │            │ │
+│ │ +        """Wrap   │                    │       │           │            │ │
+│ │ chunks counting    │                    │       │           │            │ │
+│ │ widths in visible  │                    │       │           │            │ │
+│ │ characters.        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        Mirrors   │                    │       │           │            │ │
+│ │ the algorithm of   │                    │       │           │            │ │
+│ │ :meth:`textwrap.T… │                    │       │           │            │ │
+│ │ +        with      │                    │       │           │            │ │
+│ │ every width        │                    │       │           │            │ │
+│ │ measurement routed │                    │       │           │            │ │
+│ │ through            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ :func:`click._com… │                    │       │           │            │ │
+│ │ instead of         │                    │       │           │            │ │
+│ │ :func:`len`, so    │                    │       │           │            │ │
+│ │ ANSI escape        │                    │       │           │            │ │
+│ │ +        bytes in  │                    │       │           │            │ │
+│ │ chunks, indents,   │                    │       │           │            │ │
+│ │ or the placeholder │                    │       │           │            │ │
+│ │ do not inflate the │                    │       │           │            │ │
+│ │ count.             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        ..        │                    │       │           │            │ │
+│ │ seealso::          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ :class:`textwrap.… │                    │       │           │            │ │
+│ │ in the Python      │                    │       │           │            │ │
+│ │ standard library   │                    │       │           │            │ │
+│ │ documentation:     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ https://docs.pyth… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Reference          │                    │       │           │            │ │
+│ │ implementation in  │                    │       │           │            │ │
+│ │ CPython:           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ https://github.co… │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        lines:    │                    │       │           │            │ │
+│ │ list[str] = []     │                    │       │           │            │ │
+│ │ +        if        │                    │       │           │            │ │
+│ │ self.width <= 0:   │                    │       │           │            │ │
+│ │ +            raise │                    │       │           │            │ │
+│ │ ValueError(f"inva… │                    │       │           │            │ │
+│ │ width              │                    │       │           │            │ │
+│ │ {self.width!r}     │                    │       │           │            │ │
+│ │ (must be > 0)")    │                    │       │           │            │ │
+│ │ +        if        │                    │       │           │            │ │
+│ │ self.max_lines is  │                    │       │           │            │ │
+│ │ not None:          │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ self.max_lines >   │                    │       │           │            │ │
+│ │ 1:                 │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ indent =           │                    │       │           │            │ │
+│ │ self.subsequent_i… │                    │       │           │            │ │
+│ │ +            else: │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ indent =           │                    │       │           │            │ │
+│ │ self.initial_inde… │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ term_len(indent) + │                    │       │           │            │ │
+│ │ term_len(self.pla… │                    │       │           │            │ │
+│ │ > self.width:      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ raise              │                    │       │           │            │ │
+│ │ ValueError("place… │                    │       │           │            │ │
+│ │ too large for max  │                    │       │           │            │ │
+│ │ width")            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ chunks.reverse()   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        while     │                    │       │           │            │ │
+│ │ chunks:            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ cur_line:          │                    │       │           │            │ │
+│ │ list[str] = []     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ cur_len = 0        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ lines:             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ indent =           │                    │       │           │            │ │
+│ │ self.subsequent_i… │                    │       │           │            │ │
+│ │ +            else: │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ indent =           │                    │       │           │            │ │
+│ │ self.initial_inde… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +            width │                    │       │           │            │ │
+│ │ = self.width -     │                    │       │           │            │ │
+│ │ term_len(indent)   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ self.drop_whitesp… │                    │       │           │            │ │
+│ │ and                │                    │       │           │            │ │
+│ │ chunks[-1].strip() │                    │       │           │            │ │
+│ │ == "" and lines:   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ del chunks[-1]     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +            while │                    │       │           │            │ │
+│ │ chunks:            │                    │       │           │            │ │
+│ │ +                n │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ term_len(chunks[-… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ if cur_len + n <=  │                    │       │           │            │ │
+│ │ width:             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ cur_line.append(c… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ cur_len += n       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ break              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ chunks and         │                    │       │           │            │ │
+│ │ term_len(chunks[-… │                    │       │           │            │ │
+│ │ > width:           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self._handle_long… │                    │       │           │            │ │
+│ │ cur_line, cur_len, │                    │       │           │            │ │
+│ │ width)             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ cur_len =          │                    │       │           │            │ │
+│ │ sum(map(term_len,  │                    │       │           │            │ │
+│ │ cur_line))         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ self.drop_whitesp… │                    │       │           │            │ │
+│ │ and cur_line and   │                    │       │           │            │ │
+│ │ cur_line[-1].stri… │                    │       │           │            │ │
+│ │ == "":             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ cur_len -=         │                    │       │           │            │ │
+│ │ term_len(cur_line… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ del cur_line[-1]   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ cur_line:          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ if (               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.max_lines is  │                    │       │           │            │ │
+│ │ None               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ or len(lines) + 1  │                    │       │           │            │ │
+│ │ < self.max_lines   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ or (               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ not chunks         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ or                 │                    │       │           │            │ │
+│ │ self.drop_whitesp… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ and len(chunks) == │                    │       │           │            │ │
+│ │ 1                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ and not            │                    │       │           │            │ │
+│ │ chunks[0].strip()  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ )                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ and cur_len <=     │                    │       │           │            │ │
+│ │ width              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ ):                 │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ lines.append(inde… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "".join(cur_line)) │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ while cur_line:    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ if (               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ cur_line[-1].stri… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ and cur_len +      │                    │       │           │            │ │
+│ │ term_len(self.pla… │                    │       │           │            │ │
+│ │ <= width           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ ):                 │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ cur_line.append(s… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ lines.append(inde… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "".join(cur_line)) │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ break              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ cur_len -=         │                    │       │           │            │ │
+│ │ term_len(cur_line… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ del cur_line[-1]   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ if lines:          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ prev_line =        │                    │       │           │            │ │
+│ │ lines[-1].rstrip() │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ if (               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ term_len(prev_lin… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ term_len(self.pla… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ <= self.width      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ ):                 │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ lines[-1] =        │                    │       │           │            │ │
+│ │ prev_line +        │                    │       │           │            │ │
+│ │ self.placeholder   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ break              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ lines.append(inde… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.placeholder.… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ break              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ lines              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │      @contextmana… │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ extra_indent(self, │                    │       │           │            │ │
+│ │ indent: str) ->    │                    │       │           │            │ │
+│ │ cabc.Iterator[Non… │                    │       │           │            │ │
+│ │          old_init… │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ self.initial_inde… │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/src/click/forma… │                    │       │           │            │ │
+│ │ b/src/click/forma… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ de2ca47..d9075ca   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/src/click/forma… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/src/click/forma… │                    │       │           │            │ │
+│ │ @@ -52,6 +52,12 @@ │                    │       │           │            │ │
+│ │ def wrap_text(     │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │ consecutive line.  │                    │       │           │            │ │
+│ │      :param        │                    │       │           │            │ │
+│ │ preserve_paragrap… │                    │       │           │            │ │
+│ │ if this flag is    │                    │       │           │            │ │
+│ │ set then the       │                    │       │           │            │ │
+│ │ wrapping will      │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │ handle paragraphs. │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    ..            │                    │       │           │            │ │
+│ │ versionchanged::   │                    │       │           │            │ │
+│ │ 8.4                │                    │       │           │            │ │
+│ │ +        Width is  │                    │       │           │            │ │
+│ │ measured in        │                    │       │           │            │ │
+│ │ visible            │                    │       │           │            │ │
+│ │ characters. ANSI   │                    │       │           │            │ │
+│ │ escape sequences   │                    │       │           │            │ │
+│ │ in                 │                    │       │           │            │ │
+│ │ +        ``text``, │                    │       │           │            │ │
+│ │ ``initial_indent`… │                    │       │           │            │ │
+│ │ or                 │                    │       │           │            │ │
+│ │ ``subsequent_inde… │                    │       │           │            │ │
+│ │ no longer          │                    │       │           │            │ │
+│ │ +        count     │                    │       │           │            │ │
+│ │ toward the width   │                    │       │           │            │ │
+│ │ budget, so styled  │                    │       │           │            │ │
+│ │ input wraps based  │                    │       │           │            │ │
+│ │ on what            │                    │       │           │            │ │
+│ │ +        the user  │                    │       │           │            │ │
+│ │ sees instead of    │                    │       │           │            │ │
+│ │ raw byte length.   │                    │       │           │            │ │
+│ │      """           │                    │       │           │            │ │
+│ │      from          │                    │       │           │            │ │
+│ │ ._textwrap import  │                    │       │           │            │ │
+│ │ TextWrapper        │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_form… │                    │       │           │            │ │
+│ │ b/tests/test_form… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ c74b53a..3e85688   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_form… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_form… │                    │       │           │            │ │
+│ │ @@ -1,6 +1,7 @@    │                    │       │           │            │ │
+│ │  import pytest     │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  import click      │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ click._compat      │                    │       │           │            │ │
+│ │ import strip_ansi  │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_basic_functi… │                    │       │           │            │ │
+│ │ @@ -433,3 +434,68  │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ test_help_formatt… │                    │       │           │            │ │
+│ │      actual =      │                    │       │           │            │ │
+│ │ formatter.getvalu… │                    │       │           │            │ │
+│ │      expected = "  │                    │       │           │            │ │
+│ │ Lorem ipsum dolor  │                    │       │           │            │ │
+│ │ sit amet,\n        │                    │       │           │            │ │
+│ │ consectetur        │                    │       │           │            │ │
+│ │ adipiscing elit\n" │                    │       │           │            │ │
+│ │      assert actual │                    │       │           │            │ │
+│ │ == expected        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +@pytest.mark.par… │                    │       │           │            │ │
+│ │ +    ("body",      │                    │       │           │            │ │
+│ │ "width",           │                    │       │           │            │ │
+│ │ "initial_indent"), │                    │       │           │            │ │
+│ │ +    [             │                    │       │           │            │ │
+│ │ +        # Styled  │                    │       │           │            │ │
+│ │ ``initial_indent`` │                    │       │           │            │ │
+│ │ must be measured   │                    │       │           │            │ │
+│ │ by visible width,  │                    │       │           │            │ │
+│ │ so the             │                    │       │           │            │ │
+│ │ +        #         │                    │       │           │            │ │
+│ │ ``Usage:`` prefix  │                    │       │           │            │ │
+│ │ shouldn't push     │                    │       │           │            │ │
+│ │ ``[OPTIONS]`` to   │                    │       │           │            │ │
+│ │ the second line.   │                    │       │           │            │ │
+│ │ +        #         │                    │       │           │            │ │
+│ │ Regression for the │                    │       │           │            │ │
+│ │ asymmetry between  │                    │       │           │            │ │
+│ │ ``HelpFormatter.w… │                    │       │           │            │ │
+│ │ +        # (which  │                    │       │           │            │ │
+│ │ sized the prefix   │                    │       │           │            │ │
+│ │ with ``term_len``) │                    │       │           │            │ │
+│ │ and ``wrap_text``  │                    │       │           │            │ │
+│ │ +        # (which  │                    │       │           │            │ │
+│ │ previously used    │                    │       │           │            │ │
+│ │ raw ``len``).      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ pytest.param(      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "[OPTIONS]",       │                    │       │           │            │ │
+│ │ +            30,   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "\x1b[38;2;38;139… │                    │       │           │            │ │
+│ │ ",                 │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ id="styled-initia… │                    │       │           │            │ │
+│ │ +        ),        │                    │       │           │            │ │
+│ │ +        # Styled  │                    │       │           │            │ │
+│ │ chunks in the body │                    │       │           │            │ │
+│ │ itself wrap on     │                    │       │           │            │ │
+│ │ visible width.     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ pytest.param(      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "\x1b[31malpha\x1… │                    │       │           │            │ │
+│ │ \x1b[31mbeta\x1b[… │                    │       │           │            │ │
+│ │ +            "     │                    │       │           │            │ │
+│ │ \x1b[31mgamma\x1b… │                    │       │           │            │ │
+│ │ \x1b[31mdelta\x1b… │                    │       │           │            │ │
+│ │ +            15,   │                    │       │           │            │ │
+│ │ +            "",   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ id="styled-body-w… │                    │       │           │            │ │
+│ │ +        ),        │                    │       │           │            │ │
+│ │ +        #         │                    │       │           │            │ │
+│ │ ``_handle_long_wo… │                    │       │           │            │ │
+│ │ cuts a styled      │                    │       │           │            │ │
+│ │ token between      │                    │       │           │            │ │
+│ │ visible            │                    │       │           │            │ │
+│ │ +        #         │                    │       │           │            │ │
+│ │ characters; the    │                    │       │           │            │ │
+│ │ ANSI escape        │                    │       │           │            │ │
+│ │ sequence must not  │                    │       │           │            │ │
+│ │ be split.          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ pytest.param(      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "\x1b[31mabcdefgh… │                    │       │           │            │ │
+│ │ +            5,    │                    │       │           │            │ │
+│ │ +            "",   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ id="styled-long-w… │                    │       │           │            │ │
+│ │ +        ),        │                    │       │           │            │ │
+│ │ +    ],            │                    │       │           │            │ │
+│ │ +)                 │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_wrap_text_vi… │                    │       │           │            │ │
+│ │ width,             │                    │       │           │            │ │
+│ │ initial_indent):   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ """``wrap_text``   │                    │       │           │            │ │
+│ │ of styled input    │                    │       │           │            │ │
+│ │ produces the same  │                    │       │           │            │ │
+│ │ line layout as     │                    │       │           │            │ │
+│ │ +    ``wrap_text`` │                    │       │           │            │ │
+│ │ of the             │                    │       │           │            │ │
+│ │ ANSI-stripped      │                    │       │           │            │ │
+│ │ input.             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    ANSI escape   │                    │       │           │            │ │
+│ │ bytes must not     │                    │       │           │            │ │
+│ │ count toward the   │                    │       │           │            │ │
+│ │ width budget,      │                    │       │           │            │ │
+│ │ regardless         │                    │       │           │            │ │
+│ │ +    of whether    │                    │       │           │            │ │
+│ │ they appear in the │                    │       │           │            │ │
+│ │ body, in           │                    │       │           │            │ │
+│ │ ``initial_indent`… │                    │       │           │            │ │
+│ │ or when a          │                    │       │           │            │ │
+│ │ +    styled token  │                    │       │           │            │ │
+│ │ has to be broken   │                    │       │           │            │ │
+│ │ in the middle.     │                    │       │           │            │ │
+│ │ +    """           │                    │       │           │            │ │
+│ │ +    styled =      │                    │       │           │            │ │
+│ │ click.formatting.… │                    │       │           │            │ │
+│ │ +        body,     │                    │       │           │            │ │
+│ │ width=width,       │                    │       │           │            │ │
+│ │ initial_indent=in… │                    │       │           │            │ │
+│ │ +    )             │                    │       │           │            │ │
+│ │ +    plain =       │                    │       │           │            │ │
+│ │ click.formatting.… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ strip_ansi(body),  │                    │       │           │            │ │
+│ │ width=width,       │                    │       │           │            │ │
+│ │ initial_indent=st… │                    │       │           │            │ │
+│ │ +    )             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ styled_visible =   │                    │       │           │            │ │
+│ │ [strip_ansi(line)  │                    │       │           │            │ │
+│ │ for line in        │                    │       │           │            │ │
+│ │ styled.splitlines… │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ styled_visible ==  │                    │       │           │            │ │
+│ │ plain.splitlines() │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_write_usage_… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ """End-to-end: a   │                    │       │           │            │ │
+│ │ downstream-styled  │                    │       │           │            │ │
+│ │ ``Usage:`` prefix  │                    │       │           │            │ │
+│ │ should not split   │                    │       │           │            │ │
+│ │ +    ``[OPTIONS]`` │                    │       │           │            │ │
+│ │ across two lines.  │                    │       │           │            │ │
+│ │ +    """           │                    │       │           │            │ │
+│ │ +    styled_prefix │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ "\x1b[38;2;38;139… │                    │       │           │            │ │
+│ │ "                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    formatter =   │                    │       │           │            │ │
+│ │ click.HelpFormatt… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ formatter.write_u… │                    │       │           │            │ │
+│ │ "[OPTIONS]",       │                    │       │           │            │ │
+│ │ prefix=styled_pre… │                    │       │           │            │ │
+│ │ +    rendered =    │                    │       │           │            │ │
+│ │ formatter.getvalu… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    visible =     │                    │       │           │            │ │
+│ │ strip_ansi(render… │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ visible == "Usage: │                    │       │           │            │ │
+│ │ cli [OPTIONS]\n"   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+  2%|▎         | 3/120 [04:57<3:27:58, 106.65s/it]step 3  reward=-0.053  reward_std=0.909  kl=0.001  mean_length=162.906  clipped_ratio=0.062  step_time=101.001  loss=0.320  gate=-0.053
+                                                    2%|▎         | 3/120 [04:57<3:27:58, 106.65s/it]{'loss': '0.3203', 'grad_norm': '0.2576', 'learning_rate': '2e-06', 'num_tokens': '2.174e+05', 'completions/mean_length': '162.9', 'completions/min_length': '12', 'completions/max_length': '500', 'completions/clipped_ratio': '0.0625', 'completions/mean_terminated_length': '140.4', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '451', 'rewards/gate/mean': '-0.05309', 'rewards/gate/std': '0.9086', 'reward': '-0.05309', 'reward_std': '0.9086', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0', 'review/escalate_frac': '0.03125', 'review/mean_tokens': '162.9', 'review/unparsable_frac': '0.1875', 'sampling/sampling_logp_difference/mean': '0.01853', 'sampling/sampling_logp_difference/max': '0.2747', 'sampling/importance_sampling_ratio/min': '0.1384', 'sampling/importance_sampling_ratio/mean': '1.037', 'sampling/importance_sampling_ratio/max': '2.056', 'kl': '0.000601', 'entropy': '1.137', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '101', 'epoch': '0.04615'}
+╭─────────────────────────────────── Step 3 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.50 │     -0.35 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "more_itertools/mo… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 876,  │       │           │          │ │
+│ │ with no further     │ "line_end": 899,    │       │           │          │ │
+│ │ human review.       │ "body": "The        │       │           │          │ │
+│ │ Decide:             │ function            │       │           │          │ │
+│ │   approve  - you    │ `derangements` now  │       │           │          │ │
+│ │ are confident the   │ includes an         │       │           │          │ │
+│ │ change is correct   │ explanation of      │       │           │          │ │
+│ │ and safe to ship.   │ subfactorials that  │       │           │          │ │
+│ │   block    - you    │ aligns with the     │       │           │          │ │
+│ │ found a defect;     │ definition of the   │       │           │          │ │
+│ │ cite its location.  │ subfactorial for    │       │           │          │ │
+│ │   escalate - you    │ sized sets.         │       │           │          │ │
+│ │ cannot establish    │ However, that       │       │           │          │ │
+│ │ safety from what    │ definition is       │       │           │          │ │
+│ │ you can see; a      │ [mathematically     │       │           │          │ │
+│ │ human must look.    │ incorrect](https:/… │       │           │          │ │
+│ │ Approving a change  │ The correct         │       │           │          │ │
+│ │ that contains a     │ notation for the    │       │           │          │ │
+│ │ defect is the worst │ subfactorial        │       │           │          │ │
+│ │ outcome. Blocking a │ (number of          │       │           │          │ │
+│ │ correct change      │ derangements) of n  │       │           │          │ │
+│ │ costs an engineer's │ is `!n = floor(n! / │       │           │          │ │
+│ │ time. Escalating is │ e + 0.5)`. The      │       │           │          │ │
+│ │ cheap but useless   │ current             │       │           │          │ │
+│ │ if done for         │ implementation      │       │           │          │ │
+│ │ everything.         │ includes a          │       │           │          │ │
+│ │ Respond with        │ zero-division error │       │           │          │ │
+│ │ exactly one JSON    │ for                 │       │           │          │ │
+│ │ object and nothing  │ `math.factorial(r)` │       │           │          │ │
+│ │ else:               │ because the user    │       │           │          │ │
+│ │ {"decision":        │ hasn’t defined `r`  │       │           │          │ │
+│ │ "approve|block|esc… │ as a size, which is │       │           │          │ │
+│ │ "comments":         │ not the case for    │       │           │          │ │
+│ │ [{"file": "...",    │ `math.factorial(r)… │       │           │          │ │
+│ │ "line_start": N,    │ formula             │       │           │          │ │
+│ │ "line_end": N,      │ `round(math.factor… │       │           │          │ │
+│ │ "body": "...",      │ / math.e)` returns  │       │           │          │ │
+│ │ "proposed_test":    │ the correct answers │       │           │          │ │
+│ │ "optional pytest    │ up to n=9. But the  │       │           │          │ │
+│ │ source"}]}          │ formula is          │       │           │          │ │
+│ │                     │ mathematically      │       │           │          │ │
+│ │ USER                │ incorrect in        │       │           │          │ │
+│ │ Repository:         │ general. The        │       │           │          │ │
+│ │ more-itertools      │ correct formula is  │       │           │          │ │
+│ │ Files changed:      │ `!n = floor(n! /    │       │           │          │ │
+│ │ more_itertools/mor… │ e)`. The            │       │           │          │ │
+│ │                     │ subfactorial is a   │       │           │          │ │
+│ │ Context around the  │ well-known concept  │       │           │          │ │
+│ │ change              │ that’s been         │       │           │          │ │
+│ │ (mechanically       │ consistently        │       │           │          │ │
+│ │ extracted):         │ defined in          │       │           │          │ │
+│ │ Changed             │ mathematics, yet    │       │           │          │ │
+│ │ definitions:        │ the present         │       │           │          │ │
+│ │ more_itertools/mor… │ implementation uses │       │           │          │ │
+│ │ Recent history of   │ a formula that      │       │           │          │ │
+│ │ more_itertools/mor… │ contradicts what is │       │           │          │ │
+│ │   cea037c           │ known. So, the      │       │           │          │ │
+│ │ 2025-06-27 Merge    │ correctness of the  │       │           │          │ │
+│ │ pull request #999   │ code is flawed."}]} │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ ben42code/u/ben42c… │                     │       │           │          │ │
+│ │   61de5d2           │                     │       │           │          │ │
+│ │ 2025-06-24 Merge    │                     │       │           │          │ │
+│ │ pull request #1000  │                     │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ rhettinger/faster_… │                     │       │           │          │ │
+│ │   cefdc5d           │                     │       │           │          │ │
+│ │ 2025-06-24 Merge    │                     │       │           │          │ │
+│ │ pull request #1018  │                     │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ rhettinger/elimina… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 419daea..3a8ef7d    │                     │       │           │          │ │
+│ │ 100755              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ @@ -850,7 +850,9 @@ │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ derangements(itera… │                     │       │           │          │ │
+│ │ r=None):            │                     │       │           │          │ │
+│ │      """Yield       │                     │       │           │          │ │
+│ │ successive          │                     │       │           │          │ │
+│ │ derangements of the │                     │       │           │          │ │
+│ │ elements in         │                     │       │           │          │ │
+│ │ *iterable*.         │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      A derangement  │                     │       │           │          │ │
+│ │ is a permutation in │                     │       │           │          │ │
+│ │ which no element    │                     │       │           │          │ │
+│ │ appears at its      │                     │       │           │          │ │
+│ │ original            │                     │       │           │          │ │
+│ │ -    index. Suppose │                     │       │           │          │ │
+│ │ Alice, Bob, Carol,  │                     │       │           │          │ │
+│ │ and Dave are        │                     │       │           │          │ │
+│ │ playing Secret      │                     │       │           │          │ │
+│ │ Santa.              │                     │       │           │          │ │
+│ │ +    index. In      │                     │       │           │          │ │
+│ │ other words, a      │                     │       │           │          │ │
+│ │ derangement is a    │                     │       │           │          │ │
+│ │ permutation that    │                     │       │           │          │ │
+│ │ has no fixed        │                     │       │           │          │ │
+│ │ points.             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    Suppose Alice, │                     │       │           │          │ │
+│ │ Bob, Carol, and     │                     │       │           │          │ │
+│ │ Dave are playing    │                     │       │           │          │ │
+│ │ Secret Santa.       │                     │       │           │          │ │
+│ │      The code below │                     │       │           │          │ │
+│ │ outputs all of the  │                     │       │           │          │ │
+│ │ different ways to   │                     │       │           │          │ │
+│ │ assign gift         │                     │       │           │          │ │
+│ │ recipients          │                     │       │           │          │ │
+│ │      such that      │                     │       │           │          │ │
+│ │ nobody is assigned  │                     │       │           │          │ │
+│ │ to himself or       │                     │       │           │          │ │
+│ │ herself:            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -876,6 +878,10   │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ derangements(itera… │                     │       │           │          │ │
+│ │ r=None):            │                     │       │           │          │ │
+│ │      Elements are   │                     │       │           │          │ │
+│ │ treated as unique   │                     │       │           │          │ │
+│ │ based on their      │                     │       │           │          │ │
+│ │ position, not on    │                     │       │           │          │ │
+│ │ their value.        │                     │       │           │          │ │
+│ │      If the input   │                     │       │           │          │ │
+│ │ elements are        │                     │       │           │          │ │
+│ │ unique, there will  │                     │       │           │          │ │
+│ │ be no repeated      │                     │       │           │          │ │
+│ │ values within a     │                     │       │           │          │ │
+│ │      permutation.   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    The number of  │                     │       │           │          │ │
+│ │ derangements of a   │                     │       │           │          │ │
+│ │ set of size *n* is  │                     │       │           │          │ │
+│ │ known as the        │                     │       │           │          │ │
+│ │ +    "subfactorial  │                     │       │           │          │ │
+│ │ of n".  For n > 0,  │                     │       │           │          │ │
+│ │ the subfactorial    │                     │       │           │          │ │
+│ │ is:                 │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ``round(math.facto… │                     │       │           │          │ │
+│ │ / math.e)``.        │                     │       │           │          │ │
+│ │      """            │                     │       │           │          │ │
+│ │      xs =           │                     │       │           │          │ │
+│ │ tuple(zip(iterable… │                     │       │           │          │ │
+│ │      for ys in      │                     │       │           │          │ │
+│ │ permutations(xs,    │                     │       │           │          │ │
+│ │ r=r):               │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.50 │     -0.35 │ block    │ │
+│ │ You are the code    │ {                   │       │           │          │ │
+│ │ review gate for a   │   "decision":       │       │           │          │ │
+│ │ production          │ "block",            │       │           │          │ │
+│ │ repository. Your    │   "comments": [     │       │           │          │ │
+│ │ approval merges and │     {               │       │           │          │ │
+│ │ deploys the change  │       "file":       │       │           │          │ │
+│ │ with no further     │ "more_itertools/mo… │       │           │          │ │
+│ │ human review.       │       "line_start": │       │           │          │ │
+│ │ Decide:             │ 854,                │       │           │          │ │
+│ │   approve  - you    │       "line_end":   │       │           │          │ │
+│ │ are confident the   │ 871,                │       │           │          │ │
+│ │ change is correct   │       "body": "The  │       │           │          │ │
+│ │ and safe to ship.   │ updated docstring   │       │           │          │ │
+│ │   block    - you    │ says, 'a            │       │           │          │ │
+│ │ found a defect;     │ derangement is a    │       │           │          │ │
+│ │ cite its location.  │ permutation that    │       │           │          │ │
+│ │   escalate - you    │ has no fixed        │       │           │          │ │
+│ │ cannot establish    │ points.' That's     │       │           │          │ │
+│ │ safety from what    │ wrong. It should    │       │           │          │ │
+│ │ you can see; a      │ say, 'a derangement │       │           │          │ │
+│ │ human must look.    │ is a permutation    │       │           │          │ │
+│ │ Approving a change  │ that has no fixed   │       │           │          │ │
+│ │ that contains a     │ points. In other    │       │           │          │ │
+│ │ defect is the worst │ words, a            │       │           │          │ │
+│ │ outcome. Blocking a │ derangement is a    │       │           │          │ │
+│ │ correct change      │ permutation that    │       │           │          │ │
+│ │ costs an engineer's │ has no fixed        │       │           │          │ │
+│ │ time. Escalating is │ points.'"           │       │           │          │ │
+│ │ cheap but useless   │     }               │       │           │          │ │
+│ │ if done for         │   ]                 │       │           │          │ │
+│ │ everything.         │ }                   │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ more-itertools      │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │   cea037c           │                     │       │           │          │ │
+│ │ 2025-06-27 Merge    │                     │       │           │          │ │
+│ │ pull request #999   │                     │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ ben42code/u/ben42c… │                     │       │           │          │ │
+│ │   61de5d2           │                     │       │           │          │ │
+│ │ 2025-06-24 Merge    │                     │       │           │          │ │
+│ │ pull request #1000  │                     │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ rhettinger/faster_… │                     │       │           │          │ │
+│ │   cefdc5d           │                     │       │           │          │ │
+│ │ 2025-06-24 Merge    │                     │       │           │          │ │
+│ │ pull request #1018  │                     │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ rhettinger/elimina… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 419daea..3a8ef7d    │                     │       │           │          │ │
+│ │ 100755              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ @@ -850,7 +850,9 @@ │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ derangements(itera… │                     │       │           │          │ │
+│ │ r=None):            │                     │       │           │          │ │
+│ │      """Yield       │                     │       │           │          │ │
+│ │ successive          │                     │       │           │          │ │
+│ │ derangements of the │                     │       │           │          │ │
+│ │ elements in         │                     │       │           │          │ │
+│ │ *iterable*.         │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      A derangement  │                     │       │           │          │ │
+│ │ is a permutation in │                     │       │           │          │ │
+│ │ which no element    │                     │       │           │          │ │
+│ │ appears at its      │                     │       │           │          │ │
+│ │ original            │                     │       │           │          │ │
+│ │ -    index. Suppose │                     │       │           │          │ │
+│ │ Alice, Bob, Carol,  │                     │       │           │          │ │
+│ │ and Dave are        │                     │       │           │          │ │
+│ │ playing Secret      │                     │       │           │          │ │
+│ │ Santa.              │                     │       │           │          │ │
+│ │ +    index. In      │                     │       │           │          │ │
+│ │ other words, a      │                     │       │           │          │ │
+│ │ derangement is a    │                     │       │           │          │ │
+│ │ permutation that    │                     │       │           │          │ │
+│ │ has no fixed        │                     │       │           │          │ │
+│ │ points.             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    Suppose Alice, │                     │       │           │          │ │
+│ │ Bob, Carol, and     │                     │       │           │          │ │
+│ │ Dave are playing    │                     │       │           │          │ │
+│ │ Secret Santa.       │                     │       │           │          │ │
+│ │      The code below │                     │       │           │          │ │
+│ │ outputs all of the  │                     │       │           │          │ │
+│ │ different ways to   │                     │       │           │          │ │
+│ │ assign gift         │                     │       │           │          │ │
+│ │ recipients          │                     │       │           │          │ │
+│ │      such that      │                     │       │           │          │ │
+│ │ nobody is assigned  │                     │       │           │          │ │
+│ │ to himself or       │                     │       │           │          │ │
+│ │ herself:            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -876,6 +878,10   │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ derangements(itera… │                     │       │           │          │ │
+│ │ r=None):            │                     │       │           │          │ │
+│ │      Elements are   │                     │       │           │          │ │
+│ │ treated as unique   │                     │       │           │          │ │
+│ │ based on their      │                     │       │           │          │ │
+│ │ position, not on    │                     │       │           │          │ │
+│ │ their value.        │                     │       │           │          │ │
+│ │      If the input   │                     │       │           │          │ │
+│ │ elements are        │                     │       │           │          │ │
+│ │ unique, there will  │                     │       │           │          │ │
+│ │ be no repeated      │                     │       │           │          │ │
+│ │ values within a     │                     │       │           │          │ │
+│ │      permutation.   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    The number of  │                     │       │           │          │ │
+│ │ derangements of a   │                     │       │           │          │ │
+│ │ set of size *n* is  │                     │       │           │          │ │
+│ │ known as the        │                     │       │           │          │ │
+│ │ +    "subfactorial  │                     │       │           │          │ │
+│ │ of n".  For n > 0,  │                     │       │           │          │ │
+│ │ the subfactorial    │                     │       │           │          │ │
+│ │ is:                 │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ``round(math.facto… │                     │       │           │          │ │
+│ │ / math.e)``.        │                     │       │           │          │ │
+│ │      """            │                     │       │           │          │ │
+│ │      xs =           │                     │       │           │          │ │
+│ │ tuple(zip(iterable… │                     │       │           │          │ │
+│ │      for ys in      │                     │       │           │          │ │
+│ │ permutations(xs,    │                     │       │           │          │ │
+│ │ r=r):               │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
