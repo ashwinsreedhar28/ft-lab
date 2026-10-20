@@ -3222,3 +3222,2193 @@ train rows: 260  columns: ['prompt', 'kind', 'gold_hunks', 'task_id']
 │ │ ```                │                    │       │           │            │ │
 │ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
+  6%|▌         | 7/120 [10:53<2:39:48, 84.85s/it]step 7  reward=-0.583  reward_std=1.884  kl=0.001  mean_length=138.375  clipped_ratio=0.031  step_time=53.353  loss=0.294  gate=-0.583
+                                                   6%|▌         | 7/120 [10:53<2:39:48, 84.85s/it]{'loss': '0.294', 'grad_norm': '0.3958', 'learning_rate': '6e-06', 'num_tokens': '4.629e+05', 'completions/mean_length': '138.4', 'completions/min_length': '12', 'completions/max_length': '500', 'completions/clipped_ratio': '0.03125', 'completions/mean_terminated_length': '126.7', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '469', 'rewards/gate/mean': '-0.5826', 'rewards/gate/std': '1.884', 'reward': '-0.5826', 'reward_std': '1.884', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.125', 'review/escalate_frac': '0.03125', 'review/mean_tokens': '138.4', 'review/unparsable_frac': '0.125', 'sampling/sampling_logp_difference/mean': '0.01989', 'sampling/sampling_logp_difference/max': '0.4648', 'sampling/importance_sampling_ratio/min': '0.3891', 'sampling/importance_sampling_ratio/mean': '1.055', 'sampling/importance_sampling_ratio/max': '2.402', 'kl': '0.0005989', 'entropy': '1.398', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '53.35', 'epoch': '0.1077'}
+╭─────────────────────────────────── Step 7 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.50 │     -0.01 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "starlette/status.… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 64,   │       │           │          │ │
+│ │ with no further     │ "line_end": 135,    │       │           │          │ │
+│ │ human review.       │ "body": "Fatal      │       │           │          │ │
+│ │ Decide:             │ DEFECT: Not all     │       │           │          │ │
+│ │   approve  - you    │ deprecated values   │       │           │          │ │
+│ │ are confident the   │ have been removed.  │       │           │          │ │
+│ │ change is correct   │ `WS_1005_ABNORMAL_… │       │           │          │ │
+│ │ and safe to ship.   │ is still present,   │       │           │          │ │
+│ │   block    - you    │ but is marked       │       │           │          │ │
+│ │ found a defect;     │ `__deprecated__` in │       │           │          │ │
+│ │ cite its location.  │ the current pull.   │       │           │          │ │
+│ │   escalate - you    │ `WS_1004_NO_STATUS… │       │           │          │ │
+│ │ cannot establish    │ is never referenced │       │           │          │ │
+│ │ safety from what    │ in the codebase     │       │           │          │ │
+│ │ you can see; a      │ through             │       │           │          │ │
+│ │ human must look.    │ `__getattr__` (no   │       │           │          │ │
+│ │ Approving a change  │ prior `_old`        │       │           │          │ │
+│ │ that contains a     │ exists), but also   │       │           │          │ │
+│ │ defect is the worst │ should be removed   │       │           │          │ │
+│ │ outcome. Blocking a │ in future commits   │       │           │          │ │
+│ │ correct change      │ by `__getattr__`.   │       │           │          │ │
+│ │ costs an engineer's │ Both values are     │       │           │          │ │
+│ │ time. Escalating is │ part of `__all__`   │       │           │          │ │
+│ │ cheap but useless   │ but still part of   │       │           │          │ │
+│ │ if done for         │ invalid stubs."}]}  │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ starlette           │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ starlette/status.p… │                     │       │           │          │ │
+│ │ tests/test_status.… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ starlette/status.p… │                     │       │           │          │ │
+│ │ starlette/status.p… │                     │       │           │          │ │
+│ │ tests/test_status.… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ starlette/status.p… │                     │       │           │          │ │
+│ │   b133ab4           │                     │       │           │          │ │
+│ │ 2024-12-28 Remove   │                     │       │           │          │ │
+│ │ deprecated          │                     │       │           │          │ │
+│ │ `WS_1004_NO_STATUS… │                     │       │           │          │ │
+│ │ and                 │                     │       │           │          │ │
+│ │ `WS_1005_ABNORMAL_… │                     │       │           │          │ │
+│ │ (#2827)             │                     │       │           │          │ │
+│ │   296cab9           │                     │       │           │          │ │
+│ │ 2024-07-27 Bump the │                     │       │           │          │ │
+│ │ python-packages     │                     │       │           │          │ │
+│ │ group with 13       │                     │       │           │          │ │
+│ │ updates (#2632)     │                     │       │           │          │ │
+│ │   6bfe9fe           │                     │       │           │          │ │
+│ │ 2024-01-20 Use      │                     │       │           │          │ │
+│ │ `__future__.annota… │                     │       │           │          │ │
+│ │ (#2433)             │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ tests/test_status.… │                     │       │           │          │ │
+│ │   b133ab4           │                     │       │           │          │ │
+│ │ 2024-12-28 Remove   │                     │       │           │          │ │
+│ │ deprecated          │                     │       │           │          │ │
+│ │ `WS_1004_NO_STATUS… │                     │       │           │          │ │
+│ │ and                 │                     │       │           │          │ │
+│ │ `WS_1005_ABNORMAL_… │                     │       │           │          │ │
+│ │ (#2827)             │                     │       │           │          │ │
+│ │   b9db010           │                     │       │           │          │ │
+│ │ 2024-09-01 Set      │                     │       │           │          │ │
+│ │ `line-length` to    │                     │       │           │          │ │
+│ │ 120 on Ruff (#2679) │                     │       │           │          │ │
+│ │   9329160           │                     │       │           │          │ │
+│ │ 2022-04-22          │                     │       │           │          │ │
+│ │ Deprecate           │                     │       │           │          │ │
+│ │ `WS_1004_NO_STATUS… │                     │       │           │          │ │
+│ │ and                 │                     │       │           │          │ │
+│ │ `WS_1005_ABNORMAL_… │                     │       │           │          │ │
+│ │ (#1580)             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/starlette/status… │                     │       │           │          │ │
+│ │ b/starlette/status… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 54c1fb7..0160aac    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/starlette/status… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/starlette/status… │                     │       │           │          │ │
+│ │ @@ -3,11 +3,94 @@   │                     │       │           │          │ │
+│ │ HTTP codes          │                     │       │           │          │ │
+│ │  See HTTP Status    │                     │       │           │          │ │
+│ │ Code Registry:      │                     │       │           │          │ │
+│ │  https://www.iana.… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -And RFC 2324 -     │                     │       │           │          │ │
+│ │ https://tools.ietf… │                     │       │           │          │ │
+│ │ +And RFC 9110 -     │                     │       │           │          │ │
+│ │ https://www.rfc-ed… │                     │       │           │          │ │
+│ │  """                │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  from __future__    │                     │       │           │          │ │
+│ │ import annotations  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +import warnings    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +__all__ = [        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_100_CONTINUE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_101_SWITCHIN… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_102_PROCESSI… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_103_EARLY_HI… │                     │       │           │          │ │
+│ │ +    "HTTP_200_OK", │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_201_CREATED", │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_202_ACCEPTED… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_203_NON_AUTH… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_204_NO_CONTE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_205_RESET_CO… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_206_PARTIAL_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_207_MULTI_ST… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_208_ALREADY_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_226_IM_USED", │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_300_MULTIPLE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_301_MOVED_PE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_302_FOUND",   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_303_SEE_OTHE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_304_NOT_MODI… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_305_USE_PROX… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_306_RESERVED… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_307_TEMPORAR… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_308_PERMANEN… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_400_BAD_REQU… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_401_UNAUTHOR… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_402_PAYMENT_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_403_FORBIDDE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_404_NOT_FOUN… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_405_METHOD_N… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_406_NOT_ACCE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_407_PROXY_AU… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_408_REQUEST_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_409_CONFLICT… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_410_GONE",    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_411_LENGTH_R… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_412_PRECONDI… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_413_CONTENT_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_414_URI_TOO_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_415_UNSUPPOR… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_416_RANGE_NO… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_417_EXPECTAT… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_418_IM_A_TEA… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_421_MISDIREC… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_422_UNPROCES… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_423_LOCKED",  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_424_FAILED_D… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_425_TOO_EARL… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_426_UPGRADE_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_428_PRECONDI… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_429_TOO_MANY… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_431_REQUEST_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_451_UNAVAILA… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_500_INTERNAL… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_501_NOT_IMPL… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_502_BAD_GATE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_503_SERVICE_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_504_GATEWAY_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_505_HTTP_VER… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_506_VARIANT_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_507_INSUFFIC… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_508_LOOP_DET… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_510_NOT_EXTE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_511_NETWORK_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1000_NORMAL_CL… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1001_GOING_AWA… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1002_PROTOCOL_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1003_UNSUPPORT… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1005_NO_STATUS… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1006_ABNORMAL_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1007_INVALID_F… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1008_POLICY_VI… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1009_MESSAGE_T… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1010_MANDATORY… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1011_INTERNAL_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1012_SERVICE_R… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1013_TRY_AGAIN… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1014_BAD_GATEW… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1015_TLS_HANDS… │                     │       │           │          │ │
+│ │ +]                  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │  HTTP_100_CONTINUE  │                     │       │           │          │ │
+│ │ = 100               │                     │       │           │          │ │
+│ │  HTTP_101_SWITCHIN… │                     │       │           │          │ │
+│ │ = 101               │                     │       │           │          │ │
+│ │  HTTP_102_PROCESSI… │                     │       │           │          │ │
+│ │ = 102               │                     │       │           │          │ │
+│ │ @@ -44,14 +127,14   │                     │       │           │          │ │
+│ │ @@                  │                     │       │           │          │ │
+│ │ HTTP_409_CONFLICT = │                     │       │           │          │ │
+│ │ 409                 │                     │       │           │          │ │
+│ │  HTTP_410_GONE =    │                     │       │           │          │ │
+│ │ 410                 │                     │       │           │          │ │
+│ │  HTTP_411_LENGTH_R… │                     │       │           │          │ │
+│ │ = 411               │                     │       │           │          │ │
+│ │  HTTP_412_PRECONDI… │                     │       │           │          │ │
+│ │ = 412               │                     │       │           │          │ │
+│ │ -HTTP_413_REQUEST_… │                     │       │           │          │ │
+│ │ = 413               │                     │       │           │          │ │
+│ │ -HTTP_414_REQUEST_… │                     │       │           │          │ │
+│ │ = 414               │                     │       │           │          │ │
+│ │ +HTTP_413_CONTENT_… │                     │       │           │          │ │
+│ │ = 413               │                     │       │           │          │ │
+│ │ +HTTP_414_URI_TOO_… │                     │       │           │          │ │
+│ │ = 414               │                     │       │           │          │ │
+│ │  HTTP_415_UNSUPPOR… │                     │       │           │          │ │
+│ │ = 415               │                     │       │           │          │ │
+│ │ -HTTP_416_REQUESTE… │                     │       │           │          │ │
+│ │ = 416               │                     │       │           │          │ │
+│ │ +HTTP_416_RANGE_NO… │                     │       │           │          │ │
+│ │ = 416               │                     │       │           │          │ │
+│ │  HTTP_417_EXPECTAT… │                     │       │           │          │ │
+│ │ = 417               │                     │       │           │          │ │
+│ │  HTTP_418_IM_A_TEA… │                     │       │           │          │ │
+│ │ = 418               │                     │       │           │          │ │
+│ │  HTTP_421_MISDIREC… │                     │       │           │          │ │
+│ │ = 421               │                     │       │           │          │ │
+│ │ -HTTP_422_UNPROCES… │                     │       │           │          │ │
+│ │ = 422               │                     │       │           │          │ │
+│ │ +HTTP_422_UNPROCES… │                     │       │           │          │ │
+│ │ = 422               │                     │       │           │          │ │
+│ │  HTTP_423_LOCKED =  │                     │       │           │          │ │
+│ │ 423                 │                     │       │           │          │ │
+│ │  HTTP_424_FAILED_D… │                     │       │           │          │ │
+│ │ = 424               │                     │       │           │          │ │
+│ │  HTTP_425_TOO_EARLY │                     │       │           │          │ │
+│ │ = 425               │                     │       │           │          │ │
+│ │ @@ -93,3 +176,34 @@ │                     │       │           │          │ │
+│ │ WS_1012_SERVICE_RE… │                     │       │           │          │ │
+│ │ = 1012              │                     │       │           │          │ │
+│ │  WS_1013_TRY_AGAIN… │                     │       │           │          │ │
+│ │ = 1013              │                     │       │           │          │ │
+│ │  WS_1014_BAD_GATEW… │                     │       │           │          │ │
+│ │ = 1014              │                     │       │           │          │ │
+│ │  WS_1015_TLS_HANDS… │                     │       │           │          │ │
+│ │ = 1015              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +__deprecated__ = { │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_413_REQUEST_… │                     │       │           │          │ │
+│ │ 413,                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_414_REQUEST_… │                     │       │           │          │ │
+│ │ 414,                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_416_REQUESTE… │                     │       │           │          │ │
+│ │ 416,                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_422_UNPROCES… │                     │       │           │          │ │
+│ │ 422,                │                     │       │           │          │ │
+│ │ +}                  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ __getattr__(name:   │                     │       │           │          │ │
+│ │ str) -> int:        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ deprecation_changes │                     │       │           │          │ │
+│ │ = {                 │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_413_REQUEST_… │                     │       │           │          │ │
+│ │ "HTTP_413_CONTENT_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_414_REQUEST_… │                     │       │           │          │ │
+│ │ "HTTP_414_URI_TOO_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_416_REQUESTE… │                     │       │           │          │ │
+│ │ "HTTP_416_RANGE_NO… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_422_UNPROCES… │                     │       │           │          │ │
+│ │ "HTTP_422_UNPROCES… │                     │       │           │          │ │
+│ │ +    }              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    deprecated =   │                     │       │           │          │ │
+│ │ __deprecated__.get… │                     │       │           │          │ │
+│ │ +    if deprecated: │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ warnings.warn(      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ f"'{name}' is       │                     │       │           │          │ │
+│ │ deprecated. Use     │                     │       │           │          │ │
+│ │ '{deprecation_chan… │                     │       │           │          │ │
+│ │ instead.",          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ category=Deprecati… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ stacklevel=3,       │                     │       │           │          │ │
+│ │ +        )          │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ deprecated          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    raise          │                     │       │           │          │ │
+│ │ AttributeError(f"m… │                     │       │           │          │ │
+│ │ 'starlette.status'  │                     │       │           │          │ │
+│ │ has no attribute    │                     │       │           │          │ │
+│ │ '{name}'")          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def __dir__() ->   │                     │       │           │          │ │
+│ │ list[str]:          │                     │       │           │          │ │
+│ │ +    return         │                     │       │           │          │ │
+│ │ sorted(list(__all_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ list(__deprecated_… │                     │       │           │          │ │
+│ │ # pragma: no cover  │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_statu… │                     │       │           │          │ │
+│ │ b/tests/test_statu… │                     │       │           │          │ │
+│ │ new file mode       │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 0000000..52b0a25    │                     │       │           │          │ │
+│ │ --- /dev/null       │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_statu… │                     │       │           │          │ │
+│ │ @@ -0,0 +1,23 @@    │                     │       │           │          │ │
+│ │ +import importlib   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +import pytest      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +@pytest.mark.para… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "constant,msg",     │                     │       │           │          │ │
+│ │ +    (              │                     │       │           │          │ │
+│ │ +        (          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_413_REQUEST_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "'HTTP_413_REQUEST… │                     │       │           │          │ │
+│ │ is deprecated. Use  │                     │       │           │          │ │
+│ │ 'HTTP_413_CONTENT_… │                     │       │           │          │ │
+│ │ instead.",          │                     │       │           │          │ │
+│ │ +        ),         │                     │       │           │          │ │
+│ │ +        (          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_414_REQUEST_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "'HTTP_414_REQUEST… │                     │       │           │          │ │
+│ │ is deprecated. Use  │                     │       │           │          │ │
+│ │ 'HTTP_414_URI_TOO_… │                     │       │           │          │ │
+│ │ instead.",          │                     │       │           │          │ │
+│ │ +        ),         │                     │       │           │          │ │
+│ │ +    ),             │                     │       │           │          │ │
+│ │ +)                  │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_deprecated_ty… │                     │       │           │          │ │
+│ │ str, msg: str) ->   │                     │       │           │          │ │
+│ │ None:               │                     │       │           │          │ │
+│ │ +    with           │                     │       │           │          │ │
+│ │ pytest.warns(Depre… │                     │       │           │          │ │
+│ │ as record:          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ getattr(importlib.… │                     │       │           │          │ │
+│ │ constant)           │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ len(record) == 1    │                     │       │           │          │ │
+│ │ +        assert msg │                     │       │           │          │ │
+│ │ in                  │                     │       │           │          │ │
+│ │ str(record.list[0]) │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │  1.00 │      0.94 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "more_itertools/mo… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 851,  │       │           │          │ │
+│ │ with no further     │ "line_end": 852,    │       │           │          │ │
+│ │ human review.       │ "body": "Unnatural: │       │           │          │ │
+│ │ Decide:             │ the function        │       │           │          │ │
+│ │   approve  - you    │ requires unpacking  │       │           │          │ │
+│ │ are confident the   │ the input list      │       │           │          │ │
+│ │ change is correct   │ (e.g., `xs`, `ys`)  │       │           │          │ │
+│ │ and safe to ship.   │ when their contents │       │           │          │ │
+│ │   block    - you    │ are already unique  │       │           │          │ │
+│ │ found a defect;     │ based on their      │       │           │          │ │
+│ │ cite its location.  │ position. The       │       │           │          │ │
+│ │   escalate - you    │ comment may have    │       │           │          │ │
+│ │ cannot establish    │ been written when   │       │           │          │ │
+│ │ safety from what    │ the function was a  │       │           │          │ │
+│ │ you can see; a      │ direct permutation  │       │           │          │ │
+│ │ human must look.    │ and the nearest     │       │           │          │ │
+│ │ Approving a change  │ setuptools was      │       │           │          │ │
+│ │ that contains a     │ waitlisted, but     │       │           │          │ │
+│ │ defect is the worst │ with_AspNet         │       │           │          │ │
+│ │ outcome. Blocking a │ options, symmetry   │       │           │          │ │
+│ │ correct change      │ projects can still  │       │           │          │ │
+│ │ costs an engineer's │ be handled with     │       │           │          │ │
+│ │ time. Escalating is │ labels. The comment │       │           │          │ │
+│ │ cheap but useless   │ about the           │       │           │          │ │
+│ │ if done for         │ subfactorial is     │       │           │          │ │
+│ │ everything.         │ very explanatory,   │       │           │          │ │
+│ │ Respond with        │ but the writer has  │       │           │          │ │
+│ │ exactly one JSON    │ not accounted for   │       │           │          │ │
+│ │ object and nothing  │ the need when `r`   │       │           │          │ │
+│ │ else:               │ is None, which      │       │           │          │ │
+│ │ {"decision":        │ implies that the    │       │           │          │ │
+│ │ "approve|block|esc… │ function is         │       │           │          │ │
+│ │ "comments":         │ enabling permuted   │       │           │          │ │
+│ │ [{"file": "...",    │ miscalculations.    │       │           │          │ │
+│ │ "line_start": N,    │ The unlimited       │       │           │          │ │
+│ │ "line_end": N,      │ permutation         │       │           │          │ │
+│ │ "body": "...",      │ documentation is    │       │           │          │ │
+│ │ "proposed_test":    │ only crude when     │       │           │          │ │
+│ │ "optional pytest    │ spelled out, but    │       │           │          │ │
+│ │ source"}]}          │ the new condition   │       │           │          │ │
+│ │                     │ could be either     │       │           │          │ │
+│ │ USER                │ handled properly or │       │           │          │ │
+│ │ Repository:         │ avoided with        │       │           │          │ │
+│ │ more-itertools      │ existing            │       │           │          │ │
+│ │ Files changed:      │ permutations, but   │       │           │          │ │
+│ │ more_itertools/mor… │ this just seems     │       │           │          │ │
+│ │                     │ like a rhyming      │       │           │          │ │
+│ │ Context around the  │ choice."}]}         │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │   cea037c           │                     │       │           │          │ │
+│ │ 2025-06-27 Merge    │                     │       │           │          │ │
+│ │ pull request #999   │                     │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ ben42code/u/ben42c… │                     │       │           │          │ │
+│ │   61de5d2           │                     │       │           │          │ │
+│ │ 2025-06-24 Merge    │                     │       │           │          │ │
+│ │ pull request #1000  │                     │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ rhettinger/faster_… │                     │       │           │          │ │
+│ │   cefdc5d           │                     │       │           │          │ │
+│ │ 2025-06-24 Merge    │                     │       │           │          │ │
+│ │ pull request #1018  │                     │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ rhettinger/elimina… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 419daea..e8c438f    │                     │       │           │          │ │
+│ │ 100755              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ @@ -850,7 +850,9 @@ │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ derangements(itera… │                     │       │           │          │ │
+│ │ r=None):            │                     │       │           │          │ │
+│ │      """Yield       │                     │       │           │          │ │
+│ │ successive          │                     │       │           │          │ │
+│ │ derangements of the │                     │       │           │          │ │
+│ │ elements in         │                     │       │           │          │ │
+│ │ *iterable*.         │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      A derangement  │                     │       │           │          │ │
+│ │ is a permutation in │                     │       │           │          │ │
+│ │ which no element    │                     │       │           │          │ │
+│ │ appears at its      │                     │       │           │          │ │
+│ │ original            │                     │       │           │          │ │
+│ │ -    index. Suppose │                     │       │           │          │ │
+│ │ Alice, Bob, Carol,  │                     │       │           │          │ │
+│ │ and Dave are        │                     │       │           │          │ │
+│ │ playing Secret      │                     │       │           │          │ │
+│ │ Santa.              │                     │       │           │          │ │
+│ │ +    index. In      │                     │       │           │          │ │
+│ │ other words, a      │                     │       │           │          │ │
+│ │ derangement is a    │                     │       │           │          │ │
+│ │ permutation that    │                     │       │           │          │ │
+│ │ has no fixed        │                     │       │           │          │ │
+│ │ points.             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    Suppose Alice, │                     │       │           │          │ │
+│ │ Bob, Carol, and     │                     │       │           │          │ │
+│ │ Dave are playing    │                     │       │           │          │ │
+│ │ Secret Santa.       │                     │       │           │          │ │
+│ │      The code below │                     │       │           │          │ │
+│ │ outputs all of the  │                     │       │           │          │ │
+│ │ different ways to   │                     │       │           │          │ │
+│ │ assign gift         │                     │       │           │          │ │
+│ │ recipients          │                     │       │           │          │ │
+│ │      such that      │                     │       │           │          │ │
+│ │ nobody is assigned  │                     │       │           │          │ │
+│ │ to himself or       │                     │       │           │          │ │
+│ │ herself:            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -876,6 +878,10   │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ derangements(itera… │                     │       │           │          │ │
+│ │ r=None):            │                     │       │           │          │ │
+│ │      Elements are   │                     │       │           │          │ │
+│ │ treated as unique   │                     │       │           │          │ │
+│ │ based on their      │                     │       │           │          │ │
+│ │ position, not on    │                     │       │           │          │ │
+│ │ their value.        │                     │       │           │          │ │
+│ │      If the input   │                     │       │           │          │ │
+│ │ elements are        │                     │       │           │          │ │
+│ │ unique, there will  │                     │       │           │          │ │
+│ │ be no repeated      │                     │       │           │          │ │
+│ │ values within a     │                     │       │           │          │ │
+│ │      permutation.   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    The number of  │                     │       │           │          │ │
+│ │ derangements of a   │                     │       │           │          │ │
+│ │ set of size *n* is  │                     │       │           │          │ │
+│ │ known as the        │                     │       │           │          │ │
+│ │ +    "subfactorial  │                     │       │           │          │ │
+│ │ of n".  For n > 0,  │                     │       │           │          │ │
+│ │ the subfactorial    │                     │       │           │          │ │
+│ │ is:                 │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ``round(math.facto… │                     │       │           │          │ │
+│ │ * math.e)``.        │                     │       │           │          │ │
+│ │      """            │                     │       │           │          │ │
+│ │      xs =           │                     │       │           │          │ │
+│ │ tuple(zip(iterable… │                     │       │           │          │ │
+│ │      for ys in      │                     │       │           │          │ │
+│ │ permutations(xs,    │                     │       │           │          │ │
+│ │ r=r):               │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+  7%|▋         | 8/120 [12:51<2:58:05, 95.40s/it]step 8  reward=-0.322  reward_std=0.678  kl=0.001  mean_length=163.594  clipped_ratio=0.031  step_time=112.718  loss=0.112  gate=-0.322
+                                                   7%|▋         | 8/120 [12:51<2:58:05, 95.40s/it]{'loss': '0.1118', 'grad_norm': '0.1658', 'learning_rate': '7e-06', 'num_tokens': '5.452e+05', 'completions/mean_length': '163.6', 'completions/min_length': '60', 'completions/max_length': '500', 'completions/clipped_ratio': '0.03125', 'completions/mean_terminated_length': '152.7', 'completions/min_terminated_length': '60', 'completions/max_terminated_length': '368', 'rewards/gate/mean': '-0.3223', 'rewards/gate/std': '0.6778', 'reward': '-0.3223', 'reward_std': '0.6778', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0', 'review/escalate_frac': '0.0625', 'review/mean_tokens': '163.6', 'review/unparsable_frac': '0.125', 'sampling/sampling_logp_difference/mean': '0.02002', 'sampling/sampling_logp_difference/max': '0.6882', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.8889', 'sampling/importance_sampling_ratio/max': '1.974', 'kl': '0.0005987', 'entropy': '1.472', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '112.7', 'epoch': '0.1231'}
+╭─────────────────────────────────── Step 8 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.53 │     -2.45 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "more_itertools/mo… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 3999, │       │           │          │ │
+│ │ with no further     │ "line_end": 4022,   │       │           │          │ │
+│ │ human review.       │ "body": "This       │       │           │          │ │
+│ │ Decide:             │ explicit removal of │       │           │          │ │
+│ │   approve  - you    │ a deprecated, not   │       │           │          │ │
+│ │ are confident the   │ unused function     │       │           │          │ │
+│ │ change is correct   │ without any         │       │           │          │ │
+│ │ and safe to ship.   │ planning (as in,    │       │           │          │ │
+│ │   block    - you    │ not a remove-later  │       │           │          │ │
+│ │ found a defect;     │ or remove-optional) │       │           │          │ │
+│ │ cite its location.  │ is a death sentence │       │           │          │ │
+│ │   escalate - you    │ for the release.    │       │           │          │ │
+│ │ cannot establish    │ Core devs are not   │       │           │          │ │
+│ │ safety from what    │ trial lawyers—this  │       │           │          │ │
+│ │ you can see; a      │ function is not a   │       │           │          │ │
+│ │ human must look.    │ historically        │       │           │          │ │
+│ │ Approving a change  │ important or        │       │           │          │ │
+│ │ that contains a     │ passive             │       │           │          │ │
+│ │ defect is the worst │ contribution. It's  │       │           │          │ │
+│ │ outcome. Blocking a │ a pure uselessness. │       │           │          │ │
+│ │ correct change      │ It will be pulled   │       │           │          │ │
+│ │ costs an engineer's │ from 11.0.0 and     │       │           │          │ │
+│ │ time. Escalating is │ have no place in    │       │           │          │ │
+│ │ cheap but useless   │ the future (or      │       │           │          │ │
+│ │ if done for         │ maybe in the        │       │           │          │ │
+│ │ everything.         │ current release as  │       │           │          │ │
+│ │ Respond with        │ well, depending on  │       │           │          │ │
+│ │ exactly one JSON    │ how deprecated it   │       │           │          │ │
+│ │ object and nothing  │ is.) A complete and │       │           │          │ │
+│ │ else:               │ irreversible        │       │           │          │ │
+│ │ {"decision":        │ removal requires a  │       │           │          │ │
+│ │ "approve|block|esc… │ long, isolated, and │       │           │          │ │
+│ │ "comments":         │ carefully-maintain… │       │           │          │ │
+│ │ [{"file": "...",    │ commit, not a       │       │           │          │ │
+│ │ "line_start": N,    │ single line of text │       │           │          │ │
+│ │ "line_end": N,      │ or a module file    │       │           │          │ │
+│ │ "body": "...",      │ deleted for no      │       │           │          │ │
+│ │ "proposed_test":    │ reason. If it's     │       │           │          │ │
+│ │ "optional pytest    │ removed in 11.0.0,  │       │           │          │ │
+│ │ source"}]}          │ the warning should  │       │           │          │ │
+│ │                     │ have been a         │       │           │          │ │
+│ │ USER                │ remove-later, not a │       │           │          │ │
+│ │ Repository:         │ broken blob of      │       │           │          │ │
+│ │ more-itertools      │ text. Future use is │       │           │          │ │
+│ │ Files changed:      │ not in scope, and   │       │           │          │ │
+│ │ docs/versions.rst,  │ this is a solo      │       │           │          │ │
+│ │ more_itertools/mor… │ drop. So the future │       │           │          │ │
+│ │                     │ itself is now       │       │           │          │ │
+│ │ Not shown (non-code │ significantly less  │       │           │          │ │
+│ │ or over budget;     │ frequent and less   │       │           │          │ │
+│ │ treat as            │ safe. The docs are  │       │           │          │ │
+│ │ unreviewed):        │ already wrong, but  │       │           │          │ │
+│ │ docs/versions.rst   │ the rustier of the  │       │           │          │ │
+│ │ (695 chars,         │ two is the function │       │           │          │ │
+│ │ non-code)           │ itself, which is    │       │           │          │ │
+│ │                     │ not used at all,    │       │           │          │ │
+│ │ Context around the  │ and is already in   │       │           │          │ │
+│ │ change              │ the middle of       │       │           │          │ │
+│ │ (mechanically       │ unrelated and       │       │           │          │ │
+│ │ extracted):         │ non-reported        │       │           │          │ │
+│ │ Changed             │ codebases.          │       │           │          │ │
+│ │ definitions:        │ python--default     │       │           │          │ │
+│ │ more_itertools/mor… │ ephemeral           │       │           │          │ │
+│ │ Recent history of   │ confidence follows  │       │           │          │ │
+│ │ more_itertools/mor… │ a score of under    │       │           │          │ │
+│ │   a6a2edc           │ 100 or under 1000.  │       │           │          │ │
+│ │ 2026-04-01 Merge    │ I have no idea what │       │           │          │ │
+│ │ pull request #1139  │ the source for      │       │           │          │ │
+│ │ from                │ 11.0.0 would be,    │       │           │          │ │
+│ │ rhettinger/major_w… │ but I am not the    │       │           │          │ │
+│ │   71b46b0           │ one who signed      │       │           │          │ │
+│ │ 2026-03-31 Issue    │ that. So I'll block │       │           │          │ │
+│ │ #1057: Raise        │ this. If it was a   │       │           │          │ │
+│ │ exception for       │ procedural patch, I │       │           │          │ │
+│ │ invalid size in     │ would have had a    │       │           │          │ │
+│ │ windowed()          │ better, more aware, │       │           │          │ │
+│ │   6d43b18           │ or more             │       │           │          │ │
+│ │ 2026-03-31 Docs     │ context-based       │       │           │          │ │
+│ │ changes for 11.0.0  │ reason. I'm not. So │       │           │          │ │
+│ │                     │ this is a risk      │       │           │          │ │
+│ │ Diff:               │ point for the       │       │           │          │ │
+│ │ ```diff             │ actual beek."}]}    │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ c72c4de..3362af1    │                     │       │           │          │ │
+│ │ 100755              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ @@ -3999,6 +3999,11 │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ AbortThread(BaseEx… │                     │       │           │          │ │
+│ │  class              │                     │       │           │          │ │
+│ │ callback_iter:      │                     │       │           │          │ │
+│ │      """Convert a   │                     │       │           │          │ │
+│ │ function that uses  │                     │       │           │          │ │
+│ │ callbacks to an     │                     │       │           │          │ │
+│ │ iterator.           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +    .. warning::   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +       This        │                     │       │           │          │ │
+│ │ function is         │                     │       │           │          │ │
+│ │ deprecated as of    │                     │       │           │          │ │
+│ │ version 11.0.0. It  │                     │       │           │          │ │
+│ │ will be removed in  │                     │       │           │          │ │
+│ │ a future            │                     │       │           │          │ │
+│ │ +       major       │                     │       │           │          │ │
+│ │ release.            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │      Let *func* be  │                     │       │           │          │ │
+│ │ a function that     │                     │       │           │          │ │
+│ │ takes a `callback`  │                     │       │           │          │ │
+│ │ keyword argument.   │                     │       │           │          │ │
+│ │      For example:   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │  1.00 │      0.64 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "tests/test_termui… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 143,  │       │           │          │ │
+│ │ with no further     │ "line_end": 163,    │       │           │          │ │
+│ │ human review.       │ "body": "Test case  │       │           │          │ │
+│ │ Decide:             │ `test_string_show_… │       │           │          │ │
+│ │   approve  - you    │ should not be being │       │           │          │ │
+│ │ are confident the   │ run in the CI       │       │           │          │ │
+│ │ change is correct   │ unless the feature  │       │           │          │ │
+│ │ and safe to ship.   │ is released. It's   │       │           │          │ │
+│ │   block    - you    │ specified in        │       │           │          │ │
+│ │ found a defect;     │ `CHANGES.rst` that  │       │           │          │ │
+│ │ cite its location.  │ the feature is      │       │           │          │ │
+│ │   escalate - you    │ released in         │       │           │          │ │
+│ │ cannot establish    │ `8.3.1`, but the    │       │           │          │ │
+│ │ safety from what    │ test is written for │       │           │          │ │
+│ │ you can see; a      │ `8.3.3`."}]}        │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository: click   │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ CHANGES.rst,        │                     │       │           │          │ │
+│ │ src/click/termui.p… │                     │       │           │          │ │
+│ │ tests/test_termui.… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ CHANGES.rst (636    │                     │       │           │          │ │
+│ │ chars, non-code)    │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ src/click/termui.p… │                     │       │           │          │ │
+│ │ tests/test_termui.… │                     │       │           │          │ │
+│ │ tests/test_termui.… │                     │       │           │          │ │
+│ │ tests/test_termui.… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ src/click/termui.p… │                     │       │           │          │ │
+│ │   607316f           │                     │       │           │          │ │
+│ │ 2026-04-09 Support  │                     │       │           │          │ │
+│ │ show_default string │                     │       │           │          │ │
+│ │ in prompts          │                     │       │           │          │ │
+│ │   27de74a           │                     │       │           │          │ │
+│ │ 2025-09-25 Shorten  │                     │       │           │          │ │
+│ │ the docstring       │                     │       │           │          │ │
+│ │ annotations for     │                     │       │           │          │ │
+│ │ confirm and prompt  │                     │       │           │          │ │
+│ │   1c9fc6d           │                     │       │           │          │ │
+│ │ 2025-09-25 Add      │                     │       │           │          │ │
+│ │ details to `prompt` │                     │       │           │          │ │
+│ │ and `confirm`       │                     │       │           │          │ │
+│ │ docstrings          │                     │       │           │          │ │
+│ │ regarding 8.3.1     │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ tests/test_termui.… │                     │       │           │          │ │
+│ │   607316f           │                     │       │           │          │ │
+│ │ 2026-04-09 Support  │                     │       │           │          │ │
+│ │ show_default string │                     │       │           │          │ │
+│ │ in prompts          │                     │       │           │          │ │
+│ │   b552947           │                     │       │           │          │ │
+│ │ 2026-04-10 Add path │                     │       │           │          │ │
+│ │ normalization       │                     │       │           │          │ │
+│ │ edge-cases, verify  │                     │       │           │          │ │
+│ │ `shlex.split`       │                     │       │           │          │ │
+│ │ behavior            │                     │       │           │          │ │
+│ │   b96c260           │                     │       │           │          │ │
+│ │ 2026-03-04 Document │                     │       │           │          │ │
+│ │ and fix command     │                     │       │           │          │ │
+│ │ string sanitizing   │                     │       │           │          │ │
+│ │ with `shlex.split`  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/src/click/termui… │                     │       │           │          │ │
+│ │ b/src/click/termui… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 9005487..c25ee9e    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/src/click/termui… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/src/click/termui… │                     │       │           │          │ │
+│ │ @@ -123,8 +123,9 @@ │                     │       │           │          │ │
+│ │ def prompt(         │                     │       │           │          │ │
+│ │                   … │                     │       │           │          │ │
+│ │ is true and text is │                     │       │           │          │ │
+│ │ "Group by" then the │                     │       │           │          │ │
+│ │                   … │                     │       │           │          │ │
+│ │ will be "Group by   │                     │       │           │          │ │
+│ │ (day, week): ".     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    ..             │                     │       │           │          │ │
+│ │ versionadded:: 8.2  │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ ``show_default``    │                     │       │           │          │ │
+│ │ can be a custom     │                     │       │           │          │ │
+│ │ string.             │                     │       │           │          │ │
+│ │ +    ..             │                     │       │           │          │ │
+│ │ versionchanged::    │                     │       │           │          │ │
+│ │ 8.3.3               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ``show_default``    │                     │       │           │          │ │
+│ │ can be a string to  │                     │       │           │          │ │
+│ │ hide the actual     │                     │       │           │          │ │
+│ │ value instead       │                     │       │           │          │ │
+│ │ +        of the     │                     │       │           │          │ │
+│ │ actual default,     │                     │       │           │          │ │
+│ │ matching the help   │                     │       │           │          │ │
+│ │ text behavior.      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      ..             │                     │       │           │          │ │
+│ │ versionchanged::    │                     │       │           │          │ │
+│ │ 8.3.1               │                     │       │           │          │ │
+│ │          A space is │                     │       │           │          │ │
+│ │ no longer appended  │                     │       │           │          │ │
+│ │ to the prompt.      │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_termu… │                     │       │           │          │ │
+│ │ b/tests/test_termu… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 76e0775..b7d13db    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_termu… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_termu… │                     │       │           │          │ │
+│ │ @@ -9,6 +9,7 @@     │                     │       │           │          │ │
+│ │ import pytest       │                     │       │           │          │ │
+│ │  import             │                     │       │           │          │ │
+│ │ click._termui_impl  │                     │       │           │          │ │
+│ │  from click._compat │                     │       │           │          │ │
+│ │ import WIN          │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ click._termui_impl  │                     │       │           │          │ │
+│ │ import Editor       │                     │       │           │          │ │
+│ │ +from click._utils  │                     │       │           │          │ │
+│ │ import UNSET        │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ click.exceptions    │                     │       │           │          │ │
+│ │ import BadParameter │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ click.exceptions    │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ MissingParameter    │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -717,17 +718,56  │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ test_false_show_de… │                     │       │           │          │ │
+│ │      assert         │                     │       │           │          │ │
+│ │ "my-default-value"  │                     │       │           │          │ │
+│ │ not in              │                     │       │           │          │ │
+│ │ result.output       │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -def                │                     │       │           │          │ │
+│ │ test_string_show_d… │                     │       │           │          │ │
+│ │ +@pytest.mark.para… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ("show_default",    │                     │       │           │          │ │
+│ │ "default",          │                     │       │           │          │ │
+│ │ "user_input",       │                     │       │           │          │ │
+│ │ "in_prompt",        │                     │       │           │          │ │
+│ │ "not_in_prompt"),   │                     │       │           │          │ │
+│ │ +    [              │                     │       │           │          │ │
+│ │ +        # Regular  │                     │       │           │          │ │
+│ │ string replaces the │                     │       │           │          │ │
+│ │ actual default in   │                     │       │           │          │ │
+│ │ the prompt.         │                     │       │           │          │ │
+│ │ +        ("custom", │                     │       │           │          │ │
+│ │ "actual", "\n",     │                     │       │           │          │ │
+│ │ "(custom)",         │                     │       │           │          │ │
+│ │ "actual"),          │                     │       │           │          │ │
+│ │ +        # String   │                     │       │           │          │ │
+│ │ with spaces.        │                     │       │           │          │ │
+│ │ +        ("custom   │                     │       │           │          │ │
+│ │ label", "actual",   │                     │       │           │          │ │
+│ │ "\n", "(custom      │                     │       │           │          │ │
+│ │ label)", "actual"), │                     │       │           │          │ │
+│ │ +        # Unicode  │                     │       │           │          │ │
+│ │ characters.         │                     │       │           │          │ │
+│ │ +        ("∞", "0", │                     │       │           │          │ │
+│ │ "\n", "(∞)", None), │                     │       │           │          │ │
+│ │ +        # Numeric  │                     │       │           │          │ │
+│ │ default: custom     │                     │       │           │          │ │
+│ │ string hides the    │                     │       │           │          │ │
+│ │ number.             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ("unlimited", 42,   │                     │       │           │          │ │
+│ │ "\n",               │                     │       │           │          │ │
+│ │ "(unlimited)",      │                     │       │           │          │ │
+│ │ "42"),              │                     │       │           │          │ │
+│ │ +        # Explicit │                     │       │           │          │ │
+│ │ default=None:       │                     │       │           │          │ │
+│ │ custom string still │                     │       │           │          │ │
+│ │ appears, must       │                     │       │           │          │ │
+│ │ provide input.      │                     │       │           │          │ │
+│ │ +        ("computed │                     │       │           │          │ │
+│ │ at runtime", None,  │                     │       │           │          │ │
+│ │ "value\n",          │                     │       │           │          │ │
+│ │ "(computed at       │                     │       │           │          │ │
+│ │ runtime)", None),   │                     │       │           │          │ │
+│ │ +        # No       │                     │       │           │          │ │
+│ │ default kwarg at    │                     │       │           │          │ │
+│ │ all (internal UNSET │                     │       │           │          │ │
+│ │ sentinel): same as  │                     │       │           │          │ │
+│ │ None.               │                     │       │           │          │ │
+│ │ +        ("computed │                     │       │           │          │ │
+│ │ at runtime", UNSET, │                     │       │           │          │ │
+│ │ "value\n",          │                     │       │           │          │ │
+│ │ "(computed at       │                     │       │           │          │ │
+│ │ runtime)", None),   │                     │       │           │          │ │
+│ │ +        # Empty    │                     │       │           │          │ │
+│ │ string is falsy:    │                     │       │           │          │ │
+│ │ suppresses any      │                     │       │           │          │ │
+│ │ default display.    │                     │       │           │          │ │
+│ │ +        ("",       │                     │       │           │          │ │
+│ │ "actual", "\n",     │                     │       │           │          │ │
+│ │ None, "actual"),    │                     │       │           │          │ │
+│ │ +    ],             │                     │       │           │          │ │
+│ │ +    ids=[          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "simple-string",    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "string-with-space… │                     │       │           │          │ │
+│ │ +        "unicode", │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "numeric-default",  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "default-is-none",  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "default-is-unset", │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "empty-string-is-f… │                     │       │           │          │ │
+│ │ +    ],             │                     │       │           │          │ │
+│ │ +)                  │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_string_show_d… │                     │       │           │          │ │
+│ │ +    runner,        │                     │       │           │          │ │
+│ │ show_default,       │                     │       │           │          │ │
+│ │ default,            │                     │       │           │          │ │
+│ │ user_input,         │                     │       │           │          │ │
+│ │ in_prompt,          │                     │       │           │          │ │
+│ │ not_in_prompt       │                     │       │           │          │ │
+│ │ +):                 │                     │       │           │          │ │
+│ │ +    """When        │                     │       │           │          │ │
+│ │ show_default is a   │                     │       │           │          │ │
+│ │ string, the prompt  │                     │       │           │          │ │
+│ │ should display that │                     │       │           │          │ │
+│ │ +    string in      │                     │       │           │          │ │
+│ │ parentheses instead │                     │       │           │          │ │
+│ │ of the actual       │                     │       │           │          │ │
+│ │ default value,      │                     │       │           │          │ │
+│ │ +    matching the   │                     │       │           │          │ │
+│ │ help text behavior. │                     │       │           │          │ │
+│ │ See                 │                     │       │           │          │ │
+│ │ pallets/click#2836… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    option_kwargs  │                     │       │           │          │ │
+│ │ = {"show_default":  │                     │       │           │          │ │
+│ │ show_default,       │                     │       │           │          │ │
+│ │ "prompt": True}     │                     │       │           │          │ │
+│ │ +    if default is  │                     │       │           │          │ │
+│ │ not UNSET:          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ option_kwargs["def… │                     │       │           │          │ │
+│ │ = default           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │      @click.comman… │                     │       │           │          │ │
+│ │ -    @click.option( │                     │       │           │          │ │
+│ │ -        "--arg1",  │                     │       │           │          │ │
+│ │ show_default="cust… │                     │       │           │          │ │
+│ │ prompt=True,        │                     │       │           │          │ │
+│ │ default="my-defaul… │                     │       │           │          │ │
+│ │ -    )              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ @click.option("--a… │                     │       │           │          │ │
+│ │ **option_kwargs)    │                     │       │           │          │ │
+│ │      def cmd(arg1): │                     │       │           │          │ │
+│ │ -        pass       │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ -    result =       │                     │       │           │          │ │
+│ │ runner.invoke(cmd,  │                     │       │           │          │ │
+│ │ input="my-input",   │                     │       │           │          │ │
+│ │ standalone_mode=Fa… │                     │       │           │          │ │
+│ │ -    assert         │                     │       │           │          │ │
+│ │ "(custom)" in       │                     │       │           │          │ │
+│ │ result.output       │                     │       │           │          │ │
+│ │ -    assert         │                     │       │           │          │ │
+│ │ "my-default-value"  │                     │       │           │          │ │
+│ │ not in              │                     │       │           │          │ │
+│ │ result.output       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ click.echo(arg1)    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    result =       │                     │       │           │          │ │
+│ │ runner.invoke(cmd,  │                     │       │           │          │ │
+│ │ input=user_input,   │                     │       │           │          │ │
+│ │ standalone_mode=Fa… │                     │       │           │          │ │
+│ │ +    prompt_line =  │                     │       │           │          │ │
+│ │ result.output.spli… │                     │       │           │          │ │
+│ │ +    if in_prompt   │                     │       │           │          │ │
+│ │ is not None:        │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ in_prompt in        │                     │       │           │          │ │
+│ │ prompt_line         │                     │       │           │          │ │
+│ │ +    if             │                     │       │           │          │ │
+│ │ not_in_prompt is    │                     │       │           │          │ │
+│ │ not None:           │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ not_in_prompt not   │                     │       │           │          │ │
+│ │ in prompt_line      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  REPEAT = object()  │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+  8%|▊         | 9/120 [14:51<3:10:57, 103.22s/it]step 9  reward=-0.286  reward_std=0.740  kl=0.000  mean_length=121.188  clipped_ratio=0.062  step_time=114.979  loss=0.484  gate=-0.286
+                                                    8%|▊         | 9/120 [14:51<3:10:57, 103.22s/it]{'loss': '0.4845', 'grad_norm': '0.2895', 'learning_rate': '8e-06', 'num_tokens': '6.036e+05', 'completions/mean_length': '121.2', 'completions/min_length': '12', 'completions/max_length': '500', 'completions/clipped_ratio': '0.0625', 'completions/mean_terminated_length': '95.93', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '254', 'rewards/gate/mean': '-0.2861', 'rewards/gate/std': '0.7398', 'reward': '-0.2861', 'reward_std': '0.7398', 'frac_reward_zero_std': '0.25', 'review/approve_bug_frac': '0', 'review/escalate_frac': '0', 'review/mean_tokens': '121.2', 'review/unparsable_frac': '0.1562', 'sampling/sampling_logp_difference/mean': '0.01638', 'sampling/sampling_logp_difference/max': '0.7267', 'sampling/importance_sampling_ratio/min': '0.359', 'sampling/importance_sampling_ratio/mean': '0.9824', 'sampling/importance_sampling_ratio/max': '1.605', 'kl': '0.0004801', 'entropy': '1.097', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '115', 'epoch': '0.1385'}
+╭─────────────────────────────────── Step 9 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.50 │      0.54 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ ".github/ISSUE_TEM… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 60,   │       │           │          │ │
+│ │ with no further     │ "line_end": 60,     │       │           │          │ │
+│ │ human review.       │ "body": "These      │       │           │          │ │
+│ │ Decide:             │ improvements        │       │           │          │ │
+│ │   approve  - you    │ resolve major       │       │           │          │ │
+│ │ are confident the   │ issues with the     │       │           │          │ │
+│ │ change is correct   │ documentation, both │       │           │          │ │
+│ │ and safe to ship.   │ old and new, so the │       │           │          │ │
+│ │   block    - you    │ entire site is      │       │           │          │ │
+│ │ found a defect;     │ updated. However,   │       │           │          │ │
+│ │ cite its location.  │ this pull request   │       │           │          │ │
+│ │   escalate - you    │ still needs         │       │           │          │ │
+│ │ cannot establish    │ testing, since      │       │           │          │ │
+│ │ safety from what    │ there are no tests  │       │           │          │ │
+│ │ you can see; a      │ for the API, and no │       │           │          │ │
+│ │ human must look.    │ test coverage is    │       │           │          │ │
+│ │ Approving a change  │ provided for the    │       │           │          │ │
+│ │ that contains a     │ history             │       │           │          │ │
+│ │ defect is the worst │ file.\n\nThree      │       │           │          │ │
+│ │ outcome. Blocking a │ files are not full  │       │           │          │ │
+│ │ correct change      │ coverage:           │       │           │          │ │
+│ │ costs an engineer's │ `pyproject.toml`,   │       │           │          │ │
+│ │ time. Escalating is │ `README.md`, and    │       │           │          │ │
+│ │ cheap but useless   │ `pydantic/project.… │       │           │          │ │
+│ │ if done for         │ The updated         │       │           │          │ │
+│ │ everything.         │ documentation       │       │           │          │ │
+│ │ Respond with        │ cannot be verified  │       │           │          │ │
+│ │ exactly one JSON    │ without actual      │       │           │          │ │
+│ │ object and nothing  │ tests. Therefore,   │       │           │          │ │
+│ │ else:               │ this change should  │       │           │          │ │
+│ │ {"decision":        │ be blocked for      │       │           │          │ │
+│ │ "approve|block|esc… │ now."}]}            │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ pydantic            │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ .github/ISSUE_TEMP… │                     │       │           │          │ │
+│ │ .github/ISSUE_TEMP… │                     │       │           │          │ │
+│ │ CITATION.cff,       │                     │       │           │          │ │
+│ │ HISTORY.md,         │                     │       │           │          │ │
+│ │ README.md,          │                     │       │           │          │ │
+│ │ docs/index.md,      │                     │       │           │          │ │
+│ │ docs/integrations/… │                     │       │           │          │ │
+│ │ docs/integrations/… │                     │       │           │          │ │
+│ │ docs/migration.md,  │                     │       │           │          │ │
+│ │ pydantic-core/READ… │                     │       │           │          │ │
+│ │ pydantic/_internal… │                     │       │           │          │ │
+│ │ pydantic/_internal… │                     │       │           │          │ │
+│ │ pydantic/_migratio… │                     │       │           │          │ │
+│ │ pydantic/color.py,  │                     │       │           │          │ │
+│ │ pydantic/functiona… │                     │       │           │          │ │
+│ │ pydantic/main.py,   │                     │       │           │          │ │
+│ │ pydantic/types.py,  │                     │       │           │          │ │
+│ │ pyproject.toml      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ CITATION.cff (454   │                     │       │           │          │ │
+│ │ chars, non-code),   │                     │       │           │          │ │
+│ │ HISTORY.md (18471   │                     │       │           │          │ │
+│ │ chars, non-code),   │                     │       │           │          │ │
+│ │ README.md (2747     │                     │       │           │          │ │
+│ │ chars, non-code),   │                     │       │           │          │ │
+│ │ docs/index.md (1557 │                     │       │           │          │ │
+│ │ chars, non-code),   │                     │       │           │          │ │
+│ │ docs/integrations/… │                     │       │           │          │ │
+│ │ (939 chars,         │                     │       │           │          │ │
+│ │ non-code),          │                     │       │           │          │ │
+│ │ docs/integrations/… │                     │       │           │          │ │
+│ │ (1090 chars,        │                     │       │           │          │ │
+│ │ non-code),          │                     │       │           │          │ │
+│ │ docs/migration.md   │                     │       │           │          │ │
+│ │ (548 chars,         │                     │       │           │          │ │
+│ │ non-code),          │                     │       │           │          │ │
+│ │ pydantic-core/READ… │                     │       │           │          │ │
+│ │ (824 chars,         │                     │       │           │          │ │
+│ │ non-code)           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ pydantic/_internal… │                     │       │           │          │ │
+│ │ pydantic/_internal… │                     │       │           │          │ │
+│ │ pydantic/_migratio… │                     │       │           │          │ │
+│ │ pydantic/_migratio… │                     │       │           │          │ │
+│ │ pydantic/color.py:… │                     │       │           │          │ │
+│ │ pydantic/functiona… │                     │       │           │          │ │
+│ │ pydantic/functiona… │                     │       │           │          │ │
+│ │ pydantic/main.py:B… │                     │       │           │          │ │
+│ │ pydantic/main.py:c… │                     │       │           │          │ │
+│ │ pydantic/main.py:_… │                     │       │           │          │ │
+│ │ pydantic/types.py:… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ pydantic/_internal… │                     │       │           │          │ │
+│ │   8a1a222b          │                     │       │           │          │ │
+│ │ 2026-05-12 Remove   │                     │       │           │          │ │
+│ │ support for         │                     │       │           │          │ │
+│ │ `eval_type_backpor… │                     │       │           │          │ │
+│ │ (#13133)            │                     │       │           │          │ │
+│ │   1078a051          │                     │       │           │          │ │
+│ │ 2026-05-03 Preserve │                     │       │           │          │ │
+│ │ `RootModel` core    │                     │       │           │          │ │
+│ │ metadata (#13129)   │                     │       │           │          │ │
+│ │   b36eaeb4          │                     │       │           │          │ │
+│ │ 2026-04-15 Drop     │                     │       │           │          │ │
+│ │ support for Python  │                     │       │           │          │ │
+│ │ 3.9 (#13070)        │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ pydantic/_internal… │                     │       │           │          │ │
+│ │   8a1a222b          │                     │       │           │          │ │
+│ │ 2026-05-12 Remove   │                     │       │           │          │ │
+│ │ support for         │                     │       │           │          │ │
+│ │ `eval_type_backpor… │                     │       │           │          │ │
+│ │ (#13133)            │                     │       │           │          │ │
+│ │   b36eaeb4          │                     │       │           │          │ │
+│ │ 2026-04-15 Drop     │                     │       │           │          │ │
+│ │ support for Python  │                     │       │           │          │ │
+│ │ 3.9 (#13070)        │                     │       │           │          │ │
+│ │   75f83be3          │                     │       │           │          │ │
+│ │ 2026-01-19 Optimize │                     │       │           │          │ │
+│ │ annotations         │                     │       │           │          │ │
+│ │ evaluation of       │                     │       │           │          │ │
+│ │ Pydantic models     │                     │       │           │          │ │
+│ │ (#12681)            │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ pydantic/_migratio… │                     │       │           │          │ │
+│ │   14e0f2ba          │                     │       │           │          │ │
+│ │ 2026-05-05 Avoid    │                     │       │           │          │ │
+│ │ redundant           │                     │       │           │          │ │
+│ │ dictionary lookups  │                     │       │           │          │ │
+│ │ in `_migration.py`  │                     │       │           │          │ │
+│ │ (#13152)            │                     │       │           │          │ │
+│ │   b36eaeb4          │                     │       │           │          │ │
+│ │ 2026-04-15 Drop     │                     │       │           │          │ │
+│ │ support for Python  │                     │       │           │          │ │
+│ │ 3.9 (#13070)        │                     │       │           │          │ │
+│ │   1231eeea          │                     │       │           │          │ │
+│ │ 2025-10-07 Use      │                     │       │           │          │ │
+│ │ proper `stacklevel` │                     │       │           │          │ │
+│ │ in warnings when    │                     │       │           │          │ │
+│ │ possible (#12342)   │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ pydantic/color.py:  │                     │       │           │          │ │
+│ │   b36eaeb4          │                     │       │           │          │ │
+│ │ 2026-04-15 Drop     │                     │       │           │          │ │
+│ │ support for Python  │                     │       │           │          │ │
+│ │ 3.9 (#13070)        │                     │       │           │          │ │
+│ │   c371bd12          │                     │       │           │          │ │
+│ │ 2025-01-15 Remove   │                     │       │           │          │ │
+│ │ Python 3.8 Support  │                     │       │           │          │ │
+│ │ (#11258)            │                     │       │           │          │ │
+│ │   332e77ba          │                     │       │           │          │ │
+│ │ 2024-06-07 Update   │                     │       │           │          │ │
+│ │ to Ruff `0.4.8`     │                     │       │           │          │ │
+│ │ (#9585)             │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ pydantic/functiona… │                     │       │           │          │ │
+│ │   b36eaeb4          │                     │       │           │          │ │
+│ │ 2026-04-15 Drop     │                     │       │           │          │ │
+│ │ support for Python  │                     │       │           │          │ │
+│ │ 3.9 (#13070)        │                     │       │           │          │ │
+│ │   4f818e02          │                     │       │           │          │ │
+│ │ 2026-03-16 Fix      │                     │       │           │          │ │
+│ │ typos (#12922)      │                     │       │           │          │ │
+│ │   fc684220          │                     │       │           │          │ │
+│ │ 2026-03-05 Handle   │                     │       │           │          │ │
+│ │ all schema          │                     │       │           │          │ │
+│ │ generation errors   │                     │       │           │          │ │
+│ │ in `InstanceOf`     │                     │       │           │          │ │
+│ │ (#12705)            │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ pydantic/main.py:   │                     │       │           │          │ │
+│ │   7c3468c5          │                     │       │           │          │ │
+│ │ 2026-05-16 Only     │                     │       │           │          │ │
+│ │ deepcopy            │                     │       │           │          │ │
+│ │ non-updated fields  │                     │       │           │          │ │
+│ │ in `model_copy()`   │                     │       │           │          │ │
+│ │ (#13087)            │                     │       │           │          │ │
+│ │   b36eaeb4          │                     │       │           │          │ │
+│ │ 2026-04-15 Drop     │                     │       │           │          │ │
+│ │ support for Python  │                     │       │           │          │ │
+│ │ 3.9 (#13070)        │                     │       │           │          │ │
+│ │   b1bf1944          │                     │       │           │          │ │
+│ │ 2026-04-10 Fix      │                     │       │           │          │ │
+│ │ model equality when │                     │       │           │          │ │
+│ │ using runtime       │                     │       │           │          │ │
+│ │ `extra`             │                     │       │           │          │ │
+│ │ configuration       │                     │       │           │          │ │
+│ │ (#13062)            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/.github/ISSUE_TE… │                     │       │           │          │ │
+│ │ b/.github/ISSUE_TE… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ e5aaf27b..8b2cd68b  │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/.github/ISSUE_TE… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/.github/ISSUE_TE… │                     │       │           │          │ │
+│ │ @@ -20,7 +20,7 @@   │                     │       │           │          │ │
+│ │ body:               │                     │       │           │          │ │
+│ │            require… │                     │       │           │          │ │
+│ │ true                │                     │       │           │          │ │
+│ │          - label: I │                     │       │           │          │ │
+│ │ have searched       │                     │       │           │          │ │
+│ │ Google &            │                     │       │           │          │ │
+│ │ StackOverflow for a │                     │       │           │          │ │
+│ │ solution and        │                     │       │           │          │ │
+│ │ couldn't find       │                     │       │           │          │ │
+│ │ anything            │                     │       │           │          │ │
+│ │            require… │                     │       │           │          │ │
+│ │ true                │                     │       │           │          │ │
+│ │ -        - label: I │                     │       │           │          │ │
+│ │ have read and       │                     │       │           │          │ │
+│ │ followed [the       │                     │       │           │          │ │
+│ │ docs](https://docs… │                     │       │           │          │ │
+│ │ and still think     │                     │       │           │          │ │
+│ │ this is a bug       │                     │       │           │          │ │
+│ │ +        - label: I │                     │       │           │          │ │
+│ │ have read and       │                     │       │           │          │ │
+│ │ followed [the       │                     │       │           │          │ │
+│ │ docs](https://pyda… │                     │       │           │          │ │
+│ │ and still think     │                     │       │           │          │ │
+│ │ this is a bug       │                     │       │           │          │ │
+│ │            require… │                     │       │           │          │ │
+│ │ true                │                     │       │           │          │ │
+│ │          - label: > │                     │       │           │          │ │
+│ │              I am   │                     │       │           │          │ │
+│ │ confident that the  │                     │       │           │          │ │
+│ │ issue is with       │                     │       │           │          │ │
+│ │ pydantic            │                     │       │           │          │ │
+│ │ @@ -78,14 +78,14 @@ │                     │       │           │          │ │
+│ │ body:               │                     │       │           │          │ │
+│ │        description: │                     │       │           │          │ │
+│ │ Which of the        │                     │       │           │          │ │
+│ │ following parts of  │                     │       │           │          │ │
+│ │ pydantic does this  │                     │       │           │          │ │
+│ │ bug affect?         │                     │       │           │          │ │
+│ │        # keep this  │                     │       │           │          │ │
+│ │ lis in sync with    │                     │       │           │          │ │
+│ │ feature_request.yml │                     │       │           │          │ │
+│ │        options:     │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Compatibility     │                     │       │           │          │ │
+│ │ between             │                     │       │           │          │ │
+│ │ releases](https://… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Data              │                     │       │           │          │ │
+│ │ validation/parsing… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Data              │                     │       │           │          │ │
+│ │ serialization](htt… │                     │       │           │          │ │
+│ │ - `.model_dump()`   │                     │       │           │          │ │
+│ │ and                 │                     │       │           │          │ │
+│ │ `.model_dump_json(… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[JSON              │                     │       │           │          │ │
+│ │ Schema](https://do… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Dataclasses](htt… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Model             │                     │       │           │          │ │
+│ │ Config](https://do… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Field             │                     │       │           │          │ │
+│ │ Types](https://doc… │                     │       │           │          │ │
+│ │ - adding or         │                     │       │           │          │ │
+│ │ changing a          │                     │       │           │          │ │
+│ │ particular data     │                     │       │           │          │ │
+│ │ type'               │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Function          │                     │       │           │          │ │
+│ │ validation          │                     │       │           │          │ │
+│ │ decorator](https:/… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Generic           │                     │       │           │          │ │
+│ │ Models](https://do… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Other Model       │                     │       │           │          │ │
+│ │ behaviour](https:/… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ `model_construct()… │                     │       │           │          │ │
+│ │ pickling, private   │                     │       │           │          │ │
+│ │ attributes, ORM     │                     │       │           │          │ │
+│ │ mode'               │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Plugins](https:/… │                     │       │           │          │ │
+│ │ and integration     │                     │       │           │          │ │
+│ │ with other tools -  │                     │       │           │          │ │
+│ │ mypy, FastAPI,      │                     │       │           │          │ │
+│ │ python-devtools,    │                     │       │           │          │ │
+│ │ Hypothesis, VS      │                     │       │           │          │ │
+│ │ Code, PyCharm,      │                     │       │           │          │ │
+│ │ etc.'               │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Compatibility     │                     │       │           │          │ │
+│ │ between             │                     │       │           │          │ │
+│ │ releases](https://… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Data              │                     │       │           │          │ │
+│ │ validation/parsing… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Data              │                     │       │           │          │ │
+│ │ serialization](htt… │                     │       │           │          │ │
+│ │ - `.model_dump()`   │                     │       │           │          │ │
+│ │ and                 │                     │       │           │          │ │
+│ │ `.model_dump_json(… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[JSON              │                     │       │           │          │ │
+│ │ Schema](https://py… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Dataclasses](htt… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Model             │                     │       │           │          │ │
+│ │ Config](https://py… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Field             │                     │       │           │          │ │
+│ │ Types](https://pyd… │                     │       │           │          │ │
+│ │ - adding or         │                     │       │           │          │ │
+│ │ changing a          │                     │       │           │          │ │
+│ │ particular data     │                     │       │           │          │ │
+│ │ type'               │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Function          │                     │       │           │          │ │
+│ │ validation          │                     │       │           │          │ │
+│ │ decorator](https:/… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Generic           │                     │       │           │          │ │
+│ │ Models](https://py… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Other Model       │                     │       │           │          │ │
+│ │ behaviour](https:/… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ `model_construct()… │                     │       │           │          │ │
+│ │ pickling, private   │                     │       │           │          │ │
+│ │ attributes, ORM     │                     │       │           │          │ │
+│ │ mode'               │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Plugins](https:/… │                     │       │           │          │ │
+│ │ and integration     │                     │       │           │          │ │
+│ │ with other tools -  │                     │       │           │          │ │
+│ │ mypy, FastAPI,      │                     │       │           │          │ │
+│ │ python-devtools,    │                     │       │           │          │ │
+│ │ Hypothesis, VS      │                     │       │           │          │ │
+│ │ Code, PyCharm,      │                     │       │           │          │ │
+│ │ etc.'               │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/.github/ISSUE_TE… │                     │       │           │          │ │
+│ │ b/.github/ISSUE_TE… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 953455f4..e8a975d1  │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/.github/ISSUE_TE… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/.github/ISSUE_TE… │                     │       │           │          │ │
+│ │ @@ -18,7 +18,7 @@   │                     │       │           │          │ │
+│ │ body:               │                     │       │           │          │ │
+│ │        options:     │                     │       │           │          │ │
+│ │          - label: I │                     │       │           │          │ │
+│ │ have searched       │                     │       │           │          │ │
+│ │ Google & GitHub for │                     │       │           │          │ │
+│ │ similar requests    │                     │       │           │          │ │
+│ │ and couldn't find   │                     │       │           │          │ │
+│ │ anything            │                     │       │           │          │ │
+│ │            require… │                     │       │           │          │ │
+│ │ true                │                     │       │           │          │ │
+│ │ -        - label: I │                     │       │           │          │ │
+│ │ have read and       │                     │       │           │          │ │
+│ │ followed [the       │                     │       │           │          │ │
+│ │ docs](https://docs… │                     │       │           │          │ │
+│ │ and still think     │                     │       │           │          │ │
+│ │ this feature is     │                     │       │           │          │ │
+│ │ missing             │                     │       │           │          │ │
+│ │ +        - label: I │                     │       │           │          │ │
+│ │ have read and       │                     │       │           │          │ │
+│ │ followed [the       │                     │       │           │          │ │
+│ │ docs](https://pyda… │                     │       │           │          │ │
+│ │ and still think     │                     │       │           │          │ │
+│ │ this feature is     │                     │       │           │          │ │
+│ │ missing             │                     │       │           │          │ │
+│ │            require… │                     │       │           │          │ │
+│ │ true                │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │    - type: textarea │                     │       │           │          │ │
+│ │ @@ -42,14 +42,14 @@ │                     │       │           │          │ │
+│ │ body:               │                     │       │           │          │ │
+│ │        description: │                     │       │           │          │ │
+│ │ Which of the        │                     │       │           │          │ │
+│ │ following parts of  │                     │       │           │          │ │
+│ │ pydantic does this  │                     │       │           │          │ │
+│ │ feature affect?     │                     │       │           │          │ │
+│ │        # keep this  │                     │       │           │          │ │
+│ │ lis in sync with    │                     │       │           │          │ │
+│ │ bug.yml             │                     │       │           │          │ │
+│ │        options:     │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Compatibility     │                     │       │           │          │ │
+│ │ between             │                     │       │           │          │ │
+│ │ releases](https://… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Data              │                     │       │           │          │ │
+│ │ validation/parsing… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Data              │                     │       │           │          │ │
+│ │ serialization](htt… │                     │       │           │          │ │
+│ │ - `.model_dump()`   │                     │       │           │          │ │
+│ │ and                 │                     │       │           │          │ │
+│ │ `.model_dump_json(… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[JSON              │                     │       │           │          │ │
+│ │ Schema](https://do… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Dataclasses](htt… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Model             │                     │       │           │          │ │
+│ │ Config](https://do… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Field             │                     │       │           │          │ │
+│ │ Types](https://doc… │                     │       │           │          │ │
+│ │ - adding or         │                     │       │           │          │ │
+│ │ changing a          │                     │       │           │          │ │
+│ │ particular data     │                     │       │           │          │ │
+│ │ type'               │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Function          │                     │       │           │          │ │
+│ │ validation          │                     │       │           │          │ │
+│ │ decorator](https:/… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Generic           │                     │       │           │          │ │
+│ │ Models](https://do… │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Other Model       │                     │       │           │          │ │
+│ │ behaviour](https:/… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ `model_construct()… │                     │       │           │          │ │
+│ │ pickling, private   │                     │       │           │          │ │
+│ │ attributes, ORM     │                     │       │           │          │ │
+│ │ mode'               │                     │       │           │          │ │
+│ │ -        - label:   │                     │       │           │          │ │
+│ │ '[Plugins](https:/… │                     │       │           │          │ │
+│ │ and integration     │                     │       │           │          │ │
+│ │ with other tools -  │                     │       │           │          │ │
+│ │ mypy, FastAPI,      │                     │       │           │          │ │
+│ │ python-devtools,    │                     │       │           │          │ │
+│ │ Hypothesis, VS      │                     │       │           │          │ │
+│ │ Code, PyCharm,      │                     │       │           │          │ │
+│ │ etc.'               │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Compatibility     │                     │       │           │          │ │
+│ │ between             │                     │       │           │          │ │
+│ │ releases](https://… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Data              │                     │       │           │          │ │
+│ │ validation/parsing… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Data              │                     │       │           │          │ │
+│ │ serialization](htt… │                     │       │           │          │ │
+│ │ - `.model_dump()`   │                     │       │           │          │ │
+│ │ and                 │                     │       │           │          │ │
+│ │ `.model_dump_json(… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[JSON              │                     │       │           │          │ │
+│ │ Schema](https://py… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Dataclasses](htt… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Model             │                     │       │           │          │ │
+│ │ Config](https://py… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Field             │                     │       │           │          │ │
+│ │ Types](https://pyd… │                     │       │           │          │ │
+│ │ - adding or         │                     │       │           │          │ │
+│ │ changing a          │                     │       │           │          │ │
+│ │ particular data     │                     │       │           │          │ │
+│ │ type'               │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Function          │                     │       │           │          │ │
+│ │ validation          │                     │       │           │          │ │
+│ │ decorator](https:/… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Generic           │                     │       │           │          │ │
+│ │ Models](https://py… │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Other Model       │                     │       │           │          │ │
+│ │ behaviour](https:/… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ `model_construct()… │                     │       │           │          │ │
+│ │ pickling, private   │                     │       │           │          │ │
+│ │ attributes, ORM     │                     │       │           │          │ │
+│ │ mode'               │                     │       │           │          │ │
+│ │ +        - label:   │                     │       │           │          │ │
+│ │ '[Plugins](https:/… │                     │       │           │          │ │
+│ │ and integration     │                     │       │           │          │ │
+│ │ with other tools -  │                     │       │           │          │ │
+│ │ mypy, FastAPI,      │                     │       │           │          │ │
+│ │ python-devtools,    │                     │       │           │          │ │
+│ │ Hypothesis, VS      │                     │       │           │          │ │
+│ │ Code, PyCharm,      │                     │       │           │          │ │
+│ │ etc.'               │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/pydantic/_intern… │                     │       │           │          │ │
+│ │ b/pydantic/_intern… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ abb5f7ac..9c87ec16  │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/pydantic/_intern… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/pydantic/_intern… │                     │       │           │          │ │
+│ │ @@ -321,7 +321,7 @@ │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ _add_custom_serial… │                     │       │           │          │ │
+│ │              conti… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          warnings.… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ f'`json_encoders`   │                     │       │           │          │ │
+│ │ is deprecated. See  │                     │       │           │          │ │
+│ │ https://docs.pydan… │                     │       │           │          │ │
+│ │ for alternatives',  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ f'`json_encoders`   │                     │       │           │          │ │
+│ │ is deprecated. See  │                     │       │           │          │ │
+│ │ https://pydantic.d… │                     │       │           │          │ │
+│ │ for alternatives',  │                     │       │           │          │ │
+│ │              Pydan… │                     │       │           │          │ │
+│ │          )          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/pydantic/_intern… │                     │       │           │          │ │
+│ │ b/pydantic/_intern… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 769eee2e..ab6a1397  │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/pydantic/_intern… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/pydantic/_intern… │                     │       │           │          │ │
+│ │ @@ -451,7 +451,7 @@ │                     │       │           │          │ │
+│ │ def eval_type(      │                     │       │           │          │ │
+│ │          message =  │                     │       │           │          │ │
+│ │ (                   │                     │       │           │          │ │
+│ │              "If    │                     │       │           │          │ │
+│ │ you made use of an  │                     │       │           │          │ │
+│ │ implicit recursive  │                     │       │           │          │ │
+│ │ type alias (e.g.    │                     │       │           │          │ │
+│ │ `MyType =           │                     │       │           │          │ │
+│ │ list['MyType']), "  │                     │       │           │          │ │
+│ │              'cons… │                     │       │           │          │ │
+│ │ using PEP 695 type  │                     │       │           │          │ │
+│ │ aliases instead.    │                     │       │           │          │ │
+│ │ For more details,   │                     │       │           │          │ │
+│ │ refer to the        │                     │       │           │          │ │
+│ │ documentation: '    │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ f'https://docs.pyd… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ f'https://pydantic… │                     │       │           │          │ │
+│ │          )          │                     │       │           │          │ │
+│ │          if         │                     │       │           │          │ │
+│ │ sys.version_info >= │                     │       │           │          │ │
+│ │ (3, 11):            │                     │       │           │          │ │
+│ │              e.add… │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/pydantic/_migrat… │                     │       │           │          │ │
+│ │ b/pydantic/_migrat… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ c9d754f6..bbb2054f  │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/pydantic/_migrat… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/pydantic/_migrat… │                     │       │           │          │ │
+│ │ @@ -296,7 +296,7 @@ │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ getattr_migration(… │                     │       │           │          │ │
+│ │ str) ->             │                     │       │           │          │ │
+│ │ Callable[[str],     │                     │       │           │          │ │
+│ │ Any]:               │                     │       │           │          │ │
+│ │              new_l… │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ REDIRECT_TO_V1[imp… │                     │       │           │          │ │
+│ │              warni… │                     │       │           │          │ │
+│ │                  f… │                     │       │           │          │ │
+│ │ has been removed.   │                     │       │           │          │ │
+│ │ We are importing    │                     │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ `{new_location}`    │                     │       │           │          │ │
+│ │ instead.'           │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ 'See the migration  │                     │       │           │          │ │
+│ │ guide for more      │                     │       │           │          │ │
+│ │ details:            │                     │       │           │          │ │
+│ │ https://docs.pydan… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ 'See the migration  │                     │       │           │          │ │
+│ │ guide for more      │                     │       │           │          │ │
+│ │ details:            │                     │       │           │          │ │
+│ │ https://pydantic.d… │                     │       │           │          │ │
+│ │                  c… │                     │       │           │          │ │
+│ │                  s… │                     │       │           │          │ │
+│ │              )      │                     │       │           │          │ │
+│ │ @@ -304,7 +304,7 @@ │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ getattr_migration(… │                     │       │           │          │ │
+│ │ str) ->             │                     │       │           │          │ │
+│ │ Callable[[str],     │                     │       │           │          │ │
+│ │ Any]:               │                     │       │           │          │ │
+│ │          if         │                     │       │           │          │ │
+│ │ import_path ==      │                     │       │           │          │ │
+│ │ 'pydantic:BaseSett… │                     │       │           │          │ │
+│ │              raise  │                     │       │           │          │ │
+│ │ PydanticImportErro… │                     │       │           │          │ │
+│ │                  '… │                     │       │           │          │ │
+│ │ has been moved to   │                     │       │           │          │ │
+│ │ the                 │                     │       │           │          │ │
+│ │ `pydantic-settings` │                     │       │           │          │ │
+│ │ package. '          │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ f'See               │                     │       │           │          │ │
+│ │ https://docs.pydan… │                     │       │           │          │ │
+│ │ '                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ f'See               │                     │       │           │          │ │
+│ │ https://pydantic.d… │                     │       │           │          │ │
+│ │ '                   │                     │       │           │          │ │
+│ │                  '… │                     │       │           │          │ │
+│ │ more details.'      │                     │       │           │          │ │
+│ │              )      │                     │       │           │          │ │
+│ │          if         │                     │       │           │          │ │
+│ │ import_path in      │                     │       │           │          │ │
+│ │ REMOVED_IN_V2:      │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/pydantic/color.py │                     │       │           │          │ │
+│ │ b/pydantic/color.py │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 2dca1302..91d31ba8  │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/pydantic/color.py │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/pydantic/color.py │                     │       │           │          │ │
+│ │ @@ -72,7 +72,7 @@   │                     │       │           │          │ │
+│ │ rads = 2 * math.pi  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  @deprecated(       │                     │       │           │          │ │
+│ │      'The `Color`   │                     │       │           │          │ │
+│ │ class is            │                     │       │           │          │ │
+│ │ deprecated, use     │                     │       │           │          │ │
+│ │ `pydantic_extra_ty… │                     │       │           │          │ │
+│ │ instead. '          │                     │       │           │          │ │
+│ │ -    'See           │                     │       │           │          │ │
+│ │ https://docs.pydan… │                     │       │           │          │ │
+│ │ +    'See           │                     │       │           │          │ │
+│ │ https://pydantic.d… │                     │       │           │          │ │
+│ │      category=Pyda… │                     │       │           │          │ │
+│ │  )                  │                     │       │           │          │ │
+│ │  class              │                     │       │           │          │ │
+│ │ Color(_repr.Repres… │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/pydantic/functio… │                     │       │           │          │ │
+│ │ b/pydantic/functio… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 5df200d4..d7b9acdd  │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/pydantic/functio… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/pydantic/functio… │                     │       │           │          │ │
+│ │ @@ -726,7 +726,7 @@ │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ model_validator(    │                     │       │           │          │ │
+│ │                  c… │                     │       │           │          │ │
+│ │                  m… │                     │       │           │          │ │
+│ │                   … │                     │       │           │          │ │
+│ │ `@model_validator`  │                     │       │           │          │ │
+│ │ with mode='after'   │                     │       │           │          │ │
+│ │ on a classmethod is │                     │       │           │          │ │
+│ │ deprecated.         │                     │       │           │          │ │
+│ │ Instead, use an     │                     │       │           │          │ │
+│ │ instance method. "  │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ f'See the           │                     │       │           │          │ │
+│ │ documentation at    │                     │       │           │          │ │
+│ │ https://docs.pydan… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ f'See the           │                     │       │           │          │ │
+│ │ documentation at    │                     │       │           │          │ │
+│ │ https://pydantic.d… │                     │       │           │          │ │
+│ │                  ), │                     │       │           │          │ │
+│ │                  s… │                     │       │           │          │ │
+│ │              )      │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/pydantic/main.py  │                     │       │           │          │ │
+│ │ b/pydantic/main.py  │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 8b0bc965..f1a42f60  │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/pydantic/main.py  │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/pydantic/main.py  │                     │       │           │          │ │
+│ │ @@ -265,7 +265,7 @@ │                     │       │           │          │ │
+│ │ class               │                     │       │           │          │ │
+│ │ BaseModel(metaclas… │                     │       │           │          │ │
+│ │              warni… │                     │       │           │          │ │
+│ │                  'A │                     │       │           │          │ │
+│ │ custom validator is │                     │       │           │          │ │
+│ │ returning a value   │                     │       │           │          │ │
+│ │ other than          │                     │       │           │          │ │
+│ │ `self`.\n'          │                     │       │           │          │ │
+│ │                  "… │                     │       │           │          │ │
+│ │ anything other than │                     │       │           │          │ │
+│ │ `self` from a top   │                     │       │           │          │ │
+│ │ level model         │                     │       │           │          │ │
+│ │ validator isn't     │                     │       │           │          │ │
+│ │ supported when      │                     │       │           │          │ │
+│ │ validating via      │                     │       │           │          │ │
+│ │ `__init__`.\n"      │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ 'See the            │                     │       │           │          │ │
+│ │ `model_validator`   │                     │       │           │          │ │
+│ │ docs                │                     │       │           │          │ │
+│ │ (https://docs.pyda… │                     │       │           │          │ │
+│ │ for more details.', │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ 'See the            │                     │       │           │          │ │
+│ │ `model_validator`   │                     │       │           │          │ │
+│ │ docs                │                     │       │           │          │ │
+│ │ (https://pydantic.… │                     │       │           │          │ │
+│ │ for more details.', │                     │       │           │          │ │
+│ │                  s… │                     │       │           │          │ │
+│ │              )      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -1777,7 +1777,7  │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ create_model(  #    │                     │       │           │          │ │
+│ │ noqa: C901          │                     │       │           │          │ │
+│ │      """!!!         │                     │       │           │          │ │
+│ │ abstract "Usage     │                     │       │           │          │ │
+│ │ Documentation"      │                     │       │           │          │ │
+│ │          [Dynamic   │                     │       │           │          │ │
+│ │ Model               │                     │       │           │          │ │
+│ │ Creation](../conce… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    Dynamically    │                     │       │           │          │ │
+│ │ creates and returns │                     │       │           │          │ │
+│ │ a new Pydantic      │                     │       │           │          │ │
+│ │ model, in other     │                     │       │           │          │ │
+│ │ words,              │                     │       │           │          │ │
+│ │ `create_model`      │                     │       │           │          │ │
+│ │ dynamically creates │                     │       │           │          │ │
+│ │ a                   │                     │       │           │          │ │
+│ │ +    Dynamically    │                     │       │           │          │ │
+│ │ creates and returns │                     │       │           │          │ │
+│ │ a new Pydantic      │                     │       │           │          │ │
+│ │ model. In other     │                     │       │           │          │ │
+│ │ words,              │                     │       │           │          │ │
+│ │ `create_model()`    │                     │       │           │          │ │
+│ │ dynamically creates │                     │       │           │          │ │
+│ │ a                   │                     │       │           │          │ │
+│ │      subclass of    │                     │       │           │          │ │
+│ │ [`BaseModel`][pyda… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      !!! warning    │                     │       │           │          │ │
+│ │ @@ -1794,7 +1794,7  │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ create_model(  #    │                     │       │           │          │ │
+│ │ noqa: C901          │                     │       │           │          │ │
+│ │              if     │                     │       │           │          │ │
+│ │ `None`, the value   │                     │       │           │          │ │
+│ │ is taken from       │                     │       │           │          │ │
+│ │ `sys._getframe(1)`  │                     │       │           │          │ │
+│ │          __validat… │                     │       │           │          │ │
+│ │ A dictionary of     │                     │       │           │          │ │
+│ │ methods that        │                     │       │           │          │ │
+│ │ validate fields.    │                     │       │           │          │ │
+│ │ The keys are the    │                     │       │           │          │ │
+│ │ names of the        │                     │       │           │          │ │
+│ │ validation methods  │                     │       │           │          │ │
+│ │ to                  │                     │       │           │          │ │
+│ │              be     │                     │       │           │          │ │
+│ │ added to the model, │                     │       │           │          │ │
+│ │ and the values are  │                     │       │           │          │ │
+│ │ the validation      │                     │       │           │          │ │
+│ │ methods themselves. │                     │       │           │          │ │
+│ │ You can read more   │                     │       │           │          │ │
+│ │ about functional    │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ validators          │                     │       │           │          │ │
+│ │ [here](https://doc… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ validators          │                     │       │           │          │ │
+│ │ [here](../concepts… │                     │       │           │          │ │
+│ │          __cls_kwa… │                     │       │           │          │ │
+│ │ A dictionary of     │                     │       │           │          │ │
+│ │ keyword arguments   │                     │       │           │          │ │
+│ │ for class creation, │                     │       │           │          │ │
+│ │ such as             │                     │       │           │          │ │
+│ │ `metaclass`.        │                     │       │           │          │ │
+│ │          __qualnam… │                     │       │           │          │ │
+│ │ The qualified name  │                     │       │           │          │ │
+│ │ of the newly        │                     │       │           │          │ │
+│ │ created model.      │                     │       │           │          │ │
+│ │          **field_d… │                     │       │           │          │ │
+│ │ Field definitions   │                     │       │           │          │ │
+│ │ of the new model.   │                     │       │           │          │ │
+│ │ Either:             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/pydantic/types.py │                     │       │           │          │ │
+│ │ b/pydantic/types.py │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 5e4f5830..985728c4  │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/pydantic/types.py │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/pydantic/types.py │                     │       │           │          │ │
+│ │ @@ -1924,7 +1924,7  │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ PaymentCardBrand(s… │                     │       │           │          │ │
+│ │ Enum):              │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  @deprecated(       │                     │       │           │          │ │
+│ │      'The           │                     │       │           │          │ │
+│ │ `PaymentCardNumber` │                     │       │           │          │ │
+│ │ class is            │                     │       │           │          │ │
+│ │ deprecated, use     │                     │       │           │          │ │
+│ │ `pydantic_extra_ty… │                     │       │           │          │ │
+│ │ instead. '          │                     │       │           │          │ │
+│ │ -    'See           │                     │       │           │          │ │
+│ │ https://docs.pydan… │                     │       │           │          │ │
+│ │ +    'See           │                     │       │           │          │ │
+│ │ https://pydantic.d… │                     │       │           │          │ │
+│ │      category=Pyda… │                     │       │           │          │ │
+│ │  )                  │                     │       │           │          │ │
+│ │  class              │                     │       │           │          │ │
+│ │ PaymentCardNumber(… │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/pyproject.toml    │                     │       │           │          │ │
+│ │ b/pyproject.toml    │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ e82f7399..e89c054a  │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/pyproject.toml    │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/pyproject.toml    │                     │       │           │          │ │
+│ │ @@ -60,10 +60,10 @@ │                     │       │           │          │ │
+│ │ timezone = [        │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  [project.urls]     │                     │       │           │          │ │
+│ │  Homepage =         │                     │       │           │          │ │
+│ │ 'https://github.co… │                     │       │           │          │ │
+│ │ -Documentation =    │                     │       │           │          │ │
+│ │ 'https://docs.pyda… │                     │       │           │          │ │
+│ │ +Documentation =    │                     │       │           │          │ │
+│ │ 'https://pydantic.… │                     │       │           │          │ │
+│ │  Funding =          │                     │       │           │          │ │
+│ │ 'https://github.co… │                     │       │           │          │ │
+│ │  Source =           │                     │       │           │          │ │
+│ │ 'https://github.co… │                     │       │           │          │ │
+│ │ -Changelog =        │                     │       │           │          │ │
+│ │ 'https://docs.pyda… │                     │       │           │          │ │
+│ │ +Changelog =        │                     │       │           │          │ │
+│ │ 'https://pydantic.… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  [dependency-group… │                     │       │           │          │ │
+│ │  dev = [            │                     │       │           │          │ │
+│ │ @@ -164,7 +164,7 @@ │                     │       │           │          │ │
+│ │ fragments = [       │                     │       │           │          │ │
+│ │      {path =        │                     │       │           │          │ │
+│ │ 'README.md'},       │                     │       │           │          │ │
+│ │      {text = "\n##  │                     │       │           │          │ │
+│ │ Changelog\n\n"},    │                     │       │           │          │ │
+│ │      {path =        │                     │       │           │          │ │
+│ │ 'HISTORY.md',       │                     │       │           │          │ │
+│ │ pattern =           │                     │       │           │          │ │
+│ │ '(.+?)<!-- package  │                     │       │           │          │ │
+│ │ description limit   │                     │       │           │          │ │
+│ │ -->'},              │                     │       │           │          │ │
+│ │ -    {text = "\n... │                     │       │           │          │ │
+│ │ see                 │                     │       │           │          │ │
+│ │ [here](https://doc… │                     │       │           │          │ │
+│ │ for earlier         │                     │       │           │          │ │
+│ │ changes.\n"},       │                     │       │           │          │ │
+│ │ +    {text = "\n... │                     │       │           │          │ │
+│ │ see                 │                     │       │           │          │ │
+│ │ [here](https://pyd… │                     │       │           │          │ │
+│ │ for earlier         │                     │       │           │          │ │
+│ │ changes.\n"},       │                     │       │           │          │ │
+│ │  ]                  │                     │       │           │          │ │
+│ │  # convert GitHub   │                     │       │           │          │ │
+│ │ issue/PR numbers    │                     │       │           │          │ │
+│ │ and handles to      │                     │       │           │          │ │
+│ │ links               │                     │       │           │          │ │
+│ │  substitutions = [  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.50 │     -0.39 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "src/click/core.py… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 2845, │       │           │          │ │
+│ │ with no further     │ "line_end": 2870,   │       │           │          │ │
+│ │ human review.       │ "body": "Ubuntu     │       │           │          │ │
+│ │ Decide:             │ 22.04 has lzma and  │       │           │          │ │
+│ │   approve  - you    │ so we need the -5   │       │           │          │ │
+│ │ are confident the   │ patch. However,     │       │           │          │ │
+│ │ change is correct   │ that change's       │       │           │          │ │
+│ │ and safe to ship.   │ context was not     │       │           │          │ │
+│ │   block    - you    │ clear, and the diff │       │           │          │ │
+│ │ found a defect;     │ walked in a         │       │           │          │ │
+│ │ cite its location.  │ communist way. That │       │           │          │ │
+│ │   escalate - you    │ likely never        │       │           │          │ │
+│ │ cannot establish    │ worked, or at least │       │           │          │ │
+│ │ safety from what    │ it should have been │       │           │          │ │
+│ │ you can see; a      │ noted with a        │       │           │          │ │
+│ │ human must look.    │ comment in the PR   │       │           │          │ │
+│ │ Approving a change  │ for the committer   │       │           │          │ │
+│ │ that contains a     │ to notice. Also,    │       │           │          │ │
+│ │ defect is the worst │ the reason for the  │       │           │          │ │
+│ │ outcome. Blocking a │ diff is unknown,    │       │           │          │ │
+│ │ correct change      │ but the diff itself │       │           │          │ │
+│ │ costs an engineer's │ seems to hack the   │       │           │          │ │
+│ │ time. Escalating is │ undefined. Even     │       │           │          │ │
+│ │ cheap but useless   │ though on this      │       │           │          │ │
+│ │ if done for         │ line, the bad       │       │           │          │ │
+│ │ everything.         │ indentation         │       │           │          │ │
+│ │ Respond with        │ increases chances   │       │           │          │ │
+│ │ exactly one JSON    │ of bias. There's no │       │           │          │ │
+│ │ object and nothing  │ test, so an         │       │           │          │ │
+│ │ else:               │ escalation should   │       │           │          │ │
+│ │ {"decision":        │ be considered.      │       │           │          │ │
+│ │ "approve|block|esc… │ (Assuming that this │       │           │          │ │
+│ │ "comments":         │ would have          │       │           │          │ │
+│ │ [{"file": "...",    │ harmlessly worked   │       │           │          │ │
+│ │ "line_start": N,    │ in the remote       │       │           │          │ │
+│ │ "line_end": N,      │ environment, and    │       │           │          │ │
+│ │ "body": "...",      │ guaranteed no       │       │           │          │ │
+│ │ "proposed_test":    │ session             │       │           │          │ │
+│ │ "optional pytest    │ breaks.)"}]}        │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository: click   │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ src/click/core.py   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ src/click/core.py:… │                     │       │           │          │ │
+│ │ src/click/core.py:… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ src/click/core.py:  │                     │       │           │          │ │
+│ │   5b9630f           │                     │       │           │          │ │
+│ │ 2026-05-08          │                     │       │           │          │ │
+│ │ Localisation of     │                     │       │           │          │ │
+│ │ more strings        │                     │       │           │          │ │
+│ │ (#2902)             │                     │       │           │          │ │
+│ │   73e1550           │                     │       │           │          │ │
+│ │ 2026-05-04 Fix      │                     │       │           │          │ │
+│ │ sentinel typing and │                     │       │           │          │ │
+│ │ its uses in parser  │                     │       │           │          │ │
+│ │ (#3396)             │                     │       │           │          │ │
+│ │   831c8f0           │                     │       │           │          │ │
+│ │ 2026-04-30 Add      │                     │       │           │          │ │
+│ │ NoSuchCommand       │                     │       │           │          │ │
+│ │ exception with      │                     │       │           │          │ │
+│ │ suggestions for     │                     │       │           │          │ │
+│ │ misspelled commands │                     │       │           │          │ │
+│ │ (#3228)             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/src/click/core.py │                     │       │           │          │ │
+│ │ b/src/click/core.py │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ c5cab15..08669d7    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/src/click/core.py │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/src/click/core.py │                     │       │           │          │ │
+│ │ @@ -2786,7 +2786,11 │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ Option(Parameter):  │                     │       │           │          │ │
+│ │                  if │                     │       │           │          │ │
+│ │ isinstance(depreca… │                     │       │           │          │ │
+│ │ str)                │                     │       │           │          │ │
+│ │                  e… │                     │       │           │          │ │
+│ │ "(DEPRECATED)"      │                     │       │           │          │ │
+│ │              )      │                     │       │           │          │ │
+│ │ -            help = │                     │       │           │          │ │
+│ │ help +              │                     │       │           │          │ │
+│ │ deprecated_message  │                     │       │           │          │ │
+│ │ if help is not None │                     │       │           │          │ │
+│ │ else                │                     │       │           │          │ │
+│ │ deprecated_message  │                     │       │           │          │ │
+│ │ +            help = │                     │       │           │          │ │
+│ │ (                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ f"{help}            │                     │       │           │          │ │
+│ │ {deprecated_messag… │                     │       │           │          │ │
+│ │ +                if │                     │       │           │          │ │
+│ │ help is not None    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ else                │                     │       │           │          │ │
+│ │ deprecated_message  │                     │       │           │          │ │
+│ │ +            )      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          self.prom… │                     │       │           │          │ │
+│ │ = prompt_text       │                     │       │           │          │ │
+│ │          self.conf… │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ confirmation_prompt │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
