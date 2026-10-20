@@ -19,6 +19,8 @@ TRANSFORMERS_PIN="${TRANSFORMERS_PIN:-}"
 VENV=/workspace/venv
 [ -x $VENV/bin/python ] || python -m venv --system-site-packages $VENV
 source $VENV/bin/activate
+# newer Runpod templates export PYTHONPATH to their dist-packages, which outranks the venv (hub 2.2.0 shadowed our 1.x)
+unset PYTHONPATH
 pip install -q --upgrade pip
 # vllm pins its own torch; install it first so it wins, then trl on top. --ignore-installed
 # so Debian-owned dists (PyJWT etc.) are shadowed in the venv rather than uninstalled.
@@ -26,6 +28,7 @@ pip install -q --ignore-installed "vllm${VLLM_PIN}"
 pip install -q --ignore-installed "trl[vllm]${TRL_PIN}" "transformers${TRANSFORMERS_PIN}" peft datasets accelerate \
     pyyaml matplotlib anthropic pytest "huggingface_hub[cli]<2.0"   # transformers (Oct 2026) requires hub <2.0; unpinned pulled 2.2.0
 
+python -c "import huggingface_hub as h, torch; print('hub', h.__version__, h.__file__); print('torch', torch.__version__, torch.__file__)"
 python - <<'EOF'
 import importlib, json, subprocess, sys
 mods = ["torch", "transformers", "trl", "vllm", "peft", "datasets", "accelerate"]
