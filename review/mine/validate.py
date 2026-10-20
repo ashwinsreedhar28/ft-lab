@@ -62,7 +62,9 @@ def build_images(only: str | None):
             continue
         clone = WORK / "repos" / name
         if not (clone / ".git").exists():
-            print(f"{name:10s} no clone at {clone} (run scan first)"); continue
+            print(f"{name:10s} cloning {r['url']} …", flush=True)
+            clone.parent.mkdir(parents=True, exist_ok=True)
+            subprocess.run(["git", "clone", "-q", r["url"], str(clone)], check=True)
         df = WORK / "images" / name
         df.mkdir(parents=True, exist_ok=True)
         (df / "Dockerfile").write_text(DOCKERFILE.format(install=r["install"]))
