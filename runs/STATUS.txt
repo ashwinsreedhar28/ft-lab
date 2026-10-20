@@ -1,30 +1,30 @@
-time_utc: 2026-10-20T22:19:10Z
-tag: tick
+time_utc: 2026-10-20T22:23:18Z
+tag: final
 tmux_ft_alive: yes
-gpu: NVIDIA A100-SXM4-80GB, 69647 MiB, 81920 MiB, 100 %
+gpu: NVIDIA A100-SXM4-80GB, 0 MiB, 81920 MiB, 1 %
 ---- last 25 log lines
-│ │ window='abc')  #    │                     │       │           │          │ │
-│ │ Wrong type for      │                     │       │           │          │ │
-│ │ window size         │                     │       │           │          │ │
-│ │          with       │                     │       │           │          │ │
-│ │ self.assertRaises(… │                     │       │           │          │ │
-│ │              list(… │                     │       │           │          │ │
-│ │ + 4j, 5 - 7j]))  #  │                     │       │           │          │ │
-│ │ Unorderable input   │                     │       │           │          │ │
-│ │ type                │                     │       │           │          │ │
-│ │          with       │                     │       │           │          │ │
-│ │ self.assertRaises(… │                     │       │           │          │ │
-│ │              list(  │                     │       │           │          │ │
-│ │                  r… │                     │       │           │          │ │
-│ │ 'def', 'ghi'])      │                     │       │           │          │ │
-│ │ -            )  #   │                     │       │           │          │ │
-│ │ Type that doesn't   │                     │       │           │          │ │
-│ │ support division    │                     │       │           │          │ │
-│ │ +            )  #   │                     │       │           │          │ │
-│ │ Input type that     │                     │       │           │          │ │
-│ │ doesn't support     │                     │       │           │          │ │
-│ │ division            │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
-╰──────────────────────────────────────────────────────────────────────────────╯
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py", line 140, in _preprocess_cmpl
+[rank0]:     return renderer.render_cmpl(
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/base.py", line 1187, in render_cmpl
+[rank0]:     tok_prompts = self.tokenize_prompts(dict_prompts, tok_params)
+[rank0]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/base.py", line 731, in tokenize_prompts
+[rank0]:     return [self.tokenize_prompt(prompt, params) for prompt in prompts]
+[rank0]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/base.py", line 724, in tokenize_prompt
+[rank0]:     return self._tokenize_singleton_prompt(prompt, params)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/base.py", line 634, in _tokenize_singleton_prompt
+[rank0]:     return params.apply_post_tokenization(self.tokenizer, prompt)  # type: ignore[arg-type]
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/params.py", line 538, in apply_post_tokenization
+[rank0]:     prompt["prompt_token_ids"] = self._validate_tokens(  # type: ignore[typeddict-unknown-key]
+[rank0]:                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/params.py", line 523, in _validate_tokens
+[rank0]:     tokens = validator(tokenizer, tokens)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/params.py", line 498, in _token_len_check
+[rank0]:     raise VLLMValidationError(
+[rank0]: vllm.exceptions.VLLMValidationError: This model's maximum context length is 16384 tokens. However, you requested 0 output tokens and your prompt contains 36993 input tokens, for a total of 36993 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (parameter=input_tokens, value=36993)
+ 14%|█▍        | 17/120 [25:39<2:35:27, 90.56s/it] 

@@ -1,400 +1,400 @@
-│ │ -    by             │                     │       │           │          │ │
-│ │ statistics.median(… │                     │       │           │          │ │
-│ │ -    """            │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ -    # This recipe  │                     │       │           │          │ │
-│ │ differs from the    │                     │       │           │          │ │
-│ │ one in the heapq    │                     │       │           │          │ │
-│ │ docs in that        │                     │       │           │          │ │
-│ │ -    # eliminates   │                     │       │           │          │ │
-│ │ the len() tests in  │                     │       │           │          │ │
-│ │ favor of two        │                     │       │           │          │ │
-│ │ updates per loop,   │                     │       │           │          │ │
-│ │ -    # one for the  │                     │       │           │          │ │
-│ │ even case and the   │                     │       │           │          │ │
-│ │ other for the case  │                     │       │           │          │ │
-│ │ where               │                     │       │           │          │ │
-│ │ -    # the lo       │                     │       │           │          │ │
-│ │ max-heap has one    │                     │       │           │          │ │
-│ │ more element than   │                     │       │           │          │ │
-│ │ the hi min-heap.    │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ -    read =         │                     │       │           │          │ │
-│ │ iter(iterable).__n… │                     │       │           │          │ │
-│ │ +    read =         │                     │       │           │          │ │
-│ │ iterator.__next__   │                     │       │           │          │ │
-│ │      lo = []  #     │                     │       │           │          │ │
-│ │ max-heap            │                     │       │           │          │ │
-│ │      hi = []  #     │                     │       │           │          │ │
-│ │ min-heap (same size │                     │       │           │          │ │
-│ │ as or one smaller   │                     │       │           │          │ │
-│ │ than lo)            │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ @@ -1367,10         │                     │       │           │          │ │
-│ │ +1349,10 @@ def     │                     │       │           │          │ │
-│ │ running_median(ite… │                     │       │           │          │ │
-│ │ # pragma: no cover  │                     │       │           │          │ │
-│ │              yield  │                     │       │           │          │ │
-│ │ (lo[0] + hi[0]) / 2 │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -def                │                     │       │           │          │ │
-│ │ _running_median_mi… │                     │       │           │          │ │
-│ │ # pragma: no cover  │                     │       │           │          │ │
-│ │ -    # Backport of  │                     │       │           │          │ │
-│ │ running_median()    │                     │       │           │          │ │
-│ │ for Python 3.13 and │                     │       │           │          │ │
-│ │ prior.              │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ _running_median_mi… │                     │       │           │          │ │
-│ │ # pragma: no cover  │                     │       │           │          │ │
-│ │ +    "Backport of   │                     │       │           │          │ │
-│ │ non-windowed        │                     │       │           │          │ │
-│ │ running_median()    │                     │       │           │          │ │
-│ │ for Python 3.13 and │                     │       │           │          │ │
-│ │ prior."             │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -    read =         │                     │       │           │          │ │
-│ │ iter(iterable).__n… │                     │       │           │          │ │
-│ │ +    read =         │                     │       │           │          │ │
-│ │ iterator.__next__   │                     │       │           │          │ │
-│ │      lo = []  #     │                     │       │           │          │ │
-│ │ max-heap (actually  │                     │       │           │          │ │
-│ │ a minheap with      │                     │       │           │          │ │
-│ │ negated values)     │                     │       │           │          │ │
-│ │      hi = []  #     │                     │       │           │          │ │
-│ │ min-heap (same size │                     │       │           │          │ │
-│ │ as or one smaller   │                     │       │           │          │ │
-│ │ than lo)            │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ @@ -1383,6 +1365,72 │                     │       │           │          │ │
-│ │ @@ def              │                     │       │           │          │ │
-│ │ _running_median_mi… │                     │       │           │          │ │
-│ │ # pragma: no cover  │                     │       │           │          │ │
-│ │              yield  │                     │       │           │          │ │
-│ │ (hi[0] - lo[0]) / 2 │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -if not             │                     │       │           │          │ │
-│ │ _max_heap_availabl… │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ _running_median_mi… │                     │       │           │          │ │
-│ │ =                   │                     │       │           │          │ │
-│ │ running_median.__d… │                     │       │           │          │ │
-│ │ -    running_median │                     │       │           │          │ │
-│ │ =                   │                     │       │           │          │ │
-│ │ _running_median_mi… │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ _sorted_window(ite… │                     │       │           │          │ │
-│ │ k):  # pragma: no   │                     │       │           │          │ │
-│ │ cover               │                     │       │           │          │ │
-│ │ +    "Yield windows │                     │       │           │          │ │
-│ │ in sorted order"    │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    # This simple  │                     │       │           │          │ │
-│ │ implementation is   │                     │       │           │          │ │
-│ │ reasonably fast     │                     │       │           │          │ │
-│ │ with two O(1) deque │                     │       │           │          │ │
-│ │ +    # updates and  │                     │       │           │          │ │
-│ │ two O(log k) data   │                     │       │           │          │ │
-│ │ comparisons per     │                     │       │           │          │ │
-│ │ iteration.          │                     │       │           │          │ │
-│ │ However,            │                     │       │           │          │ │
-│ │ +    # it also has  │                     │       │           │          │ │
-│ │ two O(k) steps, a   │                     │       │           │          │ │
-│ │ list insertion and  │                     │       │           │          │ │
-│ │ a list deletion.    │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    # Grant Jenks' │                     │       │           │          │ │
-│ │ work on             │                     │       │           │          │ │
-│ │ SortedCollections   │                     │       │           │          │ │
-│ │ showed that those   │                     │       │           │          │ │
-│ │ two steps           │                     │       │           │          │ │
-│ │ +    # have a very  │                     │       │           │          │ │
-│ │ low constant factor │                     │       │           │          │ │
-│ │ because they are    │                     │       │           │          │ │
-│ │ implemented with    │                     │       │           │          │ │
-│ │ +    # highly       │                     │       │           │          │ │
-│ │ optimized C         │                     │       │           │          │ │
-│ │ memmoves that shift │                     │       │           │          │ │
-│ │ the data pointers   │                     │       │           │          │ │
-│ │ without             │                     │       │           │          │ │
-│ │ +    # needing to   │                     │       │           │          │ │
-│ │ touch the           │                     │       │           │          │ │
-│ │ underlying data     │                     │       │           │          │ │
-│ │ with reference      │                     │       │           │          │ │
-│ │ counts.             │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    # This         │                     │       │           │          │ │
-│ │ function could be   │                     │       │           │          │ │
-│ │ reimplemented with  │                     │       │           │          │ │
-│ │ SortedCollections,  │                     │       │           │          │ │
-│ │ blist               │                     │       │           │          │ │
-│ │ +    # some other   │                     │       │           │          │ │
-│ │ binary tree, or an  │                     │       │           │          │ │
-│ │ IndexableSkipList   │                     │       │           │          │ │
-│ │ all of which have   │                     │       │           │          │ │
-│ │ +    # O(k)         │                     │       │           │          │ │
-│ │ insertions and      │                     │       │           │          │ │
-│ │ deletions, albiet   │                     │       │           │          │ │
-│ │ with a larger       │                     │       │           │          │ │
-│ │ constant            │                     │       │           │          │ │
-│ │ +    # factor. For  │                     │       │           │          │ │
-│ │ very large window   │                     │       │           │          │ │
-│ │ sizes, this might   │                     │       │           │          │ │
-│ │ matter.             │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    history =      │                     │       │           │          │ │
-│ │ deque()             │                     │       │           │          │ │
-│ │ +    window = []    │                     │       │           │          │ │
-│ │ +    for x in       │                     │       │           │          │ │
-│ │ iterator:           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ history.append(x)   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ insort_left(window, │                     │       │           │          │ │
-│ │ x)                  │                     │       │           │          │ │
-│ │ +        if         │                     │       │           │          │ │
-│ │ len(window) > k:    │                     │       │           │          │ │
-│ │ +            i =    │                     │       │           │          │ │
-│ │ bisect_left(window, │                     │       │           │          │ │
-│ │ history.popleft())  │                     │       │           │          │ │
-│ │ +            del    │                     │       │           │          │ │
-│ │ window[i]           │                     │       │           │          │ │
-│ │ +        yield      │                     │       │           │          │ │
-│ │ window              │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ _running_median_wi… │                     │       │           │          │ │
-│ │ window):            │                     │       │           │          │ │
-│ │ +    "Yield median  │                     │       │           │          │ │
-│ │ of values in a      │                     │       │           │          │ │
-│ │ sliding window."    │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    for data in    │                     │       │           │          │ │
-│ │ _sorted_window(ite… │                     │       │           │          │ │
-│ │ k=window):          │                     │       │           │          │ │
-│ │ +        n =        │                     │       │           │          │ │
-│ │ len(data)           │                     │       │           │          │ │
-│ │ +        if n % 2   │                     │       │           │          │ │
-│ │ == 1:               │                     │       │           │          │ │
-│ │ +            yield  │                     │       │           │          │ │
-│ │ data[n // 2]        │                     │       │           │          │ │
-│ │ +        else:      │                     │       │           │          │ │
-│ │ +            i = n  │                     │       │           │          │ │
-│ │ // 2                │                     │       │           │          │ │
-│ │ +            yield  │                     │       │           │          │ │
-│ │ (data[i - 1] +      │                     │       │           │          │ │
-│ │ data[i]) / 2        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ running_median(ite… │                     │       │           │          │ │
-│ │ *, window=None):  # │                     │       │           │          │ │
-│ │ pragma: no cover    │                     │       │           │          │ │
-│ │ +    """Cumulative  │                     │       │           │          │ │
-│ │ median of values    │                     │       │           │          │ │
-│ │ seen so far or      │                     │       │           │          │ │
-│ │ values in a sliding │                     │       │           │          │ │
-│ │ window.             │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    For example:   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        >>>        │                     │       │           │          │ │
-│ │ list(running_media… │                     │       │           │          │ │
-│ │ 9.0, 4.0, 12.0,     │                     │       │           │          │ │
-│ │ 8.0, 9.0]))         │                     │       │           │          │ │
-│ │ +        [5.0, 7.0, │                     │       │           │          │ │
-│ │ 5.0, 7.0, 8.0, 8.5] │                     │       │           │          │ │
-│ │ +        >>>        │                     │       │           │          │ │
-│ │ list(running_media… │                     │       │           │          │ │
-│ │ 9.0, 4.0, 12.0,     │                     │       │           │          │ │
-│ │ 8.0, 9.0],          │                     │       │           │          │ │
-│ │ window=3))          │                     │       │           │          │ │
-│ │ +        [5.0, 7.0, │                     │       │           │          │ │
-│ │ 5.0, 9.0, 8.0, 9.0] │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    Supports       │                     │       │           │          │ │
-│ │ numeric types such  │                     │       │           │          │ │
-│ │ as int, float,      │                     │       │           │          │ │
-│ │ Decimal, and        │                     │       │           │          │ │
-│ │ Fraction,           │                     │       │           │          │ │
-│ │ +    but not        │                     │       │           │          │ │
-│ │ complex numbers     │                     │       │           │          │ │
-│ │ which are           │                     │       │           │          │ │
-│ │ unorderable.        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    On version     │                     │       │           │          │ │
-│ │ Python 3.13 and     │                     │       │           │          │ │
-│ │ prior, max-heaps    │                     │       │           │          │ │
-│ │ are simulated with  │                     │       │           │          │ │
-│ │ +    negative       │                     │       │           │          │ │
-│ │ values. The         │                     │       │           │          │ │
-│ │ negation causes     │                     │       │           │          │ │
-│ │ Decimal inputs to   │                     │       │           │          │ │
-│ │ apply context       │                     │       │           │          │ │
-│ │ +    rounding,      │                     │       │           │          │ │
-│ │ making the results  │                     │       │           │          │ │
-│ │ slightly different  │                     │       │           │          │ │
-│ │ than that obtained  │                     │       │           │          │ │
-│ │ +    by             │                     │       │           │          │ │
-│ │ statistics.median(… │                     │       │           │          │ │
-│ │ +    """            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    iterator =     │                     │       │           │          │ │
-│ │ iter(iterable)      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    if window is   │                     │       │           │          │ │
-│ │ not None:           │                     │       │           │          │ │
-│ │ +        window =   │                     │       │           │          │ │
-│ │ index(window)       │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ _running_median_wi… │                     │       │           │          │ │
-│ │ window)             │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    if not         │                     │       │           │          │ │
-│ │ _max_heap_availabl… │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ _running_median_mi… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    return         │                     │       │           │          │ │
-│ │ _running_median_mi… │                     │       │           │          │ │
+│ │          return     │                     │       │           │          │ │
+│ │ _get_ser_schema_fo… │                     │       │           │          │ │
 │ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_recip… │                     │       │           │          │ │
-│ │ b/tests/test_recip… │                     │       │           │          │ │
+│ │ a/tests/test_inter… │                     │       │           │          │ │
+│ │ b/tests/test_inter… │                     │       │           │          │ │
 │ │ index               │                     │       │           │          │ │
-│ │ 2fa703d..ac7c662    │                     │       │           │          │ │
+│ │ acd0b46e..c3912bc7  │                     │       │           │          │ │
 │ │ 100644              │                     │       │           │          │ │
 │ │ ---                 │                     │       │           │          │ │
-│ │ a/tests/test_recip… │                     │       │           │          │ │
+│ │ a/tests/test_inter… │                     │       │           │          │ │
 │ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_recip… │                     │       │           │          │ │
-│ │ @@ -1451,7 +1451,7  │                     │       │           │          │ │
-│ │ @@ class            │                     │       │           │          │ │
-│ │ RunningMedianTests… │                     │       │           │          │ │
-│ │              #      │                     │       │           │          │ │
-│ │ Apply unary plus to │                     │       │           │          │ │
-│ │ force context       │                     │       │           │          │ │
-│ │ rounding.           │                     │       │           │          │ │
-│ │              [+Dec… │                     │       │           │          │ │
-│ │ 500)) for _ in      │                     │       │           │          │ │
-│ │ range(500)],        │                     │       │           │          │ │
-│ │              [      │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ Fraction(random.ra… │                     │       │           │          │ │
-│ │ 500),               │                     │       │           │          │ │
-│ │ random.randrange(1… │                     │       │           │          │ │
+│ │ b/tests/test_inter… │                     │       │           │          │ │
+│ │ @@ -16,6 +16,7 @@   │                     │       │           │          │ │
+│ │ from pydantic_core  │                     │       │           │          │ │
+│ │ import core_schema  │                     │       │           │          │ │
+│ │ as cs               │                     │       │           │          │ │
+│ │  from pydantic      │                     │       │           │          │ │
+│ │ import BaseModel,   │                     │       │           │          │ │
+│ │ TypeAdapter         │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ pydantic._internal… │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ ConfigWrapper       │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ pydantic._internal… │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ update_core_metada… │                     │       │           │          │ │
+│ │ +from               │                     │       │           │          │ │
+│ │ pydantic._internal… │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ as_ser_schema       │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ pydantic._internal… │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ resolve_default_va… │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ pydantic._internal… │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ GenerateSchema      │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ pydantic._internal… │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ Representation      │                     │       │           │          │ │
+│ │ @@ -288,3 +289,58   │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ test_resolve_defau… │                     │       │           │          │ │
+│ │              valid… │                     │       │           │          │ │
+│ │              call_… │                     │       │           │          │ │
+│ │          )          │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ Fraction(random.ra… │                     │       │           │          │ │
-│ │ 500),               │                     │       │           │          │ │
-│ │ random.randrange(1, │                     │       │           │          │ │
-│ │ 500))               │                     │       │           │          │ │
-│ │                  f… │                     │       │           │          │ │
-│ │ _ in range(500)     │                     │       │           │          │ │
-│ │              ],     │                     │       │           │          │ │
-│ │          ]:         │                     │       │           │          │ │
-│ │ @@ -1463,13         │                     │       │           │          │ │
-│ │ +1463,37 @@ class   │                     │       │           │          │ │
-│ │ RunningMedianTests… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def _identity(v:   │                     │       │           │          │ │
+│ │ Any) -> Any:        │                     │       │           │          │ │
+│ │ +    return v       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ _wrap_identity(v:   │                     │       │           │          │ │
+│ │ Any, handler: Any)  │                     │       │           │          │ │
+│ │ -> Any:             │                     │       │           │          │ │
+│ │ +    return         │                     │       │           │          │ │
+│ │ handler(v)          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +@pytest.mark.para… │                     │       │           │          │ │
+│ │ +    ['schema',     │                     │       │           │          │ │
+│ │ 'expected'],        │                     │       │           │          │ │
+│ │ +    [              │                     │       │           │          │ │
+│ │ +        # Any      │                     │       │           │          │ │
+│ │ non-function schema │                     │       │           │          │ │
+│ │ is returned as is:  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ (cs.int_schema(),   │                     │       │           │          │ │
+│ │ cs.int_schema()),   │                     │       │           │          │ │
+│ │ +        (          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cs.no_info_after_v… │                     │       │           │          │ │
+│ │ cs.int_schema()),   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cs.no_info_after_v… │                     │       │           │          │ │
+│ │ cs.int_schema()),   │                     │       │           │          │ │
+│ │ +        ),         │                     │       │           │          │ │
+│ │ +        # The      │                     │       │           │          │ │
+│ │ `'serialization'`   │                     │       │           │          │ │
+│ │ schema of a         │                     │       │           │          │ │
+│ │ plain/wrap function │                     │       │           │          │ │
+│ │ schema takes        │                     │       │           │          │ │
+│ │ precedence:         │                     │       │           │          │ │
+│ │ +        (          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cs.no_info_plain_v… │                     │       │           │          │ │
+│ │ serialization=cs.s… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cs.simple_ser_sche… │                     │       │           │          │ │
+│ │ +        ),         │                     │       │           │          │ │
+│ │ +        (          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cs.no_info_wrap_va… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ _wrap_identity,     │                     │       │           │          │ │
+│ │ cs.int_schema(),    │                     │       │           │          │ │
+│ │ serialization=cs.s… │                     │       │           │          │ │
+│ │ +            ),     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cs.simple_ser_sche… │                     │       │           │          │ │
+│ │ +        ),         │                     │       │           │          │ │
+│ │ +        #          │                     │       │           │          │ │
+│ │ Otherwise, plain    │                     │       │           │          │ │
+│ │ function schemas    │                     │       │           │          │ │
+│ │ are serialized as   │                     │       │           │          │ │
+│ │ `'any'`, wrap       │                     │       │           │          │ │
+│ │ function schemas    │                     │       │           │          │ │
+│ │ using the inner     │                     │       │           │          │ │
+│ │ schema:             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ (cs.no_info_plain_… │                     │       │           │          │ │
+│ │ cs.any_schema()),   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ (cs.no_info_wrap_v… │                     │       │           │          │ │
+│ │ cs.int_schema()),   │                     │       │           │          │ │
+│ │ cs.int_schema()),   │                     │       │           │          │ │
+│ │ +        # Nested   │                     │       │           │          │ │
+│ │ plain/wrap function │                     │       │           │          │ │
+│ │ schemas are         │                     │       │           │          │ │
+│ │ unwrapped:          │                     │       │           │          │ │
+│ │ +        (          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cs.no_info_wrap_va… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ _wrap_identity,     │                     │       │           │          │ │
+│ │ cs.no_info_wrap_va… │                     │       │           │          │ │
+│ │ cs.int_schema())    │                     │       │           │          │ │
+│ │ +            ),     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cs.int_schema(),    │                     │       │           │          │ │
+│ │ +        ),         │                     │       │           │          │ │
+│ │ +        (          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cs.no_info_wrap_va… │                     │       │           │          │ │
+│ │ cs.no_info_plain_v… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cs.any_schema(),    │                     │       │           │          │ │
+│ │ +        ),         │                     │       │           │          │ │
+│ │ +        (          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cs.no_info_wrap_va… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ _wrap_identity,     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cs.no_info_plain_v… │                     │       │           │          │ │
+│ │ serialization=cs.s… │                     │       │           │          │ │
+│ │ +            ),     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cs.simple_ser_sche… │                     │       │           │          │ │
+│ │ +        ),         │                     │       │           │          │ │
+│ │ +    ],             │                     │       │           │          │ │
+│ │ +)                  │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_as_ser_schema… │                     │       │           │          │ │
+│ │ CoreSchema,         │                     │       │           │          │ │
+│ │ expected:           │                     │       │           │          │ │
+│ │ cs.SerSchema) ->    │                     │       │           │          │ │
+│ │ None:               │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ as_ser_schema(sche… │                     │       │           │          │ │
+│ │ == expected         │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
-│ │          self.asse… │                     │       │           │          │ │
-│ │ [])  # Empty input  │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │  1.00 │      0.64 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "more_itertools/mo… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 2364, │       │           │          │ │
+│ │ with no further     │ "line_end": 2372,   │       │           │          │ │
+│ │ human review.       │ "body": "Don't      │       │           │          │ │
+│ │ Decide:             │ format `__repr__`   │       │           │          │ │
+│ │   approve  - you    │ using the class     │       │           │          │ │
+│ │ are confident the   │ name as an          │       │           │          │ │
+│ │ change is correct   │ argument.           │       │           │          │ │
+│ │ and safe to ship.   │ `repr`-like         │       │           │          │ │
+│ │   block    - you    │ arguments should be │       │           │          │ │
+│ │ found a defect;     │ mandatory, not      │       │           │          │ │
+│ │ cite its location.  │ optional.           │       │           │          │ │
+│ │   escalate - you    │ `__class__.__name_… │       │           │          │ │
+│ │ cannot establish    │ is redundant with   │       │           │          │ │
+│ │ safety from what    │ the class name in   │       │           │          │ │
+│ │ you can see; a      │ `__class__.__name_… │       │           │          │ │
+│ │ human must look.    │ and `str` is not    │       │           │          │ │
+│ │ Approving a change  │ format-aware. Avoid │       │           │          │ │
+│ │ that contains a     │ using `__repr__` as │       │           │          │ │
+│ │ defect is the worst │ a format for an     │       │           │          │ │
+│ │ outcome. Blocking a │ `__instancecheck__… │       │           │          │ │
+│ │ correct change      │ but use `__str__`   │       │           │          │ │
+│ │ costs an engineer's │ instead for `str`.  │       │           │          │ │
+│ │ time. Escalating is │ `__repr__` should   │       │           │          │ │
+│ │ cheap but useless   │ be unambiguous and  │       │           │          │ │
+│ │ if done for         │ ideally             │       │           │          │ │
+│ │ everything.         │ repeatable."}]}     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ test_vs_statistics… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ running_median =    │                     │       │           │          │ │
-│ │ mi.running_median   │                     │       │           │          │ │
-│ │ +        size = 10  │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        for data   │                     │       │           │          │ │
-│ │ in [                │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ random.choices(ran… │                     │       │           │          │ │
-│ │ 500), k=500),       │                     │       │           │          │ │
-│ │ +            #      │                     │       │           │          │ │
-│ │ Apply unary plus to │                     │       │           │          │ │
-│ │ force context       │                     │       │           │          │ │
-│ │ rounding.           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ [+Decimal(random.u… │                     │       │           │          │ │
-│ │ 500)) for _ in      │                     │       │           │          │ │
-│ │ range(500)],        │                     │       │           │          │ │
-│ │ +            [      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ Fraction(random.ra… │                     │       │           │          │ │
-│ │ 500),               │                     │       │           │          │ │
-│ │ random.randrange(1, │                     │       │           │          │ │
-│ │ 500))               │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ for _ in range(500) │                     │       │           │          │ │
-│ │ +            ],     │                     │       │           │          │ │
-│ │ +        ]:         │                     │       │           │          │ │
-│ │ +            with   │                     │       │           │          │ │
-│ │ self.subTest(data=… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ iterator =          │                     │       │           │          │ │
-│ │ running_median(ite… │                     │       │           │          │ │
-│ │ window=size)        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ for k, rm in        │                     │       │           │          │ │
-│ │ enumerate(iterator, │                     │       │           │          │ │
-│ │ start=1):           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ expected =          │                     │       │           │          │ │
-│ │ statistics.median(… │                     │       │           │          │ │
-│ │ k - size) : k])     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ self.assertEqual(r… │                     │       │           │          │ │
-│ │ expected)           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ self.assertEqual(t… │                     │       │           │          │ │
-│ │ type(expected))     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ self.assertEqual(l… │                     │       │           │          │ │
-│ │ [])  # Empty input  │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ more-itertools      │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │   012fa83           │                     │       │           │          │ │
+│ │ 2025-01-09 run      │                     │       │           │          │ │
+│ │ pyupgrade           │                     │       │           │          │ │
+│ │ --py39-plus ...     │                     │       │           │          │ │
+│ │   d825a34           │                     │       │           │          │ │
+│ │ 2024-12-31 Remove   │                     │       │           │          │ │
+│ │ derangements_range  │                     │       │           │          │ │
+│ │   e35235c           │                     │       │           │          │ │
+│ │ 2024-12-27 Apply    │                     │       │           │          │ │
+│ │ more changes due to │                     │       │           │          │ │
+│ │ make all-checks     │                     │       │           │          │ │
+│ │ output              │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 3ca2cc0..fb7671f    │                     │       │           │          │ │
+│ │ 100755              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ @@ -2360,13         │                     │       │           │          │ │
+│ │ +2360,10 @@ class   │                     │       │           │          │ │
+│ │ numeric_range(abc.… │                     │       │           │          │ │
+│ │ abc.Hashable):      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
 │ │      def            │                     │       │           │          │ │
-│ │ test_error_cases(s… │                     │       │           │          │ │
-│ │          running_m… │                     │       │           │          │ │
-│ │ = mi.running_median │                     │       │           │          │ │
-│ │          with       │                     │       │           │          │ │
-│ │ self.assertRaises(… │                     │       │           │          │ │
+│ │ __repr__(self):     │                     │       │           │          │ │
+│ │          if         │                     │       │           │          │ │
+│ │ self._step == 1:    │                     │       │           │          │ │
+│ │ -            return │                     │       │           │          │ │
+│ │ "numeric_range({},  │                     │       │           │          │ │
+│ │ {})".format(        │                     │       │           │          │ │
 │ │ -                   │                     │       │           │          │ │
-│ │ list(running_media… │                     │       │           │          │ │
-│ │ # No iterable input │                     │       │           │          │ │
+│ │ repr(self._start),  │                     │       │           │          │ │
+│ │ repr(self._stop)    │                     │       │           │          │ │
+│ │ -            )      │                     │       │           │          │ │
+│ │ -        else:      │                     │       │           │          │ │
+│ │ -            return │                     │       │           │          │ │
+│ │ "numeric_range({},  │                     │       │           │          │ │
+│ │ {}, {})".format(    │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ repr(self._start),  │                     │       │           │          │ │
+│ │ repr(self._stop),   │                     │       │           │          │ │
+│ │ repr(self._step)    │                     │       │           │          │ │
+│ │ -            )      │                     │       │           │          │ │
+│ │ +            return │                     │       │           │          │ │
+│ │ "numeric_range({se… │                     │       │           │          │ │
+│ │ {self._stop!r})"    │                     │       │           │          │ │
+│ │ +        return (   │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ running_median(123… │                     │       │           │          │ │
-│ │ # Non-iterable      │                     │       │           │          │ │
-│ │ input               │                     │       │           │          │ │
-│ │ +        with       │                     │       │           │          │ │
-│ │ self.assertRaises(… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ running_median([],  │                     │       │           │          │ │
-│ │ window='abc')  #    │                     │       │           │          │ │
-│ │ Wrong type for      │                     │       │           │          │ │
-│ │ window size         │                     │       │           │          │ │
-│ │          with       │                     │       │           │          │ │
-│ │ self.assertRaises(… │                     │       │           │          │ │
-│ │              list(… │                     │       │           │          │ │
-│ │ + 4j, 5 - 7j]))  #  │                     │       │           │          │ │
-│ │ Unorderable input   │                     │       │           │          │ │
-│ │ type                │                     │       │           │          │ │
-│ │          with       │                     │       │           │          │ │
-│ │ self.assertRaises(… │                     │       │           │          │ │
-│ │              list(  │                     │       │           │          │ │
-│ │                  r… │                     │       │           │          │ │
-│ │ 'def', 'ghi'])      │                     │       │           │          │ │
-│ │ -            )  #   │                     │       │           │          │ │
-│ │ Type that doesn't   │                     │       │           │          │ │
-│ │ support division    │                     │       │           │          │ │
-│ │ +            )  #   │                     │       │           │          │ │
-│ │ Input type that     │                     │       │           │          │ │
-│ │ doesn't support     │                     │       │           │          │ │
-│ │ division            │                     │       │           │          │ │
+│ │ f"numeric_range({s… │                     │       │           │          │ │
+│ │ {self._stop!r},     │                     │       │           │          │ │
+│ │ {self._step!r})"    │                     │       │           │          │ │
+│ │ +        )          │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ __reversed__(self): │                     │       │           │          │ │
+│ │          return     │                     │       │           │          │ │
+│ │ iter(               │                     │       │           │          │ │
+│ │ @@ -2864,7 +2861,7  │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ SequenceView(Seque… │                     │       │           │          │ │
+│ │          return     │                     │       │           │          │ │
+│ │ len(self._target)   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ __repr__(self):     │                     │       │           │          │ │
+│ │ -        return     │                     │       │           │          │ │
+│ │ f'{self.__class__.… │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ f'{self.__class__.… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  class seekable:    │                     │       │           │          │ │
 │ │ ```                 │                     │       │           │          │ │
 │ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "<frozen runpy>", line 198, in _run_module_as_main
+[rank0]:   File "<frozen runpy>", line 88, in _run_code
+[rank0]:   File "/workspace/ft-lab/ftlab/train.py", line 145, in <module>
+[rank0]:     main()
+[rank0]:   File "/workspace/ft-lab/ftlab/train.py", line 115, in main
+[rank0]:     trainer.train(resume_from_checkpoint=os.environ.get("RESUME") or None)
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/transformers/trainer.py", line 1520, in train
+[rank0]:     return inner_training_loop(
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/transformers/trainer.py", line 1602, in _inner_training_loop
+[rank0]:     self._run_epoch(
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/transformers/trainer.py", line 1842, in _run_epoch
+[rank0]:     tr_loss_step = self.training_step(model, inputs, num_items_in_batch)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/trl/trainer/grpo_trainer.py", line 1512, in training_step
+[rank0]:     output = super().training_step(model, inputs, num_items_in_batch)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/transformers/trainer.py", line 2008, in training_step
+[rank0]:     inputs = self._prepare_inputs(inputs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/trl/extras/profiling.py", line 211, in wrapper
+[rank0]:     return func(self, *args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/trl/trainer/grpo_trainer.py", line 1541, in _prepare_inputs
+[rank0]:     generation_batch = self._generate_and_score_completions(generation_batch)
+[rank0]:                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/trl/trainer/grpo_trainer.py", line 2436, in _generate_and_score_completions
+[rank0]:     ) = self._generate(prompts)
+[rank0]:         ^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/trl/trainer/grpo_trainer.py", line 2223, in _generate
+[rank0]:     completion_ids, logprobs = self._generate_single_turn(
+[rank0]:                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/trl/trainer/grpo_trainer.py", line 1775, in _generate_single_turn
+[rank0]:     _, completion_ids, logprobs, _ = self.vllm_generation.generate(
+[rank0]:                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/trl/generation/vllm_generation.py", line 729, in generate
+[rank0]:     all_outputs = self.llm.generate(vllm_prompts, sampling_params=sampling_params, use_tqdm=False)
+[rank0]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/entrypoints/llm.py", line 475, in generate
+[rank0]:     return self._run_completion(
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py", line 348, in _run_completion
+[rank0]:     self._add_completion_requests(
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py", line 316, in _add_completion_requests
+[rank0]:     return self._render_and_add_requests(
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py", line 556, in _render_and_add_requests
+[rank0]:     raise e
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py", line 542, in _render_and_add_requests
+[rank0]:     for i, prompt in enumerate(prompts):
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py", line 318, in <genexpr>
+[rank0]:     self._preprocess_cmpl_one(
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py", line 152, in _preprocess_cmpl_one
+[rank0]:     (engine_input,) = self._preprocess_cmpl(
+[rank0]:                       ^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py", line 140, in _preprocess_cmpl
+[rank0]:     return renderer.render_cmpl(
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/base.py", line 1187, in render_cmpl
+[rank0]:     tok_prompts = self.tokenize_prompts(dict_prompts, tok_params)
+[rank0]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/base.py", line 731, in tokenize_prompts
+[rank0]:     return [self.tokenize_prompt(prompt, params) for prompt in prompts]
+[rank0]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/base.py", line 724, in tokenize_prompt
+[rank0]:     return self._tokenize_singleton_prompt(prompt, params)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/base.py", line 634, in _tokenize_singleton_prompt
+[rank0]:     return params.apply_post_tokenization(self.tokenizer, prompt)  # type: ignore[arg-type]
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/params.py", line 538, in apply_post_tokenization
+[rank0]:     prompt["prompt_token_ids"] = self._validate_tokens(  # type: ignore[typeddict-unknown-key]
+[rank0]:                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/params.py", line 523, in _validate_tokens
+[rank0]:     tokens = validator(tokenizer, tokens)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/workspace/venv/lib/python3.12/site-packages/vllm/renderers/params.py", line 498, in _token_len_check
+[rank0]:     raise VLLMValidationError(
+[rank0]: vllm.exceptions.VLLMValidationError: This model's maximum context length is 16384 tokens. However, you requested 0 output tokens and your prompt contains 36993 input tokens, for a total of 36993 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (parameter=input_tokens, value=36993)
+ 14%|█▍        | 17/120 [25:39<2:35:27, 90.56s/it] 
