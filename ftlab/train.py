@@ -40,7 +40,8 @@ def build_grpo_config(cfg: RunConfig, out_dir: Path):
     mik.setdefault("dtype", "bfloat16")
     grpo["model_init_kwargs"] = mik
     ctk = dict(grpo.get("chat_template_kwargs") or {})
-    if "qwen3" in cfg.model.lower():
+    from ftlab.prompting import supports_thinking
+    if supports_thinking(cfg.model):
         ctk.setdefault("enable_thinking", cfg.enable_thinking)
     grpo["chat_template_kwargs"] = ctk
     if cfg.reward_weights:

@@ -13,6 +13,7 @@ import argparse
 import json
 from pathlib import Path
 
+from ftlab.prompting import supports_thinking
 from ftlab.config import load_config
 
 
@@ -37,6 +38,11 @@ def main():
     args = SFTConfig(output_dir=str(out_dir), bf16=True, logging_steps=5, save_strategy="no", report_to=[],
                      completion_only_loss=True, **sft)
     tok = AutoTokenizer.from_pretrained(cfg.model)
+    if supports_thinking(tok):
+        # Render exactly as eval/GRPO do (prompt ends with the empty <think/> block when thinking is off),
+        # so the student never learns to open a <think> block of its own. TRL reads this column per example.
+        ctk = {"enable_thinking": cfg.enable_thinking}
+        ds = ds.map(lambda _: {"chat_template_kwargs": ctk})
     model = AutoModelForCausalLM.from_pretrained(cfg.model, torch_dtype=torch.bfloat16)
     peft = None
     if cfg.lora.enabled:

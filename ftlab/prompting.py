@@ -16,10 +16,20 @@ def make_messages(user: str, system: str | None = None) -> list[dict[str, str]]:
     return msgs
 
 
+def supports_thinking(tokenizer_or_path) -> bool:
+    """True when the chat template takes `enable_thinking` (Qwen3 family). Decided from the template text,
+    not the path: a fine-tuned copy at runs/<name>/final is still Qwen3, and matching on "qwen3" in the
+    path once left thinking ON for the SFT model's eval and GRPO (47% of completions truncated)."""
+    if isinstance(tokenizer_or_path, str):
+        from transformers import AutoTokenizer
+        tokenizer_or_path = AutoTokenizer.from_pretrained(tokenizer_or_path)
+    return "enable_thinking" in (getattr(tokenizer_or_path, "chat_template", None) or "")
+
+
 def render(tokenizer, messages: list[dict[str, str]], enable_thinking: bool = False) -> str:
     """Chat-template a message list into the generation prompt string."""
     kwargs = {}
-    if "qwen3" in getattr(tokenizer, "name_or_path", "").lower():
+    if supports_thinking(tokenizer):
         kwargs["enable_thinking"] = enable_thinking
     return tokenizer.apply_chat_template(
         messages, tokenize=False, add_generation_prompt=True, **kwargs
