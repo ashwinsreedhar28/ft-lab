@@ -31321,3 +31321,1455 @@ train rows: 260  columns: ['prompt', 'kind', 'gold_hunks', 'task_id']
 │ │ ```                │                    │       │           │            │ │
 │ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
+ 35%|███▌      | 42/120 [56:19<1:39:35, 76.61s/it]step 42  reward=-0.229  reward_std=1.534  kl=0.003  mean_length=101.906  clipped_ratio=0.000  step_time=107.286  loss=0.044  gate=-0.229
+                                                   35%|███▌      | 42/120 [56:19<1:39:35, 76.61s/it]{'loss': '0.04439', 'grad_norm': '0.2803', 'learning_rate': '1e-05', 'num_tokens': '2.485e+06', 'completions/mean_length': '101.9', 'completions/min_length': '12', 'completions/max_length': '383', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '101.9', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '383', 'rewards/gate/mean': '-0.2291', 'rewards/gate/std': '1.534', 'reward': '-0.2291', 'reward_std': '1.534', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.0625', 'review/escalate_frac': '0', 'review/mean_tokens': '101.9', 'review/unparsable_frac': '0.125', 'sampling/sampling_logp_difference/mean': '0.01901', 'sampling/sampling_logp_difference/max': '0.2747', 'sampling/importance_sampling_ratio/min': '0.1814', 'sampling/importance_sampling_ratio/mean': '0.9535', 'sampling/importance_sampling_ratio/max': '2.504', 'kl': '0.003006', 'entropy': '1.218', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '107.3', 'epoch': '0.6462'}
+╭────────────────────────────────── Step 42 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM              │ ASSISTANT           │  1.00 │      0.72 │ approve  │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "approve",          │       │           │          │ │
+│ │ production          │ "comments": []}     │       │           │          │ │
+│ │ repository. Your    │                     │       │           │          │ │
+│ │ approval merges and │                     │       │           │          │ │
+│ │ deploys the change  │                     │       │           │          │ │
+│ │ with no further     │                     │       │           │          │ │
+│ │ human review.       │                     │       │           │          │ │
+│ │ Decide:             │                     │       │           │          │ │
+│ │   approve  - you    │                     │       │           │          │ │
+│ │ are confident the   │                     │       │           │          │ │
+│ │ change is correct   │                     │       │           │          │ │
+│ │ and safe to ship.   │                     │       │           │          │ │
+│ │   block    - you    │                     │       │           │          │ │
+│ │ found a defect;     │                     │       │           │          │ │
+│ │ cite its location.  │                     │       │           │          │ │
+│ │   escalate - you    │                     │       │           │          │ │
+│ │ cannot establish    │                     │       │           │          │ │
+│ │ safety from what    │                     │       │           │          │ │
+│ │ you can see; a      │                     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ starlette           │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ docs/release-notes… │                     │       │           │          │ │
+│ │ starlette/__init__… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ docs/release-notes… │                     │       │           │          │ │
+│ │ (475 chars,         │                     │       │           │          │ │
+│ │ non-code)           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/starlette/__init… │                     │       │           │          │ │
+│ │ b/starlette/__init… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 5b60188..0f228f2    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/starlette/__init… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/starlette/__init… │                     │       │           │          │ │
+│ │ @@ -1 +1 @@         │                     │       │           │          │ │
+│ │ -__version__ =      │                     │       │           │          │ │
+│ │ "1.5.0"             │                     │       │           │          │ │
+│ │ +__version__ =      │                     │       │           │          │ │
+│ │ "1.5.1"             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.50 │     -0.54 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "more_itertools/mo… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 574,  │       │           │          │ │
+│ │ with no further     │ "line_end": 597,    │       │           │          │ │
+│ │ human review.       │ "body":             │       │           │          │ │
+│ │ Decide:             │ "sized_iterator has │       │           │          │ │
+│ │   approve  - you    │ no __iter__ method, │       │           │          │ │
+│ │ are confident the   │ thus violates pep   │       │           │          │ │
+│ │ change is correct   │ 519 (requires       │       │           │          │ │
+│ │ and safe to ship.   │ __iter__ and        │       │           │          │ │
+│ │   block    - you    │ __next__ for        │       │           │          │ │
+│ │ found a defect;     │ iterators)"}]}      │       │           │          │ │
+│ │ cite its location.  │                     │       │           │          │ │
+│ │   escalate - you    │                     │       │           │          │ │
+│ │ cannot establish    │                     │       │           │          │ │
+│ │ safety from what    │                     │       │           │          │ │
+│ │ you can see; a      │                     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ more-itertools      │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ docs/api.rst,       │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ tests/test_more.py  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ docs/api.rst (303   │                     │       │           │          │ │
+│ │ chars, non-code),   │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ (852 chars,         │                     │       │           │          │ │
+│ │ non-code)           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ tests/test_more.py… │                     │       │           │          │ │
+│ │ tests/test_more.py… │                     │       │           │          │ │
+│ │ tests/test_more.py… │                     │       │           │          │ │
+│ │ tests/test_more.py… │                     │       │           │          │ │
+│ │ tests/test_more.py… │                     │       │           │          │ │
+│ │ tests/test_more.py… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │   7c10fbd           │                     │       │           │          │ │
+│ │ 2026-01-10 Fast     │                     │       │           │          │ │
+│ │ path when *initial* │                     │       │           │          │ │
+│ │ is specified        │                     │       │           │          │ │
+│ │   3f43b98           │                     │       │           │          │ │
+│ │ 2026-01-07 Simpler  │                     │       │           │          │ │
+│ │ faster `ichunked`   │                     │       │           │          │ │
+│ │   3037252           │                     │       │           │          │ │
+│ │ 2026-01-05 Merge    │                     │       │           │          │ │
+│ │ pull request #1120  │                     │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ more-itertools/rea… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ tests/test_more.py: │                     │       │           │          │ │
+│ │   06f3181           │                     │       │           │          │ │
+│ │ 2026-01-02 Simplify │                     │       │           │          │ │
+│ │ nth_combination_wi… │                     │       │           │          │ │
+│ │ Fix incorrect       │                     │       │           │          │ │
+│ │ exception.          │                     │       │           │          │ │
+│ │   073d234           │                     │       │           │          │ │
+│ │ 2025-12-30 Fix      │                     │       │           │          │ │
+│ │ support for         │                     │       │           │          │ │
+│ │ iterators using     │                     │       │           │          │ │
+│ │ "repeat"            │                     │       │           │          │ │
+│ │   6898c23           │                     │       │           │          │ │
+│ │ 2025-12-04 Stronger │                     │       │           │          │ │
+│ │ tests with more     │                     │       │           │          │ │
+│ │ than one repeated   │                     │       │           │          │ │
+│ │ iterable            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ a6da295..2b6ad30    │                     │       │           │          │ │
+│ │ 100755              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ @@ -148,6 +148,7 @@ │                     │       │           │          │ │
+│ │ __all__ = [         │                     │       │           │          │ │
+│ │      'serialize',   │                     │       │           │          │ │
+│ │      'set_partitio… │                     │       │           │          │ │
+│ │      'side_effect', │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ 'sized_iterator',   │                     │       │           │          │ │
+│ │      'sliced',      │                     │       │           │          │ │
+│ │      'sort_togethe… │                     │       │           │          │ │
+│ │      'split_after', │                     │       │           │          │ │
+│ │ @@ -572,6 +573,39   │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ with_iter(context_… │                     │       │           │          │ │
+│ │          yield from │                     │       │           │          │ │
+│ │ iterable            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +class              │                     │       │           │          │ │
+│ │ sized_iterator:     │                     │       │           │          │ │
+│ │ +    """Wrap        │                     │       │           │          │ │
+│ │ *iterable* with an  │                     │       │           │          │ │
+│ │ iterator that also  │                     │       │           │          │ │
+│ │ implements          │                     │       │           │          │ │
+│ │ ``__len__``.        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    This is useful │                     │       │           │          │ │
+│ │ when the length of  │                     │       │           │          │ │
+│ │ an iterable is      │                     │       │           │          │ │
+│ │ known in advance    │                     │       │           │          │ │
+│ │ but                 │                     │       │           │          │ │
+│ │ +    not supported  │                     │       │           │          │ │
+│ │ by the iterable     │                     │       │           │          │ │
+│ │ itself (e.g., a     │                     │       │           │          │ │
+│ │ generator). This    │                     │       │           │          │ │
+│ │ allows              │                     │       │           │          │ │
+│ │ +    usage with     │                     │       │           │          │ │
+│ │ tools that rely on  │                     │       │           │          │ │
+│ │ ``len()``, such as  │                     │       │           │          │ │
+│ │ progress bars.      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        >>> def    │                     │       │           │          │ │
+│ │ my_generator(n):    │                     │       │           │          │ │
+│ │ +        ...        │                     │       │           │          │ │
+│ │ for i in range(n):  │                     │       │           │          │ │
+│ │ +        ...        │                     │       │           │          │ │
+│ │ yield f"Item{i}"    │                     │       │           │          │ │
+│ │ +        >>> gen =  │                     │       │           │          │ │
+│ │ my_generator(3)     │                     │       │           │          │ │
+│ │ +        >>>        │                     │       │           │          │ │
+│ │ sized_gen =         │                     │       │           │          │ │
+│ │ sized_iterator(gen, │                     │       │           │          │ │
+│ │ 3)                  │                     │       │           │          │ │
+│ │ +        >>>        │                     │       │           │          │ │
+│ │ len(sized_gen)      │                     │       │           │          │ │
+│ │ +        3          │                     │       │           │          │ │
+│ │ +        >>>        │                     │       │           │          │ │
+│ │ list(sized_gen)     │                     │       │           │          │ │
+│ │ +        ['Item0',  │                     │       │           │          │ │
+│ │ 'Item1', 'Item2']   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    """            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ __init__(self,      │                     │       │           │          │ │
+│ │ iterable, length):  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self._iterator =    │                     │       │           │          │ │
+│ │ iter(iterable)      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self._length =      │                     │       │           │          │ │
+│ │ length              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ __next__(self):     │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ next(self._iterato… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ __iter__(self):     │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ self                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ __len__(self):      │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ self._length        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │  def one(iterable,  │                     │       │           │          │ │
+│ │ too_short=None,     │                     │       │           │          │ │
+│ │ too_long=None):     │                     │       │           │          │ │
+│ │      """Return the  │                     │       │           │          │ │
+│ │ first item from     │                     │       │           │          │ │
+│ │ *iterable*, which   │                     │       │           │          │ │
+│ │ is expected to      │                     │       │           │          │ │
+│ │ contain only        │                     │       │           │          │ │
+│ │      that item.     │                     │       │           │          │ │
+│ │ Raise an exception  │                     │       │           │          │ │
+│ │ if *iterable* is    │                     │       │           │          │ │
+│ │ empty or has more   │                     │       │           │          │ │
+│ │ than one            │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_more.… │                     │       │           │          │ │
+│ │ b/tests/test_more.… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 7f8ac26..0041ff1    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_more.… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_more.… │                     │       │           │          │ │
+│ │ @@ -706,6 +706,17   │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ WithIterTests(Test… │                     │       │           │          │ │
+│ │          self.asse… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +class              │                     │       │           │          │ │
+│ │ SizedIteratorTests… │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_sized_iterato… │                     │       │           │          │ │
+│ │ +        gen = (x   │                     │       │           │          │ │
+│ │ for x in range(3))  │                     │       │           │          │ │
+│ │ +        sized_gen  │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ mi.sized_iterator(… │                     │       │           │          │ │
+│ │ 3)                  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        # The      │                     │       │           │          │ │
+│ │ sized_generator     │                     │       │           │          │ │
+│ │ should have the     │                     │       │           │          │ │
+│ │ correct length      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self.assertEqual(l… │                     │       │           │          │ │
+│ │ 3)                  │                     │       │           │          │ │
+│ │ +        # The      │                     │       │           │          │ │
+│ │ sized_generator     │                     │       │           │          │ │
+│ │ elements should be  │                     │       │           │          │ │
+│ │ the same as the     │                     │       │           │          │ │
+│ │ original            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self.assertListEqu… │                     │       │           │          │ │
+│ │ list(range(3)))     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │  class              │                     │       │           │          │ │
+│ │ OneTests(TestCase): │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ test_basic(self):   │                     │       │           │          │ │
+│ │          it =       │                     │       │           │          │ │
+│ │ iter(['item'])      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ 36%|███▌      | 43/120 [58:14<1:53:15, 88.26s/it]step 43  reward=-0.278  reward_std=2.444  kl=0.002  mean_length=85.438  clipped_ratio=0.000  step_time=110.185  loss=0.187  gate=-0.278
+                                                   36%|███▌      | 43/120 [58:14<1:53:15, 88.26s/it]{'loss': '0.1874', 'grad_norm': '0.3534', 'learning_rate': '1e-05', 'num_tokens': '2.557e+06', 'completions/mean_length': '85.44', 'completions/min_length': '12', 'completions/max_length': '300', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '85.44', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '300', 'rewards/gate/mean': '-0.2781', 'rewards/gate/std': '2.444', 'reward': '-0.2781', 'reward_std': '2.444', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.1875', 'review/escalate_frac': '0', 'review/mean_tokens': '85.44', 'review/unparsable_frac': '0.0625', 'sampling/sampling_logp_difference/mean': '0.01446', 'sampling/sampling_logp_difference/max': '0.442', 'sampling/importance_sampling_ratio/min': '0.414', 'sampling/importance_sampling_ratio/mean': '1.04', 'sampling/importance_sampling_ratio/max': '2.411', 'kl': '0.002189', 'entropy': '0.9268', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '110.2', 'epoch': '0.6615'}
+╭────────────────────────────────── Step 43 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM              │ ASSISTANT           │  1.00 │      0.26 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "more_itertools/re… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 1348, │       │           │          │ │
+│ │ with no further     │ "line_end": 1349,   │       │           │          │ │
+│ │ human review.       │ "body": "TypeError: │       │           │          │ │
+│ │ Decide:             │ 'int' object is not │       │           │          │ │
+│ │   approve  - you    │ iterable in         │       │           │          │ │
+│ │ are confident the   │ _running_median_mi… │       │           │          │ │
+│ │ change is correct   │                     │       │           │          │ │
+│ │ and safe to ship.   │                     │       │           │          │ │
+│ │   block    - you    │                     │       │           │          │ │
+│ │ found a defect;     │                     │       │           │          │ │
+│ │ cite its location.  │                     │       │           │          │ │
+│ │   escalate - you    │                     │       │           │          │ │
+│ │ cannot establish    │                     │       │           │          │ │
+│ │ safety from what    │                     │       │           │          │ │
+│ │ you can see; a      │                     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ more-itertools      │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │ tests/test_recipes… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │ (555 chars,         │                     │       │           │          │ │
+│ │ non-code)           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │ tests/test_recipes… │                     │       │           │          │ │
+│ │ tests/test_recipes… │                     │       │           │          │ │
+│ │ tests/test_recipes… │                     │       │           │          │ │
+│ │ tests/test_recipes… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ more_itertools/rec… │                     │       │           │          │ │
+│ │   6887a7b           │                     │       │           │          │ │
+│ │ 2025-07-31 Add      │                     │       │           │          │ │
+│ │ running_median      │                     │       │           │          │ │
+│ │   ca44974           │                     │       │           │          │ │
+│ │ 2025-07-15 fix      │                     │       │           │          │ │
+│ │ batched IDE/help()  │                     │       │           │          │ │
+│ │ docs                │                     │       │           │          │ │
+│ │   ef8e6a2           │                     │       │           │          │ │
+│ │ 2025-06-21          │                     │       │           │          │ │
+│ │ before_and_after    │                     │       │           │          │ │
+│ │ improvement         │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ tests/test_recipes… │                     │       │           │          │ │
+│ │   6887a7b           │                     │       │           │          │ │
+│ │ 2025-07-31 Add      │                     │       │           │          │ │
+│ │ running_median      │                     │       │           │          │ │
+│ │   dc49db5           │                     │       │           │          │ │
+│ │ 2025-02-10 A        │                     │       │           │          │ │
+│ │ regular len() will  │                     │       │           │          │ │
+│ │ suffice             │                     │       │           │          │ │
+│ │   bde66eb           │                     │       │           │          │ │
+│ │ 2025-02-10 Also     │                     │       │           │          │ │
+│ │ test against a      │                     │       │           │          │ │
+│ │ set-of-permutation… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/r… │                     │       │           │          │ │
+│ │ b/more_itertools/r… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 111c2d9..d2a6288    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/r… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/r… │                     │       │           │          │ │
+│ │ @@ -10,6 +10,7 @@   │                     │       │           │          │ │
+│ │ Some                │                     │       │           │          │ │
+│ │ backward-compatible │                     │       │           │          │ │
+│ │ usability           │                     │       │           │          │ │
+│ │ improvements have   │                     │       │           │          │ │
+│ │ been made.          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  import random      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +from bisect import │                     │       │           │          │ │
+│ │ bisect_left,        │                     │       │           │          │ │
+│ │ insort_left         │                     │       │           │          │ │
+│ │  from collections   │                     │       │           │          │ │
+│ │ import deque        │                     │       │           │          │ │
+│ │  from contextlib    │                     │       │           │          │ │
+│ │ import suppress     │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ collections.abc     │                     │       │           │          │ │
+│ │ import Sized        │                     │       │           │          │ │
+│ │ @@ -32,7 +33,7 @@   │                     │       │           │          │ │
+│ │ from itertools      │                     │       │           │          │ │
+│ │ import (            │                     │       │           │          │ │
+│ │      zip_longest,   │                     │       │           │          │ │
+│ │  )                  │                     │       │           │          │ │
+│ │  from math import   │                     │       │           │          │ │
+│ │ prod, comb, isqrt,  │                     │       │           │          │ │
+│ │ gcd                 │                     │       │           │          │ │
+│ │ -from operator      │                     │       │           │          │ │
+│ │ import mul, not_,   │                     │       │           │          │ │
+│ │ itemgetter, getitem │                     │       │           │          │ │
+│ │ +from operator      │                     │       │           │          │ │
+│ │ import mul, not_,   │                     │       │           │          │ │
+│ │ itemgetter,         │                     │       │           │          │ │
+│ │ getitem, index      │                     │       │           │          │ │
+│ │  from random import │                     │       │           │          │ │
+│ │ randrange, sample,  │                     │       │           │          │ │
+│ │ choice              │                     │       │           │          │ │
+│ │  from sys import    │                     │       │           │          │ │
+│ │ hexversion          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -1332,29         │                     │       │           │          │ │
+│ │ +1333,10 @@ def     │                     │       │           │          │ │
+│ │ multinomial(*count… │                     │       │           │          │ │
+│ │      return         │                     │       │           │          │ │
+│ │ prod(map(comb,      │                     │       │           │          │ │
+│ │ accumulate(counts), │                     │       │           │          │ │
+│ │ counts))            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -def                │                     │       │           │          │ │
+│ │ running_median(ite… │                     │       │           │          │ │
+│ │ # pragma: no cover  │                     │       │           │          │ │
+│ │ -    """Yields the  │                     │       │           │          │ │
+│ │ cumulative median   │                     │       │           │          │ │
+│ │ of values seen so   │                     │       │           │          │ │
+│ │ far.                │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ # pragma: no cover  │                     │       │           │          │ │
+│ │ +    "Non-windowed  │                     │       │           │          │ │
+│ │ running_median()    │                     │       │           │          │ │
+│ │ for Python 3.14+"   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    For example:   │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ -    >>>            │                     │       │           │          │ │
+│ │ list(running_media… │                     │       │           │          │ │
+│ │ 9.0, 4.0, 12.0,     │                     │       │           │          │ │
+│ │ 8.0, 9.0]))         │                     │       │           │          │ │
+│ │ -    [5.0, 7.0,     │                     │       │           │          │ │
+│ │ 5.0, 7.0, 8.0, 8.5] │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ -    Supports       │                     │       │           │          │ │
+│ │ numeric types such  │                     │       │           │          │ │
+│ │ as int, float,      │                     │       │           │          │ │
+│ │ Decimal, and        │                     │       │           │          │ │
+│ │ Fraction,           │                     │       │           │          │ │
+│ │ -    but not        │                     │       │           │          │ │
+│ │ complex numbers     │                     │       │           │          │ │
+│ │ which are           │                     │       │           │          │ │
+│ │ unorderable.        │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ -    On versions of │                     │       │           │          │ │
+│ │ Python prior to     │                     │       │           │          │ │
+│ │ 3.14, max-heaps are │                     │       │           │          │ │
+│ │ simulated with      │                     │       │           │          │ │
+│ │ -    negative       │                     │       │           │          │ │
+│ │ values. The         │                     │       │           │          │ │
+│ │ negation causes     │                     │       │           │          │ │
+│ │ Decimal inputs to   │                     │       │           │          │ │
+│ │ apply context       │                     │       │           │          │ │
+│ │ -    rounding,      │                     │       │           │          │ │
+│ │ making the results  │                     │       │           │          │ │
+│ │ slightly different  │                     │       │           │          │ │
+│ │ than that obtained  │                     │       │           │          │ │
+│ │ -    by             │                     │       │           │          │ │
+│ │ statistics.median(… │                     │       │           │          │ │
+│ │ -    """            │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ -    # This recipe  │                     │       │           │          │ │
+│ │ differs from the    │                     │       │           │          │ │
+│ │ one in the heapq    │                     │       │           │          │ │
+│ │ docs in that        │                     │       │           │          │ │
+│ │ -    # eliminates   │                     │       │           │          │ │
+│ │ the len() tests in  │                     │       │           │          │ │
+│ │ favor of two        │                     │       │           │          │ │
+│ │ updates per loop,   │                     │       │           │          │ │
+│ │ -    # one for the  │                     │       │           │          │ │
+│ │ even case and the   │                     │       │           │          │ │
+│ │ other for the case  │                     │       │           │          │ │
+│ │ where               │                     │       │           │          │ │
+│ │ -    # the lo       │                     │       │           │          │ │
+│ │ max-heap has one    │                     │       │           │          │ │
+│ │ more element than   │                     │       │           │          │ │
+│ │ the hi min-heap.    │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ -    read =         │                     │       │           │          │ │
+│ │ iter(iterable).__n… │                     │       │           │          │ │
+│ │ +    read =         │                     │       │           │          │ │
+│ │ iterator.__next__   │                     │       │           │          │ │
+│ │      lo = []  #     │                     │       │           │          │ │
+│ │ max-heap            │                     │       │           │          │ │
+│ │      hi = []  #     │                     │       │           │          │ │
+│ │ min-heap (same size │                     │       │           │          │ │
+│ │ as or one smaller   │                     │       │           │          │ │
+│ │ than lo)            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -1367,10         │                     │       │           │          │ │
+│ │ +1349,10 @@ def     │                     │       │           │          │ │
+│ │ running_median(ite… │                     │       │           │          │ │
+│ │ # pragma: no cover  │                     │       │           │          │ │
+│ │              yield  │                     │       │           │          │ │
+│ │ (lo[0] + hi[0]) / 2 │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -def                │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ # pragma: no cover  │                     │       │           │          │ │
+│ │ -    # Backport of  │                     │       │           │          │ │
+│ │ running_median()    │                     │       │           │          │ │
+│ │ for Python 3.13 and │                     │       │           │          │ │
+│ │ prior.              │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ # pragma: no cover  │                     │       │           │          │ │
+│ │ +    "Backport of   │                     │       │           │          │ │
+│ │ non-windowed        │                     │       │           │          │ │
+│ │ running_median()    │                     │       │           │          │ │
+│ │ for Python 3.13 and │                     │       │           │          │ │
+│ │ prior."             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    read =         │                     │       │           │          │ │
+│ │ iter(iterable).__n… │                     │       │           │          │ │
+│ │ +    read =         │                     │       │           │          │ │
+│ │ iterator.__next__   │                     │       │           │          │ │
+│ │      lo = []  #     │                     │       │           │          │ │
+│ │ max-heap (actually  │                     │       │           │          │ │
+│ │ a minheap with      │                     │       │           │          │ │
+│ │ negated values)     │                     │       │           │          │ │
+│ │      hi = []  #     │                     │       │           │          │ │
+│ │ min-heap (same size │                     │       │           │          │ │
+│ │ as or one smaller   │                     │       │           │          │ │
+│ │ than lo)            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -1383,6 +1365,72 │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ # pragma: no cover  │                     │       │           │          │ │
+│ │              yield  │                     │       │           │          │ │
+│ │ (hi[0] - lo[0]) / 2 │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -if not             │                     │       │           │          │ │
+│ │ _max_heap_availabl… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ running_median.__d… │                     │       │           │          │ │
+│ │ -    running_median │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ _sorted_window(ite… │                     │       │           │          │ │
+│ │ k):  # pragma: no   │                     │       │           │          │ │
+│ │ cover               │                     │       │           │          │ │
+│ │ +    "Yield windows │                     │       │           │          │ │
+│ │ in sorted order"    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    # This simple  │                     │       │           │          │ │
+│ │ implementation is   │                     │       │           │          │ │
+│ │ reasonably fast     │                     │       │           │          │ │
+│ │ with two O(1) deque │                     │       │           │          │ │
+│ │ +    # updates and  │                     │       │           │          │ │
+│ │ two O(log k) data   │                     │       │           │          │ │
+│ │ comparisons per     │                     │       │           │          │ │
+│ │ iteration.          │                     │       │           │          │ │
+│ │ However,            │                     │       │           │          │ │
+│ │ +    # it also has  │                     │       │           │          │ │
+│ │ two O(k) steps, a   │                     │       │           │          │ │
+│ │ list insertion and  │                     │       │           │          │ │
+│ │ a list deletion.    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    # Grant Jenks' │                     │       │           │          │ │
+│ │ work on             │                     │       │           │          │ │
+│ │ SortedCollections   │                     │       │           │          │ │
+│ │ showed that those   │                     │       │           │          │ │
+│ │ two steps           │                     │       │           │          │ │
+│ │ +    # have a very  │                     │       │           │          │ │
+│ │ low constant factor │                     │       │           │          │ │
+│ │ because they are    │                     │       │           │          │ │
+│ │ implemented with    │                     │       │           │          │ │
+│ │ +    # highly       │                     │       │           │          │ │
+│ │ optimized C         │                     │       │           │          │ │
+│ │ memmoves that shift │                     │       │           │          │ │
+│ │ the data pointers   │                     │       │           │          │ │
+│ │ without             │                     │       │           │          │ │
+│ │ +    # needing to   │                     │       │           │          │ │
+│ │ touch the           │                     │       │           │          │ │
+│ │ underlying data     │                     │       │           │          │ │
+│ │ with reference      │                     │       │           │          │ │
+│ │ counts.             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    # This         │                     │       │           │          │ │
+│ │ function could be   │                     │       │           │          │ │
+│ │ reimplemented with  │                     │       │           │          │ │
+│ │ SortedCollections,  │                     │       │           │          │ │
+│ │ blist               │                     │       │           │          │ │
+│ │ +    # some other   │                     │       │           │          │ │
+│ │ binary tree, or an  │                     │       │           │          │ │
+│ │ IndexableSkipList   │                     │       │           │          │ │
+│ │ all of which have   │                     │       │           │          │ │
+│ │ +    # O(k)         │                     │       │           │          │ │
+│ │ insertions and      │                     │       │           │          │ │
+│ │ deletions, albiet   │                     │       │           │          │ │
+│ │ with a larger       │                     │       │           │          │ │
+│ │ constant            │                     │       │           │          │ │
+│ │ +    # factor. For  │                     │       │           │          │ │
+│ │ very large window   │                     │       │           │          │ │
+│ │ sizes, this might   │                     │       │           │          │ │
+│ │ matter.             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    history =      │                     │       │           │          │ │
+│ │ deque()             │                     │       │           │          │ │
+│ │ +    window = []    │                     │       │           │          │ │
+│ │ +    for x in       │                     │       │           │          │ │
+│ │ iterator:           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ history.append(x)   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ insort_left(window, │                     │       │           │          │ │
+│ │ x)                  │                     │       │           │          │ │
+│ │ +        if         │                     │       │           │          │ │
+│ │ len(window) > k:    │                     │       │           │          │ │
+│ │ +            i =    │                     │       │           │          │ │
+│ │ bisect_left(window, │                     │       │           │          │ │
+│ │ history.popleft())  │                     │       │           │          │ │
+│ │ +            del    │                     │       │           │          │ │
+│ │ window[i]           │                     │       │           │          │ │
+│ │ +        yield      │                     │       │           │          │ │
+│ │ window              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ _running_median_wi… │                     │       │           │          │ │
+│ │ window):            │                     │       │           │          │ │
+│ │ +    "Yield median  │                     │       │           │          │ │
+│ │ of values in a      │                     │       │           │          │ │
+│ │ sliding window."    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    for data in    │                     │       │           │          │ │
+│ │ _sorted_window(ite… │                     │       │           │          │ │
+│ │ k=window):          │                     │       │           │          │ │
+│ │ +        n =        │                     │       │           │          │ │
+│ │ len(data)           │                     │       │           │          │ │
+│ │ +        if n % 2   │                     │       │           │          │ │
+│ │ == 1:               │                     │       │           │          │ │
+│ │ +            yield  │                     │       │           │          │ │
+│ │ data[n // 2]        │                     │       │           │          │ │
+│ │ +        else:      │                     │       │           │          │ │
+│ │ +            i = n  │                     │       │           │          │ │
+│ │ // 2                │                     │       │           │          │ │
+│ │ +            yield  │                     │       │           │          │ │
+│ │ (data[i - 1] +      │                     │       │           │          │ │
+│ │ data[i]) / 2        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ running_median(ite… │                     │       │           │          │ │
+│ │ *, window=None):  # │                     │       │           │          │ │
+│ │ pragma: no cover    │                     │       │           │          │ │
+│ │ +    """Cumulative  │                     │       │           │          │ │
+│ │ median of values    │                     │       │           │          │ │
+│ │ seen so far or      │                     │       │           │          │ │
+│ │ values in a sliding │                     │       │           │          │ │
+│ │ window.             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    For example:   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        >>>        │                     │       │           │          │ │
+│ │ list(running_media… │                     │       │           │          │ │
+│ │ 9.0, 4.0, 12.0,     │                     │       │           │          │ │
+│ │ 8.0, 9.0]))         │                     │       │           │          │ │
+│ │ +        [5.0, 7.0, │                     │       │           │          │ │
+│ │ 5.0, 7.0, 8.0, 8.5] │                     │       │           │          │ │
+│ │ +        >>>        │                     │       │           │          │ │
+│ │ list(running_media… │                     │       │           │          │ │
+│ │ 9.0, 4.0, 12.0,     │                     │       │           │          │ │
+│ │ 8.0, 9.0],          │                     │       │           │          │ │
+│ │ window=3))          │                     │       │           │          │ │
+│ │ +        [5.0, 7.0, │                     │       │           │          │ │
+│ │ 5.0, 9.0, 8.0, 9.0] │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    Supports       │                     │       │           │          │ │
+│ │ numeric types such  │                     │       │           │          │ │
+│ │ as int, float,      │                     │       │           │          │ │
+│ │ Decimal, or         │                     │       │           │          │ │
+│ │ Fraction,           │                     │       │           │          │ │
+│ │ +    but not        │                     │       │           │          │ │
+│ │ complex numbers     │                     │       │           │          │ │
+│ │ which are           │                     │       │           │          │ │
+│ │ unorderable.        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    On version     │                     │       │           │          │ │
+│ │ Python 3.13 and     │                     │       │           │          │ │
+│ │ prior, max-heaps    │                     │       │           │          │ │
+│ │ are simulated with  │                     │       │           │          │ │
+│ │ +    negative       │                     │       │           │          │ │
+│ │ values. The         │                     │       │           │          │ │
+│ │ negation causes     │                     │       │           │          │ │
+│ │ Decimal inputs to   │                     │       │           │          │ │
+│ │ apply context       │                     │       │           │          │ │
+│ │ +    rounding,      │                     │       │           │          │ │
+│ │ making the results  │                     │       │           │          │ │
+│ │ slightly different  │                     │       │           │          │ │
+│ │ than that obtained  │                     │       │           │          │ │
+│ │ +    by             │                     │       │           │          │ │
+│ │ statistics.median(… │                     │       │           │          │ │
+│ │ +    """            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    iterator =     │                     │       │           │          │ │
+│ │ iter(iterable)      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    if window is   │                     │       │           │          │ │
+│ │ not None:           │                     │       │           │          │ │
+│ │ +        window =   │                     │       │           │          │ │
+│ │ index(window)       │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ _running_median_wi… │                     │       │           │          │ │
+│ │ window)             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    if not         │                     │       │           │          │ │
+│ │ _max_heap_availabl… │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    return         │                     │       │           │          │ │
+│ │ _running_median_mi… │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_recip… │                     │       │           │          │ │
+│ │ b/tests/test_recip… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 2fa703d..ac7c662    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_recip… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_recip… │                     │       │           │          │ │
+│ │ @@ -1451,7 +1451,7  │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ RunningMedianTests… │                     │       │           │          │ │
+│ │              #      │                     │       │           │          │ │
+│ │ Apply unary plus to │                     │       │           │          │ │
+│ │ force context       │                     │       │           │          │ │
+│ │ rounding.           │                     │       │           │          │ │
+│ │              [+Dec… │                     │       │           │          │ │
+│ │ 500)) for _ in      │                     │       │           │          │ │
+│ │ range(500)],        │                     │       │           │          │ │
+│ │              [      │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ Fraction(random.ra… │                     │       │           │          │ │
+│ │ 500),               │                     │       │           │          │ │
+│ │ random.randrange(1… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ Fraction(random.ra… │                     │       │           │          │ │
+│ │ 500),               │                     │       │           │          │ │
+│ │ random.randrange(1, │                     │       │           │          │ │
+│ │ 500))               │                     │       │           │          │ │
+│ │                  f… │                     │       │           │          │ │
+│ │ _ in range(500)     │                     │       │           │          │ │
+│ │              ],     │                     │       │           │          │ │
+│ │          ]:         │                     │       │           │          │ │
+│ │ @@ -1463,13         │                     │       │           │          │ │
+│ │ +1463,37 @@ class   │                     │       │           │          │ │
+│ │ RunningMedianTests… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          self.asse… │                     │       │           │          │ │
+│ │ [])  # Empty input  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_vs_statistics… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ running_median =    │                     │       │           │          │ │
+│ │ mi.running_median   │                     │       │           │          │ │
+│ │ +        size = 10  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        for data   │                     │       │           │          │ │
+│ │ in [                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ random.choices(ran… │                     │       │           │          │ │
+│ │ 500), k=500),       │                     │       │           │          │ │
+│ │ +            #      │                     │       │           │          │ │
+│ │ Apply unary plus to │                     │       │           │          │ │
+│ │ force context       │                     │       │           │          │ │
+│ │ rounding.           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ [+Decimal(random.u… │                     │       │           │          │ │
+│ │ 500)) for _ in      │                     │       │           │          │ │
+│ │ range(500)],        │                     │       │           │          │ │
+│ │ +            [      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ Fraction(random.ra… │                     │       │           │          │ │
+│ │ 500),               │                     │       │           │          │ │
+│ │ random.randrange(1, │                     │       │           │          │ │
+│ │ 500))               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ for _ in range(500) │                     │       │           │          │ │
+│ │ +            ],     │                     │       │           │          │ │
+│ │ +        ]:         │                     │       │           │          │ │
+│ │ +            with   │                     │       │           │          │ │
+│ │ self.subTest(data=… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ iterator =          │                     │       │           │          │ │
+│ │ running_median(ite… │                     │       │           │          │ │
+│ │ window=size)        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ for k, rm in        │                     │       │           │          │ │
+│ │ enumerate(iterator, │                     │       │           │          │ │
+│ │ start=1):           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ expected =          │                     │       │           │          │ │
+│ │ statistics.median(… │                     │       │           │          │ │
+│ │ k - size) : k])     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self.assertEqual(r… │                     │       │           │          │ │
+│ │ expected)           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self.assertEqual(t… │                     │       │           │          │ │
+│ │ type(expected))     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self.assertEqual(l… │                     │       │           │          │ │
+│ │ [])  # Empty input  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ test_error_cases(s… │                     │       │           │          │ │
+│ │          running_m… │                     │       │           │          │ │
+│ │ = mi.running_median │                     │       │           │          │ │
+│ │          with       │                     │       │           │          │ │
+│ │ self.assertRaises(… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ list(running_media… │                     │       │           │          │ │
+│ │ # No iterable input │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ running_median(123… │                     │       │           │          │ │
+│ │ # Non-iterable      │                     │       │           │          │ │
+│ │ input               │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ self.assertRaises(… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ running_median([],  │                     │       │           │          │ │
+│ │ window='abc')  #    │                     │       │           │          │ │
+│ │ Wrong type for      │                     │       │           │          │ │
+│ │ window size         │                     │       │           │          │ │
+│ │          with       │                     │       │           │          │ │
+│ │ self.assertRaises(… │                     │       │           │          │ │
+│ │              list(… │                     │       │           │          │ │
+│ │ + 4j, 5 - 7j]))  #  │                     │       │           │          │ │
+│ │ Unorderable input   │                     │       │           │          │ │
+│ │ type                │                     │       │           │          │ │
+│ │          with       │                     │       │           │          │ │
+│ │ self.assertRaises(… │                     │       │           │          │ │
+│ │              list(  │                     │       │           │          │ │
+│ │                  r… │                     │       │           │          │ │
+│ │ 'def', 'ghi'])      │                     │       │           │          │ │
+│ │ -            )  #   │                     │       │           │          │ │
+│ │ Type that doesn't   │                     │       │           │          │ │
+│ │ support division    │                     │       │           │          │ │
+│ │ +            )  #   │                     │       │           │          │ │
+│ │ Input type that     │                     │       │           │          │ │
+│ │ doesn't support     │                     │       │           │          │ │
+│ │ division            │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -1.21 │ approve  │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "approve",          │       │           │          │ │
+│ │ production          │ "comments": []}     │       │           │          │ │
+│ │ repository. Your    │                     │       │           │          │ │
+│ │ approval merges and │                     │       │           │          │ │
+│ │ deploys the change  │                     │       │           │          │ │
+│ │ with no further     │                     │       │           │          │ │
+│ │ human review.       │                     │       │           │          │ │
+│ │ Decide:             │                     │       │           │          │ │
+│ │   approve  - you    │                     │       │           │          │ │
+│ │ are confident the   │                     │       │           │          │ │
+│ │ change is correct   │                     │       │           │          │ │
+│ │ and safe to ship.   │                     │       │           │          │ │
+│ │   block    - you    │                     │       │           │          │ │
+│ │ found a defect;     │                     │       │           │          │ │
+│ │ cite its location.  │                     │       │           │          │ │
+│ │   escalate - you    │                     │       │           │          │ │
+│ │ cannot establish    │                     │       │           │          │ │
+│ │ safety from what    │                     │       │           │          │ │
+│ │ you can see; a      │                     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ starlette           │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ docs/release-notes… │                     │       │           │          │ │
+│ │ starlette/__init__… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ docs/release-notes… │                     │       │           │          │ │
+│ │ (1314 chars,        │                     │       │           │          │ │
+│ │ non-code)           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/starlette/__init… │                     │       │           │          │ │
+│ │ b/starlette/__init… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 8583baf..f9ecada    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/starlette/__init… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/starlette/__init… │                     │       │           │          │ │
+│ │ @@ -1 +1 @@         │                     │       │           │          │ │
+│ │ -__version__ =      │                     │       │           │          │ │
+│ │ "0.46.2"            │                     │       │           │          │ │
+│ │ +__version__ =      │                     │       │           │          │ │
+│ │ "0.74.0"            │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ 37%|███▋      | 44/120 [59:50<1:54:30, 90.40s/it]step 44  reward=-0.909  reward_std=2.177  kl=0.002  mean_length=121.188  clipped_ratio=0.000  step_time=91.153  loss=0.338  gate=-0.909
+                                                   37%|███▋      | 44/120 [59:50<1:54:30, 90.40s/it]{'loss': '0.3382', 'grad_norm': '0.3368', 'learning_rate': '1e-05', 'num_tokens': '2.629e+06', 'completions/mean_length': '121.2', 'completions/min_length': '12', 'completions/max_length': '406', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '121.2', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '406', 'rewards/gate/mean': '-0.9085', 'rewards/gate/std': '2.177', 'reward': '-0.9085', 'reward_std': '2.177', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.1875', 'review/escalate_frac': '0', 'review/mean_tokens': '121.2', 'review/unparsable_frac': '0.1562', 'sampling/sampling_logp_difference/mean': '0.01909', 'sampling/sampling_logp_difference/max': '0.3539', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '1.024', 'sampling/importance_sampling_ratio/max': '1.961', 'kl': '0.001786', 'entropy': '1.374', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '91.15', 'epoch': '0.6769'}
+╭────────────────────────────────── Step 44 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.54 │ approve  │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "approve",          │       │           │          │ │
+│ │ production          │ "comments": []}     │       │           │          │ │
+│ │ repository. Your    │                     │       │           │          │ │
+│ │ approval merges and │                     │       │           │          │ │
+│ │ deploys the change  │                     │       │           │          │ │
+│ │ with no further     │                     │       │           │          │ │
+│ │ human review.       │                     │       │           │          │ │
+│ │ Decide:             │                     │       │           │          │ │
+│ │   approve  - you    │                     │       │           │          │ │
+│ │ are confident the   │                     │       │           │          │ │
+│ │ change is correct   │                     │       │           │          │ │
+│ │ and safe to ship.   │                     │       │           │          │ │
+│ │   block    - you    │                     │       │           │          │ │
+│ │ found a defect;     │                     │       │           │          │ │
+│ │ cite its location.  │                     │       │           │          │ │
+│ │   escalate - you    │                     │       │           │          │ │
+│ │ cannot establish    │                     │       │           │          │ │
+│ │ safety from what    │                     │       │           │          │ │
+│ │ you can see; a      │                     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ more-itertools      │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │   b5ebe53           │                     │       │           │          │ │
+│ │ 2026-04-22 Switch   │                     │       │           │          │ │
+│ │ from itemgetter()   │                     │       │           │          │ │
+│ │ to compress()       │                     │       │           │          │ │
+│ │   45a9b51           │                     │       │           │          │ │
+│ │ 2026-04-21          │                     │       │           │          │ │
+│ │ itemgetter() is     │                     │       │           │          │ │
+│ │ faster than a K     │                     │       │           │          │ │
+│ │ combinator lambda.  │                     │       │           │          │ │
+│ │   975c157           │                     │       │           │          │ │
+│ │ 2026-04-20 Side     │                     │       │           │          │ │
+│ │ counter             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 737b07d..3bf25ca    │                     │       │           │          │ │
+│ │ 100755              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ @@ -5374,18         │                     │       │           │          │ │
+│ │ +5374,42 @@ class   │                     │       │           │          │ │
+│ │ serialize:          │                     │       │           │          │ │
+│ │      threads.       │                     │       │           │          │ │
+│ │      """            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    __slots__ =    │                     │       │           │          │ │
+│ │ ('iterator',        │                     │       │           │          │ │
+│ │ 'lock')             │                     │       │           │          │ │
+│ │ +    __slots__ =    │                     │       │           │          │ │
+│ │ ('_iterator',       │                     │       │           │          │ │
+│ │ '_lock')            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ __init__(self,      │                     │       │           │          │ │
+│ │ iterable):          │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ self.iterator =     │                     │       │           │          │ │
+│ │ iter(iterable)      │                     │       │           │          │ │
+│ │ -        self.lock  │                     │       │           │          │ │
+│ │ = Lock()            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self._iterator =    │                     │       │           │          │ │
+│ │ iter(iterable)      │                     │       │           │          │ │
+│ │ +        self._lock │                     │       │           │          │ │
+│ │ = Lock()            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ __iter__(self):     │                     │       │           │          │ │
+│ │          return     │                     │       │           │          │ │
+│ │ self                │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ __next__(self):     │                     │       │           │          │ │
+│ │ -        with       │                     │       │           │          │ │
+│ │ self.lock:          │                     │       │           │          │ │
+│ │ -            return │                     │       │           │          │ │
+│ │ next(self.iterator) │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ self._lock:         │                     │       │           │          │ │
+│ │ +            return │                     │       │           │          │ │
+│ │ next(self._iterato… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def send(self, │                     │       │           │          │ │
+│ │ value, /):          │                     │       │           │          │ │
+│ │ +        """Send a  │                     │       │           │          │ │
+│ │ value to a          │                     │       │           │          │ │
+│ │ generator.          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        Raises     │                     │       │           │          │ │
+│ │ AttributeError if   │                     │       │           │          │ │
+│ │ not a generator.    │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ self._lock:         │                     │       │           │          │ │
+│ │ +            return │                     │       │           │          │ │
+│ │ self._iterator.sen… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ throw(self, *args): │                     │       │           │          │ │
+│ │ +        """Call    │                     │       │           │          │ │
+│ │ throw() on a        │                     │       │           │          │ │
+│ │ generator.          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        Raises     │                     │       │           │          │ │
+│ │ AttributeError if a │                     │       │           │          │ │
+│ │ generator.          │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ self._lock:         │                     │       │           │          │ │
+│ │ +            return │                     │       │           │          │ │
+│ │ self._iterator.thr… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ close(self):        │                     │       │           │          │ │
+│ │ +        """Call    │                     │       │           │          │ │
+│ │ close() on a        │                     │       │           │          │ │
+│ │ generator.          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        Raises     │                     │       │           │          │ │
+│ │ AttributeError if   │                     │       │           │          │ │
+│ │ not a generator.    │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ self._lock:         │                     │       │           │          │ │
+│ │ +            return │                     │       │           │          │ │
+│ │ self._iterator.clo… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  def                │                     │       │           │          │ │
+│ │ synchronized(func): │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.54 │ approve  │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "approve",          │       │           │          │ │
+│ │ production          │ "comments": []}     │       │           │          │ │
+│ │ repository. Your    │                     │       │           │          │ │
+│ │ approval merges and │                     │       │           │          │ │
+│ │ deploys the change  │                     │       │           │          │ │
+│ │ with no further     │                     │       │           │          │ │
+│ │ human review.       │                     │       │           │          │ │
+│ │ Decide:             │                     │       │           │          │ │
+│ │   approve  - you    │                     │       │           │          │ │
+│ │ are confident the   │                     │       │           │          │ │
+│ │ change is correct   │                     │       │           │          │ │
+│ │ and safe to ship.   │                     │       │           │          │ │
+│ │   block    - you    │                     │       │           │          │ │
+│ │ found a defect;     │                     │       │           │          │ │
+│ │ cite its location.  │                     │       │           │          │ │
+│ │   escalate - you    │                     │       │           │          │ │
+│ │ cannot establish    │                     │       │           │          │ │
+│ │ safety from what    │                     │       │           │          │ │
+│ │ you can see; a      │                     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ more-itertools      │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │   b5ebe53           │                     │       │           │          │ │
+│ │ 2026-04-22 Switch   │                     │       │           │          │ │
+│ │ from itemgetter()   │                     │       │           │          │ │
+│ │ to compress()       │                     │       │           │          │ │
+│ │   45a9b51           │                     │       │           │          │ │
+│ │ 2026-04-21          │                     │       │           │          │ │
+│ │ itemgetter() is     │                     │       │           │          │ │
+│ │ faster than a K     │                     │       │           │          │ │
+│ │ combinator lambda.  │                     │       │           │          │ │
+│ │   975c157           │                     │       │           │          │ │
+│ │ 2026-04-20 Side     │                     │       │           │          │ │
+│ │ counter             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 737b07d..3bf25ca    │                     │       │           │          │ │
+│ │ 100755              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ @@ -5374,18         │                     │       │           │          │ │
+│ │ +5374,42 @@ class   │                     │       │           │          │ │
+│ │ serialize:          │                     │       │           │          │ │
+│ │      threads.       │                     │       │           │          │ │
+│ │      """            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    __slots__ =    │                     │       │           │          │ │
+│ │ ('iterator',        │                     │       │           │          │ │
+│ │ 'lock')             │                     │       │           │          │ │
+│ │ +    __slots__ =    │                     │       │           │          │ │
+│ │ ('_iterator',       │                     │       │           │          │ │
+│ │ '_lock')            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ __init__(self,      │                     │       │           │          │ │
+│ │ iterable):          │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ self.iterator =     │                     │       │           │          │ │
+│ │ iter(iterable)      │                     │       │           │          │ │
+│ │ -        self.lock  │                     │       │           │          │ │
+│ │ = Lock()            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self._iterator =    │                     │       │           │          │ │
+│ │ iter(iterable)      │                     │       │           │          │ │
+│ │ +        self._lock │                     │       │           │          │ │
+│ │ = Lock()            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ __iter__(self):     │                     │       │           │          │ │
+│ │          return     │                     │       │           │          │ │
+│ │ self                │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ __next__(self):     │                     │       │           │          │ │
+│ │ -        with       │                     │       │           │          │ │
+│ │ self.lock:          │                     │       │           │          │ │
+│ │ -            return │                     │       │           │          │ │
+│ │ next(self.iterator) │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ self._lock:         │                     │       │           │          │ │
+│ │ +            return │                     │       │           │          │ │
+│ │ next(self._iterato… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def send(self, │                     │       │           │          │ │
+│ │ value, /):          │                     │       │           │          │ │
+│ │ +        """Send a  │                     │       │           │          │ │
+│ │ value to a          │                     │       │           │          │ │
+│ │ generator.          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        Raises     │                     │       │           │          │ │
+│ │ AttributeError if   │                     │       │           │          │ │
+│ │ not a generator.    │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ self._lock:         │                     │       │           │          │ │
+│ │ +            return │                     │       │           │          │ │
+│ │ self._iterator.sen… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ throw(self, *args): │                     │       │           │          │ │
+│ │ +        """Call    │                     │       │           │          │ │
+│ │ throw() on a        │                     │       │           │          │ │
+│ │ generator.          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        Raises     │                     │       │           │          │ │
+│ │ AttributeError if a │                     │       │           │          │ │
+│ │ generator.          │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ self._lock:         │                     │       │           │          │ │
+│ │ +            return │                     │       │           │          │ │
+│ │ self._iterator.thr… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ close(self):        │                     │       │           │          │ │
+│ │ +        """Call    │                     │       │           │          │ │
+│ │ close() on a        │                     │       │           │          │ │
+│ │ generator.          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        Raises     │                     │       │           │          │ │
+│ │ AttributeError if   │                     │       │           │          │ │
+│ │ not a generator.    │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ self._lock:         │                     │       │           │          │ │
+│ │ +            return │                     │       │           │          │ │
+│ │ self._iterator.clo… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  def                │                     │       │           │          │ │
+│ │ synchronized(func): │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
