@@ -1,400 +1,400 @@
-│ │ +                   │                     │       │           │          │ │
-│ │ mock_init.assert_c… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ test_logger_name(s… │                     │       │           │          │ │
-│ │ cr, styles,         │                     │       │           │          │ │
-│ │ padded):            │                     │       │           │          │ │
-│ │          """        │                     │       │           │          │ │
-│ │          Logger     │                     │       │           │          │ │
-│ │ names are appended  │                     │       │           │          │ │
-│ │ after the event.    │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
-│ │ SYSTEM              │ ASSISTANT           │ -0.50 │     -0.02 │ block    │ │
-│ │ You are the code    │ {"decision":        │       │           │          │ │
-│ │ review gate for a   │ "block",            │       │           │          │ │
-│ │ production          │ "comments":         │       │           │          │ │
-│ │ repository. Your    │ [{"file":           │       │           │          │ │
-│ │ approval merges and │ "pydantic/networks… │       │           │          │ │
-│ │ deploys the change  │ "line_start": 244,  │       │           │          │ │
-│ │ with no further     │ "line_end": 244,    │       │           │          │ │
-│ │ human review.       │ "body": "__lt__ is  │       │           │          │ │
-│ │ Decide:             │ implemented with    │       │           │          │ │
-│ │   approve  - you    │ return              │       │           │          │ │
-│ │ are confident the   │ NotImplemented, but │       │           │          │ │
-│ │ change is correct   │ the rest of the     │       │           │          │ │
-│ │ and safe to ship.   │ code below also     │       │           │          │ │
-│ │   block    - you    │ return              │       │           │          │ │
-│ │ found a defect;     │ NotImplemented on   │       │           │          │ │
-│ │ cite its location.  │ type mismatch. In   │       │           │          │ │
-│ │   escalate - you    │ this case, the      │       │           │          │ │
-│ │ cannot establish    │ __lt__ should       │       │           │          │ │
-│ │ safety from what    │ return              │       │           │          │ │
-│ │ you can see; a      │ NotImplemented, but │       │           │          │ │
-│ │ human must look.    │ the other operators │       │           │          │ │
-│ │ Approving a change  │ shouldn't. The      │       │           │          │ │
-│ │ that contains a     │ methods __gt__,     │       │           │          │ │
-│ │ defect is the worst │ __le__, __ge__ do   │       │           │          │ │
-│ │ outcome. Blocking a │ not appear to       │       │           │          │ │
-│ │ correct change      │ return              │       │           │          │ │
-│ │ costs an engineer's │ NotImplemented on   │       │           │          │ │
-│ │ time. Escalating is │ type mismatch, but  │       │           │          │ │
-│ │ cheap but useless   │ their names are not │       │           │          │ │
-│ │ if done for         │ correct for what    │       │           │          │ │
-│ │ everything.         │ they actually do.   │       │           │          │ │
-│ │ Respond with        │ The __lt__ must     │       │           │          │ │
-│ │ exactly one JSON    │ return              │       │           │          │ │
-│ │ object and nothing  │ NotImplemented on   │       │           │          │ │
-│ │ else:               │ type mismatch, but  │       │           │          │ │
-│ │ {"decision":        │ the __gt__ method   │       │           │          │ │
-│ │ "approve|block|esc… │ is not set in this  │       │           │          │ │
-│ │ "comments":         │ way. The crashing   │       │           │          │ │
-│ │ [{"file": "...",    │ trial could be the  │       │           │          │ │
-│ │ "line_start": N,    │ __lt__ (which sets  │       │           │          │ │
-│ │ "line_end": N,      │ NotImplemented) and │       │           │          │ │
-│ │ "body": "...",      │ __gt__ checks for   │       │           │          │ │
-│ │ "proposed_test":    │ type without it.    │       │           │          │ │
-│ │ "optional pytest    │ The __gt__ is not   │       │           │          │ │
-│ │ source"}]}          │ correctly checking  │       │           │          │ │
-│ │                     │ for type mismatch   │       │           │          │ │
-│ │ USER                │ and is _mismaking_  │       │           │          │ │
-│ │ Repository:         │ that (the correct   │       │           │          │ │
-│ │ pydantic            │ approach would be   │       │           │          │ │
-│ │ Files changed:      │ to return           │       │           │          │ │
-│ │ pydantic/networks.… │ NotImplemented for  │       │           │          │ │
-│ │ tests/test_network… │ type mismatch). So, │       │           │          │ │
-│ │                     │ implement BaseUrl's │       │           │          │ │
-│ │ Context around the  │ __lt__ and other    │       │           │          │ │
-│ │ change              │ comparisons with    │       │           │          │ │
-│ │ (mechanically       │ specs that would    │       │           │          │ │
-│ │ extracted):         │ prevent them from   │       │           │          │ │
-│ │ Changed             │ __lt__/__gt__/__le… │       │           │          │ │
-│ │ definitions:        │ comparisons with    │       │           │          │ │
-│ │ pydantic/networks.… │ other types of      │       │           │          │ │
-│ │ pydantic/networks.… │ URLs. They now      │       │           │          │ │
-│ │ pydantic/networks.… │ *should* implement  │       │           │          │ │
-│ │ pydantic/networks.… │ the correct type    │       │           │          │ │
-│ │ pydantic/networks.… │ checking and should │       │           │          │ │
-│ │ pydantic/networks.… │ return              │       │           │          │ │
-│ │ pydantic/networks.… │ NotImplemented on   │       │           │          │ │
-│ │ tests/test_network… │ type mismatch, but  │       │           │          │ │
-│ │ tests/test_network… │ they currently      │       │           │          │ │
-│ │ tests/test_network… │ don't. The __lt__   │       │           │          │ │
-│ │ tests/test_network… │ returns             │       │           │          │ │
-│ │ tests/test_network… │ NotImplemented, but │       │           │          │ │
-│ │ Callers elsewhere   │ the other           │       │           │          │ │
-│ │ (file:line):        │ comparisons do not. │       │           │          │ │
-│ │   pydantic-core/te… │ The implementation  │       │           │          │ │
-│ │ class               │ of __lt__ is        │       │           │          │ │
-│ │ SubModel(Model):    │ correct, but the    │       │           │          │ │
-│ │   pydantic-core/te… │ others are not.     │       │           │          │ │
-│ │ dc = SubModel(x=1,  │ Hence, __gt__ has   │       │           │          │ │
-│ │ y='a', x2=2,        │ is not correctly    │       │           │          │ │
-│ │ y2='b')             │ returning           │       │           │          │ │
-│ │   pydantic-core/te… │ NotImplemented and  │       │           │          │ │
-│ │ class               │ is could be broken. │       │           │          │ │
-│ │ SubModel(Model):    │ The change is       │       │           │          │ │
-│ │   pydantic-core/te… │ broken."}]}         │       │           │          │ │
-│ │ dc = SubModel(x=1,  │                     │       │           │          │ │
-│ │ y='a', x2=2,        │                     │       │           │          │ │
-│ │ y2='b')             │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ BasicSubModel(Basi… │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ assert              │                     │       │           │          │ │
-│ │ s.to_python(BasicS… │                     │       │           │          │ │
-│ │ bar=b'more')) ==    │                     │       │           │          │ │
-│ │ IsStrictDict(foo=1, │                     │       │           │          │ │
-│ │ bar=b'more')        │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ assert              │                     │       │           │          │ │
-│ │ s.to_python(BasicS… │                     │       │           │          │ │
-│ │ foo=1, c=3),        │                     │       │           │          │ │
-│ │ mode='json') ==     │                     │       │           │          │ │
-│ │ IsStrictDict(bar='… │                     │       │           │          │ │
-│ │ foo=1)              │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ assert              │                     │       │           │          │ │
-│ │ json.loads(s.to_js… │                     │       │           │          │ │
-│ │ foo=1, c=3))) ==    │                     │       │           │          │ │
-│ │ {'bar': 'more',     │                     │       │           │          │ │
-│ │ 'foo': 1}           │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ # class             │                     │       │           │          │ │
-│ │ SubSubModel(BaseMo… │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ # class             │                     │       │           │          │ │
-│ │ SubModel(BaseModel… │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ RootSubModel(RootM… │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ assert              │                     │       │           │          │ │
-│ │ s.to_python(RootSu… │                     │       │           │          │ │
-│ │ == 1                │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ assert              │                     │       │           │          │ │
-│ │ json.loads(s.to_js… │                     │       │           │          │ │
-│ │ == 1                │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ SubModel(Model):    │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ MySubModel(MyModel… │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ m2 = MySubModel()   │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ MySubModel(MyModel… │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ m2 = MySubModel()   │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ m4 = MySubModel()   │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ MySubModel(MyModel… │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ m3 = MySubModel()   │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ MySubModel(MyModel… │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ m3 = MySubModel()   │                     │       │           │          │ │
-│ │   pydantic-core/te… │                     │       │           │          │ │
-│ │ m5 = MySubModel()   │                     │       │           │          │ │
-│ │   tests/test_compu… │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ MySubModel(MyModel… │                     │       │           │          │ │
-│ │ Recent history of   │                     │       │           │          │ │
-│ │ pydantic/networks.… │                     │       │           │          │ │
-│ │   be3e4d17          │                     │       │           │          │ │
-│ │ 2026-06-29 Allow    │                     │       │           │          │ │
-│ │ periods in unquoted │                     │       │           │          │ │
-│ │ `NameEmail` display │                     │       │           │          │ │
-│ │ names (#13206)      │                     │       │           │          │ │
-│ │   718ef06e          │                     │       │           │          │ │
-│ │ 2026-06-05 Fix      │                     │       │           │          │ │
-│ │ missing period      │                     │       │           │          │ │
-│ │ after 'e.g' in      │                     │       │           │          │ │
-│ │ docstrings and      │                     │       │           │          │ │
-│ │ grammar in docs     │                     │       │           │          │ │
-│ │ (#13283)            │                     │       │           │          │ │
-│ │   b36eaeb4          │                     │       │           │          │ │
-│ │ 2026-04-15 Drop     │                     │       │           │          │ │
-│ │ support for Python  │                     │       │           │          │ │
-│ │ 3.9 (#13070)        │                     │       │           │          │ │
-│ │ Recent history of   │                     │       │           │          │ │
-│ │ tests/test_network… │                     │       │           │          │ │
-│ │   be3e4d17          │                     │       │           │          │ │
-│ │ 2026-06-29 Allow    │                     │       │           │          │ │
-│ │ periods in unquoted │                     │       │           │          │ │
-│ │ `NameEmail` display │                     │       │           │          │ │
-│ │ names (#13206)      │                     │       │           │          │ │
-│ │   b9715628          │                     │       │           │          │ │
-│ │ 2026-04-30 Upgrade  │                     │       │           │          │ │
-│ │ to pytest 9, use    │                     │       │           │          │ │
-│ │ strict mode         │                     │       │           │          │ │
-│ │ (#13110)            │                     │       │           │          │ │
-│ │   b36eaeb4          │                     │       │           │          │ │
-│ │ 2026-04-15 Drop     │                     │       │           │          │ │
-│ │ support for Python  │                     │       │           │          │ │
-│ │ 3.9 (#13070)        │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Diff:               │                     │       │           │          │ │
-│ │ ```diff             │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/pydantic/network… │                     │       │           │          │ │
-│ │ b/pydantic/network… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 59bb0c6d..a0155e1b  │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/pydantic/network… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/pydantic/network… │                     │       │           │          │ │
-│ │ @@ -241,16 +241,24  │                     │       │           │          │ │
-│ │ @@ class _BaseUrl:  │                     │       │           │          │ │
-│ │          return     │                     │       │           │          │ │
-│ │ self.__class__ is   │                     │       │           │          │ │
-│ │ other.__class__ and │                     │       │           │          │ │
-│ │ self._url ==        │                     │       │           │          │ │
-│ │ other._url          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ __lt__(self, other: │                     │       │           │          │ │
-│ │ Any) -> bool:       │                     │       │           │          │ │
-│ │ -        return     │                     │       │           │          │ │
-│ │ self.__class__ is   │                     │       │           │          │ │
-│ │ other.__class__ and │                     │       │           │          │ │
-│ │ self._url <         │                     │       │           │          │ │
-│ │ other._url          │                     │       │           │          │ │
-│ │ +        if         │                     │       │           │          │ │
-│ │ self.__class__ is   │                     │       │           │          │ │
-│ │ not                 │                     │       │           │          │ │
-│ │ other.__class__:    │                     │       │           │          │ │
-│ │ +            return │                     │       │           │          │ │
-│ │ NotImplemented      │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ self._url <         │                     │       │           │          │ │
-│ │ other._url          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ __gt__(self, other: │                     │       │           │          │ │
-│ │ Any) -> bool:       │                     │       │           │          │ │
-│ │ -        return     │                     │       │           │          │ │
-│ │ self.__class__ is   │                     │       │           │          │ │
-│ │ other.__class__ and │                     │       │           │          │ │
-│ │ self._url >         │                     │       │           │          │ │
-│ │ other._url          │                     │       │           │          │ │
-│ │ +        if         │                     │       │           │          │ │
-│ │ self.__class__ is   │                     │       │           │          │ │
-│ │ not                 │                     │       │           │          │ │
-│ │ other.__class__:    │                     │       │           │          │ │
-│ │ +            return │                     │       │           │          │ │
-│ │ NotImplemented      │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ self._url >         │                     │       │           │          │ │
-│ │ other._url          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ __le__(self, other: │                     │       │           │          │ │
-│ │ Any) -> bool:       │                     │       │           │          │ │
-│ │ -        return     │                     │       │           │          │ │
-│ │ self.__class__ is   │                     │       │           │          │ │
-│ │ other.__class__ and │                     │       │           │          │ │
-│ │ self._url <=        │                     │       │           │          │ │
-│ │ other._url          │                     │       │           │          │ │
-│ │ +        if         │                     │       │           │          │ │
-│ │ self.__class__ is   │                     │       │           │          │ │
-│ │ not                 │                     │       │           │          │ │
-│ │ other.__class__:    │                     │       │           │          │ │
-│ │ +            return │                     │       │           │          │ │
-│ │ NotImplemented      │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ self._url <=        │                     │       │           │          │ │
-│ │ other._url          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ __ge__(self, other: │                     │       │           │          │ │
-│ │ Any) -> bool:       │                     │       │           │          │ │
-│ │ -        return     │                     │       │           │          │ │
-│ │ self.__class__ is   │                     │       │           │          │ │
-│ │ other.__class__ and │                     │       │           │          │ │
-│ │ self._url >=        │                     │       │           │          │ │
-│ │ other._url          │                     │       │           │          │ │
-│ │ +        if         │                     │       │           │          │ │
-│ │ self.__class__ is   │                     │       │           │          │ │
-│ │ not                 │                     │       │           │          │ │
-│ │ other.__class__:    │                     │       │           │          │ │
-│ │ +            return │                     │       │           │          │ │
-│ │ NotImplemented      │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ self._url >=        │                     │       │           │          │ │
-│ │ other._url          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ __hash__(self) ->   │                     │       │           │          │ │
-│ │ int:                │                     │       │           │          │ │
-│ │          return     │                     │       │           │          │ │
-│ │ hash(self._url)     │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_netwo… │                     │       │           │          │ │
-│ │ b/tests/test_netwo… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ ae25de2c..d9235c84  │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/tests/test_netwo… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_netwo… │                     │       │           │          │ │
-│ │ @@ -1,4 +1,5 @@     │                     │       │           │          │ │
-│ │  import json        │                     │       │           │          │ │
-│ │ +import operator    │                     │       │           │          │ │
-│ │  from typing import │                     │       │           │          │ │
-│ │ Annotated, Any      │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  import pytest      │                     │       │           │          │ │
-│ │ @@ -1182,6 +1183,27 │                     │       │           │          │ │
-│ │ @@ def              │                     │       │           │          │ │
-│ │ test_any_url_compa… │                     │       │           │          │ │
-│ │ -> None:            │                     │       │           │          │ │
-│ │      assert         │                     │       │           │          │ │
-│ │ second_url >=       │                     │       │           │          │ │
-│ │ first_url           │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ +@pytest.mark.para… │                     │       │           │          │ │
-│ │ ['https://a.com',   │                     │       │           │          │ │
-│ │ 5, None,            │                     │       │           │          │ │
-│ │ HttpUrl('https://a… │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ test_any_url_order… │                     │       │           │          │ │
-│ │ Any) -> None:       │                     │       │           │          │ │
-│ │ +    """Ordering    │                     │       │           │          │ │
-│ │ against a different │                     │       │           │          │ │
-│ │ type is             │                     │       │           │          │ │
-│ │ unsupported, rather │                     │       │           │          │ │
-│ │ than silently       │                     │       │           │          │ │
-│ │ `False`."""         │                     │       │           │          │ │
-│ │ +    url =          │                     │       │           │          │ │
-│ │ AnyUrl('https://a.… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    for op in      │                     │       │           │          │ │
-│ │ (operator.lt,       │                     │       │           │          │ │
-│ │ operator.gt,        │                     │       │           │          │ │
-│ │ operator.le,        │                     │       │           │          │ │
-│ │ operator.ge):       │                     │       │           │          │ │
-│ │ +        with       │                     │       │           │          │ │
-│ │ pytest.raises(Type… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ op(url, other)      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ test_any_url_order… │                     │       │           │          │ │
-│ │ -> None:            │                     │       │           │          │ │
-│ │ +    """`sorted()`  │                     │       │           │          │ │
-│ │ on mixed URL types  │                     │       │           │          │ │
-│ │ raises instead of   │                     │       │           │          │ │
-│ │ returning a         │                     │       │           │          │ │
-│ │ meaningless         │                     │       │           │          │ │
-│ │ order."""           │                     │       │           │          │ │
-│ │ +    with           │                     │       │           │          │ │
-│ │ pytest.raises(Type… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ sorted([AnyUrl('ht… │                     │       │           │          │ │
-│ │ HttpUrl('https://b… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    # Equality is  │                     │       │           │          │ │
-│ │ unaffected: unlike  │                     │       │           │          │ │
-│ │ ordering, comparing │                     │       │           │          │ │
-│ │ against another     │                     │       │           │          │ │
-│ │ type is well        │                     │       │           │          │ │
-│ │ defined.            │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ AnyUrl('https://a.… │                     │       │           │          │ │
-│ │ !=                  │                     │       │           │          │ │
-│ │ HttpUrl('https://a… │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ AnyUrl('https://a.… │                     │       │           │          │ │
-│ │ != 'https://a.com'  │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ AnyUrl('https://a.… │                     │       │           │          │ │
-│ │ ==                  │                     │       │           │          │ │
-│ │ AnyUrl('https://a.… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │  def                │                     │       │           │          │ │
-│ │ test_max_length_ba… │                     │       │           │          │ │
-│ │ -> None:            │                     │       │           │          │ │
-│ │      class          │                     │       │           │          │ │
-│ │ Model(BaseModel):   │                     │       │           │          │ │
-│ │          url:       │                     │       │           │          │ │
-│ │ AnyUrl =            │                     │       │           │          │ │
-│ │ Field(max_length=2… │                     │       │           │          │ │
+│ │ str):               │                     │       │           │          │ │
+│ │          assert     │                     │       │           │          │ │
+│ │ deprecated in       │                     │       │           │          │ │
+│ │ result.output       │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
 │ │ ```                 │                     │       │           │          │ │
 │ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ 31%|███       | 37/120 [49:55<1:29:19, 64.57s/it]step 37  reward=-0.540  reward_std=2.593  kl=0.001  mean_length=111.312  clipped_ratio=0.031  step_time=29.762  loss=-0.378  gate=-0.540
+                                                   31%|███       | 37/120 [49:55<1:29:19, 64.57s/it]{'loss': '-0.3777', 'grad_norm': '0.2558', 'learning_rate': '1e-05', 'num_tokens': '2.189e+06', 'completions/mean_length': '111.3', 'completions/min_length': '12', 'completions/max_length': '500', 'completions/clipped_ratio': '0.03125', 'completions/mean_terminated_length': '98.77', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '282', 'rewards/gate/mean': '-0.5399', 'rewards/gate/std': '2.593', 'reward': '-0.5399', 'reward_std': '2.593', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.2188', 'review/escalate_frac': '0', 'review/mean_tokens': '111.3', 'review/unparsable_frac': '0.1875', 'sampling/sampling_logp_difference/mean': '0.01846', 'sampling/sampling_logp_difference/max': '0.2648', 'sampling/importance_sampling_ratio/min': '0.3788', 'sampling/importance_sampling_ratio/mean': '1.042', 'sampling/importance_sampling_ratio/max': '1.708', 'kl': '0.001353', 'entropy': '1.288', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '29.76', 'epoch': '0.5692'}
+╭────────────────────────────────── Step 37 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┓ │
+│ ┃ Prompt             ┃ Completion         ┃  gate ┃ Advantage ┃ decision   ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━┩ │
+│ │ SYSTEM             │ ASSISTANT          │ -5.00 │     -1.14 │ approve    │ │
+│ │ You are the code   │ {"decision":       │       │           │            │ │
+│ │ review gate for a  │ "approve",         │       │           │            │ │
+│ │ production         │ "comments": []}    │       │           │            │ │
+│ │ repository. Your   │                    │       │           │            │ │
+│ │ approval merges    │                    │       │           │            │ │
+│ │ and deploys the    │                    │       │           │            │ │
+│ │ change with no     │                    │       │           │            │ │
+│ │ further human      │                    │       │           │            │ │
+│ │ review. Decide:    │                    │       │           │            │ │
+│ │   approve  - you   │                    │       │           │            │ │
+│ │ are confident the  │                    │       │           │            │ │
+│ │ change is correct  │                    │       │           │            │ │
+│ │ and safe to ship.  │                    │       │           │            │ │
+│ │   block    - you   │                    │       │           │            │ │
+│ │ found a defect;    │                    │       │           │            │ │
+│ │ cite its location. │                    │       │           │            │ │
+│ │   escalate - you   │                    │       │           │            │ │
+│ │ cannot establish   │                    │       │           │            │ │
+│ │ safety from what   │                    │       │           │            │ │
+│ │ you can see; a     │                    │       │           │            │ │
+│ │ human must look.   │                    │       │           │            │ │
+│ │ Approving a change │                    │       │           │            │ │
+│ │ that contains a    │                    │       │           │            │ │
+│ │ defect is the      │                    │       │           │            │ │
+│ │ worst outcome.     │                    │       │           │            │ │
+│ │ Blocking a correct │                    │       │           │            │ │
+│ │ change costs an    │                    │       │           │            │ │
+│ │ engineer's time.   │                    │       │           │            │ │
+│ │ Escalating is      │                    │       │           │            │ │
+│ │ cheap but useless  │                    │       │           │            │ │
+│ │ if done for        │                    │       │           │            │ │
+│ │ everything.        │                    │       │           │            │ │
+│ │ Respond with       │                    │       │           │            │ │
+│ │ exactly one JSON   │                    │       │           │            │ │
+│ │ object and nothing │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ {"decision":       │                    │       │           │            │ │
+│ │ "approve|block|es… │                    │       │           │            │ │
+│ │ "comments":        │                    │       │           │            │ │
+│ │ [{"file": "...",   │                    │       │           │            │ │
+│ │ "line_start": N,   │                    │       │           │            │ │
+│ │ "line_end": N,     │                    │       │           │            │ │
+│ │ "body": "...",     │                    │       │           │            │ │
+│ │ "proposed_test":   │                    │       │           │            │ │
+│ │ "optional pytest   │                    │       │           │            │ │
+│ │ source"}]}         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ USER               │                    │       │           │            │ │
+│ │ Repository:        │                    │       │           │            │ │
+│ │ more-itertools     │                    │       │           │            │ │
+│ │ Files changed:     │                    │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │ tests/test_more.py │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Not shown          │                    │       │           │            │ │
+│ │ (non-code or over  │                    │       │           │            │ │
+│ │ budget; treat as   │                    │       │           │            │ │
+│ │ unreviewed):       │                    │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │ (709 chars,        │                    │       │           │            │ │
+│ │ non-code)          │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Context around the │                    │       │           │            │ │
+│ │ change             │                    │       │           │            │ │
+│ │ (mechanically      │                    │       │           │            │ │
+│ │ extracted):        │                    │       │           │            │ │
+│ │ Changed            │                    │       │           │            │ │
+│ │ definitions:       │                    │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │   7b18730          │                    │       │           │            │ │
+│ │ 2025-07-28 Fix     │                    │       │           │            │ │
+│ │ linespacing        │                    │       │           │            │ │
+│ │   e048f12          │                    │       │           │            │ │
+│ │ 2025-07-28 Merge   │                    │       │           │            │ │
+│ │ pull request #1036 │                    │       │           │            │ │
+│ │ from               │                    │       │           │            │ │
+│ │ rhettinger/nth_pr… │                    │       │           │            │ │
+│ │   113f3e6          │                    │       │           │            │ │
+│ │ 2025-07-28 Remove  │                    │       │           │            │ │
+│ │ future warning     │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │   cca3294          │                    │       │           │            │ │
+│ │ 2025-07-13 fix     │                    │       │           │            │ │
+│ │ last() when        │                    │       │           │            │ │
+│ │ __reversed__ is    │                    │       │           │            │ │
+│ │ None               │                    │       │           │            │ │
+│ │   1a789ff          │                    │       │           │            │ │
+│ │ 2025-05-31 Remove  │                    │       │           │            │ │
+│ │ obsolete comments  │                    │       │           │            │ │
+│ │ on potential       │                    │       │           │            │ │
+│ │ improvement        │                    │       │           │            │ │
+│ │   a16e9c1          │                    │       │           │            │ │
+│ │ 2025-05-31 Improve │                    │       │           │            │ │
+│ │ islice_extended    │                    │       │           │            │ │
+│ │ memory usage when  │                    │       │           │            │ │
+│ │ stop<0 and step>0  │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Diff:              │                    │       │           │            │ │
+│ │ ```diff            │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ d9e1113..842d621   │                    │       │           │            │ │
+│ │ 100755             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ @@ -104,6 +104,7   │                    │       │           │            │ │
+│ │ @@ __all__ = [     │                    │       │           │            │ │
+│ │      'interleave', │                    │       │           │            │ │
+│ │      'interleave_… │                    │       │           │            │ │
+│ │      'interleave_… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ 'interleave_rando… │                    │       │           │            │ │
+│ │      'intersperse… │                    │       │           │            │ │
+│ │      'is_sorted',  │                    │       │           │            │ │
+│ │      'islice_exte… │                    │       │           │            │ │
+│ │ @@ -1316,6         │                    │       │           │            │ │
+│ │ +1317,26 @@ def    │                    │       │           │            │ │
+│ │ interleave_evenly… │                    │       │           │            │ │
+│ │ lengths=None):     │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │ += delta_primary   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ interleave_random… │                    │       │           │            │ │
+│ │ +    """Return a   │                    │       │           │            │ │
+│ │ new iterable       │                    │       │           │            │ │
+│ │ randomly selecting │                    │       │           │            │ │
+│ │ from each          │                    │       │           │            │ │
+│ │ iterable,          │                    │       │           │            │ │
+│ │ +    until all     │                    │       │           │            │ │
+│ │ iterables are      │                    │       │           │            │ │
+│ │ exhausted.         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    The relative  │                    │       │           │            │ │
+│ │ order of the       │                    │       │           │            │ │
+│ │ elements in each   │                    │       │           │            │ │
+│ │ iterable is        │                    │       │           │            │ │
+│ │ preserved,         │                    │       │           │            │ │
+│ │ +    but the order │                    │       │           │            │ │
+│ │ with respect to    │                    │       │           │            │ │
+│ │ other iterables is │                    │       │           │            │ │
+│ │ randomized.        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        >>>       │                    │       │           │            │ │
+│ │ iterables = [1, 2, │                    │       │           │            │ │
+│ │ 3], 'abc', (True,  │                    │       │           │            │ │
+│ │ False, None)       │                    │       │           │            │ │
+│ │ +        >>>       │                    │       │           │            │ │
+│ │ list(interleave_r… │                    │       │           │            │ │
+│ │ # doctest: +SKIP   │                    │       │           │            │ │
+│ │ +        ['a',     │                    │       │           │            │ │
+│ │ 'b', 1, 'c', True, │                    │       │           │            │ │
+│ │ True, None, 2, 3]  │                    │       │           │            │ │
+│ │ +    """           │                    │       │           │            │ │
+│ │ +    iterators =   │                    │       │           │            │ │
+│ │ [iter(e) for e in  │                    │       │           │            │ │
+│ │ iterables]         │                    │       │           │            │ │
+│ │ +    while         │                    │       │           │            │ │
+│ │ iterators:         │                    │       │           │            │ │
+│ │ +        idx =     │                    │       │           │            │ │
+│ │ randrange(len(ite… │                    │       │           │            │ │
+│ │ +        try:      │                    │       │           │            │ │
+│ │ +            yield │                    │       │           │            │ │
+│ │ next(iterators[id… │                    │       │           │            │ │
+│ │ +        except    │                    │       │           │            │ │
+│ │ StopIteration:     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ iterators.pop(idx) │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ collapse(iterable, │                    │       │           │            │ │
+│ │ base_type=None,    │                    │       │           │            │ │
+│ │ levels=None):      │                    │       │           │            │ │
+│ │      """Flatten an │                    │       │           │            │ │
+│ │ iterable with      │                    │       │           │            │ │
+│ │ multiple levels of │                    │       │           │            │ │
+│ │ nesting (e.g., a   │                    │       │           │            │ │
+│ │ list of            │                    │       │           │            │ │
+│ │      lists of      │                    │       │           │            │ │
+│ │ tuples) into       │                    │       │           │            │ │
+│ │ non-iterable       │                    │       │           │            │ │
+│ │ types.             │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_more… │                    │       │           │            │ │
+│ │ b/tests/test_more… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 03f6d65..fd8afc2   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_more… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_more… │                    │       │           │            │ │
+│ │ @@ -1214,6         │                    │       │           │            │ │
+│ │ +1214,42 @@ class  │                    │       │           │            │ │
+│ │ InterleaveEvenlyT… │                    │       │           │            │ │
+│ │              list… │                    │       │           │            │ │
+│ │ lengths=lengths))  │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +class             │                    │       │           │            │ │
+│ │ InterleaveRandoml… │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_basic(self):  │                    │       │           │            │ │
+│ │ +        seed(0)   │                    │       │           │            │ │
+│ │ # For              │                    │       │           │            │ │
+│ │ reproducibility    │                    │       │           │            │ │
+│ │ +        iterables │                    │       │           │            │ │
+│ │ = [1, 2, 3],       │                    │       │           │            │ │
+│ │ 'abc', (True,      │                    │       │           │            │ │
+│ │ False, None)       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.assertEqual(  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ list(mi.interleav… │                    │       │           │            │ │
+│ │ +            ['a', │                    │       │           │            │ │
+│ │ 'b', 1, 'c', True, │                    │       │           │            │ │
+│ │ False, None, 2,    │                    │       │           │            │ │
+│ │ 3],                │                    │       │           │            │ │
+│ │ +        )         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_some_empty(s… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.assertEqual(  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ list(mi.interleav… │                    │       │           │            │ │
+│ │ 2, 3], [], [])),   │                    │       │           │            │ │
+│ │ +            [1,   │                    │       │           │            │ │
+│ │ 2, 3],             │                    │       │           │            │ │
+│ │ +        )         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.assertEqual(  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ list(mi.interleav… │                    │       │           │            │ │
+│ │ [1, 2, 3], [])),   │                    │       │           │            │ │
+│ │ +            [1,   │                    │       │           │            │ │
+│ │ 2, 3],             │                    │       │           │            │ │
+│ │ +        )         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.assertEqual(  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ list(mi.interleav… │                    │       │           │            │ │
+│ │ [], [1, 2, 3])),   │                    │       │           │            │ │
+│ │ +            [1,   │                    │       │           │            │ │
+│ │ 2, 3],             │                    │       │           │            │ │
+│ │ +        )         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_all_empty(se… │                    │       │           │            │ │
+│ │ +        iterables │                    │       │           │            │ │
+│ │ = [], [], []       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.assertEqual(… │                    │       │           │            │ │
+│ │ [])                │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_no_args(self… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.assertEqual(… │                    │       │           │            │ │
+│ │ [])                │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_bad_type(sel… │                    │       │           │            │ │
+│ │ +        # Should  │                    │       │           │            │ │
+│ │ raise TypeError if │                    │       │           │            │ │
+│ │ not all arguments  │                    │       │           │            │ │
+│ │ are iterable       │                    │       │           │            │ │
+│ │ +        with      │                    │       │           │            │ │
+│ │ self.assertRaises… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ list(mi.interleav… │                    │       │           │            │ │
+│ │ [2, 3], 'abc'))    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │  class             │                    │       │           │            │ │
+│ │ TestCollapse(Test… │                    │       │           │            │ │
+│ │      """Tests for  │                    │       │           │            │ │
+│ │ ``collapse()``"""  │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │ -1.20 │     -0.51 │ unparsable │ │
+│ │ You are the code   │ {"decision":       │       │           │            │ │
+│ │ review gate for a  │ "block",           │       │           │            │ │
+│ │ production         │ "comments":        │       │           │            │ │
+│ │ repository. Your   │ [{"file":          │       │           │            │ │
+│ │ approval merges    │ "starlette/__init… │       │           │            │ │
+│ │ and deploys the    │ "line_start": 1,   │       │           │            │ │
+│ │ change with no     │ "line_end": 1,     │       │           │            │ │
+│ │ further human      │ "body": "Minor     │       │           │            │ │
+│ │ review. Decide:    │ version bump 1.5.0 │       │           │            │ │
+│ │   approve  - you   │ to 1.15.1 is       │       │           │            │ │
+│ │ are confident the  │ visually incorrect │       │           │            │ │
+│ │ change is correct  │ (1 vs 1.15.1),     │       │           │            │ │
+│ │ and safe to ship.  │ missing compliant  │       │           │            │ │
+│ │   block    - you   │ Guarded Syntax,    │       │           │            │ │
+│ │ found a defect;    │ could introduce    │       │           │            │ │
+│ │ cite its location. │ breaking changes   │       │           │            │ │
+│ │   escalate - you   │ no test for. Add   │       │           │            │ │
+│ │ cannot establish   │ 'str' to           │       │           │            │ │
+│ │ safety from what   │ __version__        │       │           │            │ │
+│ │ you can see; a     │ proponents are     │       │           │            │ │
+│ │ human must look.   │ zero. Cree them,   │       │           │            │ │
+│ │ Approving a change │ as قريب            │       │           │            │ │
+│ │ that contains a    │ Irrelevant. Note:  │       │           │            │ │
+│ │ defect is the      │ ER, but "0.15.2"   │       │           │            │ │
+│ │ worst outcome.     │ is also W. Let's   │       │           │            │ │
+│ │ Blocking a correct │ not tear up the    │       │           │            │ │
+│ │ change costs an    │ tires. 1.15.1 is   │       │           │            │ │
+│ │ engineer's time.   │ requested by       │       │           │            │ │
+│ │ Escalating is      │ 0.15.2."}]}        │       │           │            │ │
+│ │ cheap but useless  │                    │       │           │            │ │
+│ │ if done for        │                    │       │           │            │ │
+│ │ everything.        │                    │       │           │            │ │
+│ │ Respond with       │                    │       │           │            │ │
+│ │ exactly one JSON   │                    │       │           │            │ │
+│ │ object and nothing │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ {"decision":       │                    │       │           │            │ │
+│ │ "approve|block|es… │                    │       │           │            │ │
+│ │ "comments":        │                    │       │           │            │ │
+│ │ [{"file": "...",   │                    │       │           │            │ │
+│ │ "line_start": N,   │                    │       │           │            │ │
+│ │ "line_end": N,     │                    │       │           │            │ │
+│ │ "body": "...",     │                    │       │           │            │ │
+│ │ "proposed_test":   │                    │       │           │            │ │
+│ │ "optional pytest   │                    │       │           │            │ │
+│ │ source"}]}         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ USER               │                    │       │           │            │ │
+│ │ Repository:        │                    │       │           │            │ │
+│ │ starlette          │                    │       │           │            │ │
+│ │ Files changed:     │                    │       │           │            │ │
+│ │ docs/release-note… │                    │       │           │            │ │
+│ │ starlette/__init_… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Not shown          │                    │       │           │            │ │
+│ │ (non-code or over  │                    │       │           │            │ │
+│ │ budget; treat as   │                    │       │           │            │ │
+│ │ unreviewed):       │                    │       │           │            │ │
+│ │ docs/release-note… │                    │       │           │            │ │
+│ │ (475 chars,        │                    │       │           │            │ │
+│ │ non-code)          │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Diff:              │                    │       │           │            │ │
+│ │ ```diff            │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/starlette/__ini… │                    │       │           │            │ │
+│ │ b/starlette/__ini… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 5b60188..8b0c915   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/starlette/__ini… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/starlette/__ini… │                    │       │           │            │ │
+│ │ @@ -1 +1 @@        │                    │       │           │            │ │
+│ │ -__version__ =     │                    │       │           │            │ │
+│ │ "1.5.0"            │                    │       │           │            │ │
+│ │ +__version__ =     │                    │       │           │            │ │
+│ │ "1.15.1"           │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
