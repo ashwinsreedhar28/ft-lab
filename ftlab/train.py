@@ -87,6 +87,23 @@ class _LineLog:
         self.cb = CB()
 
 
+def drop_long_prompts(ds, cfg):
+    """GRPO does not truncate prompts: a review prompt longer than the vLLM window minus the completion
+    budget raises VLLMValidationError mid-run (a 36,993-token PR killed phase 3b at step 16). Drop them."""
+    from transformers import AutoTokenizer
+    from ftlab.prompting import render
+    grpo = cfg.grpo
+    budget = int(grpo.get("vllm_max_model_length") or 0) - int(grpo.get("max_completion_length") or 0)
+    if budget <= 0 or "prompt" not in ds.column_names:
+        return ds
+    tok = AutoTokenizer.from_pretrained(cfg.model)
+    def ok(row):
+        return len(tok(render(tok, row["prompt"], cfg.enable_thinking))["input_ids"]) <= budget
+    keep = ds.filter(ok)
+    print(f"prompt budget {budget} tokens: kept {len(keep)}/{len(ds)} train rows", flush=True)
+    return keep
+
+
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     if not argv:
@@ -98,6 +115,7 @@ def main(argv=None):
 
     task = get_task(cfg.data.task)
     train_ds = task.load_train(cfg.data, cfg.system_prompt)
+    train_ds = drop_long_prompts(train_ds, cfg)
     print(f"train rows: {len(train_ds)}  columns: {train_ds.column_names}", flush=True)
 
     from trl import GRPOTrainer
