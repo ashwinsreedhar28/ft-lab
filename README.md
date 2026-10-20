@@ -180,8 +180,18 @@ opposite directions, Sonnet by shipping and Haiku by blocking, and neither has f
 in 70 bug-PR runs across both benches.
 
 **Leakage probe** (`make leakage`): a bag-of-tokens logistic regression on added diff lines, 5-fold CV
-grouped by PR so a mutant and its original never split across folds. AUROC 0.56 all, 0.55 operator,
-0.55 LLM. The operator vocabulary (`or`, `!=`, `True`) carries the top weights but does not separate
-the classes at n=97. Clears the cheap test; the op-vs-llm result gap after training is the real one.
+grouped by PR so a mutant and its original never split across folds. At n=97: AUROC 0.56. At n=415
+it found the operator signature: 0.68 on operator mutants (`>=`, `or`, `!=` top-weighted), 0.61 on LLM
+mutants, 0.56 overall. Two fixes tried. Unpaired token-matched clean decoys made it *worse* (LLM 0.65):
+the paired design is the defense, and unpaired PRs add whole-document content confounds. Direction
+balance worked: equalizing each symmetric operator pair in train (`and→or` vs `or→and`, …) makes the
+introduced token appear in bug lines equally often either way; operator AUROC 0.62, overall 0.53, at
+the cost of 34 train mutants. What remains is the mutated line's meaning, which a reviewer is supposed
+to notice. The post-training op-vs-llm gap is the control for anything a linear probe cannot see.
+
+**Bench v3 (Oct 20):** 240 mutants (120 op / 120 llm) from 10 repos + 2 real + their clean originals →
+**380 tasks** after balancing: eval 118 (70 bugs: 29 op, 39 llm, 2 real; 48 clean), train 262 (137
+bugs; 125 clean). Split by PR hash. Five repos carry weight (click, pydantic, more-itertools, starlette,
+fastapi).
 Human checks pending: label-noise sheet (22 items) and failure taxonomy (Sonnet's 7 approvals, both
 models' blocked cleans) in `review/analysis/`.
