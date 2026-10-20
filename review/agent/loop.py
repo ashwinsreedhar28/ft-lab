@@ -29,6 +29,7 @@ from review.bench.score import by_split, provenance, load_tasks
 
 RESULTS = Path(__file__).parent / "results"
 RUNS = Path(__file__).parent / "runs.json"
+HARNESS_VERSION = 5   # 4b: raw suite output at head; 5: suite delta vs parent, collection errors non-fatal (see suite_delta)
 
 LOOP_SYSTEM = SYSTEM + (
     "\n\nEvidence rules of this gate:\n"
@@ -176,6 +177,55 @@ def suite_at(task: dict, sha: str, subdir: str) -> str:
     return out
 
 
+def suite_outcomes(task: dict, sha: str, subdir: str) -> dict[str, str]:
+    """{test id: passed|failed|error|skipped} via junit xml at a commit (text summaries are unreliable at scale)."""
+    import xml.etree.ElementTree as ET
+    cmd = (f"{prelude(task, sha)} && cd {subdir} && {task['test_cmd']} -q --continue-on-collection-errors "
+           f"--junitxml=/tmp/j.xml >/dev/null 2>&1; echo JUNIT_BEGIN; cat /tmp/j.xml 2>/dev/null; echo JUNIT_END")
+    rc, out = docker_run(task["image"], cmd, **container_kw(task))
+    if "JUNIT_BEGIN" not in out:
+        return {}
+    xml = out.split("JUNIT_BEGIN", 1)[1].split("JUNIT_END", 1)[0].strip()
+    res = {}
+    try:
+        for tc in ET.fromstring(xml).iter("testcase"):
+            kids = {k.tag for k in tc}
+            res[f"{tc.get('classname', '')}::{tc.get('name', '')}"] = ("error" if "error" in kids else "failed" if "failure" in kids
+                                                                      else "skipped" if "skipped" in kids else "passed")
+    except ET.ParseError:
+        return {}
+    return res
+
+
+def suite_delta(task: dict, subdir: str, runs: dict) -> str:
+    """v5: what the agent sees about tests is the DELTA between parent and head, not raw head output.
+    The failure sheet (Oct 20) found 5 of 7 false blocks came from environment failures (no tty for `less`,
+    collection errors) that were present at the parent too and were shown to the agent as evidence."""
+    key_p, key_h = f"outcomes:{task['base_sha']}", f"outcomes:{task['head_sha']}"
+    for key, sha in ((key_p, task["base_sha"]), (key_h, task["head_sha"])):
+        if key not in runs:
+            runs[key] = suite_outcomes(task, sha, subdir)
+            RUNS.write_text(json.dumps(runs, indent=1))
+    p, h = runs[key_p], runs[key_h]
+    if not h:
+        return "Test suite could not be run at the PR head (collection failed entirely)."
+    new_fail = sorted(t for t, st in h.items() if st in ("failed", "error") and p.get(t) == "passed")
+    fixed = sorted(t for t, st in h.items() if st == "passed" and p.get(t) in ("failed", "error"))
+    gone = sorted(t for t in p if t not in h)
+    added = sorted(t for t in h if t not in p)
+    pre = sum(1 for t, st in p.items() if st in ("failed", "error"))
+    lines = [f"Suite at PR head: {sum(1 for s in h.values() if s == 'passed')} passed, {sum(1 for s in h.values() if s in ('failed', 'error'))} failing. "
+             f"{pre} of those failures ALSO fail at the parent commit (environment or pre-existing; NOT evidence about this PR)."]
+    lines.append("NEW failures introduced by this PR (passed at parent, fail at head): " + (", ".join(new_fail[:15]) if new_fail else "none"))
+    if fixed:
+        lines.append("Fixed by this PR: " + ", ".join(fixed[:10]))
+    if added:
+        lines.append(f"Tests added by this PR: {len(added)} ({', '.join(added[:8])}{'…' if len(added) > 8 else ''})")
+    if gone:
+        lines.append(f"Tests removed by this PR: {len(gone)}")
+    return "\n".join(lines)
+
+
 def run_probe(task: dict, sha: str, subdir: str, path: str, source: str, with_cov: bool = False):
     """Returns (status passed|failed|error, output tail, probe_cov|None)."""
     full = f"/testbed/{subdir}/{path}".replace("/./", "/")
@@ -231,12 +281,17 @@ def call(model: str, system: str, messages: list[dict], max_tokens: int):
 def review_one(task: dict, model: str, max_probes: int, runs: dict, max_tokens: int):
     subdir = task.get("subdir") or "."
     image_ok = bool(task.get("image"))
-    if image_ok and task["head_sha"] not in runs:
-        runs[task["head_sha"]] = suite_at(task, task["head_sha"], subdir)
-        RUNS.write_text(json.dumps(runs, indent=1))
-    run_txt = runs.get(task["head_sha"])
+    run_txt = None
+    if image_ok:
+        if HARNESS_VERSION >= 5:
+            run_txt = suite_delta(task, subdir, runs)
+        else:
+            if task["head_sha"] not in runs:
+                runs[task["head_sha"]] = suite_at(task, task["head_sha"], subdir)
+                RUNS.write_text(json.dumps(runs, indent=1))
+            run_txt = runs.get(task["head_sha"])
     if run_txt:
-        run_txt = ("(reminder: green here means the pre-existing tests still pass; it does not test the change)\n" + run_txt)
+        run_txt = ("(reminder: pre-existing tests passing says nothing about the change; only NEW failures or a probe you write are evidence)\n" + run_txt)
     prompt = build_prompt(task, "full" if image_ok else "diff+graph", run_txt)
     unc = uncovered_defs(task)
     if unc:
