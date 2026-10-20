@@ -61,3 +61,5 @@ sheet-tally:     ## summarize the verdict:/cause: lines you filled in
 	python -m review.analysis.sheets tally
 rescore:         ## RESULTS="..." re-score saved runs against the current review/bench/public_eval.jsonl
 	python -m review.analysis.rescore $(RESULTS)
+gate-table:      ## EVALS="runs/review_grpo_4b/eval_*.json": score local-model evals as a gate next to the frontier rows
+	python -m review.analysis.gate_table $(EVALS)

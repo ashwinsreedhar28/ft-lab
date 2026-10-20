@@ -21,4 +21,5 @@ done_ sft_eval  || { $EV --label sft --model runs/review_sft_4b/final; mark sft_
 done_ grpo      || { mkdir -p runs/review_grpo_4b; python -m ftlab.train configs/review_grpo_4b.yaml 2>&1 | tee -a runs/review_grpo_4b/train.log; mark grpo; }
 done_ grpo_eval || { $EV --label grpo --model runs/review_grpo_4b/final; mark grpo_eval; }
 python -m ftlab.eval --table runs/review_grpo_4b/eval_*.json | tee runs/review_grpo_4b/table.txt
+python -m review.analysis.gate_table runs/review_grpo_4b/eval_*.json | tee runs/review_grpo_4b/gate_table.txt
 echo PHASE-DONE
