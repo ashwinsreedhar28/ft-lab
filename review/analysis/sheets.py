@@ -226,6 +226,103 @@ def failures(result_paths: list[str], tasks_path: str):
     p = OUT / "failure_sheet.md"; p.write_text("\n".join(out)); print(f"-> {p}")
 
 
+CAUSES = ["wrong-file", "right-file-wrong-hypothesis", "never-probed", "vacuous-probe-passed", "surface-cue-block", "label-wrong", "other"]
+
+
+def ai_cause(t: dict, rev: dict, kind: str) -> tuple[str, str]:
+    """Haiku reads the agent's decision, comments and probes against the gold and proposes a cause tag + one line."""
+    import os, re
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        return "", ""
+    try:
+        from review.agent.loop import call
+        gold = ", ".join(f"{h['file']}:{h['line_start']}-{h['line_end']}" for h in t.get("gold_hunks", [])[:5])
+        probes = "\n".join(f"- probe r{p['round']}: status={p['status']} specific={p.get('specific')} targets_uncovered={p.get('targets_uncovered')}; hypothesis: {p.get('hypothesis','')[:300]}"
+                           for p in rev.get("probes", [])) or f"- no probe ({rev.get('no_probe_reason')})"
+        comments = "\n".join(f"- {c['file']}:{c['line_start']}-{c['line_end']}: {c['body'][:300]}" for c in rev.get("comments", [])[:5]) or "- none"
+        what = "approved a PR that contains a bug" if kind == "bug" else "blocked a PR that is clean"
+        prompt = (f"A review agent {what}. Task {t['id']} ({t.get('source')}, {t.get('operator') or ''}).\n"
+                  f"Gold (where the bug is, if any): {gold or 'none; clean PR'}\n"
+                  f"Agent decision: {rev['decision']}\nAgent comments:\n{comments}\nAgent probes:\n{probes}\n\n"
+                  f"PR diff (truncated):\n{t['diff'][:3500]}\n\n"
+                  "In 1-2 terse sentences, like a review-comment, say why the agent got it wrong. Then a final line "
+                  f"'CAUSE: <one of {', '.join(CAUSES)}>'. wrong-file = probed/commented elsewhere; right-file-wrong-hypothesis = right place, tested the wrong thing; "
+                  "never-probed = decided without running a test; vacuous-probe-passed = probe passed but proves nothing; surface-cue-block = blocked a clean PR on a surface pattern; "
+                  "label-wrong = the gold label is wrong (the 'bug' is not a bug / the 'clean' PR has a real issue).")
+        text = ""
+        for budget in (1200, 2500):
+            text, _, _ = call("claude-haiku-5-5", "You diagnose code-review agent mistakes tersely.", [{"role": "user", "content": prompt}], budget)
+            if text and text.strip() and not text.startswith("API_"):
+                break
+        m = re.search(r"CAUSE:\s*([\w-]+)", text or "")
+        cause = m.group(1).lower() if m and m.group(1).lower() in CAUSES else ""
+        note = (text[: m.start()] if m else text or "").strip()
+        return note, cause
+    except Exception as e:  # noqa: BLE001
+        return f"(note unavailable: {type(e).__name__})", ""
+
+
+def failures_html(result_paths: list[str], tasks_path: str):
+    tasks = {t["id"]: t for t in (json.loads(l) for l in Path(tasks_path).read_text().splitlines() if l.strip())}
+    items, n = [], 0
+    for rp in result_paths:
+        r = json.loads(Path(rp).read_text())
+        for rev in r["reviews"]:
+            t = tasks.get(rev["task_id"])
+            if not t:
+                continue
+            bad_bug = t["kind"] == "bug" and rev["decision"] == "approve"
+            bad_clean = t["kind"] == "clean" and rev["decision"] == "block"
+            if not (bad_bug or bad_clean):
+                continue
+            n += 1
+            kind = "bug" if bad_bug else "clean"
+            note, cause = ai_cause(t, rev, kind)
+            gold = ", ".join(f"{h['file']}:{h['line_start']}-{h['line_end']}" for h in t.get("gold_hunks", [])[:5])
+            comments = "".join(f"<li><code>{_html_escape(c['file'])}:{c['line_start']}-{c['line_end']}</code> {_html_escape(c['body'][:400])}</li>" for c in rev.get("comments", [])[:5]) or "<li><i>none</i></li>"
+            probes = "".join(f"<li>r{p['round']}: <b>{p['status']}</b> specific={p.get('specific')} targets_uncovered={p.get('targets_uncovered')}<br><i>{_html_escape(p.get('hypothesis','')[:400])}</i>"
+                             f"<details><summary>probe source</summary><pre>{_html_escape(p.get('source','')[:2500])}</pre></details></li>" for p in rev.get("probes", [])) \
+                     or f"<li><i>no probe ({rev.get('no_probe_reason')})</i></li>"
+            radios = "".join(f'<label><input type="radio" name="c{n}" value="{c}" {"checked data-suggested=\"1\"" if c == cause else ""}> {c}</label>' for c in CAUSES)
+            dl = t["diff"].splitlines()[:120]
+            items.append(f"""
+<section data-id="{_html_escape(t['id'])}" data-run="{_html_escape(r['label'])}">
+<h2>{n}. {'APPROVED A BUG' if bad_bug else 'BLOCKED A CLEAN PR'} · <code>{_html_escape(t['id'])}</code> <span class="tag">{r['label']}</span> <span class="tag">{t.get('source')} {t.get('operator') or ''}</span></h2>
+{f'<p class="where">gold: {_html_escape(gold)}</p>' if gold else ''}
+{f'<p class="note"><b>AI diagnosis (Haiku):</b> {_html_escape(note)}</p>' if note else ''}
+<b>agent comments</b><ul>{comments}</ul>
+<b>agent probes</b><ul>{probes}</ul>
+<details><summary>PR diff (first 120 lines)</summary><pre class="ctx">{_html_escape(chr(10).join(dl))}</pre></details>
+<div class="verdict">{radios}{f'<span class="sug">AI suggests <b>{cause}</b></span>' if cause else ''}<input type="text" class="why" id="fw{n}" placeholder="notes (optional)"></div>
+</section>""")
+    html = f"""<!doctype html><html><head><meta charset="utf-8"><title>Failure sheet</title>
+<style>
+body{{font:15px/1.45 -apple-system,system-ui,sans-serif;max-width:980px;margin:24px auto;padding:0 16px;color:#222}}
+h2{{font-size:15px;margin:28px 0 4px}} .tag{{font-size:12px;background:#eee;border-radius:4px;padding:1px 6px;margin-left:6px}}
+.where{{color:#666;margin:0 0 8px;font-size:13px}} ul{{margin:4px 0 10px 18px;font-size:13.5px}}
+pre{{background:#f6f6f6;padding:8px;border-radius:4px;white-space:pre-wrap;font-size:12.5px;margin:0}}
+.note{{background:#f3f0ff;padding:6px 10px;border-radius:4px;font-size:13.5px;white-space:pre-wrap}} .sug{{font-size:12.5px;color:#5b4b9a}}
+details{{margin:6px 0}} summary{{cursor:pointer;color:#444;font-size:13px}}
+.verdict{{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px}} .verdict label{{font-size:13.5px}}
+.why{{flex:1;min-width:240px;padding:4px 6px}}
+#bar{{position:sticky;top:0;background:#fff;padding:10px 0;border-bottom:1px solid #ddd;display:flex;gap:12px;align-items:center}}
+button{{padding:6px 12px}} #out{{width:100%;height:80px;font-size:12px}}
+</style></head><body>
+<div id="bar"><b>Failure sheet</b> <span id="count">0/{n}</span> <button onclick="exportJson()">Copy causes as JSON</button>
+<span style="color:#666;font-size:13px">paste into review/analysis/failure_causes.json, then make sheet-tally</span></div>
+<p>{n} items: every bug PR a run approved and every clean PR it blocked. Tag the cause; the AI's suggestion is pre-selected.</p>
+{''.join(items)}
+<textarea id="out" readonly></textarea>
+<script>
+function collect(){{const o={{}};document.querySelectorAll('section').forEach(s=>{{const r=s.querySelector('input[type=radio]:checked');const sg=s.querySelector('input[data-suggested]');if(r)o[s.dataset.run+'::'+s.dataset.id]={{cause:r.value,notes:s.querySelector('.why').value,suggested:sg?sg.value:null,confirmed:!!s.dataset.touched}};}});return o;}}
+function refresh(){{document.getElementById('count').textContent=Object.keys(collect()).length+'/{n}';try{{localStorage.setItem('failsheet',JSON.stringify(collect()));}}catch(e){{}}}}
+function exportJson(){{const j=JSON.stringify(collect(),null,1);document.getElementById('out').value=j;navigator.clipboard&&navigator.clipboard.writeText(j).catch(()=>{{}});}}
+document.addEventListener('change',e=>{{const s=e.target.closest&&e.target.closest('section');if(s&&e.target.matches('input[type=radio]'))s.dataset.touched='1';refresh();}});
+document.addEventListener('input',refresh);refresh();
+</script></body></html>"""
+    p = OUT / "failure_sheet.html"; p.write_text(html); print(f"{n} items -> {p}  (open in a browser)")
+
+
 def tally():
     import re
     pj = OUT / "label_verdicts.json"
@@ -248,10 +345,15 @@ def tally():
         print(f"label sheet: {dict(c)}  filled {sum(c.values())}  (verdicts by Ashwin; per-item AI notes shown, descriptive only)")
         if c:
             print(f"  label-noise estimate (no + arguable/2) / filled = {(c.get('no', 0) + c.get('arguable', 0) / 2) / max(sum(c.values()), 1):.2f}")
+    pj = OUT / "failure_causes.json"
     p = OUT / "failure_sheet.md"
-    if p.exists():
+    from collections import Counter
+    if pj.exists():
+        d = json.loads(pj.read_text())
+        print(f"failure sheet: {dict(Counter(x.get('cause', '') for x in d.values()))}  "
+              f"(AI-suggested; agreed {sum(1 for x in d.values() if x.get('suggested') == x.get('cause'))}/{len(d)})")
+    elif p.exists():
         v = re.findall(r"^cause:\s*([\w-]+)", p.read_text(), re.M)
-        from collections import Counter
         print(f"failure sheet: {dict(Counter(x.lower() for x in v if x))}")
 
 
@@ -268,6 +370,7 @@ def main():
         labels_html(args.tasks, args.n, args.seed)
     elif args.cmd == "failures":
         failures(args.results, args.tasks)
+        failures_html(args.results, args.tasks)
     else:
         tally()
 
