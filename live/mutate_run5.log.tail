@@ -1,26 +1,26 @@
-== review/mine/work/mutate_run5.log (2026-10-20T22:23:47Z)
-    : in <module>
-        from pydantic import BaseModel
-    pydantic/__init__.py:451: in __getattr__
-        module = import_module(module_name, package=package)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    pydantic/main.py:37: in <module>
-        from ._internal import (
-    pydantic/_internal/_model_construction.py:35: in <module>
-        from ._generate_schema import GenerateSchema, InvalidSchemaError
-    pydantic/_internal/_generate_schema.py:115: in <module>
-        from ._schema_gather import MissingDefinitionError, gather_schemas_for_cleaning
-    pydantic/_internal/_schema_gather.py:5: in <module>
-        from pydantic_core._pydantic_core import _schema_gather
-    E   ImportError: cannot import name '_schema_gather' from 'pydantic_core._pydantic_core' (/usr/local/lib/python3.12/site-packages/pydantic_core/_pydantic_core.cpython-312-aarch64-linux-gnu.so)
+== review/mine/work/mutate_run5.log (2026-10-20T22:33:49Z)
+    httpx/__init__.py:106: in <module>
+        setattr(__locals[__name], "__module__", "httpx")  # noqa
+                ^^^^^^^^^^^^^^^^
+    E   KeyError: 'FunctionAuht'
     EXIT=4
-rich      230fdacb rich/_unicode_data/__init__.py: baseline 138 passing in 5 test files
-rich      230fdacb rich/_unicode_data/__init__.py:85 not_add        suite-killed 88
-rich      230fdacb rich/_unicode_data/__init__.py:78 not_add        suite-green guard=distinguished
-rich      230fdacb rich/_unicode_data/__init__.py:75 llm            suite-green guard=distinguished
-rich      65a04ccd rich/traceback.py: baseline 21 passing in 1 test files
-rich      65a04ccd rich/traceback.py:576 bool_and_or    killed 18
-rich      65a04ccd rich/traceback.py:586 not_add        killed 18
-rich      65a04ccd rich/traceback.py:586 llm            killed 1
-requests  3816cfa1 src/requests/_types.py: baseline 604 passing in all test files
-requests  3816cfa1 src/requests/_types.py:23 true_false     suite-green guard=distinguished
+    JUNIT_BEGIN
+    JUNIT_END
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/ashwinsreedhar/ft-lab/review/mine/mutate.py", line 413, in <module>
+    main()
+  File "/Users/ashwinsreedhar/ft-lab/review/mine/mutate.py", line 403, in main
+    for row in process_pr(pr, cfg, a.per_pr, not a.no_llm, a.timeout, rng, lambda s: print(s, flush=True)):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ashwinsreedhar/ft-lab/review/mine/mutate.py", line 295, in process_pr
+    src_lines = git(repo, "show", f"{pr['sha']}:{f}").splitlines()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ashwinsreedhar/ft-lab/review/mine/scan.py", line 28, in git
+    return subprocess.run(["git", "-C", str(repo), *args], capture_output=True, text=True, check=True).stdout
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', '-C', '/Users/ashwinsreedhar/ft-lab/review/mine/work/repos/fastapi', 'show', '083b6ebe9efa76cdee3fe3f74ea686a2ea860f51:pdm_build.py']' returned non-zero exit status 128.
+make: *** [mine-mutate] Error 1
