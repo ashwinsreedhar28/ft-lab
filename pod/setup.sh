@@ -12,7 +12,7 @@ echo "== template torch =="; python -c "import torch;print('torch',torch.__versi
 # Pins: leave empty on first run; after the first successful smoke test, copy the
 # versions from pod/versions.lock into here so every later pod is identical.
 TRL_PIN="${TRL_PIN:-}"          # e.g. ==1.15.0
-VLLM_PIN="${VLLM_PIN:-}"        # e.g. ==0.12.0
+VLLM_PIN="${VLLM_PIN:-==0.31.0}"   # frozen Oct 20: 0.31.0 is what phases 0-3 ran on
 TRANSFORMERS_PIN="${TRANSFORMERS_PIN:-}"
 
 # venv on top of the template's site-packages: keeps its torch, dodges Debian-owned packages.
@@ -28,9 +28,15 @@ pip install -q --ignore-installed "vllm${VLLM_PIN}"
 pip install -q --ignore-installed "trl[vllm]${TRL_PIN}" "transformers${TRANSFORMERS_PIN}" peft datasets accelerate \
     pyyaml matplotlib anthropic pytest "huggingface_hub[cli]<2.0"   # transformers (Oct 2026) requires hub <2.0; unpinned pulled 2.2.0
 
-# --ignore-installed leaves stale *.dist-info behind; importlib.metadata then reports a version the module isn't.
-for _ in 1 2 3; do pip uninstall -y -q huggingface_hub 2>/dev/null || break; done
-pip install -q "huggingface_hub[cli]<2.0"
+# Reconcile: the second --ignore-installed step re-resolves vllm's pinned deps to newer releases
+# (flashinfer 0.7.2 broke against cutlass-dsl 4.7.1 on Oct 20) and leaves stale *.dist-info behind,
+# so importlib.metadata reports versions the modules aren't. Purge and reinstall the pins vllm declares.
+for pkg in huggingface_hub flashinfer-python nvidia-cutlass-dsl; do
+  for _ in 1 2 3; do pip uninstall -y -q "$pkg" 2>/dev/null || break; done
+done
+pip install -q "huggingface_hub[cli]<2.0" "flashinfer-python==0.7.0.post1" "nvidia-cutlass-dsl[cu13]==4.7.1"
+pip check || true
+python -c "import flashinfer; print('flashinfer', flashinfer.__version__)"
 python -c "import huggingface_hub as h, torch; print('hub', h.__version__, h.__file__); print('torch', torch.__version__, torch.__file__)"
 python - <<'EOF'
 import importlib, json, subprocess, sys
