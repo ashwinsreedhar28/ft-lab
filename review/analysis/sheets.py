@@ -99,8 +99,12 @@ def ai_note(t: dict, before: str, after: str, ctx: str, probe: str) -> str:
                   "Style examples: 'inverts the stdin check: `-` now fails the exists check and real paths skip it.' / "
                   "'docs-only, no code path changes.' / 'argmax returns 3 either way; equivalent.'\n"
                   "Then a final line, exactly one of: SUGGEST: yes (block it) / SUGGEST: arguable (edge case only) / SUGGEST: no (same behavior or not code).")
-        text, _, _ = call("claude-haiku-5-5", "You explain one-line code changes concretely for a reviewer.", [{"role": "user", "content": prompt}], 450)
-        return text.strip()
+        text = ""
+        for budget in (1200, 2500):          # 5.5 models can spend a small budget entirely on thinking and return no text
+            text, _, _ = call("claude-haiku-5-5", "You explain one-line code changes concretely for a reviewer.", [{"role": "user", "content": prompt}], budget)
+            if text and text.strip() and not text.startswith("API_"):
+                break
+        return text.strip() if text and not text.startswith("API_") else "(no note: empty model response twice)"
     except Exception as e:  # noqa: BLE001
         return f"(note unavailable: {type(e).__name__})"
 
