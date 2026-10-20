@@ -24,7 +24,7 @@ pip install -q --upgrade pip
 # so Debian-owned dists (PyJWT etc.) are shadowed in the venv rather than uninstalled.
 pip install -q --ignore-installed "vllm${VLLM_PIN}"
 pip install -q --ignore-installed "trl[vllm]${TRL_PIN}" "transformers${TRANSFORMERS_PIN}" peft datasets accelerate \
-    pyyaml matplotlib anthropic pytest "huggingface_hub[cli]"
+    pyyaml matplotlib anthropic pytest "huggingface_hub[cli]<2.0"   # transformers (Oct 2026) requires hub <2.0; unpinned pulled 2.2.0
 
 python - <<'EOF'
 import importlib, json, subprocess, sys
