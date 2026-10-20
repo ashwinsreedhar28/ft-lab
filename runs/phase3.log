@@ -1628,3 +1628,1597 @@ train rows: 260  columns: ['prompt', 'kind', 'gold_hunks', 'task_id']
 │ │ ```                 │                     │       │           │          │ │
 │ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
+  3%|▎         | 4/120 [06:58<3:36:41, 112.08s/it]step 4  reward=-0.318  reward_std=2.253  kl=0.001  mean_length=132.250  clipped_ratio=0.000  step_time=114.976  loss=-0.146  gate=-0.318
+                                                    3%|▎         | 4/120 [06:58<3:36:41, 112.08s/it]{'loss': '-0.1464', 'grad_norm': '0.2965', 'learning_rate': '3e-06', 'num_tokens': '2.829e+05', 'completions/mean_length': '132.2', 'completions/min_length': '12', 'completions/max_length': '424', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '132.2', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '424', 'rewards/gate/mean': '-0.3179', 'rewards/gate/std': '2.253', 'reward': '-0.3179', 'reward_std': '2.253', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.1562', 'review/escalate_frac': '0', 'review/mean_tokens': '132.2', 'review/unparsable_frac': '0.09375', 'sampling/sampling_logp_difference/mean': '0.01921', 'sampling/sampling_logp_difference/max': '0.4622', 'sampling/importance_sampling_ratio/min': '0.5109', 'sampling/importance_sampling_ratio/mean': '1.118', 'sampling/importance_sampling_ratio/max': '2.366', 'kl': '0.0005924', 'entropy': '1.319', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '115', 'epoch': '0.06154'}
+╭─────────────────────────────────── Step 4 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.90 │ approve  │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "approve",          │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "more_itertools/mo… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 4746, │       │           │          │ │
+│ │ with no further     │ "line_end": 4748,   │       │           │          │ │
+│ │ human review.       │ "body": "The        │       │           │          │ │
+│ │ Decide:             │ documentation       │       │           │          │ │
+│ │   approve  - you    │ offers an example   │       │           │          │ │
+│ │ are confident the   │ of using this       │       │           │          │ │
+│ │ change is correct   │ function in tandem  │       │           │          │ │
+│ │ and safe to ship.   │ with                │       │           │          │ │
+│ │   block    - you    │ unique_everseen,    │       │           │          │ │
+│ │ found a defect;     │ which might be      │       │           │          │ │
+│ │ cite its location.  │ helpful for         │       │           │          │ │
+│ │   escalate - you    │ users."}]}          │       │           │          │ │
+│ │ cannot establish    │                     │       │           │          │ │
+│ │ safety from what    │                     │       │           │          │ │
+│ │ you can see; a      │                     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ more-itertools      │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │   0e6acdf           │                     │       │           │          │ │
+│ │ 2026-07-19 Raise a  │                     │       │           │          │ │
+│ │ clear ValueError    │                     │       │           │          │ │
+│ │ for negative n in   │                     │       │           │          │ │
+│ │ chunked()           │                     │       │           │          │ │
+│ │   069b300           │                     │       │           │          │ │
+│ │ 2026-07-16 Issue    │                     │       │           │          │ │
+│ │ 1214: Update __eq__ │                     │       │           │          │ │
+│ │ and __hash__ for    │                     │       │           │          │ │
+│ │ numeric_range       │                     │       │           │          │ │
+│ │   07eb790           │                     │       │           │          │ │
+│ │ 2026-07-12 Add      │                     │       │           │          │ │
+│ │ threading to        │                     │       │           │          │ │
+│ │ lazy_modules.       │                     │       │           │          │ │
+│ │ Revert c6b640       │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 5896d6d..ffc541a    │                     │       │           │          │ │
+│ │ 100755              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ @@ -4742,6 +4742,11 │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ duplicates_eversee… │                     │       │           │          │ │
+│ │ key=None):          │                     │       │           │          │ │
+│ │      This function  │                     │       │           │          │ │
+│ │ is analogous to     │                     │       │           │          │ │
+│ │ :func:`unique_ever… │                     │       │           │          │ │
+│ │ and is subject to   │                     │       │           │          │ │
+│ │      the same       │                     │       │           │          │ │
+│ │ performance         │                     │       │           │          │ │
+│ │ considerations.     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +    If you would   │                     │       │           │          │ │
+│ │ like each duplicate │                     │       │           │          │ │
+│ │ to only appear      │                     │       │           │          │ │
+│ │ once, much like     │                     │       │           │          │ │
+│ │ ``uniq -d``         │                     │       │           │          │ │
+│ │ +    in the Unix    │                     │       │           │          │ │
+│ │ shell and           │                     │       │           │          │ │
+│ │ ``Itertools::dupli… │                     │       │           │          │ │
+│ │ from the Rust       │                     │       │           │          │ │
+│ │ ``itertools``       │                     │       │           │          │ │
+│ │ +    crate, pass    │                     │       │           │          │ │
+│ │ the return value of │                     │       │           │          │ │
+│ │ this function into  │                     │       │           │          │ │
+│ │ :func:`unique_ever… │                     │       │           │          │ │
+│ │ +    with the same  │                     │       │           │          │ │
+│ │ ``key``.            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │      """            │                     │       │           │          │ │
+│ │      seen_set =     │                     │       │           │          │ │
+│ │ set()               │                     │       │           │          │ │
+│ │      seen_list = [] │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │  1.50 │      0.35 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "starlette/__init_… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 1,    │       │           │          │ │
+│ │ with no further     │ "line_end": 1,      │       │           │          │ │
+│ │ human review.       │ "body":             │       │           │          │ │
+│ │ Decide:             │ "Incompatible       │       │           │          │ │
+│ │   approve  - you    │ version upgrade     │       │           │          │ │
+│ │ are confident the   │ from 0.49.0 to      │       │           │          │ │
+│ │ change is correct   │ 0.94.1. This is a   │       │           │          │ │
+│ │ and safe to ship.   │ major version bump  │       │           │          │ │
+│ │   block    - you    │ that likely breaks  │       │           │          │ │
+│ │ found a defect;     │ existing apps.      │       │           │          │ │
+│ │ cite its location.  │ Without an explicit │       │           │          │ │
+│ │   escalate - you    │ versioning strategy │       │           │          │ │
+│ │ cannot establish    │ or version agnostic │       │           │          │ │
+│ │ safety from what    │ versioning, the     │       │           │          │ │
+│ │ you can see; a      │ change may be       │       │           │          │ │
+│ │ human must look.    │ incompatible with   │       │           │          │ │
+│ │ Approving a change  │ previous codebases. │       │           │          │ │
+│ │ that contains a     │ There is no test    │       │           │          │ │
+│ │ defect is the worst │ case provided to    │       │           │          │ │
+│ │ outcome. Blocking a │ verify backward     │       │           │          │ │
+│ │ correct change      │ compatibility,      │       │           │          │ │
+│ │ costs an engineer's │ hence, the proposed │       │           │          │ │
+│ │ time. Escalating is │ change is unsafe    │       │           │          │ │
+│ │ cheap but useless   │ and potentially     │       │           │          │ │
+│ │ if done for         │ risky for the       │       │           │          │ │
+│ │ everything.         │ release. The need   │       │           │          │ │
+│ │ Respond with        │ to maintain         │       │           │          │ │
+│ │ exactly one JSON    │ backward            │       │           │          │ │
+│ │ object and nothing  │ compatibility from  │       │           │          │ │
+│ │ else:               │ the version change  │       │           │          │ │
+│ │ {"decision":        │ has not been        │       │           │          │ │
+│ │ "approve|block|esc… │ addressed in the    │       │           │          │ │
+│ │ "comments":         │ repository. The     │       │           │          │ │
+│ │ [{"file": "...",    │ proposed test is    │       │           │          │ │
+│ │ "line_start": N,    │ missing and the     │       │           │          │ │
+│ │ "line_end": N,      │ repository is       │       │           │          │ │
+│ │ "body": "...",      │ deficient in the    │       │           │          │ │
+│ │ "proposed_test":    │ version upgrade     │       │           │          │ │
+│ │ "optional pytest    │ strategy. The       │       │           │          │ │
+│ │ source"}]}          │ change should be    │       │           │          │ │
+│ │                     │ blocked until the   │       │           │          │ │
+│ │ USER                │ upgrade is properly │       │           │          │ │
+│ │ Repository:         │ researched and the  │       │           │          │ │
+│ │ starlette           │ versioning strategy │       │           │          │ │
+│ │ Files changed:      │ is justified.       │       │           │          │ │
+│ │ docs/release-notes… │ Prioritize tests    │       │           │          │ │
+│ │ starlette/__init__… │ and version         │       │           │          │ │
+│ │                     │ compatibility for   │       │           │          │ │
+│ │ Not shown (non-code │ the next            │       │           │          │ │
+│ │ or over budget;     │ release."}]}        │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ docs/release-notes… │                     │       │           │          │ │
+│ │ (697 chars,         │                     │       │           │          │ │
+│ │ non-code)           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/starlette/__init… │                     │       │           │          │ │
+│ │ b/starlette/__init… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ d4ace94..7436385    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/starlette/__init… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/starlette/__init… │                     │       │           │          │ │
+│ │ @@ -1 +1 @@         │                     │       │           │          │ │
+│ │ -__version__ =      │                     │       │           │          │ │
+│ │ "0.49.0"            │                     │       │           │          │ │
+│ │ +__version__ =      │                     │       │           │          │ │
+│ │ "0.94.1"            │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+  4%|▍         | 5/120 [08:29<3:20:46, 104.76s/it]step 5  reward=0.341  reward_std=1.157  kl=0.001  mean_length=166.469  clipped_ratio=0.094  step_time=87.763  loss=0.443  gate=0.341
+                                                    4%|▍         | 5/120 [08:29<3:20:46, 104.76s/it]{'loss': '0.4435', 'grad_norm': '0.2265', 'learning_rate': '4e-06', 'num_tokens': '3.451e+05', 'completions/mean_length': '166.5', 'completions/min_length': '12', 'completions/max_length': '500', 'completions/clipped_ratio': '0.09375', 'completions/mean_terminated_length': '132', 'completions/min_terminated_length': '12', 'completions/max_terminated_length': '394', 'rewards/gate/mean': '0.3412', 'rewards/gate/std': '1.157', 'reward': '0.3412', 'reward_std': '1.157', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0', 'review/escalate_frac': '0.03125', 'review/mean_tokens': '166.5', 'review/unparsable_frac': '0.25', 'sampling/sampling_logp_difference/mean': '0.01683', 'sampling/sampling_logp_difference/max': '0.2754', 'sampling/importance_sampling_ratio/min': '0.2938', 'sampling/importance_sampling_ratio/mean': '1.009', 'sampling/importance_sampling_ratio/max': '2.758', 'kl': '0.0005394', 'entropy': '1.141', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '87.76', 'epoch': '0.07692'}
+╭─────────────────────────────────── Step 5 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.50 │     -0.21 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "src/click/core.py… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 3365, │       │           │          │ │
+│ │ with no further     │ "line_end": 3404,   │       │           │          │ │
+│ │ human review.       │ "body":             │       │           │          │ │
+│ │ Decide:             │ "option.get_help_r… │       │           │          │ │
+│ │   approve  - you    │ is now used in the  │       │           │          │ │
+│ │ are confident the   │ default             │       │           │          │ │
+│ │ change is correct   │ test_deprecated_em… │       │           │          │ │
+│ │ and safe to ship.   │ which is still used │       │           │          │ │
+│ │   block    - you    │ by                  │       │           │          │ │
+│ │ found a defect;     │ opt.get_help_recor… │       │           │          │ │
+│ │ cite its location.  │ but the             │       │           │          │ │
+│ │   escalate - you    │ option.get_help_re… │       │           │          │ │
+│ │ cannot establish    │ has been removed    │       │           │          │ │
+│ │ safety from what    │ from core.py.  This │       │           │          │ │
+│ │ you can see; a      │ is an internal      │       │           │          │ │
+│ │ human must look.    │ error that is       │       │           │          │ │
+│ │ Approving a change  │ missed by the       │       │           │          │ │
+│ │ that contains a     │ test_deprecated_em… │       │           │          │ │
+│ │ defect is the worst │ in test_options.py. │       │           │          │ │
+│ │ outcome. Blocking a │ The bad behavior is │       │           │          │ │
+│ │ correct change      │ the                 │       │           │          │ │
+│ │ costs an engineer's │ option.get_help_re… │       │           │          │ │
+│ │ time. Escalating is │ in the test for the │       │           │          │ │
+│ │ cheap but useless   │ hidden option,      │       │           │          │ │
+│ │ if done for         │ which is now None   │       │           │          │ │
+│ │ everything.         │ after the change in │       │           │          │ │
+│ │ Respond with        │ core.py, but the    │       │           │          │ │
+│ │ exactly one JSON    │ highlighted         │       │           │          │ │
+│ │ object and nothing  │ test_deprecated_em… │       │           │          │ │
+│ │ else:               │ is still expecting  │       │           │          │ │
+│ │ {"decision":        │ the default output  │       │           │          │ │
+│ │ "approve|block|esc… │ direct from the     │       │           │          │ │
+│ │ "comments":         │ option.get_help_re… │       │           │          │ │
+│ │ [{"file": "...",    │ in                  │       │           │          │ │
+│ │ "line_start": N,    │ test_options.py."}… │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository: click   │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ CHANGES.md,         │                     │       │           │          │ │
+│ │ src/click/core.py,  │                     │       │           │          │ │
+│ │ tests/test_options… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ CHANGES.md (764     │                     │       │           │          │ │
+│ │ chars, non-code)    │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ src/click/core.py:… │                     │       │           │          │ │
+│ │ src/click/core.py:… │                     │       │           │          │ │
+│ │ src/click/core.py:… │                     │       │           │          │ │
+│ │ src/click/core.py:… │                     │       │           │          │ │
+│ │ src/click/core.py:… │                     │       │           │          │ │
+│ │ src/click/core.py:… │                     │       │           │          │ │
+│ │ tests/test_options… │                     │       │           │          │ │
+│ │ tests/test_options… │                     │       │           │          │ │
+│ │ tests/test_options… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ src/click/core.py:  │                     │       │           │          │ │
+│ │   fc518e4           │                     │       │           │          │ │
+│ │ 2026-08-31 Fix race │                     │       │           │          │ │
+│ │ condition on        │                     │       │           │          │ │
+│ │ `KeyboardInterrupt` │                     │       │           │          │ │
+│ │ arriving in         │                     │       │           │          │ │
+│ │ `Command.main()`    │                     │       │           │          │ │
+│ │   047adef           │                     │       │           │          │ │
+│ │ 2026-07-31 Preserve │                     │       │           │          │ │
+│ │ declaration order   │                     │       │           │          │ │
+│ │ of help option      │                     │       │           │          │ │
+│ │ names               │                     │       │           │          │ │
+│ │   0f4738d           │                     │       │           │          │ │
+│ │ 2026-07-17 Fix docs │                     │       │           │          │ │
+│ │ and changelog       │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ tests/test_options… │                     │       │           │          │ │
+│ │   394088a           │                     │       │           │          │ │
+│ │ 2026-08-27 Test     │                     │       │           │          │ │
+│ │ frozen types;       │                     │       │           │          │ │
+│ │ Documents type      │                     │       │           │          │ │
+│ │ conversion          │                     │       │           │          │ │
+│ │   3495fba           │                     │       │           │          │ │
+│ │ 2026-07-07 Warn     │                     │       │           │          │ │
+│ │ when an argument    │                     │       │           │          │ │
+│ │ name collide with   │                     │       │           │          │ │
+│ │ other parameters    │                     │       │           │          │ │
+│ │   1557e26           │                     │       │           │          │ │
+│ │ 2026-06-13 Check    │                     │       │           │          │ │
+│ │ for warning         │                     │       │           │          │ │
+│ │ exception with      │                     │       │           │          │ │
+│ │ idiomatic context   │                     │       │           │          │ │
+│ │ manager             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/src/click/core.py │                     │       │           │          │ │
+│ │ b/src/click/core.py │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ c3e68b1..18a43ac    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/src/click/core.py │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/src/click/core.py │                     │       │           │          │ │
+│ │ @@ -3363,10         │                     │       │           │          │ │
+│ │ +3363,15 @@ class   │                     │       │           │          │ │
+│ │ Option(Parameter):  │                     │       │           │          │ │
+│ │                  n… │                     │       │           │          │ │
+│ │              )      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    def            │                     │       │           │          │ │
+│ │ get_help_record(se… │                     │       │           │          │ │
+│ │ ctx: Context) ->    │                     │       │           │          │ │
+│ │ tuple[str, str] |   │                     │       │           │          │ │
+│ │ None:               │                     │       │           │          │ │
+│ │ -        if         │                     │       │           │          │ │
+│ │ self.hidden:        │                     │       │           │          │ │
+│ │ -            return │                     │       │           │          │ │
+│ │ None                │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ get_help_spec(self, │                     │       │           │          │ │
+│ │ ctx: Context) ->    │                     │       │           │          │ │
+│ │ str:                │                     │       │           │          │ │
+│ │ +        """Returns │                     │       │           │          │ │
+│ │ the left column of  │                     │       │           │          │ │
+│ │ the option's help   │                     │       │           │          │ │
+│ │ record: its         │                     │       │           │          │ │
+│ │ spellings           │                     │       │           │          │ │
+│ │ +        and        │                     │       │           │          │ │
+│ │ metavar, like ``-v, │                     │       │           │          │ │
+│ │ --verbose`` or      │                     │       │           │          │ │
+│ │ ``-c, --config      │                     │       │           │          │ │
+│ │ TEXT``.             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +        Unlike     │                     │       │           │          │ │
+│ │ :meth:`get_help_re… │                     │       │           │          │ │
+│ │ the spec is         │                     │       │           │          │ │
+│ │ produced even when  │                     │       │           │          │ │
+│ │ the                 │                     │       │           │          │ │
+│ │ +        option is  │                     │       │           │          │ │
+│ │ :attr:`hidden`.     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        ..         │                     │       │           │          │ │
+│ │ versionadded::      │                     │       │           │          │ │
+│ │ 8.5.1               │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │          any_prefi… │                     │       │           │          │ │
+│ │ = False             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          def        │                     │       │           │          │ │
+│ │ _write_opts(opts:   │                     │       │           │          │ │
+│ │ cabc.Sequence[str]) │                     │       │           │          │ │
+│ │ -> str:             │                     │       │           │          │ │
+│ │ @@ -3387,6 +3392,12 │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ Option(Parameter):  │                     │       │           │          │ │
+│ │          if         │                     │       │           │          │ │
+│ │ self.secondary_opt… │                     │       │           │          │ │
+│ │              rv.ap… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +        return ("; │                     │       │           │          │ │
+│ │ " if                │                     │       │           │          │ │
+│ │ any_prefix_is_slash │                     │       │           │          │ │
+│ │ else " /            │                     │       │           │          │ │
+│ │ ").join(rv)         │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ get_help_record(se… │                     │       │           │          │ │
+│ │ ctx: Context) ->    │                     │       │           │          │ │
+│ │ tuple[str, str] |   │                     │       │           │          │ │
+│ │ None:               │                     │       │           │          │ │
+│ │ +        if         │                     │       │           │          │ │
+│ │ self.hidden:        │                     │       │           │          │ │
+│ │ +            return │                     │       │           │          │ │
+│ │ None                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │          help =     │                     │       │           │          │ │
+│ │ self.help or ""     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          extra =    │                     │       │           │          │ │
+│ │ self.get_help_extr… │                     │       │           │          │ │
+│ │ @@ -3406,7 +3417,7  │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ Option(Parameter):  │                     │       │           │          │ │
+│ │              extra… │                     │       │           │          │ │
+│ │ = ";                │                     │       │           │          │ │
+│ │ ".join(extra_items) │                     │       │           │          │ │
+│ │              help = │                     │       │           │          │ │
+│ │ f"{help}            │                     │       │           │          │ │
+│ │ [{extra_str}]" if   │                     │       │           │          │ │
+│ │ help else           │                     │       │           │          │ │
+│ │ f"[{extra_str}]"    │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -        return ("; │                     │       │           │          │ │
+│ │ " if                │                     │       │           │          │ │
+│ │ any_prefix_is_slash │                     │       │           │          │ │
+│ │ else " /            │                     │       │           │          │ │
+│ │ ").join(rv), help   │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ self.get_help_spec… │                     │       │           │          │ │
+│ │ help                │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ get_help_extra(sel… │                     │       │           │          │ │
+│ │ ctx: Context) ->    │                     │       │           │          │ │
+│ │ types.OptionHelpEx… │                     │       │           │          │ │
+│ │          extra:     │                     │       │           │          │ │
+│ │ types.OptionHelpEx… │                     │       │           │          │ │
+│ │ = {}                │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_optio… │                     │       │           │          │ │
+│ │ b/tests/test_optio… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 5438a8c..0656a0b    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_optio… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_optio… │                     │       │           │          │ │
+│ │ @@ -72,6 +72,30 @@  │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ test_deprecated_em… │                     │       │           │          │ │
+│ │ deprecated,         │                     │       │           │          │ │
+│ │ expected)           │                     │       │           │          │ │
+│ │      assert         │                     │       │           │          │ │
+│ │ opt.get_help_recor… │                     │       │           │          │ │
+│ │ == expected         │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +@pytest.mark.para… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ("param_decls",     │                     │       │           │          │ │
+│ │ "kwargs",           │                     │       │           │          │ │
+│ │ "expected"),        │                     │       │           │          │ │
+│ │ +    [              │                     │       │           │          │ │
+│ │ +        (["-v",    │                     │       │           │          │ │
+│ │ "--verbose"],       │                     │       │           │          │ │
+│ │ {"is_flag": True},  │                     │       │           │          │ │
+│ │ "-v, --verbose"),   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ (["--config"], {},  │                     │       │           │          │ │
+│ │ "--config TEXT"),   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ (["--color/--no-co… │                     │       │           │          │ │
+│ │ {}, "--color /      │                     │       │           │          │ │
+│ │ --no-color"),       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ (["/debug;/no-debu… │                     │       │           │          │ │
+│ │ {}, "/debug;        │                     │       │           │          │ │
+│ │ /no-debug"),        │                     │       │           │          │ │
+│ │ +    ],             │                     │       │           │          │ │
+│ │ +)                  │                     │       │           │          │ │
+│ │ +@pytest.mark.para… │                     │       │           │          │ │
+│ │ [False, True])      │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_help_spec(par… │                     │       │           │          │ │
+│ │ kwargs, hidden,     │                     │       │           │          │ │
+│ │ expected):          │                     │       │           │          │ │
+│ │ +    """A hidden    │                     │       │           │          │ │
+│ │ option still        │                     │       │           │          │ │
+│ │ produces its spec   │                     │       │           │          │ │
+│ │ via                 │                     │       │           │          │ │
+│ │ ``get_help_spec()`… │                     │       │           │          │ │
+│ │ unlike              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ``get_help_record(… │                     │       │           │          │ │
+│ │ +    """            │                     │       │           │          │ │
+│ │ +    opt =          │                     │       │           │          │ │
+│ │ click.Option(param… │                     │       │           │          │ │
+│ │ hidden=hidden,      │                     │       │           │          │ │
+│ │ **kwargs)           │                     │       │           │          │ │
+│ │ +    ctx =          │                     │       │           │          │ │
+│ │ click.Context(clic… │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ opt.get_help_spec(… │                     │       │           │          │ │
+│ │ == expected         │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    if hidden:     │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ opt.get_help_recor… │                     │       │           │          │ │
+│ │ is None             │                     │       │           │          │ │
+│ │ +    else:          │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ opt.get_help_recor… │                     │       │           │          │ │
+│ │ == expected         │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │  @pytest.mark.para… │                     │       │           │          │ │
+│ │ [True, "USE B       │                     │       │           │          │ │
+│ │ INSTEAD"])          │                     │       │           │          │ │
+│ │  def                │                     │       │           │          │ │
+│ │ test_deprecated_wa… │                     │       │           │          │ │
+│ │ deprecated):        │                     │       │           │          │ │
+│ │      @click.comman… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │  1.50 │      0.54 │ block    │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "starlette/__init_… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 1,    │       │           │          │ │
+│ │ with no further     │ "line_end": 1,      │       │           │          │ │
+│ │ human review.       │ "body": "Wrong      │       │           │          │ │
+│ │ Decide:             │ version number. The │       │           │          │ │
+│ │   approve  - you    │ version is set      │       │           │          │ │
+│ │ are confident the   │ backwards: 0.25.0   │       │           │          │ │
+│ │ change is correct   │ instead of 0.51.0.  │       │           │          │ │
+│ │ and safe to ship.   │ This results in     │       │           │          │ │
+│ │   block    - you    │ counting past the   │       │           │          │ │
+│ │ found a defect;     │ actual version, and │       │           │          │ │
+│ │ cite its location.  │ makes Starlette     │       │           │          │ │
+│ │   escalate - you    │ look like it's      │       │           │          │ │
+│ │ cannot establish    │ already released    │       │           │          │ │
+│ │ safety from what    │ but not yet staged. │       │           │          │ │
+│ │ you can see; a      │ Use 0.51.0."}]}     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ starlette           │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ docs/release-notes… │                     │       │           │          │ │
+│ │ starlette/__init__… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ docs/release-notes… │                     │       │           │          │ │
+│ │ (1212 chars,        │                     │       │           │          │ │
+│ │ non-code)           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/starlette/__init… │                     │       │           │          │ │
+│ │ b/starlette/__init… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ d942e9e..6fea77c    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/starlette/__init… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/starlette/__init… │                     │       │           │          │ │
+│ │ @@ -1 +1 @@         │                     │       │           │          │ │
+│ │ -__version__ =      │                     │       │           │          │ │
+│ │ "0.51.0"            │                     │       │           │          │ │
+│ │ +__version__ =      │                     │       │           │          │ │
+│ │ "0.25.0"            │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+  5%|▌         | 6/120 [09:57<3:08:07, 99.01s/it] step 6  reward=-0.201  reward_std=1.329  kl=0.001  mean_length=132.781  clipped_ratio=0.031  step_time=84.019  loss=0.181  gate=-0.201
+                                                   5%|▌         | 6/120 [09:57<3:08:07, 99.01s/it]{'loss': '0.181', 'grad_norm': '0.2517', 'learning_rate': '5e-06', 'num_tokens': '4.076e+05', 'completions/mean_length': '132.8', 'completions/min_length': '7', 'completions/max_length': '500', 'completions/clipped_ratio': '0.03125', 'completions/mean_terminated_length': '120.9', 'completions/min_terminated_length': '7', 'completions/max_terminated_length': '377', 'rewards/gate/mean': '-0.2008', 'rewards/gate/std': '1.329', 'reward': '-0.2008', 'reward_std': '1.329', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.03125', 'review/escalate_frac': '0', 'review/mean_tokens': '132.8', 'review/unparsable_frac': '0.2812', 'sampling/sampling_logp_difference/mean': '0.01829', 'sampling/sampling_logp_difference/max': '0.2719', 'sampling/importance_sampling_ratio/min': '0.321', 'sampling/importance_sampling_ratio/mean': '0.9304', 'sampling/importance_sampling_ratio/max': '2.545', 'kl': '0.0005878', 'entropy': '1.26', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '84.02', 'epoch': '0.09231'}
+╭─────────────────────────────────── Step 6 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┓ │
+│ ┃ Prompt             ┃ Completion         ┃  gate ┃ Advantage ┃ decision   ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━┩ │
+│ │ SYSTEM             │ ASSISTANT          │  1.00 │      0.38 │ block      │ │
+│ │ You are the code   │ {"decision":       │       │           │            │ │
+│ │ review gate for a  │ "block",           │       │           │            │ │
+│ │ production         │ "comments":        │       │           │            │ │
+│ │ repository. Your   │ [{"file":          │       │           │            │ │
+│ │ approval merges    │ "fastapi/response… │       │           │            │ │
+│ │ and deploys the    │ "line_start": 90,  │       │           │            │ │
+│ │ change with no     │ "line_end": 90,    │       │           │            │ │
+│ │ further human      │ "body": "render is │       │           │            │ │
+│ │ review. Decide:    │ overriden, but do  │       │           │            │ │
+│ │   approve  - you   │ not call           │       │           │            │ │
+│ │ are confident the  │ superclass render. │       │           │            │ │
+│ │ change is correct  │ The superclass     │       │           │            │ │
+│ │ and safe to ship.  │ JSONResponse may   │       │           │            │ │
+│ │   block    - you   │ have been          │       │           │            │ │
+│ │ found a defect;    │ implemented with   │       │           │            │ │
+│ │ cite its location. │ caching. The       │       │           │            │ │
+│ │   escalate - you   │ overridden render  │       │           │            │ │
+│ │ cannot establish   │ method should be   │       │           │            │ │
+│ │ safety from what   │ fixed to call the  │       │           │            │ │
+│ │ you can see; a     │ superclass render  │       │           │            │ │
+│ │ human must look.   │ or else the cached │       │           │            │ │
+│ │ Approving a change │ view is not        │       │           │            │ │
+│ │ that contains a    │ invalidated."}]}   │       │           │            │ │
+│ │ defect is the      │                    │       │           │            │ │
+│ │ worst outcome.     │                    │       │           │            │ │
+│ │ Blocking a correct │                    │       │           │            │ │
+│ │ change costs an    │                    │       │           │            │ │
+│ │ engineer's time.   │                    │       │           │            │ │
+│ │ Escalating is      │                    │       │           │            │ │
+│ │ cheap but useless  │                    │       │           │            │ │
+│ │ if done for        │                    │       │           │            │ │
+│ │ everything.        │                    │       │           │            │ │
+│ │ Respond with       │                    │       │           │            │ │
+│ │ exactly one JSON   │                    │       │           │            │ │
+│ │ object and nothing │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ {"decision":       │                    │       │           │            │ │
+│ │ "approve|block|es… │                    │       │           │            │ │
+│ │ "comments":        │                    │       │           │            │ │
+│ │ [{"file": "...",   │                    │       │           │            │ │
+│ │ "line_start": N,   │                    │       │           │            │ │
+│ │ "line_end": N,     │                    │       │           │            │ │
+│ │ "body": "...",     │                    │       │           │            │ │
+│ │ "proposed_test":   │                    │       │           │            │ │
+│ │ "optional pytest   │                    │       │           │            │ │
+│ │ source"}]}         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ USER               │                    │       │           │            │ │
+│ │ Repository:        │                    │       │           │            │ │
+│ │ fastapi            │                    │       │           │            │ │
+│ │ Files changed:     │                    │       │           │            │ │
+│ │ docs/en/docs/refe… │                    │       │           │            │ │
+│ │ fastapi/responses… │                    │       │           │            │ │
+│ │ pyproject.toml,    │                    │       │           │            │ │
+│ │ tests/test_deprec… │                    │       │           │            │ │
+│ │ tests/test_orjson… │                    │       │           │            │ │
+│ │ tests/test_tutori… │                    │       │           │            │ │
+│ │ tests/test_tutori… │                    │       │           │            │ │
+│ │ uv.lock            │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Not shown          │                    │       │           │            │ │
+│ │ (non-code or over  │                    │       │           │            │ │
+│ │ budget; treat as   │                    │       │           │            │ │
+│ │ unreviewed):       │                    │       │           │            │ │
+│ │ docs/en/docs/refe… │                    │       │           │            │ │
+│ │ (1051 chars,       │                    │       │           │            │ │
+│ │ non-code), uv.lock │                    │       │           │            │ │
+│ │ (5464 chars,       │                    │       │           │            │ │
+│ │ non-code)          │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Context around the │                    │       │           │            │ │
+│ │ change             │                    │       │           │            │ │
+│ │ (mechanically      │                    │       │           │            │ │
+│ │ extracted):        │                    │       │           │            │ │
+│ │ Changed            │                    │       │           │            │ │
+│ │ definitions:       │                    │       │           │            │ │
+│ │ fastapi/responses… │                    │       │           │            │ │
+│ │ fastapi/responses… │                    │       │           │            │ │
+│ │ fastapi/responses… │                    │       │           │            │ │
+│ │ fastapi/responses… │                    │       │           │            │ │
+│ │ tests/test_deprec… │                    │       │           │            │ │
+│ │ tests/test_deprec… │                    │       │           │            │ │
+│ │ tests/test_deprec… │                    │       │           │            │ │
+│ │ tests/test_deprec… │                    │       │           │            │ │
+│ │ tests/test_deprec… │                    │       │           │            │ │
+│ │ tests/test_deprec… │                    │       │           │            │ │
+│ │ tests/test_deprec… │                    │       │           │            │ │
+│ │ tests/test_deprec… │                    │       │           │            │ │
+│ │ tests/test_deprec… │                    │       │           │            │ │
+│ │ tests/test_orjson… │                    │       │           │            │ │
+│ │ tests/test_orjson… │                    │       │           │            │ │
+│ │ tests/test_tutori… │                    │       │           │            │ │
+│ │ tests/test_tutori… │                    │       │           │            │ │
+│ │ tests/test_tutori… │                    │       │           │            │ │
+│ │ tests/test_tutori… │                    │       │           │            │ │
+│ │ tests/test_tutori… │                    │       │           │            │ │
+│ │ Callers elsewhere  │                    │       │           │            │ │
+│ │ (file:line):       │                    │       │           │            │ │
+│ │   tests/test_open… │                    │       │           │            │ │
+│ │ SubItem(BaseModel… │                    │       │           │            │ │
+│ │   tests/test_open… │                    │       │           │            │ │
+│ │ sub=SubItem(subna… │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ fastapi/responses… │                    │       │           │            │ │
+│ │   05ca41cfd        │                    │       │           │            │ │
+│ │ 2023-10-18 ✨ Add  │                    │       │           │            │ │
+│ │ reference (code    │                    │       │           │            │ │
+│ │ API) docs with PEP │                    │       │           │            │ │
+│ │ 727, add subclass  │                    │       │           │            │ │
+│ │ with custom        │                    │       │           │            │ │
+│ │ docstrings for     │                    │       │           │            │ │
+│ │ `BackgroundTasks`, │                    │       │           │            │ │
+│ │ refactor docs      │                    │       │           │            │ │
+│ │ structure (#10392) │                    │       │           │            │ │
+│ │   52fd0afc9        │                    │       │           │            │ │
+│ │ 2023-06-10 ♻       │                    │       │           │            │ │
+│ │ Remove             │                    │       │           │            │ │
+│ │ `media_type` from  │                    │       │           │            │ │
+│ │ `ORJSONResponse`   │                    │       │           │            │ │
+│ │ as it's inherited  │                    │       │           │            │ │
+│ │ from the parent    │                    │       │           │            │ │
+│ │ class (#5805)      │                    │       │           │            │ │
+│ │   7250c194d        │                    │       │           │            │ │
+│ │ 2022-09-02 ✨      │                    │       │           │            │ │
+│ │ Update             │                    │       │           │            │ │
+│ │ `ORJSONResponse`   │                    │       │           │            │ │
+│ │ to support non     │                    │       │           │            │ │
+│ │ `str` keys and     │                    │       │           │            │ │
+│ │ serializing Numpy  │                    │       │           │            │ │
+│ │ arrays (#3892)     │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ tests/test_orjson… │                    │       │           │            │ │
+│ │   7250c194d        │                    │       │           │            │ │
+│ │ 2022-09-02 ✨      │                    │       │           │            │ │
+│ │ Update             │                    │       │           │            │ │
+│ │ `ORJSONResponse`   │                    │       │           │            │ │
+│ │ to support non     │                    │       │           │            │ │
+│ │ `str` keys and     │                    │       │           │            │ │
+│ │ serializing Numpy  │                    │       │           │            │ │
+│ │ arrays (#3892)     │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ tests/test_tutori… │                    │       │           │            │ │
+│ │   590a5e535        │                    │       │           │            │ │
+│ │ 2026-02-22 ✨      │                    │       │           │            │ │
+│ │ Serialize JSON     │                    │       │           │            │ │
+│ │ response with      │                    │       │           │            │ │
+│ │ Pydantic (in       │                    │       │           │            │ │
+│ │ Rust), when        │                    │       │           │            │ │
+│ │ there's a Pydantic │                    │       │           │            │ │
+│ │ return type or     │                    │       │           │            │ │
+│ │ response model     │                    │       │           │            │ │
+│ │ (#14962)           │                    │       │           │            │ │
+│ │   c9e2277d8        │                    │       │           │            │ │
+│ │ 2026-02-12 📝      │                    │       │           │            │ │
+│ │ Update source      │                    │       │           │            │ │
+│ │ examples and docs  │                    │       │           │            │ │
+│ │ from Python 3.9 to │                    │       │           │            │ │
+│ │ 3.10 (#14900)      │                    │       │           │            │ │
+│ │   9f4ecf562        │                    │       │           │            │ │
+│ │ 2026-02-08 ✅ Add  │                    │       │           │            │ │
+│ │ inline snapshot    │                    │       │           │            │ │
+│ │ tests for OpenAPI  │                    │       │           │            │ │
+│ │ before changes     │                    │       │           │            │ │
+│ │ from Pydantic v2   │                    │       │           │            │ │
+│ │ (#14864)           │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ tests/test_tutori… │                    │       │           │            │ │
+│ │   c9e2277d8        │                    │       │           │            │ │
+│ │ 2026-02-12 📝      │                    │       │           │            │ │
+│ │ Update source      │                    │       │           │            │ │
+│ │ examples and docs  │                    │       │           │            │ │
+│ │ from Python 3.9 to │                    │       │           │            │ │
+│ │ 3.10 (#14900)      │                    │       │           │            │ │
+│ │   9f4ecf562        │                    │       │           │            │ │
+│ │ 2026-02-08 ✅ Add  │                    │       │           │            │ │
+│ │ inline snapshot    │                    │       │           │            │ │
+│ │ tests for OpenAPI  │                    │       │           │            │ │
+│ │ before changes     │                    │       │           │            │ │
+│ │ from Pydantic v2   │                    │       │           │            │ │
+│ │ (#14864)           │                    │       │           │            │ │
+│ │   ed97d9dc0        │                    │       │           │            │ │
+│ │ 2025-12-17 ⚰️      │                    │       │           │            │ │
+│ │ Remove Python 3.8  │                    │       │           │            │ │
+│ │ from CI and remove │                    │       │           │            │ │
+│ │ Python 3.8         │                    │       │           │            │ │
+│ │ examples from      │                    │       │           │            │ │
+│ │ source docs        │                    │       │           │            │ │
+│ │ (#14559)           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Diff:              │                    │       │           │            │ │
+│ │ ```diff            │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/fastapi/respons… │                    │       │           │            │ │
+│ │ b/fastapi/respons… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 6c8db6f33..107bb1… │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/fastapi/respons… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/fastapi/respons… │                    │       │           │            │ │
+│ │ @@ -1,5 +1,6 @@    │                    │       │           │            │ │
+│ │  from typing       │                    │       │           │            │ │
+│ │ import Any         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ fastapi.exceptions │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ starlette.respons… │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ FileResponse as    │                    │       │           │            │ │
+│ │ FileResponse  #    │                    │       │           │            │ │
+│ │ noqa               │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ starlette.respons… │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ HTMLResponse as    │                    │       │           │            │ │
+│ │ HTMLResponse  #    │                    │       │           │            │ │
+│ │ noqa               │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ starlette.respons… │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ JSONResponse as    │                    │       │           │            │ │
+│ │ JSONResponse  #    │                    │       │           │            │ │
+│ │ noqa               │                    │       │           │            │ │
+│ │ @@ -7,6 +8,7 @@    │                    │       │           │            │ │
+│ │ from               │                    │       │           │            │ │
+│ │ starlette.respons… │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ PlainTextResponse  │                    │       │           │            │ │
+│ │ as                 │                    │       │           │            │ │
+│ │ PlainTextResponse  │                    │       │           │            │ │
+│ │ # noqa             │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ starlette.respons… │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ RedirectResponse   │                    │       │           │            │ │
+│ │ as                 │                    │       │           │            │ │
+│ │ RedirectResponse   │                    │       │           │            │ │
+│ │ # noqa             │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ starlette.respons… │                    │       │           │            │ │
+│ │ import Response as │                    │       │           │            │ │
+│ │ Response  # noqa   │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ starlette.respons… │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ StreamingResponse  │                    │       │           │            │ │
+│ │ as                 │                    │       │           │            │ │
+│ │ StreamingResponse  │                    │       │           │            │ │
+│ │ # noqa             │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ typing_extensions  │                    │       │           │            │ │
+│ │ import deprecated  │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  try:              │                    │       │           │            │ │
+│ │      import ujson  │                    │       │           │            │ │
+│ │ @@ -20,12 +22,29   │                    │       │           │            │ │
+│ │ @@ except          │                    │       │           │            │ │
+│ │ ImportError:  #    │                    │       │           │            │ │
+│ │ pragma: nocover    │                    │       │           │            │ │
+│ │      orjson = None │                    │       │           │            │ │
+│ │ # type: ignore     │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +@deprecated(      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "UJSONResponse is  │                    │       │           │            │ │
+│ │ deprecated,        │                    │       │           │            │ │
+│ │ FastAPI now        │                    │       │           │            │ │
+│ │ serializes data    │                    │       │           │            │ │
+│ │ directly to JSON " │                    │       │           │            │ │
+│ │ +    "bytes via    │                    │       │           │            │ │
+│ │ Pydantic when a    │                    │       │           │            │ │
+│ │ return type or     │                    │       │           │            │ │
+│ │ response model is  │                    │       │           │            │ │
+│ │ set, which is "    │                    │       │           │            │ │
+│ │ +    "faster and   │                    │       │           │            │ │
+│ │ doesn't need a     │                    │       │           │            │ │
+│ │ custom response    │                    │       │           │            │ │
+│ │ class. Read more   │                    │       │           │            │ │
+│ │ in the FastAPI "   │                    │       │           │            │ │
+│ │ +    "docs:        │                    │       │           │            │ │
+│ │ https://fastapi.t… │                    │       │           │            │ │
+│ │ "                  │                    │       │           │            │ │
+│ │ +    "and          │                    │       │           │            │ │
+│ │ https://fastapi.t… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ category=FastAPID… │                    │       │           │            │ │
+│ │ +    stacklevel=2, │                    │       │           │            │ │
+│ │ +)                 │                    │       │           │            │ │
+│ │  class             │                    │       │           │            │ │
+│ │ UJSONResponse(JSO… │                    │       │           │            │ │
+│ │ -    """           │                    │       │           │            │ │
+│ │ -    JSON response │                    │       │           │            │ │
+│ │ using the          │                    │       │           │            │ │
+│ │ high-performance   │                    │       │           │            │ │
+│ │ ujson library to   │                    │       │           │            │ │
+│ │ serialize data to  │                    │       │           │            │ │
+│ │ JSON.              │                    │       │           │            │ │
+│ │ +    """JSON       │                    │       │           │            │ │
+│ │ response using the │                    │       │           │            │ │
+│ │ ujson library to   │                    │       │           │            │ │
+│ │ serialize data to  │                    │       │           │            │ │
+│ │ JSON.              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ **Deprecated**:    │                    │       │           │            │ │
+│ │ `UJSONResponse` is │                    │       │           │            │ │
+│ │ deprecated.        │                    │       │           │            │ │
+│ │ FastAPI now        │                    │       │           │            │ │
+│ │ serializes data    │                    │       │           │            │ │
+│ │ +    directly to   │                    │       │           │            │ │
+│ │ JSON bytes via     │                    │       │           │            │ │
+│ │ Pydantic when a    │                    │       │           │            │ │
+│ │ return type or     │                    │       │           │            │ │
+│ │ response model is  │                    │       │           │            │ │
+│ │ +    set, which is │                    │       │           │            │ │
+│ │ faster and doesn't │                    │       │           │            │ │
+│ │ need a custom      │                    │       │           │            │ │
+│ │ response class.    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    Read more in  │                    │       │           │            │ │
+│ │ the                │                    │       │           │            │ │
+│ │ +    [FastAPI docs │                    │       │           │            │ │
+│ │ for Custom         │                    │       │           │            │ │
+│ │ Response](https:/… │                    │       │           │            │ │
+│ │ +    and the       │                    │       │           │            │ │
+│ │ +    [FastAPI docs │                    │       │           │            │ │
+│ │ for Response       │                    │       │           │            │ │
+│ │ Model](https://fa… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    Read more     │                    │       │           │            │ │
+│ │ about it in the    │                    │       │           │            │ │
+│ │ -    [FastAPI docs │                    │       │           │            │ │
+│ │ for Custom         │                    │       │           │            │ │
+│ │ Response - HTML,   │                    │       │           │            │ │
+│ │ Stream, File,      │                    │       │           │            │ │
+│ │ others](https://f… │                    │       │           │            │ │
+│ │ +    **Note**:     │                    │       │           │            │ │
+│ │ `ujson` is not     │                    │       │           │            │ │
+│ │ included with      │                    │       │           │            │ │
+│ │ FastAPI and must   │                    │       │           │            │ │
+│ │ be installed       │                    │       │           │            │ │
+│ │ +    separately,   │                    │       │           │            │ │
+│ │ e.g. `pip install  │                    │       │           │            │ │
+│ │ ujson`.            │                    │       │           │            │ │
+│ │      """           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ render(self,       │                    │       │           │            │ │
+│ │ content: Any) ->   │                    │       │           │            │ │
+│ │ bytes:             │                    │       │           │            │ │
+│ │ @@ -33,12 +52,29   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ UJSONResponse(JSO… │                    │       │           │            │ │
+│ │          return    │                    │       │           │            │ │
+│ │ ujson.dumps(conte… │                    │       │           │            │ │
+│ │ ensure_ascii=Fals… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +@deprecated(      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "ORJSONResponse is │                    │       │           │            │ │
+│ │ deprecated,        │                    │       │           │            │ │
+│ │ FastAPI now        │                    │       │           │            │ │
+│ │ serializes data    │                    │       │           │            │ │
+│ │ directly to JSON " │                    │       │           │            │ │
+│ │ +    "bytes via    │                    │       │           │            │ │
+│ │ Pydantic when a    │                    │       │           │            │ │
+│ │ return type or     │                    │       │           │            │ │
+│ │ response model is  │                    │       │           │            │ │
+│ │ set, which is "    │                    │       │           │            │ │
+│ │ +    "faster and   │                    │       │           │            │ │
+│ │ doesn't need a     │                    │       │           │            │ │
+│ │ custom response    │                    │       │           │            │ │
+│ │ class. Read more   │                    │       │           │            │ │
+│ │ in the FastAPI "   │                    │       │           │            │ │
+│ │ +    "docs:        │                    │       │           │            │ │
+│ │ https://fastapi.t… │                    │       │           │            │ │
+│ │ "                  │                    │       │           │            │ │
+│ │ +    "and          │                    │       │           │            │ │
+│ │ https://fastapi.t… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ category=FastAPID… │                    │       │           │            │ │
+│ │ +    stacklevel=2, │                    │       │           │            │ │
+│ │ +)                 │                    │       │           │            │ │
+│ │  class             │                    │       │           │            │ │
+│ │ ORJSONResponse(JS… │                    │       │           │            │ │
+│ │ -    """           │                    │       │           │            │ │
+│ │ -    JSON response │                    │       │           │            │ │
+│ │ using the          │                    │       │           │            │ │
+│ │ high-performance   │                    │       │           │            │ │
+│ │ orjson library to  │                    │       │           │            │ │
+│ │ serialize data to  │                    │       │           │            │ │
+│ │ JSON.              │                    │       │           │            │ │
+│ │ +    """JSON       │                    │       │           │            │ │
+│ │ response using the │                    │       │           │            │ │
+│ │ orjson library to  │                    │       │           │            │ │
+│ │ serialize data to  │                    │       │           │            │ │
+│ │ JSON.              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ **Deprecated**:    │                    │       │           │            │ │
+│ │ `ORJSONResponse`   │                    │       │           │            │ │
+│ │ is deprecated.     │                    │       │           │            │ │
+│ │ FastAPI now        │                    │       │           │            │ │
+│ │ serializes data    │                    │       │           │            │ │
+│ │ +    directly to   │                    │       │           │            │ │
+│ │ JSON bytes via     │                    │       │           │            │ │
+│ │ Pydantic when a    │                    │       │           │            │ │
+│ │ return type or     │                    │       │           │            │ │
+│ │ response model is  │                    │       │           │            │ │
+│ │ +    set, which is │                    │       │           │            │ │
+│ │ faster and doesn't │                    │       │           │            │ │
+│ │ need a custom      │                    │       │           │            │ │
+│ │ response class.    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    Read more in  │                    │       │           │            │ │
+│ │ the                │                    │       │           │            │ │
+│ │ +    [FastAPI docs │                    │       │           │            │ │
+│ │ for Custom         │                    │       │           │            │ │
+│ │ Response](https:/… │                    │       │           │            │ │
+│ │ +    and the       │                    │       │           │            │ │
+│ │ +    [FastAPI docs │                    │       │           │            │ │
+│ │ for Response       │                    │       │           │            │ │
+│ │ Model](https://fa… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    Read more     │                    │       │           │            │ │
+│ │ about it in the    │                    │       │           │            │ │
+│ │ -    [FastAPI docs │                    │       │           │            │ │
+│ │ for Custom         │                    │       │           │            │ │
+│ │ Response - HTML,   │                    │       │           │            │ │
+│ │ Stream, File,      │                    │       │           │            │ │
+│ │ others](https://f… │                    │       │           │            │ │
+│ │ +    **Note**:     │                    │       │           │            │ │
+│ │ `orjson` is not    │                    │       │           │            │ │
+│ │ included with      │                    │       │           │            │ │
+│ │ FastAPI and must   │                    │       │           │            │ │
+│ │ be installed       │                    │       │           │            │ │
+│ │ +    separately,   │                    │       │           │            │ │
+│ │ e.g. `pip install  │                    │       │           │            │ │
+│ │ orjson`.           │                    │       │           │            │ │
+│ │      """           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ render(self,       │                    │       │           │            │ │
+│ │ content: Any) ->   │                    │       │           │            │ │
+│ │ bytes:             │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/pyproject.toml   │                    │       │           │            │ │
+│ │ b/pyproject.toml   │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ c51eb8ce9..79dfc1… │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/pyproject.toml   │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/pyproject.toml   │                    │       │           │            │ │
+│ │ @@ -105,10 +105,6  │                    │       │           │            │ │
+│ │ @@ all = [         │                    │       │           │            │ │
+│ │      "itsdangerous │                    │       │           │            │ │
+│ │ >=1.1.0",          │                    │       │           │            │ │
+│ │      # For         │                    │       │           │            │ │
+│ │ Starlette's schema │                    │       │           │            │ │
+│ │ generation, would  │                    │       │           │            │ │
+│ │ not be used with   │                    │       │           │            │ │
+│ │ FastAPI            │                    │       │           │            │ │
+│ │      "pyyaml       │                    │       │           │            │ │
+│ │ >=5.3.1",          │                    │       │           │            │ │
+│ │ -    # For         │                    │       │           │            │ │
+│ │ UJSONResponse      │                    │       │           │            │ │
+│ │ -    "ujson        │                    │       │           │            │ │
+│ │ >=5.8.0",          │                    │       │           │            │ │
+│ │ -    # For         │                    │       │           │            │ │
+│ │ ORJSONResponse     │                    │       │           │            │ │
+│ │ -    "orjson       │                    │       │           │            │ │
+│ │ >=3.9.3",          │                    │       │           │            │ │
+│ │      # To validate │                    │       │           │            │ │
+│ │ email fields       │                    │       │           │            │ │
+│ │      "email-valid… │                    │       │           │            │ │
+│ │ >=2.0.0",          │                    │       │           │            │ │
+│ │      # Uvicorn     │                    │       │           │            │ │
+│ │ with uvloop        │                    │       │           │            │ │
+│ │ @@ -151,6 +147,10  │                    │       │           │            │ │
+│ │ @@ docs = [        │                    │       │           │            │ │
+│ │  docs-tests = [    │                    │       │           │            │ │
+│ │      "httpx        │                    │       │           │            │ │
+│ │ >=0.23.0,<1.0.0",  │                    │       │           │            │ │
+│ │      "ruff         │                    │       │           │            │ │
+│ │ >=0.14.14",        │                    │       │           │            │ │
+│ │ +    # For         │                    │       │           │            │ │
+│ │ UJSONResponse      │                    │       │           │            │ │
+│ │ +    "ujson        │                    │       │           │            │ │
+│ │ >=5.8.0",          │                    │       │           │            │ │
+│ │ +    # For         │                    │       │           │            │ │
+│ │ ORJSONResponse     │                    │       │           │            │ │
+│ │ +    "orjson       │                    │       │           │            │ │
+│ │ >=3.9.3",          │                    │       │           │            │ │
+│ │  ]                 │                    │       │           │            │ │
+│ │  github-actions =  │                    │       │           │            │ │
+│ │ [                  │                    │       │           │            │ │
+│ │      "httpx        │                    │       │           │            │ │
+│ │ >=0.27.0,<1.0.0",  │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_depr… │                    │       │           │            │ │
+│ │ b/tests/test_depr… │                    │       │           │            │ │
+│ │ new file mode      │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 000000000..eff579… │                    │       │           │            │ │
+│ │ --- /dev/null      │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_depr… │                    │       │           │            │ │
+│ │ @@ -0,0 +1,73 @@   │                    │       │           │            │ │
+│ │ +import warnings   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +import pytest     │                    │       │           │            │ │
+│ │ +from fastapi      │                    │       │           │            │ │
+│ │ import FastAPI     │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ fastapi.exceptions │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ fastapi.responses  │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ ORJSONResponse,    │                    │       │           │            │ │
+│ │ UJSONResponse      │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ fastapi.testclient │                    │       │           │            │ │
+│ │ import TestClient  │                    │       │           │            │ │
+│ │ +from pydantic     │                    │       │           │            │ │
+│ │ import BaseModel   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +class             │                    │       │           │            │ │
+│ │ Item(BaseModel):   │                    │       │           │            │ │
+│ │ +    name: str     │                    │       │           │            │ │
+│ │ +    price: float  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +# ORJSON          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ _make_orjson_app() │                    │       │           │            │ │
+│ │ -> FastAPI:        │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +        app =     │                    │       │           │            │ │
+│ │ FastAPI(default_r… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ @app.get("/items") │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ get_items() ->     │                    │       │           │            │ │
+│ │ Item:              │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ Item(name="widget… │                    │       │           │            │ │
+│ │ price=9.99)        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    return app    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_orjson_respo… │                    │       │           │            │ │
+│ │ +    app =         │                    │       │           │            │ │
+│ │ _make_orjson_app() │                    │       │           │            │ │
+│ │ +    client =      │                    │       │           │            │ │
+│ │ TestClient(app)    │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +        response  │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ client.get("/item… │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ response.status_c… │                    │       │           │            │ │
+│ │ == 200             │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ response.json() == │                    │       │           │            │ │
+│ │ {"name": "widget", │                    │       │           │            │ │
+│ │ "price": 9.99}     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_orjson_respo… │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ pytest.warns(Fast… │                    │       │           │            │ │
+│ │ match="ORJSONResp… │                    │       │           │            │ │
+│ │ is deprecated"):   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ ORJSONResponse(co… │                    │       │           │            │ │
+│ │ "world"})          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +# UJSON           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ _make_ujson_app()  │                    │       │           │            │ │
+│ │ -> FastAPI:        │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +        app =     │                    │       │           │            │ │
+│ │ FastAPI(default_r… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ @app.get("/items") │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ get_items() ->     │                    │       │           │            │ │
+│ │ Item:              │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ Item(name="widget… │                    │       │           │            │ │
+│ │ price=9.99)        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    return app    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_ujson_respon… │                    │       │           │            │ │
+│ │ +    app =         │                    │       │           │            │ │
+│ │ _make_ujson_app()  │                    │       │           │            │ │
+│ │ +    client =      │                    │       │           │            │ │
+│ │ TestClient(app)    │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +        response  │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ client.get("/item… │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ response.status_c… │                    │       │           │            │ │
+│ │ == 200             │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ response.json() == │                    │       │           │            │ │
+│ │ {"name": "widget", │                    │       │           │            │ │
+│ │ "price": 9.99}     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_ujson_respon… │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ pytest.warns(Fast… │                    │       │           │            │ │
+│ │ match="UJSONRespo… │                    │       │           │            │ │
+│ │ is deprecated"):   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ UJSONResponse(con… │                    │       │           │            │ │
+│ │ "world"})          │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_orjs… │                    │       │           │            │ │
+│ │ b/tests/test_orjs… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 6fe62daf9..63ea05… │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_orjs… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_orjs… │                    │       │           │            │ │
+│ │ @@ -1,9 +1,14 @@   │                    │       │           │            │ │
+│ │ +import warnings   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │  from fastapi      │                    │       │           │            │ │
+│ │ import FastAPI     │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ fastapi.exceptions │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ fastapi.responses  │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ ORJSONResponse     │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ fastapi.testclient │                    │       │           │            │ │
+│ │ import TestClient  │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ sqlalchemy.sql.el… │                    │       │           │            │ │
+│ │ import quoted_name │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -app =             │                    │       │           │            │ │
+│ │ FastAPI(default_r… │                    │       │           │            │ │
+│ │ +with              │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +    app =         │                    │       │           │            │ │
+│ │ FastAPI(default_r… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  @app.get("/orjso… │                    │       │           │            │ │
+│ │ @@ -16,6 +21,8 @@  │                    │       │           │            │ │
+│ │ client =           │                    │       │           │            │ │
+│ │ TestClient(app)    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_orjson_non_s… │                    │       │           │            │ │
+│ │ -    with client:  │                    │       │           │            │ │
+│ │ -        response  │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ client.get("/orjs… │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +        with      │                    │       │           │            │ │
+│ │ client:            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ response =         │                    │       │           │            │ │
+│ │ client.get("/orjs… │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.json() == │                    │       │           │            │ │
+│ │ {"msg": "Hello     │                    │       │           │            │ │
+│ │ World", "1": 1}    │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_tuto… │                    │       │           │            │ │
+│ │ b/tests/test_tuto… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ cec5ebe6c..a691dd… │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_tuto… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_tuto… │                    │       │           │            │ │
+│ │ @@ -17,12 +17,14   │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ get_client(reques… │                    │       │           │            │ │
+│ │ pytest.FixtureReq… │                    │       │           │            │ │
+│ │      return client │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +@pytest.mark.fil… │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_get_custom_r… │                    │       │           │            │ │
+│ │ TestClient):       │                    │       │           │            │ │
+│ │      response =    │                    │       │           │            │ │
+│ │ client.get("/item… │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.status_c… │                    │       │           │            │ │
+│ │ == 200,            │                    │       │           │            │ │
+│ │ response.text      │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.json() == │                    │       │           │            │ │
+│ │ [{"item_id":       │                    │       │           │            │ │
+│ │ "Foo"}]            │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +@pytest.mark.fil… │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_openapi_sche… │                    │       │           │            │ │
+│ │ TestClient):       │                    │       │           │            │ │
+│ │      response =    │                    │       │           │            │ │
+│ │ client.get("/open… │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.status_c… │                    │       │           │            │ │
+│ │ == 200,            │                    │       │           │            │ │
+│ │ response.text      │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_tuto… │                    │       │           │            │ │
+│ │ b/tests/test_tuto… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 32437db86..11ce81… │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_tuto… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_tuto… │                    │       │           │            │ │
+│ │ @@ -1,17 +1,25 @@  │                    │       │           │            │ │
+│ │ +import warnings   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +import pytest     │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ fastapi.exceptions │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ fastapi.testclient │                    │       │           │            │ │
+│ │ import TestClient  │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ inline_snapshot    │                    │       │           │            │ │
+│ │ import snapshot    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -from              │                    │       │           │            │ │
+│ │ docs_src.custom_r… │                    │       │           │            │ │
+│ │ import app         │                    │       │           │            │ │
+│ │ +with              │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +    from          │                    │       │           │            │ │
+│ │ docs_src.custom_r… │                    │       │           │            │ │
+│ │ import app         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  client =          │                    │       │           │            │ │
+│ │ TestClient(app)    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +@pytest.mark.fil… │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_get_custom_r… │                    │       │           │            │ │
+│ │      response =    │                    │       │           │            │ │
+│ │ client.get("/item… │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.status_c… │                    │       │           │            │ │
+│ │ == 200,            │                    │       │           │            │ │
+│ │ response.text      │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.json() == │                    │       │           │            │ │
+│ │ [{"item_id":       │                    │       │           │            │ │
+│ │ "Foo"}]            │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +@pytest.mark.fil… │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_openapi_sche… │                    │       │           │            │ │
+│ │      response =    │                    │       │           │            │ │
+│ │ client.get("/open… │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.status_c… │                    │       │           │            │ │
+│ │ == 200,            │                    │       │           │            │ │
+│ │ response.text      │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │ -1.20 │     -1.21 │ unparsable │ │
+│ │ You are the code   │ {"decision":       │       │           │            │ │
+│ │ review gate for a  │ "block",           │       │           │            │ │
+│ │ production         │ "comments":        │       │           │            │ │
+│ │ repository. Your   │ [{"file":          │       │           │            │ │
+│ │ approval merges    │ "src/click/testin… │       │           │            │ │
+│ │ and deploys the    │ "line_start": 24,  │       │           │            │ │
+│ │ change with no     │ "line_end": 27,    │       │           │            │ │
+│ │ further human      │ "body": "New code  │       │           │            │ │
+│ │ review. Decide:    │ uses type aliases  │       │           │            │ │
+│ │   approve  - you   │ for CaptureMode,   │       │           │            │ │
+│ │ are confident the  │ but the new        │       │           │            │ │
+│ │ change is correct  │ condition is in    │       │           │            │ │
+│ │ and safe to ship.  │ the wrong          │       │           │            │ │
+│ │   block    - you   │ place."}]}         │       │           │            │ │
+│ │ found a defect;    │ {"decision":       │       │           │            │ │
+│ │ cite its location. │ "block",           │       │           │            │ │
+│ │   escalate - you   │ "comments":        │       │           │            │ │
+│ │ cannot establish   │ [{"file":          │       │           │            │ │
+│ │ safety from what   │ "src/click/testin… │       │           │            │ │
+│ │ you can see; a     │ "line_start": 24,  │       │           │            │ │
+│ │ human must look.   │ "line_end": 27,    │       │           │            │ │
+│ │ Approving a change │ "body": "New code  │       │           │            │ │
+│ │ that contains a    │ uses type aliases  │       │           │            │ │
+│ │ defect is the      │ for CaptureMode,   │       │           │            │ │
+│ │ worst outcome.     │ but the new        │       │           │            │ │
+│ │ Blocking a correct │ condition is in    │       │           │            │ │
+│ │ change costs an    │ the wrong          │       │           │            │ │
+│ │ engineer's time.   │ place."}]}         │       │           │            │ │
+│ │ Escalating is      │                    │       │           │            │ │
+│ │ cheap but useless  │                    │       │           │            │ │
+│ │ if done for        │                    │       │           │            │ │
+│ │ everything.        │                    │       │           │            │ │
+│ │ Respond with       │                    │       │           │            │ │
+│ │ exactly one JSON   │                    │       │           │            │ │
+│ │ object and nothing │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ {"decision":       │                    │       │           │            │ │
+│ │ "approve|block|es… │                    │       │           │            │ │
+│ │ "comments":        │                    │       │           │            │ │
+│ │ [{"file": "...",   │                    │       │           │            │ │
+│ │ "line_start": N,   │                    │       │           │            │ │
+│ │ "line_end": N,     │                    │       │           │            │ │
+│ │ "body": "...",     │                    │       │           │            │ │
+│ │ "proposed_test":   │                    │       │           │            │ │
+│ │ "optional pytest   │                    │       │           │            │ │
+│ │ source"}]}         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ USER               │                    │       │           │            │ │
+│ │ Repository: click  │                    │       │           │            │ │
+│ │ Files changed:     │                    │       │           │            │ │
+│ │ src/click/testing… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Context around the │                    │       │           │            │ │
+│ │ change             │                    │       │           │            │ │
+│ │ (mechanically      │                    │       │           │            │ │
+│ │ extracted):        │                    │       │           │            │ │
+│ │ Changed            │                    │       │           │            │ │
+│ │ definitions:       │                    │       │           │            │ │
+│ │ src/click/testing… │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ src/click/testing… │                    │       │           │            │ │
+│ │   e39679a          │                    │       │           │            │ │
+│ │ 2026-05-18 Add     │                    │       │           │            │ │
+│ │ type annotations   │                    │       │           │            │ │
+│ │ for instance       │                    │       │           │            │ │
+│ │ attributes in      │                    │       │           │            │ │
+│ │ `testing`          │                    │       │           │            │ │
+│ │   ad39d74          │                    │       │           │            │ │
+│ │ 2026-03-05 Add     │                    │       │           │            │ │
+│ │ `capture`          │                    │       │           │            │ │
+│ │ parameter to       │                    │       │           │            │ │
+│ │ `CliRunner` and    │                    │       │           │            │ │
+│ │ revert             │                    │       │           │            │ │
+│ │ default-mode       │                    │       │           │            │ │
+│ │ `fileno` exposure  │                    │       │           │            │ │
+│ │   bb59ba0          │                    │       │           │            │ │
+│ │ 2026-04-14 Apply   │                    │       │           │            │ │
+│ │ format guidelines  │                    │       │           │            │ │
+│ │ to commits since   │                    │       │           │            │ │
+│ │ latest 8.3.2       │                    │       │           │            │ │
+│ │ release            │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Diff:              │                    │       │           │            │ │
+│ │ ```diff            │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/src/click/testi… │                    │       │           │            │ │
+│ │ b/src/click/testi… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ d4473ca..19fae4a   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/src/click/testi… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/src/click/testi… │                    │       │           │            │ │
+│ │ @@ -22,7 +22,10 @@ │                    │       │           │            │ │
+│ │ if                 │                    │       │           │            │ │
+│ │ t.TYPE_CHECKING:   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      from .core    │                    │       │           │            │ │
+│ │ import Command     │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -CaptureMode:      │                    │       │           │            │ │
+│ │ t.TypeAlias =      │                    │       │           │            │ │
+│ │ t.Literal["sys",   │                    │       │           │            │ │
+│ │ "fd"]              │                    │       │           │            │ │
+│ │ +if sys.platform   │                    │       │           │            │ │
+│ │ == "win32":        │                    │       │           │            │ │
+│ │ +    CaptureMode:  │                    │       │           │            │ │
+│ │ t.TypeAlias =      │                    │       │           │            │ │
+│ │ t.Literal["sys"]   │                    │       │           │            │ │
+│ │ # pyright:         │                    │       │           │            │ │
+│ │ ignore[reportRede… │                    │       │           │            │ │
+│ │ +else:             │                    │       │           │            │ │
+│ │ +    CaptureMode:  │                    │       │           │            │ │
+│ │ t.TypeAlias =      │                    │       │           │            │ │
+│ │ t.Literal["sys",   │                    │       │           │            │ │
+│ │ "fd"]  # pyright:  │                    │       │           │            │ │
+│ │ ignore[reportRede… │                    │       │           │            │ │
+│ │  ExceptionInfo:    │                    │       │           │            │ │
+│ │ t.TypeAlias =      │                    │       │           │            │ │
+│ │ tuple[type[BaseEx… │                    │       │           │            │ │
+│ │ BaseException,     │                    │       │           │            │ │
+│ │ TracebackType]     │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
