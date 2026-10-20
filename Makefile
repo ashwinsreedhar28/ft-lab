@@ -59,3 +59,5 @@ sheet-failures:  ## RESULTS="review/agent/results/x.json ..." -> failure_sheet.m
 	python -m review.analysis.sheets failures $(RESULTS)
 sheet-tally:     ## summarize the verdict:/cause: lines you filled in
 	python -m review.analysis.sheets tally
+rescore:         ## RESULTS="..." re-score saved runs against the current review/bench/public_eval.jsonl
+	python -m review.analysis.rescore $(RESULTS)
