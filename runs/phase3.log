@@ -44,3 +44,141 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
 (EngineCore pid=7061) INFO 10-20 21:08:41 [weight_utils.py:1063] Filesystem type for checkpoints: OVERLAY. Checkpoint size: 7.49 GiB. Available RAM: 209.71 GiB.
 (EngineCore pid=7061) INFO 10-20 21:08:41 [weight_utils.py:1086] Auto-prefetch is disabled because the filesystem (OVERLAY) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
 Loading safetensors checkpoint shards:   0% Completed | 0/3 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards:  33% Completed | 1/3 [00:00<00:00,  2.11it/s]
+Loading safetensors checkpoint shards:  67% Completed | 2/3 [00:00<00:00,  2.05it/s]
+Loading safetensors checkpoint shards: 100% Completed | 3/3 [00:01<00:00,  2.86it/s]
+
+(EngineCore pid=7061) INFO 10-20 21:08:42 [default_loader.py:484] Loading weights took 1.06 seconds
+(EngineCore pid=7061) INFO 10-20 21:08:43 [model_runner.py:407] Model loading took 7.56 GiB memory and 24.889694 seconds
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433] EngineCore failed to start.
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433] Traceback (most recent call last):
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1395, in run_engine_core
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     return func(*args, **kwargs)
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1151, in __init__
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     super().__init__(
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 140, in __init__
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     self.model_executor = executor_class(vllm_config)
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     return func(*args, **kwargs)
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/executor/abstract.py", line 113, in __init__
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     self._init_executor()
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/executor/uniproc_executor.py", line 74, in _init_executor
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     self.driver_worker.load_model()
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 545, in load_model
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     self.model_runner.load_model(load_dummy_weights=load_dummy_weights)
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/worker/gpu/model_runner.py", line 468, in load_model
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     self.sampler = Sampler(**sampler_kwargs)
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/worker/gpu/sample/sampler.py", line 89, in __init__
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     not return_sampling_mask and flashinfer_sampler_supported()
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/sample/ops/topk_topp_sampler.py", line 101, in flashinfer_sampler_supported
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     from vllm.v1.attention.backends.flashinfer import FlashInferBackend
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/attention/backends/flashinfer.py", line 12, in <module>
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     from flashinfer import (
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/flashinfer/__init__.py", line 175, in <module>
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     from .gemm import SegmentGEMMWrapper as SegmentGEMMWrapper
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/flashinfer/gemm/__init__.py", line 1, in <module>
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     from .gemm_base import SegmentGEMMWrapper as SegmentGEMMWrapper
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/flashinfer/gemm/gemm_base.py", line 68, in <module>
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     from .kernels.utils import (
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/__init__.py", line 51, in <module>
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     from .bmm_fp8_rubin import SM107PersistentDenseGemmKernel
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]   File "/workspace/venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/bmm_fp8_rubin.py", line 53, in <module>
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433]     from cutlass.cute.nvgpu.tcgen05 import CollectorOp
+(EngineCore pid=7061) ERROR 10-20 21:08:43 [core.py:1433] ImportError: cannot import name 'CollectorOp' from 'cutlass.cute.nvgpu.tcgen05' (/workspace/venv/lib/python3.12/site-packages/nvidia_cutlass_dsl/dsl_packages/cutlass/cute/nvgpu/tcgen05/__init__.py)
+Process EngineCore:
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1437, in run_engine_core
+    raise e
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1395, in run_engine_core
+    engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1151, in __init__
+    super().__init__(
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 140, in __init__
+    self.model_executor = executor_class(vllm_config)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/executor/abstract.py", line 113, in __init__
+    self._init_executor()
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/executor/uniproc_executor.py", line 74, in _init_executor
+    self.driver_worker.load_model()
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 545, in load_model
+    self.model_runner.load_model(load_dummy_weights=load_dummy_weights)
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/worker/gpu/model_runner.py", line 468, in load_model
+    self.sampler = Sampler(**sampler_kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/worker/gpu/sample/sampler.py", line 89, in __init__
+    not return_sampling_mask and flashinfer_sampler_supported()
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/sample/ops/topk_topp_sampler.py", line 101, in flashinfer_sampler_supported
+    from vllm.v1.attention.backends.flashinfer import FlashInferBackend
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/attention/backends/flashinfer.py", line 12, in <module>
+    from flashinfer import (
+  File "/workspace/venv/lib/python3.12/site-packages/flashinfer/__init__.py", line 175, in <module>
+    from .gemm import SegmentGEMMWrapper as SegmentGEMMWrapper
+  File "/workspace/venv/lib/python3.12/site-packages/flashinfer/gemm/__init__.py", line 1, in <module>
+    from .gemm_base import SegmentGEMMWrapper as SegmentGEMMWrapper
+  File "/workspace/venv/lib/python3.12/site-packages/flashinfer/gemm/gemm_base.py", line 68, in <module>
+    from .kernels.utils import (
+  File "/workspace/venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/__init__.py", line 51, in <module>
+    from .bmm_fp8_rubin import SM107PersistentDenseGemmKernel
+  File "/workspace/venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/bmm_fp8_rubin.py", line 53, in <module>
+    from cutlass.cute.nvgpu.tcgen05 import CollectorOp
+ImportError: cannot import name 'CollectorOp' from 'cutlass.cute.nvgpu.tcgen05' (/workspace/venv/lib/python3.12/site-packages/nvidia_cutlass_dsl/dsl_packages/cutlass/cute/nvgpu/tcgen05/__init__.py)
+(MainProcess pid=6637) INFO 10-20 21:08:43 [utils.py:638] [shutdown] Process manager: send sigterm to process EngineCore
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/ft-lab/ftlab/eval.py", line 165, in <module>
+    main()
+  File "/workspace/ft-lab/ftlab/eval.py", line 161, in main
+    run_eval(a.config, a.label, a.model, a.backend, a.max_tokens, a.gpu_mem, a.max_model_len, a.set, a.temperature)
+  File "/workspace/ft-lab/ftlab/eval.py", line 88, in run_eval
+    texts = gen_vllm(model, prompts, max_tokens, gpu_mem, max_model_len, temperature)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ft-lab/ftlab/eval.py", line 38, in gen_vllm
+    llm = LLM(model=model, dtype="bfloat16", gpu_memory_utilization=gpu_mem,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/entrypoints/llm.py", line 344, in __init__
+    self.llm_engine = LLMEngine.from_engine_args(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py", line 185, in from_engine_args
+    return cls(
+           ^^^^
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py", line 111, in __init__
+    self.engine_core = EngineCoreClient.make_client(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 126, in make_client
+    return SyncMPClient(
+           ^^^^^^^^^^^^^
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 917, in __init__
+    super().__init__(
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 674, in __init__
+    with launch_core_engines(
+  File "/usr/lib/python3.12/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1268, in launch_core_engines
+    wait_for_engine_startup(
+  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1348, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
