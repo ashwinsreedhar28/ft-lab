@@ -28,6 +28,9 @@ pip install -q --ignore-installed "vllm${VLLM_PIN}"
 pip install -q --ignore-installed "trl[vllm]${TRL_PIN}" "transformers${TRANSFORMERS_PIN}" peft datasets accelerate \
     pyyaml matplotlib anthropic pytest "huggingface_hub[cli]<2.0"   # transformers (Oct 2026) requires hub <2.0; unpinned pulled 2.2.0
 
+# --ignore-installed leaves stale *.dist-info behind; importlib.metadata then reports a version the module isn't.
+for _ in 1 2 3; do pip uninstall -y -q huggingface_hub 2>/dev/null || break; done
+pip install -q "huggingface_hub[cli]<2.0"
 python -c "import huggingface_hub as h, torch; print('hub', h.__version__, h.__file__); print('torch', torch.__version__, torch.__file__)"
 python - <<'EOF'
 import importlib, json, subprocess, sys
