@@ -92,10 +92,32 @@ def added_lines(repo: Path, sha: str, f: str) -> list[tuple[int, str]]:
     return out
 
 
+def docstring_lines(src: list[str]) -> set[int]:
+    """1-based line numbers inside triple-quoted strings (both quote styles). Operators must not touch them:
+    a `>>>` doctest prompt mutated to `>=>>` passed the guard once (the probe parsed the docstring)."""
+    inside, q, out = False, "", set()
+    for i, line in enumerate(src, 1):
+        j, opened_here = 0, False
+        while True:
+            found = [(k, t) for t in ('"""', "'''") for k in [line.find(t, j)] if k >= 0]
+            if not found:
+                break
+            k, t = min(found)
+            if not inside:
+                inside, q, opened_here = True, t, True
+            elif t == q:
+                inside = False
+            j = k + 3
+        if inside or opened_here:
+            out.add(i)
+    return out
+
+
 def op_mutants(lines: list[tuple[int, str]], k: int, rng: random.Random, src: list[str] | None = None) -> list[dict]:
     cands = []
+    doc = docstring_lines(src) if src else set()
     for ln, text in lines:
-        if SKIP_LINE.match(text):
+        if SKIP_LINE.match(text) or ln in doc or ">>>" in text or text.lstrip().startswith("#"):
             continue
         prev = src[ln - 2].rstrip() if src and ln >= 2 else ""
         continuation = prev.endswith(("(", "[", "{", ",", "\\")) or prev.count("(") > prev.count(")")
