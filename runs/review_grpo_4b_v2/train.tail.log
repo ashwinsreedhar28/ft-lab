@@ -1,400 +1,400 @@
-│ │ {"status": "ok"}    │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    client =       │                     │       │           │          │ │
-│ │ TestClient(app)     │                     │       │           │          │ │
-│ │ +    resp =         │                     │       │           │          │ │
-│ │ client.get("/")     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.status_code == │                     │       │           │          │ │
-│ │ 200                 │                     │       │           │          │ │
-│ │ +    assert "from   │                     │       │           │          │ │
-│ │ dependency" in      │                     │       │           │          │ │
-│ │ task_results        │                     │       │           │          │ │
-│ │ +    assert "from   │                     │       │           │          │ │
-│ │ endpoint" in        │                     │       │           │          │ │
-│ │ task_results        │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
-│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.35 │ approve  │ │
-│ │ You are the code    │ {"decision":        │       │           │          │ │
-│ │ review gate for a   │ "approve",          │       │           │          │ │
-│ │ production          │ "comments":         │       │           │          │ │
-│ │ repository. Your    │ [{"file":           │       │           │          │ │
-│ │ approval merges and │ "src/click/testing… │       │           │          │ │
-│ │ deploys the change  │ "line_start": 28,   │       │           │          │ │
-│ │ with no further     │ "line_end": 28,     │       │           │          │ │
-│ │ human review.       │ "body": "Avoiding   │       │           │          │ │
-│ │ Decide:             │ capturing from a    │       │           │          │ │
-│ │   approve  - you    │ file descriptor on  │       │           │          │ │
-│ │ are confident the   │ Windows as the      │       │           │          │ │
-│ │ change is correct   │ documentation says  │       │           │          │ │
-│ │ and safe to ship.   │ it's not            │       │           │          │ │
-│ │   block    - you    │ supported"}]}       │       │           │          │ │
-│ │ found a defect;     │                     │       │           │          │ │
-│ │ cite its location.  │                     │       │           │          │ │
-│ │   escalate - you    │                     │       │           │          │ │
-│ │ cannot establish    │                     │       │           │          │ │
-│ │ safety from what    │                     │       │           │          │ │
-│ │ you can see; a      │                     │       │           │          │ │
-│ │ human must look.    │                     │       │           │          │ │
-│ │ Approving a change  │                     │       │           │          │ │
-│ │ that contains a     │                     │       │           │          │ │
-│ │ defect is the worst │                     │       │           │          │ │
-│ │ outcome. Blocking a │                     │       │           │          │ │
-│ │ correct change      │                     │       │           │          │ │
-│ │ costs an engineer's │                     │       │           │          │ │
-│ │ time. Escalating is │                     │       │           │          │ │
-│ │ cheap but useless   │                     │       │           │          │ │
-│ │ if done for         │                     │       │           │          │ │
-│ │ everything.         │                     │       │           │          │ │
-│ │ Respond with        │                     │       │           │          │ │
-│ │ exactly one JSON    │                     │       │           │          │ │
-│ │ object and nothing  │                     │       │           │          │ │
-│ │ else:               │                     │       │           │          │ │
-│ │ {"decision":        │                     │       │           │          │ │
-│ │ "approve|block|esc… │                     │       │           │          │ │
-│ │ "comments":         │                     │       │           │          │ │
-│ │ [{"file": "...",    │                     │       │           │          │ │
-│ │ "line_start": N,    │                     │       │           │          │ │
-│ │ "line_end": N,      │                     │       │           │          │ │
-│ │ "body": "...",      │                     │       │           │          │ │
-│ │ "proposed_test":    │                     │       │           │          │ │
-│ │ "optional pytest    │                     │       │           │          │ │
-│ │ source"}]}          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ USER                │                     │       │           │          │ │
-│ │ Repository: click   │                     │       │           │          │ │
-│ │ Files changed:      │                     │       │           │          │ │
-│ │ src/click/testing.… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Context around the  │                     │       │           │          │ │
-│ │ change              │                     │       │           │          │ │
-│ │ (mechanically       │                     │       │           │          │ │
-│ │ extracted):         │                     │       │           │          │ │
-│ │ Changed             │                     │       │           │          │ │
-│ │ definitions:        │                     │       │           │          │ │
-│ │ src/click/testing.… │                     │       │           │          │ │
-│ │ Recent history of   │                     │       │           │          │ │
-│ │ src/click/testing.… │                     │       │           │          │ │
-│ │   e39679a           │                     │       │           │          │ │
-│ │ 2026-05-18 Add type │                     │       │           │          │ │
-│ │ annotations for     │                     │       │           │          │ │
-│ │ instance attributes │                     │       │           │          │ │
-│ │ in `testing`        │                     │       │           │          │ │
-│ │   ad39d74           │                     │       │           │          │ │
-│ │ 2026-03-05 Add      │                     │       │           │          │ │
-│ │ `capture` parameter │                     │       │           │          │ │
-│ │ to `CliRunner` and  │                     │       │           │          │ │
-│ │ revert default-mode │                     │       │           │          │ │
-│ │ `fileno` exposure   │                     │       │           │          │ │
-│ │   bb59ba0           │                     │       │           │          │ │
-│ │ 2026-04-14 Apply    │                     │       │           │          │ │
-│ │ format guidelines   │                     │       │           │          │ │
-│ │ to commits since    │                     │       │           │          │ │
-│ │ latest 8.3.2        │                     │       │           │          │ │
-│ │ release             │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Diff:               │                     │       │           │          │ │
-│ │ ```diff             │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/src/click/testin… │                     │       │           │          │ │
-│ │ b/src/click/testin… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ d4473ca..929d0b7    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/src/click/testin… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/src/click/testin… │                     │       │           │          │ │
-│ │ @@ -22,7 +22,10 @@  │                     │       │           │          │ │
-│ │ if t.TYPE_CHECKING: │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      from .core     │                     │       │           │          │ │
-│ │ import Command      │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -CaptureMode:       │                     │       │           │          │ │
-│ │ t.TypeAlias =       │                     │       │           │          │ │
-│ │ t.Literal["sys",    │                     │       │           │          │ │
-│ │ "fd"]               │                     │       │           │          │ │
-│ │ +if sys.platform != │                     │       │           │          │ │
-│ │ "win32":            │                     │       │           │          │ │
-│ │ +    CaptureMode:   │                     │       │           │          │ │
-│ │ t.TypeAlias =       │                     │       │           │          │ │
-│ │ t.Literal["sys"]  # │                     │       │           │          │ │
-│ │ pyright:            │                     │       │           │          │ │
-│ │ ignore[reportRedec… │                     │       │           │          │ │
-│ │ +else:              │                     │       │           │          │ │
-│ │ +    CaptureMode:   │                     │       │           │          │ │
-│ │ t.TypeAlias =       │                     │       │           │          │ │
-│ │ t.Literal["sys",    │                     │       │           │          │ │
-│ │ "fd"]  # pyright:   │                     │       │           │          │ │
-│ │ ignore[reportRedec… │                     │       │           │          │ │
-│ │  ExceptionInfo:     │                     │       │           │          │ │
-│ │ t.TypeAlias =       │                     │       │           │          │ │
-│ │ tuple[type[BaseExc… │                     │       │           │          │ │
-│ │ BaseException,      │                     │       │           │          │ │
-│ │ TracebackType]      │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
-╰──────────────────────────────────────────────────────────────────────────────╯
- 55%|█████▌    | 165/300 [4:32:57<3:13:04, 85.81s/it] step 165  reward=-1.881  reward_std=3.001  kl=0.083  mean_length=85.688  clipped_ratio=0.000  step_time=39.611  loss=0.017  gate=-1.881
-                                                      55%|█████▌    | 165/300 [4:32:57<3:13:04, 85.81s/it]{'loss': '0.01675', 'grad_norm': '0.1091', 'learning_rate': '5e-05', 'num_tokens': '1.331e+07', 'completions/mean_length': '85.69', 'completions/min_length': '53', 'completions/max_length': '249', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '85.69', 'completions/min_terminated_length': '53', 'completions/max_terminated_length': '249', 'rewards/gate/mean': '-1.881', 'rewards/gate/std': '3.001', 'reward': '-1.881', 'reward_std': '3.001', 'frac_reward_zero_std': '0.75', 'review/approve_bug_frac': '0.4688', 'review/escalate_frac': '0', 'review/mean_tokens': '85.69', 'review/unparsable_frac': '0.03125', 'sampling/sampling_logp_difference/mean': '0.01428', 'sampling/sampling_logp_difference/max': '0.349', 'sampling/importance_sampling_ratio/min': '0.3075', 'sampling/importance_sampling_ratio/mean': '1.042', 'sampling/importance_sampling_ratio/max': '1.45', 'kl': '0.08284', 'entropy': '1.048', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '39.61', 'epoch': '5.323'}
-╭────────────────────────────────── Step 165 ──────────────────────────────────╮
-│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
-│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
-│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
-│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.35 │ approve  │ │
-│ │ You are the code    │ {"decision":        │       │           │          │ │
-│ │ review gate for a   │ "approve",          │       │           │          │ │
-│ │ production          │ "comments":         │       │           │          │ │
-│ │ repository. Your    │ [{"file":           │       │           │          │ │
-│ │ approval merges and │ "src/click/core.py… │       │           │          │ │
-│ │ deploys the change  │ "line_start": 2786, │       │           │          │ │
-│ │ with no further     │ "line_end": 2786,   │       │           │          │ │
-│ │ human review.       │ "body": "added a    │       │           │          │ │
-│ │ Decide:             │ space between the   │       │           │          │ │
-│ │   approve  - you    │ original help       │       │           │          │ │
-│ │ are confident the   │ message and the     │       │           │          │ │
-│ │ change is correct   │ deprecated message  │       │           │          │ │
-│ │ and safe to ship.   │ so that tooling     │       │           │          │ │
-│ │   block    - you    │ that splits up      │       │           │          │ │
-│ │ found a defect;     │ messages into parts │       │           │          │ │
-│ │ cite its location.  │ can find it"}]}     │       │           │          │ │
-│ │   escalate - you    │                     │       │           │          │ │
-│ │ cannot establish    │                     │       │           │          │ │
-│ │ safety from what    │                     │       │           │          │ │
-│ │ you can see; a      │                     │       │           │          │ │
-│ │ human must look.    │                     │       │           │          │ │
-│ │ Approving a change  │                     │       │           │          │ │
-│ │ that contains a     │                     │       │           │          │ │
-│ │ defect is the worst │                     │       │           │          │ │
-│ │ outcome. Blocking a │                     │       │           │          │ │
-│ │ correct change      │                     │       │           │          │ │
-│ │ costs an engineer's │                     │       │           │          │ │
-│ │ time. Escalating is │                     │       │           │          │ │
-│ │ cheap but useless   │                     │       │           │          │ │
-│ │ if done for         │                     │       │           │          │ │
-│ │ everything.         │                     │       │           │          │ │
-│ │ Respond with        │                     │       │           │          │ │
-│ │ exactly one JSON    │                     │       │           │          │ │
-│ │ object and nothing  │                     │       │           │          │ │
-│ │ else:               │                     │       │           │          │ │
-│ │ {"decision":        │                     │       │           │          │ │
-│ │ "approve|block|esc… │                     │       │           │          │ │
-│ │ "comments":         │                     │       │           │          │ │
-│ │ [{"file": "...",    │                     │       │           │          │ │
-│ │ "line_start": N,    │                     │       │           │          │ │
-│ │ "line_end": N,      │                     │       │           │          │ │
-│ │ "body": "...",      │                     │       │           │          │ │
-│ │ "proposed_test":    │                     │       │           │          │ │
-│ │ "optional pytest    │                     │       │           │          │ │
-│ │ source"}]}          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ USER                │                     │       │           │          │ │
-│ │ Repository: click   │                     │       │           │          │ │
-│ │ Files changed:      │                     │       │           │          │ │
-│ │ src/click/core.py   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Context around the  │                     │       │           │          │ │
-│ │ change              │                     │       │           │          │ │
-│ │ (mechanically       │                     │       │           │          │ │
-│ │ extracted):         │                     │       │           │          │ │
-│ │ Changed             │                     │       │           │          │ │
-│ │ definitions:        │                     │       │           │          │ │
-│ │ src/click/core.py:… │                     │       │           │          │ │
-│ │ src/click/core.py:… │                     │       │           │          │ │
-│ │ Recent history of   │                     │       │           │          │ │
-│ │ src/click/core.py:  │                     │       │           │          │ │
-│ │   5b9630f           │                     │       │           │          │ │
-│ │ 2026-05-08          │                     │       │           │          │ │
-│ │ Localisation of     │                     │       │           │          │ │
-│ │ more strings        │                     │       │           │          │ │
-│ │ (#2902)             │                     │       │           │          │ │
-│ │   73e1550           │                     │       │           │          │ │
-│ │ 2026-05-04 Fix      │                     │       │           │          │ │
-│ │ sentinel typing and │                     │       │           │          │ │
-│ │ its uses in parser  │                     │       │           │          │ │
-│ │ (#3396)             │                     │       │           │          │ │
-│ │   831c8f0           │                     │       │           │          │ │
-│ │ 2026-04-30 Add      │                     │       │           │          │ │
-│ │ NoSuchCommand       │                     │       │           │          │ │
-│ │ exception with      │                     │       │           │          │ │
-│ │ suggestions for     │                     │       │           │          │ │
-│ │ misspelled commands │                     │       │           │          │ │
-│ │ (#3228)             │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Diff:               │                     │       │           │          │ │
-│ │ ```diff             │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/src/click/core.py │                     │       │           │          │ │
-│ │ b/src/click/core.py │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ c5cab15..fa1f2d4    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/src/click/core.py │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/src/click/core.py │                     │       │           │          │ │
-│ │ @@ -2786,7 +2786,11 │                     │       │           │          │ │
-│ │ @@ class            │                     │       │           │          │ │
-│ │ Option(Parameter):  │                     │       │           │          │ │
-│ │                  if │                     │       │           │          │ │
-│ │ isinstance(depreca… │                     │       │           │          │ │
-│ │ str)                │                     │       │           │          │ │
-│ │                  e… │                     │       │           │          │ │
-│ │ "(DEPRECATED)"      │                     │       │           │          │ │
-│ │              )      │                     │       │           │          │ │
-│ │ -            help = │                     │       │           │          │ │
-│ │ help +              │                     │       │           │          │ │
-│ │ deprecated_message  │                     │       │           │          │ │
-│ │ if help is not None │                     │       │           │          │ │
-│ │ else                │                     │       │           │          │ │
-│ │ deprecated_message  │                     │       │           │          │ │
-│ │ +            help = │                     │       │           │          │ │
-│ │ (                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ f"{help}            │                     │       │           │          │ │
-│ │ {deprecated_messag… │                     │       │           │          │ │
-│ │ +                if │                     │       │           │          │ │
-│ │ help is None        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ else                │                     │       │           │          │ │
-│ │ deprecated_message  │                     │       │           │          │ │
-│ │ +            )      │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          self.prom… │                     │       │           │          │ │
-│ │ = prompt_text       │                     │       │           │          │ │
-│ │          self.conf… │                     │       │           │          │ │
-│ │ =                   │                     │       │           │          │ │
-│ │ confirmation_prompt │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
-│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.35 │ approve  │ │
-│ │ You are the code    │ {"decision":        │       │           │          │ │
-│ │ review gate for a   │ "approve",          │       │           │          │ │
-│ │ production          │ "comments":         │       │           │          │ │
-│ │ repository. Your    │ [{"file":           │       │           │          │ │
-│ │ approval merges and │ "src/click/core.py… │       │           │          │ │
-│ │ deploys the change  │ "line_start": 2786, │       │           │          │ │
-│ │ with no further     │ "line_end": 2786,   │       │           │          │ │
-│ │ human review.       │ "body": " помогает  │       │           │          │ │
-│ │ Decide:             │ составлять          │       │           │          │ │
-│ │   approve  - you    │ нестандартные       │       │           │          │ │
-│ │ are confident the   │ команды."}]}        │       │           │          │ │
-│ │ change is correct   │                     │       │           │          │ │
-│ │ and safe to ship.   │                     │       │           │          │ │
-│ │   block    - you    │                     │       │           │          │ │
-│ │ found a defect;     │                     │       │           │          │ │
-│ │ cite its location.  │                     │       │           │          │ │
-│ │   escalate - you    │                     │       │           │          │ │
-│ │ cannot establish    │                     │       │           │          │ │
-│ │ safety from what    │                     │       │           │          │ │
-│ │ you can see; a      │                     │       │           │          │ │
-│ │ human must look.    │                     │       │           │          │ │
-│ │ Approving a change  │                     │       │           │          │ │
-│ │ that contains a     │                     │       │           │          │ │
-│ │ defect is the worst │                     │       │           │          │ │
-│ │ outcome. Blocking a │                     │       │           │          │ │
-│ │ correct change      │                     │       │           │          │ │
-│ │ costs an engineer's │                     │       │           │          │ │
-│ │ time. Escalating is │                     │       │           │          │ │
-│ │ cheap but useless   │                     │       │           │          │ │
-│ │ if done for         │                     │       │           │          │ │
-│ │ everything.         │                     │       │           │          │ │
-│ │ Respond with        │                     │       │           │          │ │
-│ │ exactly one JSON    │                     │       │           │          │ │
-│ │ object and nothing  │                     │       │           │          │ │
-│ │ else:               │                     │       │           │          │ │
-│ │ {"decision":        │                     │       │           │          │ │
-│ │ "approve|block|esc… │                     │       │           │          │ │
-│ │ "comments":         │                     │       │           │          │ │
-│ │ [{"file": "...",    │                     │       │           │          │ │
-│ │ "line_start": N,    │                     │       │           │          │ │
-│ │ "line_end": N,      │                     │       │           │          │ │
-│ │ "body": "...",      │                     │       │           │          │ │
-│ │ "proposed_test":    │                     │       │           │          │ │
-│ │ "optional pytest    │                     │       │           │          │ │
-│ │ source"}]}          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ USER                │                     │       │           │          │ │
-│ │ Repository: click   │                     │       │           │          │ │
-│ │ Files changed:      │                     │       │           │          │ │
-│ │ src/click/core.py   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Context around the  │                     │       │           │          │ │
-│ │ change              │                     │       │           │          │ │
-│ │ (mechanically       │                     │       │           │          │ │
-│ │ extracted):         │                     │       │           │          │ │
-│ │ Changed             │                     │       │           │          │ │
-│ │ definitions:        │                     │       │           │          │ │
-│ │ src/click/core.py:… │                     │       │           │          │ │
-│ │ src/click/core.py:… │                     │       │           │          │ │
-│ │ Recent history of   │                     │       │           │          │ │
-│ │ src/click/core.py:  │                     │       │           │          │ │
-│ │   5b9630f           │                     │       │           │          │ │
-│ │ 2026-05-08          │                     │       │           │          │ │
-│ │ Localisation of     │                     │       │           │          │ │
-│ │ more strings        │                     │       │           │          │ │
-│ │ (#2902)             │                     │       │           │          │ │
-│ │   73e1550           │                     │       │           │          │ │
-│ │ 2026-05-04 Fix      │                     │       │           │          │ │
-│ │ sentinel typing and │                     │       │           │          │ │
-│ │ its uses in parser  │                     │       │           │          │ │
-│ │ (#3396)             │                     │       │           │          │ │
-│ │   831c8f0           │                     │       │           │          │ │
-│ │ 2026-04-30 Add      │                     │       │           │          │ │
-│ │ NoSuchCommand       │                     │       │           │          │ │
-│ │ exception with      │                     │       │           │          │ │
-│ │ suggestions for     │                     │       │           │          │ │
-│ │ misspelled commands │                     │       │           │          │ │
-│ │ (#3228)             │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Diff:               │                     │       │           │          │ │
-│ │ ```diff             │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/src/click/core.py │                     │       │           │          │ │
-│ │ b/src/click/core.py │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ c5cab15..fa1f2d4    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/src/click/core.py │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/src/click/core.py │                     │       │           │          │ │
-│ │ @@ -2786,7 +2786,11 │                     │       │           │          │ │
-│ │ @@ class            │                     │       │           │          │ │
-│ │ Option(Parameter):  │                     │       │           │          │ │
-│ │                  if │                     │       │           │          │ │
-│ │ isinstance(depreca… │                     │       │           │          │ │
-│ │ str)                │                     │       │           │          │ │
-│ │                  e… │                     │       │           │          │ │
-│ │ "(DEPRECATED)"      │                     │       │           │          │ │
-│ │              )      │                     │       │           │          │ │
-│ │ -            help = │                     │       │           │          │ │
-│ │ help +              │                     │       │           │          │ │
-│ │ deprecated_message  │                     │       │           │          │ │
-│ │ if help is not None │                     │       │           │          │ │
-│ │ else                │                     │       │           │          │ │
-│ │ deprecated_message  │                     │       │           │          │ │
-│ │ +            help = │                     │       │           │          │ │
-│ │ (                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ f"{help}            │                     │       │           │          │ │
-│ │ {deprecated_messag… │                     │       │           │          │ │
-│ │ +                if │                     │       │           │          │ │
-│ │ help is None        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ else                │                     │       │           │          │ │
-│ │ deprecated_message  │                     │       │           │          │ │
-│ │ +            )      │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          self.prom… │                     │       │           │          │ │
-│ │ = prompt_text       │                     │       │           │          │ │
-│ │          self.conf… │                     │       │           │          │ │
-│ │ =                   │                     │       │           │          │ │
-│ │ confirmation_prompt │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+│ │ a/src/structlog/d… │                    │       │           │            │ │
+│ │ b/src/structlog/d… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ f49b38a..2c0a764   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/src/structlog/d… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/src/structlog/d… │                    │       │           │            │ │
+│ │ @@ -567,7 +567,7   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ ConsoleRenderer:   │                    │       │           │            │ │
+│ │      ..            │                    │       │           │            │ │
+│ │ versionadded::     │                    │       │           │            │ │
+│ │ 24.2.0 *pad_level* │                    │       │           │            │ │
+│ │      """           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    def __init__( │                    │       │           │            │ │
+│ │ # noqa: PLR0912,   │                    │       │           │            │ │
+│ │ PLR0915            │                    │       │           │            │ │
+│ │ +    def __init__( │                    │       │           │            │ │
+│ │          self,     │                    │       │           │            │ │
+│ │          pad_even… │                    │       │           │            │ │
+│ │ int =              │                    │       │           │            │ │
+│ │ _EVENT_WIDTH,      │                    │       │           │            │ │
+│ │          colors:   │                    │       │           │            │ │
+│ │ bool =             │                    │       │           │            │ │
+│ │ _has_colors,       │                    │       │           │            │ │
+│ │ @@ -630,29 +630,7  │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ ConsoleRenderer:   │                    │       │           │            │ │
+│ │              retu… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          # Create  │                    │       │           │            │ │
+│ │ default columns    │                    │       │           │            │ │
+│ │ configuration.     │                    │       │           │            │ │
+│ │ -        styles:   │                    │       │           │            │ │
+│ │ Styles             │                    │       │           │            │ │
+│ │ -        if        │                    │       │           │            │ │
+│ │ colors:            │                    │       │           │            │ │
+│ │ -            if    │                    │       │           │            │ │
+│ │ _IS_WINDOWS:  #    │                    │       │           │            │ │
+│ │ pragma: no cover   │                    │       │           │            │ │
+│ │ -                # │                    │       │           │            │ │
+│ │ On Windows, we     │                    │       │           │            │ │
+│ │ can't do colorful  │                    │       │           │            │ │
+│ │ output without     │                    │       │           │            │ │
+│ │ colorama.          │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ if colorama is     │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ classname =        │                    │       │           │            │ │
+│ │ self.__class__.__… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ raise SystemError( │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ _MISSING.format(   │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ who=classname + "  │                    │       │           │            │ │
+│ │ with               │                    │       │           │            │ │
+│ │ `colors=True`",    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ package="colorama… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ )                  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ )                  │                    │       │           │            │ │
+│ │ -                # │                    │       │           │            │ │
+│ │ Colorama must be   │                    │       │           │            │ │
+│ │ init'd on Windows, │                    │       │           │            │ │
+│ │ but must NOT be    │                    │       │           │            │ │
+│ │ -                # │                    │       │           │            │ │
+│ │ init'd on other    │                    │       │           │            │ │
+│ │ OSes, because it   │                    │       │           │            │ │
+│ │ can break colors.  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ if force_colors:   │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ colorama.deinit()  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ colorama.init(str… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ colorama.init()    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ styles =           │                    │       │           │            │ │
+│ │ _ColorfulStyles    │                    │       │           │            │ │
+│ │ -        else:     │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ styles =           │                    │       │           │            │ │
+│ │ _PlainStyles       │                    │       │           │            │ │
+│ │ +        styles =  │                    │       │           │            │ │
+│ │ self.get_default_… │                    │       │           │            │ │
+│ │ force_colors)      │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          self._st… │                    │       │           │            │ │
+│ │ = styles           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ @@ -719,6 +697,53  │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ ConsoleRenderer:   │                    │       │           │            │ │
+│ │              Colu… │                    │       │           │            │ │
+│ │ logger_name_forma… │                    │       │           │            │ │
+│ │          ]         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +    @classmethod  │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ get_default_colum… │                    │       │           │            │ │
+│ │ +        cls,      │                    │       │           │            │ │
+│ │ colors: bool =     │                    │       │           │            │ │
+│ │ _has_colors,       │                    │       │           │            │ │
+│ │ force_colors: bool │                    │       │           │            │ │
+│ │ = False            │                    │       │           │            │ │
+│ │ +    ) -> Styles:  │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        Configure │                    │       │           │            │ │
+│ │ and return the     │                    │       │           │            │ │
+│ │ appropriate styles │                    │       │           │            │ │
+│ │ class for console  │                    │       │           │            │ │
+│ │ output.            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        This      │                    │       │           │            │ │
+│ │ method handles the │                    │       │           │            │ │
+│ │ setup of colorful  │                    │       │           │            │ │
+│ │ or plain styles,   │                    │       │           │            │ │
+│ │ including          │                    │       │           │            │ │
+│ │ +        proper    │                    │       │           │            │ │
+│ │ colorama           │                    │       │           │            │ │
+│ │ initialization on  │                    │       │           │            │ │
+│ │ Windows systems    │                    │       │           │            │ │
+│ │ when colors are    │                    │       │           │            │ │
+│ │ enabled.           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        Args:     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colors: Whether to │                    │       │           │            │ │
+│ │ use colorful       │                    │       │           │            │ │
+│ │ output styles.     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ force_colors:      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Force colorful     │                    │       │           │            │ │
+│ │ output even in     │                    │       │           │            │ │
+│ │ non-interactive    │                    │       │           │            │ │
+│ │ environments.      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Only relevant on   │                    │       │           │            │ │
+│ │ Windows with       │                    │       │           │            │ │
+│ │ colorama.          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        Returns:  │                    │       │           │            │ │
+│ │ +            The   │                    │       │           │            │ │
+│ │ configured styles  │                    │       │           │            │ │
+│ │ class              │                    │       │           │            │ │
+│ │ (_ColorfulStyles   │                    │       │           │            │ │
+│ │ or _PlainStyles).  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        Raises:   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ SystemError: On    │                    │       │           │            │ │
+│ │ Windows when       │                    │       │           │            │ │
+│ │ colors=True but    │                    │       │           │            │ │
+│ │ colorama is not    │                    │       │           │            │ │
+│ │ installed.         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        ..        │                    │       │           │            │ │
+│ │ versionadded::     │                    │       │           │            │ │
+│ │ 25.5.0             │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        if not    │                    │       │           │            │ │
+│ │ colors:            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ return             │                    │       │           │            │ │
+│ │ _PlainStyles       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        if        │                    │       │           │            │ │
+│ │ _IS_WINDOWS:  #    │                    │       │           │            │ │
+│ │ pragma: no cover   │                    │       │           │            │ │
+│ │ +            # On  │                    │       │           │            │ │
+│ │ Windows, we can't  │                    │       │           │            │ │
+│ │ do colorful output │                    │       │           │            │ │
+│ │ without colorama.  │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ colorama is None:  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ raise SystemError( │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ _MISSING.format(   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ who=cls.__name__ + │                    │       │           │            │ │
+│ │ " with             │                    │       │           │            │ │
+│ │ `colors=True`",    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ package="colorama… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ )                  │                    │       │           │            │ │
+│ │ +                ) │                    │       │           │            │ │
+│ │ +            #     │                    │       │           │            │ │
+│ │ Colorama must be   │                    │       │           │            │ │
+│ │ init'd on Windows, │                    │       │           │            │ │
+│ │ but must NOT be    │                    │       │           │            │ │
+│ │ +            #     │                    │       │           │            │ │
+│ │ init'd on other    │                    │       │           │            │ │
+│ │ OSes, because it   │                    │       │           │            │ │
+│ │ can break colors.  │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ force_colors:      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colorama.deinit()  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colorama.init(str… │                    │       │           │            │ │
+│ │ +            else: │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colorama.init()    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ _ColorfulStyles    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ _repr(self, val:   │                    │       │           │            │ │
+│ │ Any) -> str:       │                    │       │           │            │ │
+│ │          """       │                    │       │           │            │ │
+│ │          Determine │                    │       │           │            │ │
+│ │ representation of  │                    │       │           │            │ │
+│ │ *val* depending on │                    │       │           │            │ │
+│ │ its type &         │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_dev.… │                    │       │           │            │ │
+│ │ b/tests/test_dev.… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 58020d8..05da67d   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_dev.… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_dev.… │                    │       │           │            │ │
+│ │ @@ -175,6 +175,64  │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ TestConsoleRender… │                    │       │           │            │ │
+│ │              +     │                    │       │           │            │ │
+│ │ styles.reset       │                    │       │           │            │ │
+│ │          ) == rv   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_returns_colo… │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        When      │                    │       │           │            │ │
+│ │ colors=True,       │                    │       │           │            │ │
+│ │ returns            │                    │       │           │            │ │
+│ │ _ColorfulStyles    │                    │       │           │            │ │
+│ │ class.             │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        styles =  │                    │       │           │            │ │
+│ │ dev.ConsoleRender… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles is          │                    │       │           │            │ │
+│ │ dev._ColorfulStyl… │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "reset")           │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "bright")          │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "level_critical")  │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "kv_key")          │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "kv_value")        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_returns_plai… │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        When      │                    │       │           │            │ │
+│ │ colors=False,      │                    │       │           │            │ │
+│ │ returns            │                    │       │           │            │ │
+│ │ _PlainStyles       │                    │       │           │            │ │
+│ │ class.             │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        styles =  │                    │       │           │            │ │
+│ │ dev.ConsoleRender… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles is          │                    │       │           │            │ │
+│ │ dev._PlainStyles   │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.reset == "" │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.bright ==   │                    │       │           │            │ │
+│ │ ""                 │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.level_crit… │                    │       │           │            │ │
+│ │ == ""              │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.kv_key ==   │                    │       │           │            │ │
+│ │ ""                 │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.kv_value == │                    │       │           │            │ │
+│ │ ""                 │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ @pytest.mark.skip… │                    │       │           │            │ │
+│ │ +        not       │                    │       │           │            │ │
+│ │ dev._IS_WINDOWS or │                    │       │           │            │ │
+│ │ dev.colorama is    │                    │       │           │            │ │
+│ │ not None,          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ reason="Only       │                    │       │           │            │ │
+│ │ relevant on        │                    │       │           │            │ │
+│ │ Windows without    │                    │       │           │            │ │
+│ │ colorama",         │                    │       │           │            │ │
+│ │ +    )             │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_raises_syste… │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        On        │                    │       │           │            │ │
+│ │ Windows without    │                    │       │           │            │ │
+│ │ colorama, raises   │                    │       │           │            │ │
+│ │ SystemError when   │                    │       │           │            │ │
+│ │ colors=True.       │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        with      │                    │       │           │            │ │
+│ │ pytest.raises(Sys… │                    │       │           │            │ │
+│ │ match="requires    │                    │       │           │            │ │
+│ │ the colorama       │                    │       │           │            │ │
+│ │ package"):         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ dev.ConsoleRender… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ @pytest.mark.skip… │                    │       │           │            │ │
+│ │ +        not       │                    │       │           │            │ │
+│ │ dev._IS_WINDOWS or │                    │       │           │            │ │
+│ │ dev.colorama is    │                    │       │           │            │ │
+│ │ None,              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ reason="Only       │                    │       │           │            │ │
+│ │ relevant on        │                    │       │           │            │ │
+│ │ Windows with       │                    │       │           │            │ │
+│ │ colorama",         │                    │       │           │            │ │
+│ │ +    )             │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_initializes_… │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        On        │                    │       │           │            │ │
+│ │ Windows with       │                    │       │           │            │ │
+│ │ colorama,          │                    │       │           │            │ │
+│ │ force_colors=True  │                    │       │           │            │ │
+│ │ reinitializes      │                    │       │           │            │ │
+│ │ colorama.          │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        with      │                    │       │           │            │ │
+│ │ mock.patch.object( │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ dev.colorama,      │                    │       │           │            │ │
+│ │ "init"             │                    │       │           │            │ │
+│ │ +        ) as      │                    │       │           │            │ │
+│ │ mock_init,         │                    │       │           │            │ │
+│ │ mock.patch.object( │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ dev.colorama,      │                    │       │           │            │ │
+│ │ "deinit"           │                    │       │           │            │ │
+│ │ +        ) as      │                    │       │           │            │ │
+│ │ mock_deinit:       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ styles =           │                    │       │           │            │ │
+│ │ dev.ConsoleRender… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colors=True,       │                    │       │           │            │ │
+│ │ force_colors=True  │                    │       │           │            │ │
+│ │ +            )     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ assert styles is   │                    │       │           │            │ │
+│ │ dev._ColorfulStyl… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ mock_deinit.asser… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ mock_init.assert_… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ test_logger_name(… │                    │       │           │            │ │
+│ │ cr, styles,        │                    │       │           │            │ │
+│ │ padded):           │                    │       │           │            │ │
+│ │          """       │                    │       │           │            │ │
+│ │          Logger    │                    │       │           │            │ │
+│ │ names are appended │                    │       │           │            │ │
+│ │ after the event.   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
