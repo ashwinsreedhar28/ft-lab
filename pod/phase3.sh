@@ -20,8 +20,10 @@ source /workspace/venv/bin/activate
 python -c 'import trl, vllm, peft; print("venv ok:", trl.__version__, vllm.__version__, peft.__version__)'
 test -s data/review_sft.jsonl || { echo "no data/review_sft.jsonl: run review/analysis/traces.py on the Mac and commit"; exit 2; }
 done_ base_eval || { mkdir -p runs/$GRPO; $EV --label base --model Qwen/Qwen3-4B; mark base_eval; }
+if [ -f configs/$SFT.yaml ]; then       # v5+: no SFT stage, GRPO starts from the base (configs/review_grpo_4b_v5.yaml)
 done_ sft       || { mkdir -p runs/$SFT; python -m ftlab.sft configs/$SFT.yaml 2>&1 | tee runs/$SFT/train.log; mark sft; }
 done_ sft_eval  || { $EV --label sft --model runs/$SFT/final; mark sft_eval; }
+fi
 done_ grpo      || { mkdir -p runs/$GRPO; python -m ftlab.train configs/$GRPO.yaml 2>&1 | tee -a runs/$GRPO/train.log; mark grpo; }
 done_ grpo_eval || { $EV --label grpo --model runs/$GRPO/merged; mark grpo_eval; }   # LoRA run: train.py writes the merged weights to merged/, final/ is the adapter
 python -m ftlab.eval --table runs/$GRPO/eval_*.json | tee runs/$GRPO/table.txt

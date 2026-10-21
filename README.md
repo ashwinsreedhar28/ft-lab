@@ -266,3 +266,22 @@ truncated); detect by chat template. GRPO does not truncate prompts: a 36,993-to
 **v3 plan:** eval every 50 steps; 16 generations per prompt; lr 2e-5, β 0.02; reward with unparsable −3 and
 block-on-bug +1 before localization so the correct move is reachable in one step; SWE-smith instances as
 additional positives once the recipe moves the needle on 61.
+
+**v3 and v4 (Oct 21, 1× H100, ~$12).** v3 fixed the optimizer: `scale_rewards: group` had been dividing each
+group's advantages by its own std, so a bug group (−5 vs +1) and a clean group (+1 vs −0.5) both pushed with
+|adv| ≈ 1 and the −5 never reached the gradient — v3a (group, lr 2e-5) collapsed to an 11-token
+approve-everything by step 18. With `scale_rewards: none` and lr 1e-5, v3b held its format and moved both ways
+at step 25 (bugs 29 blocked / 6 approved, clean 9 approved / 17 blocked) then settled into block-all by step
+50 and stayed there to 200 (eval every 25 steps, `runs/review_grpo_4b_v3/eval_curve.jsonl`). Block-all is the
+reward's rational optimum for a policy that cannot discriminate, and the SFT students never could:
+P(block | bug) 0.89 vs P(block | clean) 0.81. The suite delta cannot help either — mutants are selected to
+survive the suite, so it is empty on every positive by construction.
+
+v4 tried thinking mode. Untrained Qwen3-4B with thinking on, decoded at T 0.6 (greedy loops in thinking mode,
+per Qwen's own docs): bugs 9 blocked / 22 approved / 4 truncated, clean 2 blocked / 23 approved —
+**P(block | bug) 0.29 vs P(block | clean) 0.08, the first student start that discriminates**. SFT on 50
+Sonnet rationales (balanced; `review/analysis/rationales.py`, 42 of 128 tasks refused by the API) made it
+worse on every column (5 / 20 / 9 and 3 / 15 / 8; 18 never close the think block). GRPO was not run.
+
+**v5 (ready, not run):** GRPO straight from the thinking base, no SFT, reward v4, raw advantages, 75 steps,
+T 0.6 eval every 25. `configs/review_grpo_4b_v5.yaml`; `V=_v5 bash -s phase3`. ~2 h, ~$6.
