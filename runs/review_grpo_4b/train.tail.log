@@ -1,199 +1,64 @@
-│ │ +    ..             │                     │       │           │          │ │
-│ │ versionchanged::    │                     │       │           │          │ │
-│ │ 26.1.0 Add support  │                     │       │           │          │ │
-│ │ for instances.      │                     │       │           │          │ │
-│ │      """            │                     │       │           │          │ │
-│ │      generic_base = │                     │       │           │          │ │
-│ │ get_generic_base(c… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      if             │                     │       │           │          │ │
-│ │ generic_base is     │                     │       │           │          │ │
-│ │ None and not        │                     │       │           │          │ │
-│ │ isinstance(cls,     │                     │       │           │          │ │
-│ │ type):              │                     │       │           │          │ │
-│ │ -        msg =      │                     │       │           │          │ │
-│ │ "Passed object must │                     │       │           │          │ │
-│ │ be a class."        │                     │       │           │          │ │
-│ │ -        raise      │                     │       │           │          │ │
-│ │ TypeError(msg)      │                     │       │           │          │ │
-│ │ +        type_ =    │                     │       │           │          │ │
-│ │ type(cls)           │                     │       │           │          │ │
-│ │ +        if         │                     │       │           │          │ │
-│ │ getattr(type_,      │                     │       │           │          │ │
-│ │ "__attrs_attrs__",  │                     │       │           │          │ │
-│ │ None) is None:      │                     │       │           │          │ │
-│ │ +            msg =  │                     │       │           │          │ │
-│ │ "Passed object must │                     │       │           │          │ │
-│ │ be a class or attrs │                     │       │           │          │ │
-│ │ instance."          │                     │       │           │          │ │
-│ │ +            raise  │                     │       │           │          │ │
-│ │ TypeError(msg)      │                     │       │           │          │ │
+│ │ +import pytest      │                     │       │           │          │ │
+│ │ +from fastapi       │                     │       │           │          │ │
+│ │ import FastAPI      │                     │       │           │          │ │
+│ │ +from               │                     │       │           │          │ │
+│ │ fastapi.exceptions  │                     │       │           │          │ │
+│ │ import FastAPIError │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ fields(type_)       │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      attrs =        │                     │       │           │          │ │
-│ │ getattr(cls,        │                     │       │           │          │ │
-│ │ "__attrs_attrs__",  │                     │       │           │          │ │
-│ │ None)               │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_make.… │                     │       │           │          │ │
-│ │ b/tests/test_make.… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 6430195..6f226c6    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/tests/test_make.… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_make.… │                     │       │           │          │ │
-│ │ @@ -1550,12         │                     │       │           │          │ │
-│ │ +1550,19 @@ class   │                     │       │           │          │ │
-│ │ TestFields:         │                     │       │           │          │ │
-│ │      @given(simple… │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ test_instance(self, │                     │       │           │          │ │
-│ │ C):                 │                     │       │           │          │ │
-│ │          """        │                     │       │           │          │ │
-│ │ -        Raises     │                     │       │           │          │ │
-│ │ `TypeError` on      │                     │       │           │          │ │
-│ │ non-classes.        │                     │       │           │          │ │
-│ │ +        Returns    │                     │       │           │          │ │
-│ │ the class fields    │                     │       │           │          │ │
-│ │ for *attrs*         │                     │       │           │          │ │
-│ │ instances too.      │                     │       │           │          │ │
-│ │          """        │                     │       │           │          │ │
-│ │ -        with       │                     │       │           │          │ │
-│ │ pytest.raises(Type… │                     │       │           │          │ │
-│ │ as e:               │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ fields(C())         │                     │       │           │          │ │
-│ │ +        assert     │                     │       │           │          │ │
-│ │ fields(C()) is      │                     │       │           │          │ │
-│ │ fields(C)           │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -        assert     │                     │       │           │          │ │
-│ │ "Passed object must │                     │       │           │          │ │
-│ │ be a class." ==     │                     │       │           │          │ │
-│ │ e.value.args[0]     │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ test_handler_non_a… │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        Raises     │                     │       │           │          │ │
-│ │ `TypeError` on      │                     │       │           │          │ │
-│ │ non-*attrs*         │                     │       │           │          │ │
-│ │ instances.          │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        with       │                     │       │           │          │ │
-│ │ pytest.raises(      │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ TypeError,          │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_vibe_raises(): │                     │       │           │          │ │
+│ │ +    with           │                     │       │           │          │ │
+│ │ pytest.raises(Fast… │                     │       │           │          │ │
+│ │ match="Are you      │                     │       │           │          │ │
+│ │ kidding me"):       │                     │       │           │          │ │
+│ │ +        app =      │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ match=r"Passed      │                     │       │           │          │ │
-│ │ object must be a    │                     │       │           │          │ │
-│ │ class or attrs      │                     │       │           │          │ │
-│ │ instance\.",        │                     │       │           │          │ │
-│ │ +        ):         │                     │       │           │          │ │
+│ │ +        @app.vibe( │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ fields(object())    │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ test_handler_non_a… │                     │       │           │          │ │
-│ │          """        │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_mypy.… │                     │       │           │          │ │
-│ │ b/tests/test_mypy.… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 7351fd9..0c120f6    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/tests/test_mypy.… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_mypy.… │                     │       │           │          │ │
-│ │ @@ -1431,6 +1431,17 │                     │       │           │          │ │
-│ │ @@                  │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      reveal_type(f… │                     │       │           │          │ │
-│ │ # N: Revealed type  │                     │       │           │          │ │
-│ │ is                  │                     │       │           │          │ │
-│ │ "[Tt]uple\[attr.At… │                     │       │           │          │ │
-│ │ attr.Attribute\[bu… │                     │       │           │          │ │
-│ │ fallback=main.A.__… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ +- case:            │                     │       │           │          │ │
-│ │ testFieldsInstance  │                     │       │           │          │ │
-│ │ +  main: |          │                     │       │           │          │ │
-│ │ +    from attrs     │                     │       │           │          │ │
-│ │ import define,      │                     │       │           │          │ │
-│ │ fields              │                     │       │           │          │ │
+│ │ "/vibe/",           │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ +    @define        │                     │       │           │          │ │
-│ │ +    class A:       │                     │       │           │          │ │
-│ │ +      a: int       │                     │       │           │          │ │
-│ │ +      b: str       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    fields(A(1,    │                     │       │           │          │ │
-│ │ "x"))               │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │  - case:            │                     │       │           │          │ │
-│ │ testFieldsError     │                     │       │           │          │ │
-│ │    regex: true      │                     │       │           │          │ │
-│ │    main: |          │                     │       │           │          │ │
-│ │ @@ -1440,7 +1451,7  │                     │       │           │          │ │
-│ │ @@                  │                     │       │           │          │ │
-│ │        a: int       │                     │       │           │          │ │
-│ │        b: str       │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -    fields(A)  #   │                     │       │           │          │ │
-│ │ E: Argument 1 to    │                     │       │           │          │ │
-│ │ "fields" has        │                     │       │           │          │ │
-│ │ incompatible type   │                     │       │           │          │ │
-│ │ "[Tt]ype\[A\]";     │                     │       │           │          │ │
-│ │ expected            │                     │       │           │          │ │
-│ │ "[Tt]ype\[AttrsIns… │                     │       │           │          │ │
-│ │ \[arg-type\]        │                     │       │           │          │ │
-│ │ +    fields(A)  #   │                     │       │           │          │ │
-│ │ E: Argument 1 to    │                     │       │           │          │ │
-│ │ "fields" has        │                     │       │           │          │ │
-│ │ incompatible type   │                     │       │           │          │ │
-│ │ "type\[A\]";        │                     │       │           │          │ │
-│ │ expected            │                     │       │           │          │ │
-│ │ "type\[AttrsInstan… │                     │       │           │          │ │
-│ │ \| AttrsInstance"   │                     │       │           │          │ │
-│ │ \[arg-type\]        │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  - case: testAsDict │                     │       │           │          │ │
-│ │    main: |          │                     │       │           │          │ │
+│ │ prompt="pls return  │                     │       │           │          │ │
+│ │ json of users from  │                     │       │           │          │ │
+│ │ database. make no   │                     │       │           │          │ │
+│ │ mistakes",          │                     │       │           │          │ │
+│ │ +        )          │                     │       │           │          │ │
+│ │ +        async def  │                     │       │           │          │ │
+│ │ ai_vibes(body:      │                     │       │           │          │ │
+│ │ Any):  # pragma:    │                     │       │           │          │ │
+│ │ nocover             │                     │       │           │          │ │
+│ │ +            pass   │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
 │ │ ```                 │                     │       │           │          │ │
 │ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
-│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.52 │ approve  │ │
+│ │ SYSTEM              │ ASSISTANT           │ -0.50 │      0.55 │ block    │ │
 │ │ You are the code    │ {"decision":        │       │           │          │ │
-│ │ review gate for a   │ "approve",          │       │           │          │ │
-│ │ production          │ "comments": []}     │       │           │          │ │
-│ │ repository. Your    │                     │       │           │          │ │
-│ │ approval merges and │                     │       │           │          │ │
-│ │ deploys the change  │                     │       │           │          │ │
-│ │ with no further     │                     │       │           │          │ │
-│ │ human review.       │                     │       │           │          │ │
-│ │ Decide:             │                     │       │           │          │ │
-│ │   approve  - you    │                     │       │           │          │ │
-│ │ are confident the   │                     │       │           │          │ │
-│ │ change is correct   │                     │       │           │          │ │
-│ │ and safe to ship.   │                     │       │           │          │ │
-│ │   block    - you    │                     │       │           │          │ │
-│ │ found a defect;     │                     │       │           │          │ │
-│ │ cite its location.  │                     │       │           │          │ │
-│ │   escalate - you    │                     │       │           │          │ │
-│ │ cannot establish    │                     │       │           │          │ │
-│ │ safety from what    │                     │       │           │          │ │
-│ │ you can see; a      │                     │       │           │          │ │
-│ │ human must look.    │                     │       │           │          │ │
-│ │ Approving a change  │                     │       │           │          │ │
-│ │ that contains a     │                     │       │           │          │ │
-│ │ defect is the worst │                     │       │           │          │ │
-│ │ outcome. Blocking a │                     │       │           │          │ │
-│ │ correct change      │                     │       │           │          │ │
+│ │ review gate for a   │ "block",            │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "fastapi/applicati… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 4573, │       │           │          │ │
+│ │ with no further     │ "line_end": 4573,   │       │           │          │ │
+│ │ human review.       │ "body": "The        │       │           │          │ │
+│ │ Decide:             │ approved change has │       │           │          │ │
+│ │   approve  - you    │ a defect: the       │       │           │          │ │
+│ │ are confident the   │ methods for `vibe`  │       │           │          │ │
+│ │ change is correct   │ and                 │       │           │          │ │
+│ │ and safe to ship.   │ `websocket_route`   │       │           │          │ │
+│ │   block    - you    │ are inconsistent.   │       │           │          │ │
+│ │ found a defect;     │ `vibe` doesn’t      │       │           │          │ │
+│ │ cite its location.  │ support arguments   │       │           │          │ │
+│ │   escalate - you    │ like `name`, but    │       │           │          │ │
+│ │ cannot establish    │ does support a      │       │           │          │ │
+│ │ safety from what    │ `prompt` argument   │       │           │          │ │
+│ │ you can see; a      │ with a default,     │       │           │          │ │
+│ │ human must look.    │ whereas             │       │           │          │ │
+│ │ Approving a change  │ `websocket_route`   │       │           │          │ │
+│ │ that contains a     │ does support        │       │           │          │ │
+│ │ defect is the worst │ `name`. Consider    │       │           │          │ │
+│ │ outcome. Blocking a │ fixing this         │       │           │          │ │
+│ │ correct change      │ discrepancy."}]}    │       │           │          │ │
 │ │ costs an engineer's │                     │       │           │          │ │
 │ │ time. Escalating is │                     │       │           │          │ │
 │ │ cheap but useless   │                     │       │           │          │ │
@@ -215,9 +80,21 @@
 │ │ source"}]}          │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
 │ │ USER                │                     │       │           │          │ │
-│ │ Repository: click   │                     │       │           │          │ │
+│ │ Repository: fastapi │                     │       │           │          │ │
 │ │ Files changed:      │                     │       │           │          │ │
-│ │ src/click/core.py   │                     │       │           │          │ │
+│ │ docs/en/docs/advan… │                     │       │           │          │ │
+│ │ docs/en/mkdocs.yml, │                     │       │           │          │ │
+│ │ docs_src/vibe/tuto… │                     │       │           │          │ │
+│ │ fastapi/applicatio… │                     │       │           │          │ │
+│ │ tests/test_vibe.py  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ docs/en/docs/advan… │                     │       │           │          │ │
+│ │ (2304 chars,        │                     │       │           │          │ │
+│ │ non-code)           │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
 │ │ Context around the  │                     │       │           │          │ │
 │ │ change              │                     │       │           │          │ │
@@ -225,176 +102,299 @@
 │ │ extracted):         │                     │       │           │          │ │
 │ │ Changed             │                     │       │           │          │ │
 │ │ definitions:        │                     │       │           │          │ │
-│ │ src/click/core.py:… │                     │       │           │          │ │
-│ │ src/click/core.py:… │                     │       │           │          │ │
+│ │ docs_src/vibe/tuto… │                     │       │           │          │ │
+│ │ fastapi/applicatio… │                     │       │           │          │ │
+│ │ fastapi/applicatio… │                     │       │           │          │ │
+│ │ fastapi/applicatio… │                     │       │           │          │ │
+│ │ fastapi/applicatio… │                     │       │           │          │ │
+│ │ fastapi/applicatio… │                     │       │           │          │ │
+│ │ tests/test_vibe.py… │                     │       │           │          │ │
+│ │ tests/test_vibe.py… │                     │       │           │          │ │
 │ │ Recent history of   │                     │       │           │          │ │
-│ │ src/click/core.py:  │                     │       │           │          │ │
-│ │   546f285           │                     │       │           │          │ │
-│ │ 2026-02-21 Fix      │                     │       │           │          │ │
-│ │ callable            │                     │       │           │          │ │
-│ │ ``flag_value``      │                     │       │           │          │ │
-│ │ being instantiated  │                     │       │           │          │ │
-│ │ when used as a      │                     │       │           │          │ │
-│ │ default             │                     │       │           │          │ │
-│ │   aaf99a3           │                     │       │           │          │ │
-│ │ 2026-02-20 Hide     │                     │       │           │          │ │
-│ │ `Sentinel.UNSET`    │                     │       │           │          │ │
-│ │ values as `None` in │                     │       │           │          │ │
-│ │ `lookup_default()`  │                     │       │           │          │ │
-│ │   955ca49           │                     │       │           │          │ │
-│ │ 2025-11-19 Cleanup  │                     │       │           │          │ │
-│ │ changes to fix      │                     │       │           │          │ │
-│ │ flag_value bug      │                     │       │           │          │ │
+│ │ fastapi/applicatio… │                     │       │           │          │ │
+│ │   98b269b51         │                     │       │           │          │ │
+│ │ 2026-03-15 👷 Add   │                     │       │           │          │ │
+│ │ `ty` to precommit   │                     │       │           │          │ │
+│ │ (#15091)            │                     │       │           │          │ │
+│ │   2686c7fbb         │                     │       │           │          │ │
+│ │ 2026-02-24 ♻️       │                     │       │           │          │ │
+│ │ Refactor logic to   │                     │       │           │          │ │
+│ │ handle OpenAPI and  │                     │       │           │          │ │
+│ │ Swagger UI escaping │                     │       │           │          │ │
+│ │ data (#14986)       │                     │       │           │          │ │
+│ │   22354a253         │                     │       │           │          │ │
+│ │ 2026-02-23 🔒️ Add   │                     │       │           │          │ │
+│ │ `strict_content_ty… │                     │       │           │          │ │
+│ │ checking for JSON   │                     │       │           │          │ │
+│ │ requests (#14978)   │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
 │ │ Diff:               │                     │       │           │          │ │
 │ │ ```diff             │                     │       │           │          │ │
 │ │ diff --git          │                     │       │           │          │ │
-│ │ a/src/click/core.py │                     │       │           │          │ │
-│ │ b/src/click/core.py │                     │       │           │          │ │
+│ │ a/docs/en/mkdocs.y… │                     │       │           │          │ │
+│ │ b/docs/en/mkdocs.y… │                     │       │           │          │ │
 │ │ index               │                     │       │           │          │ │
-│ │ f0a624b..98a0bcd    │                     │       │           │          │ │
+│ │ 461419498..a84934f… │                     │       │           │          │ │
 │ │ 100644              │                     │       │           │          │ │
 │ │ ---                 │                     │       │           │          │ │
-│ │ a/src/click/core.py │                     │       │           │          │ │
+│ │ a/docs/en/mkdocs.y… │                     │       │           │          │ │
 │ │ +++                 │                     │       │           │          │ │
-│ │ b/src/click/core.py │                     │       │           │          │ │
-│ │ @@ -2891,13         │                     │       │           │          │ │
-│ │ +2891,33 @@ class   │                     │       │           │          │ │
-│ │ Option(Parameter):  │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ get_default(        │                     │       │           │          │ │
-│ │          self, ctx: │                     │       │           │          │ │
-│ │ Context, call: bool │                     │       │           │          │ │
-│ │ = True              │                     │       │           │          │ │
-│ │      ) -> t.Any |   │                     │       │           │          │ │
-│ │ t.Callable[[],      │                     │       │           │          │ │
-│ │ t.Any] | None:      │                     │       │           │          │ │
-│ │ +        """For     │                     │       │           │          │ │
-│ │ non-boolean flag    │                     │       │           │          │ │
-│ │ options,            │                     │       │           │          │ │
-│ │ ``default=True`` is │                     │       │           │          │ │
-│ │ treated as a        │                     │       │           │          │ │
-│ │ +        sentinel   │                     │       │           │          │ │
-│ │ meaning "activate   │                     │       │           │          │ │
-│ │ this flag by        │                     │       │           │          │ │
-│ │ default" and is     │                     │       │           │          │ │
-│ │ resolved to         │                     │       │           │          │ │
+│ │ b/docs/en/mkdocs.y… │                     │       │           │          │ │
+│ │ @@ -197,6 +197,7 @@ │                     │       │           │          │ │
+│ │ nav:                │                     │       │           │          │ │
+│ │      -              │                     │       │           │          │ │
+│ │ advanced/advanced-… │                     │       │           │          │ │
+│ │      -              │                     │       │           │          │ │
+│ │ advanced/json-base… │                     │       │           │          │ │
+│ │      -              │                     │       │           │          │ │
+│ │ advanced/strict-co… │                     │       │           │          │ │
+│ │ +    -              │                     │       │           │          │ │
+│ │ advanced/vibe.md    │                     │       │           │          │ │
+│ │    - fastapi-cli.md │                     │       │           │          │ │
+│ │    -                │                     │       │           │          │ │
+│ │ editor-support.md   │                     │       │           │          │ │
+│ │    - Deployment:    │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/docs_src/vibe/tu… │                     │       │           │          │ │
+│ │ b/docs_src/vibe/tu… │                     │       │           │          │ │
+│ │ new file mode       │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 000000000..4ec3d55… │                     │       │           │          │ │
+│ │ --- /dev/null       │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/docs_src/vibe/tu… │                     │       │           │          │ │
+│ │ @@ -0,0 +1,12 @@    │                     │       │           │          │ │
+│ │ +from typing import │                     │       │           │          │ │
+│ │ Any                 │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ :attr:`flag_value`. │                     │       │           │          │ │
-│ │ This resolution is  │                     │       │           │          │ │
-│ │ performed lazily    │                     │       │           │          │ │
-│ │ here (rather        │                     │       │           │          │ │
-│ │ +        than       │                     │       │           │          │ │
-│ │ eagerly in          │                     │       │           │          │ │
-│ │ :meth:`__init__`)   │                     │       │           │          │ │
-│ │ to prevent callable │                     │       │           │          │ │
-│ │ ``flag_value``      │                     │       │           │          │ │
-│ │ +        values     │                     │       │           │          │ │
-│ │ (like classes) from │                     │       │           │          │ │
-│ │ being instantiated  │                     │       │           │          │ │
-│ │ prematurely         │                     │       │           │          │ │
+│ │ +from fastapi       │                     │       │           │          │ │
+│ │ import FastAPI      │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ (:issue:`3121`).    │                     │       │           │          │ │
+│ │ +app = FastAPI()    │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ +        For        │                     │       │           │          │ │
-│ │ example, with       │                     │       │           │          │ │
-│ │ ``--upper/--lower`` │                     │       │           │          │ │
-│ │ feature switches    │                     │       │           │          │ │
-│ │ where               │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ ``flag_value="uppe… │                     │       │           │          │ │
-│ │ and                 │                     │       │           │          │ │
-│ │ ``default=False``,  │                     │       │           │          │ │
-│ │ the default         │                     │       │           │          │ │
-│ │ resolves            │                     │       │           │          │ │
-│ │ +        to         │                     │       │           │          │ │
-│ │ ``"upper"``.        │                     │       │           │          │ │
+│ │ +@app.vibe(         │                     │       │           │          │ │
+│ │ +    "/vibe/",      │                     │       │           │          │ │
+│ │ +    prompt="pls    │                     │       │           │          │ │
+│ │ return json of      │                     │       │           │          │ │
+│ │ users from          │                     │       │           │          │ │
+│ │ database. make no   │                     │       │           │          │ │
+│ │ mistakes",          │                     │       │           │          │ │
+│ │ +)                  │                     │       │           │          │ │
+│ │ +async def          │                     │       │           │          │ │
+│ │ ai_vibes(body:      │                     │       │           │          │ │
+│ │ Any): ...           │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/fastapi/applicat… │                     │       │           │          │ │
+│ │ b/fastapi/applicat… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 4af1146b0..dfd80d4… │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/fastapi/applicat… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/fastapi/applicat… │                     │       │           │          │ │
+│ │ @@ -10,7 +10,11 @@  │                     │       │           │          │ │
+│ │ from                │                     │       │           │          │ │
+│ │ fastapi.exception_… │                     │       │           │          │ │
+│ │ import (            │                     │       │           │          │ │
+│ │      request_valid… │                     │       │           │          │ │
+│ │      websocket_req… │                     │       │           │          │ │
+│ │  )                  │                     │       │           │          │ │
+│ │ -from               │                     │       │           │          │ │
+│ │ fastapi.exceptions  │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ RequestValidationE… │                     │       │           │          │ │
+│ │ WebSocketRequestVa… │                     │       │           │          │ │
+│ │ +from               │                     │       │           │          │ │
+│ │ fastapi.exceptions  │                     │       │           │          │ │
+│ │ import (            │                     │       │           │          │ │
+│ │ +    FastAPIError,  │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ +        ..         │                     │       │           │          │ │
-│ │ caution::           │                     │       │           │          │ │
-│ │ +            This   │                     │       │           │          │ │
-│ │ substitution only   │                     │       │           │          │ │
-│ │ applies to          │                     │       │           │          │ │
-│ │ **non-boolean**     │                     │       │           │          │ │
-│ │ flags               │                     │       │           │          │ │
+│ │ RequestValidationE… │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ (:attr:`is_bool_fl… │                     │       │           │          │ │
-│ │ is ``False``). For  │                     │       │           │          │ │
-│ │ boolean flags,      │                     │       │           │          │ │
-│ │ ``True`` is         │                     │       │           │          │ │
-│ │ +            not a  │                     │       │           │          │ │
-│ │ sentinel but a      │                     │       │           │          │ │
-│ │ legitimate Python   │                     │       │           │          │ │
-│ │ value, so           │                     │       │           │          │ │
-│ │ ``default=True`` is │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ returned as-is.     │                     │       │           │          │ │
-│ │ Without this        │                     │       │           │          │ │
-│ │ distinction,        │                     │       │           │          │ │
-│ │ ``flag_value=False, │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ default=True``      │                     │       │           │          │ │
-│ │ would silently      │                     │       │           │          │ │
-│ │ always return       │                     │       │           │          │ │
-│ │ ``False``,          │                     │       │           │          │ │
-│ │ regardless of       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ whether the flag    │                     │       │           │          │ │
-│ │ was passed or not.  │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        ..         │                     │       │           │          │ │
-│ │ versionchanged::    │                     │       │           │          │ │
-│ │ 8.3                 │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ ``default=True`` is │                     │       │           │          │ │
-│ │ no longer           │                     │       │           │          │ │
-│ │ substituted with    │                     │       │           │          │ │
-│ │ ``flag_value`` for  │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ boolean flags,      │                     │       │           │          │ │
-│ │ fixing negative     │                     │       │           │          │ │
-│ │ boolean flags like  │                     │       │           │          │ │
-│ │ ``flag_value=False, │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ default=True``.     │                     │       │           │          │ │
-│ │ :issue:`3111`       │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │          value =    │                     │       │           │          │ │
-│ │ super().get_defaul… │                     │       │           │          │ │
-│ │ call=False)         │                     │       │           │          │ │
+│ │ WebSocketRequestVa… │                     │       │           │          │ │
+│ │ +)                  │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ fastapi.logger      │                     │       │           │          │ │
+│ │ import logger       │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ fastapi.middleware… │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ AsyncExitStackMidd… │                     │       │           │          │ │
+│ │  from               │                     │       │           │          │ │
+│ │ fastapi.openapi.do… │                     │       │           │          │ │
+│ │ import (            │                     │       │           │          │ │
+│ │ @@ -4559,6 +4563,60 │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ FastAPI(Starlette): │                     │       │           │          │ │
+│ │              gener… │                     │       │           │          │ │
+│ │          )          │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
-│ │ -        # Lazily   │                     │       │           │          │ │
-│ │ resolve             │                     │       │           │          │ │
-│ │ default=True to     │                     │       │           │          │ │
-│ │ flag_value. Doing   │                     │       │           │          │ │
-│ │ this here           │                     │       │           │          │ │
-│ │ -        # (instead │                     │       │           │          │ │
-│ │ of eagerly in       │                     │       │           │          │ │
-│ │ __init__) prevents  │                     │       │           │          │ │
-│ │ callable            │                     │       │           │          │ │
-│ │ flag_values         │                     │       │           │          │ │
-│ │ -        # (like    │                     │       │           │          │ │
-│ │ classes) from being │                     │       │           │          │ │
-│ │ instantiated by the │                     │       │           │          │ │
-│ │ callable check      │                     │       │           │          │ │
-│ │ below.              │                     │       │           │          │ │
-│ │ -        #          │                     │       │           │          │ │
-│ │ https://github.com… │                     │       │           │          │ │
-│ │ -        if value   │                     │       │           │          │ │
-│ │ is True and         │                     │       │           │          │ │
-│ │ self.is_flag:       │                     │       │           │          │ │
-│ │ +        if value   │                     │       │           │          │ │
-│ │ is True and         │                     │       │           │          │ │
-│ │ self.is_flag and    │                     │       │           │          │ │
-│ │ not                 │                     │       │           │          │ │
-│ │ self.is_bool_flag:  │                     │       │           │          │ │
-│ │              value  │                     │       │           │          │ │
-│ │ = self.flag_value   │                     │       │           │          │ │
-│ │          elif call  │                     │       │           │          │ │
-│ │ and                 │                     │       │           │          │ │
-│ │ callable(value):    │                     │       │           │          │ │
-│ │              value  │                     │       │           │          │ │
-│ │ = value()           │                     │       │           │          │ │
+│ │ +    def vibe(      │                     │       │           │          │ │
+│ │ +        self,      │                     │       │           │          │ │
+│ │ +        path:      │                     │       │           │          │ │
+│ │ Annotated[          │                     │       │           │          │ │
+│ │ +            str,   │                     │       │           │          │ │
+│ │ +            Doc(   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ """                 │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ The URL path to be  │                     │       │           │          │ │
+│ │ used for this *path │                     │       │           │          │ │
+│ │ operation*.         │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ For example, in     │                     │       │           │          │ │
+│ │ `http://example.co… │                     │       │           │          │ │
+│ │ the path is         │                     │       │           │          │ │
+│ │ `/vibes`.           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ """                 │                     │       │           │          │ │
+│ │ +            ),     │                     │       │           │          │ │
+│ │ +        ],         │                     │       │           │          │ │
+│ │ +        *,         │                     │       │           │          │ │
+│ │ +        prompt:    │                     │       │           │          │ │
+│ │ Annotated[          │                     │       │           │          │ │
+│ │ +            str,   │                     │       │           │          │ │
+│ │ +            Doc(   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ """                 │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ The prompt to send  │                     │       │           │          │ │
+│ │ to the LLM provider │                     │       │           │          │ │
+│ │ along with the      │                     │       │           │          │ │
+│ │ payload.            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ This tells the LLM  │                     │       │           │          │ │
+│ │ what to do with the │                     │       │           │          │ │
+│ │ request body.       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ """                 │                     │       │           │          │ │
+│ │ +            ),     │                     │       │           │          │ │
+│ │ +        ] = "",    │                     │       │           │          │ │
+│ │ +    ) ->           │                     │       │           │          │ │
+│ │ Callable[[Decorate… │                     │       │           │          │ │
+│ │ DecoratedCallable]: │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        Add a      │                     │       │           │          │ │
+│ │ *vibe coding path   │                     │       │           │          │ │
+│ │ operation* that     │                     │       │           │          │ │
+│ │ receives any HTTP   │                     │       │           │          │ │
+│ │ method              │                     │       │           │          │ │
+│ │ +        and any    │                     │       │           │          │ │
+│ │ payload.            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        It's       │                     │       │           │          │ │
+│ │ intended to receive │                     │       │           │          │ │
+│ │ the request and     │                     │       │           │          │ │
+│ │ send the payload    │                     │       │           │          │ │
+│ │ directly            │                     │       │           │          │ │
+│ │ +        to an LLM  │                     │       │           │          │ │
+│ │ provider, and       │                     │       │           │          │ │
+│ │ return the response │                     │       │           │          │ │
+│ │ as is.              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        Embrace    │                     │       │           │          │ │
+│ │ the freedom and     │                     │       │           │          │ │
+│ │ flexibility of not  │                     │       │           │          │ │
+│ │ having any data     │                     │       │           │          │ │
+│ │ validation,         │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ documentation, or   │                     │       │           │          │ │
+│ │ serialization.      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        ## Example │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        ```python  │                     │       │           │          │ │
+│ │ +        from       │                     │       │           │          │ │
+│ │ typing import Any   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        from       │                     │       │           │          │ │
+│ │ fastapi import      │                     │       │           │          │ │
+│ │ FastAPI             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        app =      │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        @app.vibe( │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "/vibe/",           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ prompt="pls return  │                     │       │           │          │ │
+│ │ json of users from  │                     │       │           │          │ │
+│ │ database. make no   │                     │       │           │          │ │
+│ │ mistakes",          │                     │       │           │          │ │
+│ │ +        )          │                     │       │           │          │ │
+│ │ +        async def  │                     │       │           │          │ │
+│ │ ai_vibes(body:      │                     │       │           │          │ │
+│ │ Any):               │                     │       │           │          │ │
+│ │ +            ...    │                     │       │           │          │ │
+│ │ +        ```        │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        raise      │                     │       │           │          │ │
+│ │ FastAPIError("Are   │                     │       │           │          │ │
+│ │ you kidding me?     │                     │       │           │          │ │
+│ │ Happy April         │                     │       │           │          │ │
+│ │ Fool's")            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ websocket_route(    │                     │       │           │          │ │
+│ │          self,      │                     │       │           │          │ │
+│ │ path: str, name:    │                     │       │           │          │ │
+│ │ str | None = None   │                     │       │           │          │ │
+│ │      ) ->           │                     │       │           │          │ │
+│ │ Callable[[Decorate… │                     │       │           │          │ │
+│ │ DecoratedCallable]: │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_vibe.… │                     │       │           │          │ │
+│ │ b/tests/test_vibe.… │                     │       │           │          │ │
+│ │ new file mode       │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 000000000..4a79d6b… │                     │       │           │          │ │
+│ │ --- /dev/null       │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_vibe.… │                     │       │           │          │ │
+│ │ @@ -0,0 +1,17 @@    │                     │       │           │          │ │
+│ │ +from typing import │                     │       │           │          │ │
+│ │ Any                 │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +import pytest      │                     │       │           │          │ │
+│ │ +from fastapi       │                     │       │           │          │ │
+│ │ import FastAPI      │                     │       │           │          │ │
+│ │ +from               │                     │       │           │          │ │
+│ │ fastapi.exceptions  │                     │       │           │          │ │
+│ │ import FastAPIError │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_vibe_raises(): │                     │       │           │          │ │
+│ │ +    with           │                     │       │           │          │ │
+│ │ pytest.raises(Fast… │                     │       │           │          │ │
+│ │ match="Are you      │                     │       │           │          │ │
+│ │ kidding me"):       │                     │       │           │          │ │
+│ │ +        app =      │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        @app.vibe( │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "/vibe/",           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ prompt="pls return  │                     │       │           │          │ │
+│ │ json of users from  │                     │       │           │          │ │
+│ │ database. make no   │                     │       │           │          │ │
+│ │ mistakes",          │                     │       │           │          │ │
+│ │ +        )          │                     │       │           │          │ │
+│ │ +        async def  │                     │       │           │          │ │
+│ │ ai_vibes(body:      │                     │       │           │          │ │
+│ │ Any):  # pragma:    │                     │       │           │          │ │
+│ │ nocover             │                     │       │           │          │ │
+│ │ +            pass   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
 │ │ ```                 │                     │       │           │          │ │
 │ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
