@@ -216,3 +216,53 @@ change: no probe has reproduced an oracle in any run on either bench, so the blo
 the diff, not testing it; and the own-repo `36f4e93` case (probe-licensed approval of a 447-line
 PR) stands. Single-line mutants are the easy end of the distribution; the real-PR end is where the
 gate still fails, and that is the next bench to grow.
+
+**Harness v5 (Oct 20): the agent sees the suite delta.** v4b showed the agent raw suite output at head, and
+5 of 7 false blocks were environment failures already present at the parent. v5 runs junit at both commits
+and reports only new failures, fixed tests, and tests the PR added (flagging any that fail at head). Same
+eval: Sonnet 2/35 bugs approved, auto-ship 0.38, escalate 0.34; Haiku 0/35, auto-ship 0.26, escalate 0.44.
+Fewer false blocks, more escalation; the remaining blocks on clean PRs are speculation the delta refutes,
+and one candidate (`clean__click__c69643b6`) both models flag. Eval frozen here; the harness is not
+iterated further on 61 tasks.
+
+## Phase 3b: SFT + GRPO into the triage gate (Oct 20–21, 2026, 1× A100 80 GB, ~$22)
+
+**Student role.** No tools: diff + context graph in, `{"decision", "comments"}` out. The teacher is Sonnet
+under harness v5 on the 128 train tasks (`review/analysis/traces.py`): 79 usable traces, 54 bug→block,
+25 clean→approve; 29 clean→escalate dropped because the gate must not learn to punt. Reward
+(`ftlab/rewards/review.py`): approve-a-bug −5, correct +1, block-a-clean −0.5, escalate −0.2, localized
+block +0.5, unparsable −1, −0.1 per 256 tokens past 300. Pipeline: `pod/phase3.sh` (base eval → SFT →
+eval → GRPO → eval), results every 5 min to `results/phase3`.
+
+**Two runs, both on the 61-task eval (35 bugs / 26 clean):**
+
+| run | model | acc | bugs → approve / block | clean → approve / block | note |
+|---|---|---|---|---|---|
+| — | Qwen3-4B base | 0.475 | 32 / 3 | 26 / 0 | approves 58/61 |
+| v1 | SFT, 54:25 traces | 0.230 | 1 / 34 | 0 / 26 | blocks 60/61; 20 outputs fail strict parse |
+| v1 | + GRPO 120 steps, lr 1e-5, β 0.04 | 0.393 | 1 / 34 | 0 / 26 | same decisions; gain is JSON validity. kl 0.001 |
+| v2 | SFT, 25:25 balanced | 0.311 | 4 / 31 | 5 / 21 | first non-degenerate prior |
+| v2 | + GRPO 300 steps, lr 5e-5, β 0.01, T 1.0 | 0.426 | 35 / 0 | 26 / 0 | approves 61/61; 18 drifted to single-quoted dicts. kl 0.14 |
+
+**What the two runs say.** The gate's decision prior comes from SFT and GRPO has not beaten it. v1 started
+from a block-everything policy; every group of 8 samples then carried the same reward, the advantage was
+zero, and 120 steps moved nothing (kl 0.001). v2 started from a policy that varied, and the reward signal
+was visibly correct in training (`review/approve_bug_frac` logged every step; the −5s show up exactly
+where it rises), but the policy slid toward approve anyway: 0.09 → 0.3–0.5 approve-on-bug over 300
+steps, unparsable 0.2–0.56 throughout, reward never above −0.4. The reward is sparse in the one
+direction that matters: switching the decision token and writing a localized comment is a two-part
+move, block samples get rare once the policy tilts, and within a group of 8 the comparison is mostly
+approve-vs-approve. At lr 5e-5 with β 0.01 nothing pulled it back; the single-quote drift (−1 each)
+is the same failure in miniature. Importance-sampling ratio 0.7–1.08 all run, so this is the policy
+learning the wrong thing, not a sampler mismatch.
+
+**Infra lessons (one pod-day lost):** the Runpod template now exports `PYTHONPATH` to its dist-packages,
+which outranks a venv; `pip --ignore-installed` leaves stale `*.dist-info` so importlib.metadata reports
+versions the module isn't; `trl[vllm]` pulled vllm 0.32.0 over the 0.31.0 pin; flashinfer 0.7.2 broke
+against the cutlass-dsl vllm pins. `pod/setup.sh` now does one pinned resolve and force-reinstalls
+vllm's pins. Qwen3 detection by path left thinking on for a model at `runs/<name>/final` (53/118
+truncated); detect by chat template. GRPO does not truncate prompts: a 36,993-token PR killed a run.
+
+**v3 plan:** eval every 50 steps; 16 generations per prompt; lr 2e-5, β 0.02; reward with unparsable −3 and
+block-on-bug +1 before localization so the correct move is reachable in one step; SWE-smith instances as
+additional positives once the recipe moves the needle on 61.
