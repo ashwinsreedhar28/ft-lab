@@ -1,400 +1,400 @@
-│ │ =                  │                    │       │           │            │ │
-│ │ get_type_ref(orig… │                    │       │           │            │ │
-│ │ args_override=arg… │                    │       │           │            │ │
-│ │ +        type_ref  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ _type_refs.model_… │                    │       │           │            │ │
-│ │ args_override=arg… │                    │       │           │            │ │
-│ │          if        │                    │       │           │            │ │
-│ │ type_ref in        │                    │       │           │            │ │
-│ │ previously_seen_t… │                    │       │           │            │ │
-│ │              self… │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ PydanticRecursive… │                    │       │           │            │ │
-│ │              yield │                    │       │           │            │ │
-│ │ self_type          │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/pydantic/_inter… │                    │       │           │            │ │
-│ │ b/pydantic/_inter… │                    │       │           │            │ │
-│ │ new file mode      │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 00000000..df8b65c5 │                    │       │           │            │ │
-│ │ --- /dev/null      │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/pydantic/_inter… │                    │       │           │            │ │
-│ │ @@ -0,0 +1,128 @@  │                    │       │           │            │ │
-│ │ +"""Logic related  │                    │       │           │            │ │
-│ │ to reference       │                    │       │           │            │ │
-│ │ computation for    │                    │       │           │            │ │
-│ │ types."""          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +from __future__   │                    │       │           │            │ │
-│ │ import annotations │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +import sys        │                    │       │           │            │ │
-│ │ +from enum import  │                    │       │           │            │ │
-│ │ Enum               │                    │       │           │            │ │
-│ │ +from typing       │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ TYPE_CHECKING,     │                    │       │           │            │ │
-│ │ Any, cast,         │                    │       │           │            │ │
-│ │ get_args,          │                    │       │           │            │ │
-│ │ get_origin         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ typing_extensions  │                    │       │           │            │ │
-│ │ import Sentinel,   │                    │       │           │            │ │
-│ │ TypeAliasType      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +from . import     │                    │       │           │            │ │
-│ │ _repr              │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ ._import_utils     │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ import_cached_bas… │                    │       │           │            │ │
-│ │ +from ._utils      │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ lenient_issubclass │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +if TYPE_CHECKING: │                    │       │           │            │ │
-│ │ +    from pydantic │                    │       │           │            │ │
-│ │ import BaseModel   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ _args_ref(args:    │                    │       │           │            │ │
-│ │ tuple[Any, ...])   │                    │       │           │            │ │
-│ │ -> str:            │                    │       │           │            │ │
-│ │ +    arg_refs:     │                    │       │           │            │ │
-│ │ list[str] = []     │                    │       │           │            │ │
-│ │ +    for arg in    │                    │       │           │            │ │
-│ │ args:              │                    │       │           │            │ │
-│ │ +        if        │                    │       │           │            │ │
-│ │ isinstance(arg,    │                    │       │           │            │ │
-│ │ str):              │                    │       │           │            │ │
-│ │ +            #     │                    │       │           │            │ │
-│ │ Handle string args │                    │       │           │            │ │
-│ │ as a special case; │                    │       │           │            │ │
-│ │ we may be able to  │                    │       │           │            │ │
-│ │ remove this        │                    │       │           │            │ │
-│ │ special handling   │                    │       │           │            │ │
-│ │ if we              │                    │       │           │            │ │
-│ │ +            #     │                    │       │           │            │ │
-│ │ wrap them in a     │                    │       │           │            │ │
-│ │ ForwardRef at some │                    │       │           │            │ │
-│ │ point.             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ arg_ref =          │                    │       │           │            │ │
-│ │ f'{arg}:str-{id(a… │                    │       │           │            │ │
-│ │ +        else:     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ arg_ref =          │                    │       │           │            │ │
-│ │ f'{_repr.display_… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ arg_refs.append(a… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    if arg_refs:  │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ f'[{",".join(arg_… │                    │       │           │            │ │
-│ │ +    else:         │                    │       │           │            │ │
-│ │ +        return '' │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ model_type_ref(ty… │                    │       │           │            │ │
-│ │ type[BaseModel],   │                    │       │           │            │ │
-│ │ args_override:     │                    │       │           │            │ │
-│ │ tuple[Any, ...] |  │                    │       │           │            │ │
-│ │ None = None) ->    │                    │       │           │            │ │
-│ │ str:               │                    │       │           │            │ │
-│ │ +    """Produce a  │                    │       │           │            │ │
-│ │ reference for      │                    │       │           │            │ │
-│ │ Pydantic base      │                    │       │           │            │ │
-│ │ models."""         │                    │       │           │            │ │
-│ │ +    try:          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ generic_metadata = │                    │       │           │            │ │
-│ │ type_.__pydantic_… │                    │       │           │            │ │
-│ │ +    except        │                    │       │           │            │ │
-│ │ AttributeError:    │                    │       │           │            │ │
-│ │ +        # `type_` │                    │       │           │            │ │
-│ │ is `BaseModel`:    │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ f'{type_.__module… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    origin =      │                    │       │           │            │ │
-│ │ generic_metadata[… │                    │       │           │            │ │
-│ │ or type_           │                    │       │           │            │ │
-│ │ +    args =        │                    │       │           │            │ │
-│ │ generic_metadata[… │                    │       │           │            │ │
-│ │ +    if not args   │                    │       │           │            │ │
-│ │ and args_override  │                    │       │           │            │ │
-│ │ is not None:       │                    │       │           │            │ │
-│ │ +        args =    │                    │       │           │            │ │
-│ │ args_override      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # While it is │                    │       │           │            │ │
-│ │ typed as `str`,    │                    │       │           │            │ │
-│ │ `__module__` could │                    │       │           │            │ │
-│ │ in theory be       │                    │       │           │            │ │
-│ │ `None`:            │                    │       │           │            │ │
-│ │ +    module_name = │                    │       │           │            │ │
-│ │ cast(str | None,   │                    │       │           │            │ │
-│ │ origin.__module__) │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ module_name is     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ module_name = '<No │                    │       │           │            │ │
-│ │ __module__>'       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ f'{module_name}.{… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ class_type_ref(ty… │                    │       │           │            │ │
-│ │ Any, origin:       │                    │       │           │            │ │
-│ │ type[Any] | None)  │                    │       │           │            │ │
-│ │ -> str:            │                    │       │           │            │ │
-│ │ +    """Produce a  │                    │       │           │            │ │
-│ │ reference for an   │                    │       │           │            │ │
-│ │ arbitrary class    │                    │       │           │            │ │
-│ │ (dataclasses,      │                    │       │           │            │ │
-│ │ typed              │                    │       │           │            │ │
-│ │ dictionaries,      │                    │       │           │            │ │
-│ │ named tuples)."""  │                    │       │           │            │ │
-│ │ +    tp: type[Any] │                    │       │           │            │ │
-│ │ = origin if origin │                    │       │           │            │ │
-│ │ is not None else   │                    │       │           │            │ │
-│ │ type_              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # While it is │                    │       │           │            │ │
-│ │ typed as `str`,    │                    │       │           │            │ │
-│ │ `__module__` could │                    │       │           │            │ │
-│ │ in theory be       │                    │       │           │            │ │
-│ │ `None`:            │                    │       │           │            │ │
-│ │ +    module_name = │                    │       │           │            │ │
-│ │ cast(str | None,   │                    │       │           │            │ │
-│ │ tp.__module__)     │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ module_name is     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ module_name = '<No │                    │       │           │            │ │
-│ │ __module__>'       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ f'{module_name}.{… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +_NOT_PROVIDED =   │                    │       │           │            │ │
-│ │ Sentinel('_NOT_PR… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ any_class_type_re… │                    │       │           │            │ │
-│ │ Any, origin:       │                    │       │           │            │ │
-│ │ type[Any] | None | │                    │       │           │            │ │
-│ │ _NOT_PROVIDED =    │                    │       │           │            │ │
-│ │ _NOT_PROVIDED) ->  │                    │       │           │            │ │
-│ │ str:               │                    │       │           │            │ │
-│ │ +    """Produce a  │                    │       │           │            │ │
-│ │ reference for any  │                    │       │           │            │ │
-│ │ class kind,        │                    │       │           │            │ │
-│ │ including Pydantic │                    │       │           │            │ │
-│ │ models."""         │                    │       │           │            │ │
-│ │ +    BaseModel_ =  │                    │       │           │            │ │
-│ │ import_cached_bas… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ lenient_issubclas… │                    │       │           │            │ │
-│ │ BaseModel_):       │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ model_type_ref(ty… │                    │       │           │            │ │
-│ │ # pyright:         │                    │       │           │            │ │
-│ │ ignore[reportArgu… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    origin =      │                    │       │           │            │ │
-│ │ get_origin(type_)  │                    │       │           │            │ │
-│ │ if origin is       │                    │       │           │            │ │
-│ │ _NOT_PROVIDED else │                    │       │           │            │ │
-│ │ origin             │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ class_type_ref(ty… │                    │       │           │            │ │
-│ │ origin)  #         │                    │       │           │            │ │
-│ │ pyright:           │                    │       │           │            │ │
-│ │ ignore[reportArgu… │                    │       │           │            │ │
-│ │ (https://github.c… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ any_type_ref(type… │                    │       │           │            │ │
-│ │ Any, origin: Any | │                    │       │           │            │ │
-│ │ _NOT_PROVIDED =    │                    │       │           │            │ │
-│ │ _NOT_PROVIDED) ->  │                    │       │           │            │ │
-│ │ str:               │                    │       │           │            │ │
-│ │ +    """Produce a  │                    │       │           │            │ │
-│ │ reference for any  │                    │       │           │            │ │
-│ │ object, including  │                    │       │           │            │ │
-│ │ non-class          │                    │       │           │            │ │
-│ │ objects."""        │                    │       │           │            │ │
-│ │ +    BaseModel_ =  │                    │       │           │            │ │
-│ │ import_cached_bas… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ lenient_issubclas… │                    │       │           │            │ │
-│ │ BaseModel_):       │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ model_type_ref(ty… │                    │       │           │            │ │
-│ │ # pyright:         │                    │       │           │            │ │
-│ │ ignore[reportArgu… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    origin =      │                    │       │           │            │ │
-│ │ get_origin(type_)  │                    │       │           │            │ │
-│ │ if origin is       │                    │       │           │            │ │
-│ │ _NOT_PROVIDED else │                    │       │           │            │ │
-│ │ origin             │                    │       │           │            │ │
-│ │ +    tp: Any =     │                    │       │           │            │ │
-│ │ origin if origin   │                    │       │           │            │ │
-│ │ is not None else   │                    │       │           │            │ │
-│ │ type_              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    module_name = │                    │       │           │            │ │
-│ │ getattr(tp,        │                    │       │           │            │ │
-│ │ '__module__',      │                    │       │           │            │ │
-│ │ None)              │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ module_name is     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ module_name = '<No │                    │       │           │            │ │
-│ │ __module__>'       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    try:          │                    │       │           │            │ │
-│ │ +        qualname  │                    │       │           │            │ │
-│ │ = getattr(tp,      │                    │       │           │            │ │
-│ │ '__qualname__',    │                    │       │           │            │ │
-│ │ f'<No              │                    │       │           │            │ │
-│ │ __qualname__:      │                    │       │           │            │ │
-│ │ {tp}>')            │                    │       │           │            │ │
-│ │ +    except        │                    │       │           │            │ │
-│ │ Exception:         │                    │       │           │            │ │
-│ │ +        qualname  │                    │       │           │            │ │
-│ │ = getattr(tp,      │                    │       │           │            │ │
-│ │ '__qualname__',    │                    │       │           │            │ │
-│ │ '<No               │                    │       │           │            │ │
-│ │ __qualname__>')    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ f'{module_name}.{… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ enum_type_ref(typ… │                    │       │           │            │ │
-│ │ type[Enum]) ->     │                    │       │           │            │ │
-│ │ str:               │                    │       │           │            │ │
-│ │ +    """Produce a  │                    │       │           │            │ │
-│ │ reference for an   │                    │       │           │            │ │
-│ │ enum class."""     │                    │       │           │            │ │
-│ │ +    # While it is │                    │       │           │            │ │
-│ │ typed as `str`,    │                    │       │           │            │ │
-│ │ `__module__` could │                    │       │           │            │ │
-│ │ in theory be       │                    │       │           │            │ │
-│ │ `None`:            │                    │       │           │            │ │
-│ │ +    module_name = │                    │       │           │            │ │
-│ │ cast(str | None,   │                    │       │           │            │ │
-│ │ type_.__module__)  │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ module_name is     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ module_name = '<No │                    │       │           │            │ │
-│ │ __module__>'       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ f'{module_name}.{… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ type_alias_type_r… │                    │       │           │            │ │
-│ │ TypeAliasType) ->  │                    │       │           │            │ │
-│ │ str:               │                    │       │           │            │ │
-│ │ +    """Produce a  │                    │       │           │            │ │
-│ │ reference for a    │                    │       │           │            │ │
-│ │ type alias."""     │                    │       │           │            │ │
-│ │ +    origin:       │                    │       │           │            │ │
-│ │ TypeAliasType =    │                    │       │           │            │ │
-│ │ get_origin(type_)  │                    │       │           │            │ │
-│ │ or type_           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    module_name = │                    │       │           │            │ │
-│ │ type_.__module__   │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ module_name is     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ module_name = '<No │                    │       │           │            │ │
-│ │ __module__>'       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ sys.version_info   │                    │       │           │            │ │
-│ │ >= (3, 15):        │                    │       │           │            │ │
-│ │ +        type_ref  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ f'{module_name}.{… │                    │       │           │            │ │
-│ │ +    else:         │                    │       │           │            │ │
-│ │ +        type_ref  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ f'{module_name}.{… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ f'{type_ref}{_arg… │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_edge… │                    │       │           │            │ │
-│ │ b/tests/test_edge… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 699a49da..f5e0de1a │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_edge… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_edge… │                    │       │           │            │ │
-│ │ @@ -3209,3         │                    │       │           │            │ │
-│ │ +3209,12 @@ def    │                    │       │           │            │ │
-│ │ test_unhasbable_g… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │      ta =          │                    │       │           │            │ │
-│ │ TypeAdapter(list[… │                    │       │           │            │ │
-│ │ Meta()]])          │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ ta.validate_pytho… │                    │       │           │            │ │
-│ │ == [1]             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_get_pydantic… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │ +    class         │                    │       │           │            │ │
-│ │ SchemaProvider:    │                    │       │           │            │ │
-│ │ +        def       │                    │       │           │            │ │
-│ │ __get_pydantic_co… │                    │       │           │            │ │
-│ │ source: Any,       │                    │       │           │            │ │
-│ │ handler:           │                    │       │           │            │ │
-│ │ GetCoreSchemaHand… │                    │       │           │            │ │
-│ │ -> CoreSchema:     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ return             │                    │       │           │            │ │
-│ │ core_schema.int_s… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    ta =          │                    │       │           │            │ │
-│ │ TypeAdapter(Schem… │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ ta.validate_pytho… │                    │       │           │            │ │
-│ │ == 1               │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ TestClient(app)     │                     │       │           │          │ │
+│ │ +    resp =         │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.status_code == │                     │       │           │          │ │
+│ │ 200                 │                     │       │           │          │ │
+│ │ +    assert "from   │                     │       │           │          │ │
+│ │ dependency" in      │                     │       │           │          │ │
+│ │ task_results        │                     │       │           │          │ │
+│ │ +    assert "from   │                     │       │           │          │ │
+│ │ endpoint" in        │                     │       │           │          │ │
+│ │ task_results        │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.35 │ approve  │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "approve",          │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "src/click/testing… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 28,   │       │           │          │ │
+│ │ with no further     │ "line_end": 28,     │       │           │          │ │
+│ │ human review.       │ "body": "Avoiding   │       │           │          │ │
+│ │ Decide:             │ capturing from a    │       │           │          │ │
+│ │   approve  - you    │ file descriptor on  │       │           │          │ │
+│ │ are confident the   │ Windows as the      │       │           │          │ │
+│ │ change is correct   │ documentation says  │       │           │          │ │
+│ │ and safe to ship.   │ it's not            │       │           │          │ │
+│ │   block    - you    │ supported"}]}       │       │           │          │ │
+│ │ found a defect;     │                     │       │           │          │ │
+│ │ cite its location.  │                     │       │           │          │ │
+│ │   escalate - you    │                     │       │           │          │ │
+│ │ cannot establish    │                     │       │           │          │ │
+│ │ safety from what    │                     │       │           │          │ │
+│ │ you can see; a      │                     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository: click   │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ src/click/testing.… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ src/click/testing.… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ src/click/testing.… │                     │       │           │          │ │
+│ │   e39679a           │                     │       │           │          │ │
+│ │ 2026-05-18 Add type │                     │       │           │          │ │
+│ │ annotations for     │                     │       │           │          │ │
+│ │ instance attributes │                     │       │           │          │ │
+│ │ in `testing`        │                     │       │           │          │ │
+│ │   ad39d74           │                     │       │           │          │ │
+│ │ 2026-03-05 Add      │                     │       │           │          │ │
+│ │ `capture` parameter │                     │       │           │          │ │
+│ │ to `CliRunner` and  │                     │       │           │          │ │
+│ │ revert default-mode │                     │       │           │          │ │
+│ │ `fileno` exposure   │                     │       │           │          │ │
+│ │   bb59ba0           │                     │       │           │          │ │
+│ │ 2026-04-14 Apply    │                     │       │           │          │ │
+│ │ format guidelines   │                     │       │           │          │ │
+│ │ to commits since    │                     │       │           │          │ │
+│ │ latest 8.3.2        │                     │       │           │          │ │
+│ │ release             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/src/click/testin… │                     │       │           │          │ │
+│ │ b/src/click/testin… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ d4473ca..929d0b7    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/src/click/testin… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/src/click/testin… │                     │       │           │          │ │
+│ │ @@ -22,7 +22,10 @@  │                     │       │           │          │ │
+│ │ if t.TYPE_CHECKING: │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      from .core     │                     │       │           │          │ │
+│ │ import Command      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -CaptureMode:       │                     │       │           │          │ │
+│ │ t.TypeAlias =       │                     │       │           │          │ │
+│ │ t.Literal["sys",    │                     │       │           │          │ │
+│ │ "fd"]               │                     │       │           │          │ │
+│ │ +if sys.platform != │                     │       │           │          │ │
+│ │ "win32":            │                     │       │           │          │ │
+│ │ +    CaptureMode:   │                     │       │           │          │ │
+│ │ t.TypeAlias =       │                     │       │           │          │ │
+│ │ t.Literal["sys"]  # │                     │       │           │          │ │
+│ │ pyright:            │                     │       │           │          │ │
+│ │ ignore[reportRedec… │                     │       │           │          │ │
+│ │ +else:              │                     │       │           │          │ │
+│ │ +    CaptureMode:   │                     │       │           │          │ │
+│ │ t.TypeAlias =       │                     │       │           │          │ │
+│ │ t.Literal["sys",    │                     │       │           │          │ │
+│ │ "fd"]  # pyright:   │                     │       │           │          │ │
+│ │ ignore[reportRedec… │                     │       │           │          │ │
+│ │  ExceptionInfo:     │                     │       │           │          │ │
+│ │ t.TypeAlias =       │                     │       │           │          │ │
+│ │ tuple[type[BaseExc… │                     │       │           │          │ │
+│ │ BaseException,      │                     │       │           │          │ │
+│ │ TracebackType]      │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ 55%|█████▌    | 165/300 [4:32:57<3:13:04, 85.81s/it] step 165  reward=-1.881  reward_std=3.001  kl=0.083  mean_length=85.688  clipped_ratio=0.000  step_time=39.611  loss=0.017  gate=-1.881
+                                                      55%|█████▌    | 165/300 [4:32:57<3:13:04, 85.81s/it]{'loss': '0.01675', 'grad_norm': '0.1091', 'learning_rate': '5e-05', 'num_tokens': '1.331e+07', 'completions/mean_length': '85.69', 'completions/min_length': '53', 'completions/max_length': '249', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '85.69', 'completions/min_terminated_length': '53', 'completions/max_terminated_length': '249', 'rewards/gate/mean': '-1.881', 'rewards/gate/std': '3.001', 'reward': '-1.881', 'reward_std': '3.001', 'frac_reward_zero_std': '0.75', 'review/approve_bug_frac': '0.4688', 'review/escalate_frac': '0', 'review/mean_tokens': '85.69', 'review/unparsable_frac': '0.03125', 'sampling/sampling_logp_difference/mean': '0.01428', 'sampling/sampling_logp_difference/max': '0.349', 'sampling/importance_sampling_ratio/min': '0.3075', 'sampling/importance_sampling_ratio/mean': '1.042', 'sampling/importance_sampling_ratio/max': '1.45', 'kl': '0.08284', 'entropy': '1.048', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '39.61', 'epoch': '5.323'}
+╭────────────────────────────────── Step 165 ──────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt              ┃ Completion          ┃  gate ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.35 │ approve  │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "approve",          │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "src/click/core.py… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 2786, │       │           │          │ │
+│ │ with no further     │ "line_end": 2786,   │       │           │          │ │
+│ │ human review.       │ "body": "added a    │       │           │          │ │
+│ │ Decide:             │ space between the   │       │           │          │ │
+│ │   approve  - you    │ original help       │       │           │          │ │
+│ │ are confident the   │ message and the     │       │           │          │ │
+│ │ change is correct   │ deprecated message  │       │           │          │ │
+│ │ and safe to ship.   │ so that tooling     │       │           │          │ │
+│ │   block    - you    │ that splits up      │       │           │          │ │
+│ │ found a defect;     │ messages into parts │       │           │          │ │
+│ │ cite its location.  │ can find it"}]}     │       │           │          │ │
+│ │   escalate - you    │                     │       │           │          │ │
+│ │ cannot establish    │                     │       │           │          │ │
+│ │ safety from what    │                     │       │           │          │ │
+│ │ you can see; a      │                     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository: click   │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ src/click/core.py   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ src/click/core.py:… │                     │       │           │          │ │
+│ │ src/click/core.py:… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ src/click/core.py:  │                     │       │           │          │ │
+│ │   5b9630f           │                     │       │           │          │ │
+│ │ 2026-05-08          │                     │       │           │          │ │
+│ │ Localisation of     │                     │       │           │          │ │
+│ │ more strings        │                     │       │           │          │ │
+│ │ (#2902)             │                     │       │           │          │ │
+│ │   73e1550           │                     │       │           │          │ │
+│ │ 2026-05-04 Fix      │                     │       │           │          │ │
+│ │ sentinel typing and │                     │       │           │          │ │
+│ │ its uses in parser  │                     │       │           │          │ │
+│ │ (#3396)             │                     │       │           │          │ │
+│ │   831c8f0           │                     │       │           │          │ │
+│ │ 2026-04-30 Add      │                     │       │           │          │ │
+│ │ NoSuchCommand       │                     │       │           │          │ │
+│ │ exception with      │                     │       │           │          │ │
+│ │ suggestions for     │                     │       │           │          │ │
+│ │ misspelled commands │                     │       │           │          │ │
+│ │ (#3228)             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/src/click/core.py │                     │       │           │          │ │
+│ │ b/src/click/core.py │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ c5cab15..fa1f2d4    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/src/click/core.py │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/src/click/core.py │                     │       │           │          │ │
+│ │ @@ -2786,7 +2786,11 │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ Option(Parameter):  │                     │       │           │          │ │
+│ │                  if │                     │       │           │          │ │
+│ │ isinstance(depreca… │                     │       │           │          │ │
+│ │ str)                │                     │       │           │          │ │
+│ │                  e… │                     │       │           │          │ │
+│ │ "(DEPRECATED)"      │                     │       │           │          │ │
+│ │              )      │                     │       │           │          │ │
+│ │ -            help = │                     │       │           │          │ │
+│ │ help +              │                     │       │           │          │ │
+│ │ deprecated_message  │                     │       │           │          │ │
+│ │ if help is not None │                     │       │           │          │ │
+│ │ else                │                     │       │           │          │ │
+│ │ deprecated_message  │                     │       │           │          │ │
+│ │ +            help = │                     │       │           │          │ │
+│ │ (                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ f"{help}            │                     │       │           │          │ │
+│ │ {deprecated_messag… │                     │       │           │          │ │
+│ │ +                if │                     │       │           │          │ │
+│ │ help is None        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ else                │                     │       │           │          │ │
+│ │ deprecated_message  │                     │       │           │          │ │
+│ │ +            )      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          self.prom… │                     │       │           │          │ │
+│ │ = prompt_text       │                     │       │           │          │ │
+│ │          self.conf… │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ confirmation_prompt │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.35 │ approve  │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "approve",          │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "src/click/core.py… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 2786, │       │           │          │ │
+│ │ with no further     │ "line_end": 2786,   │       │           │          │ │
+│ │ human review.       │ "body": " помогает  │       │           │          │ │
+│ │ Decide:             │ составлять          │       │           │          │ │
+│ │   approve  - you    │ нестандартные       │       │           │          │ │
+│ │ are confident the   │ команды."}]}        │       │           │          │ │
+│ │ change is correct   │                     │       │           │          │ │
+│ │ and safe to ship.   │                     │       │           │          │ │
+│ │   block    - you    │                     │       │           │          │ │
+│ │ found a defect;     │                     │       │           │          │ │
+│ │ cite its location.  │                     │       │           │          │ │
+│ │   escalate - you    │                     │       │           │          │ │
+│ │ cannot establish    │                     │       │           │          │ │
+│ │ safety from what    │                     │       │           │          │ │
+│ │ you can see; a      │                     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository: click   │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ src/click/core.py   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ src/click/core.py:… │                     │       │           │          │ │
+│ │ src/click/core.py:… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ src/click/core.py:  │                     │       │           │          │ │
+│ │   5b9630f           │                     │       │           │          │ │
+│ │ 2026-05-08          │                     │       │           │          │ │
+│ │ Localisation of     │                     │       │           │          │ │
+│ │ more strings        │                     │       │           │          │ │
+│ │ (#2902)             │                     │       │           │          │ │
+│ │   73e1550           │                     │       │           │          │ │
+│ │ 2026-05-04 Fix      │                     │       │           │          │ │
+│ │ sentinel typing and │                     │       │           │          │ │
+│ │ its uses in parser  │                     │       │           │          │ │
+│ │ (#3396)             │                     │       │           │          │ │
+│ │   831c8f0           │                     │       │           │          │ │
+│ │ 2026-04-30 Add      │                     │       │           │          │ │
+│ │ NoSuchCommand       │                     │       │           │          │ │
+│ │ exception with      │                     │       │           │          │ │
+│ │ suggestions for     │                     │       │           │          │ │
+│ │ misspelled commands │                     │       │           │          │ │
+│ │ (#3228)             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/src/click/core.py │                     │       │           │          │ │
+│ │ b/src/click/core.py │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ c5cab15..fa1f2d4    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/src/click/core.py │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/src/click/core.py │                     │       │           │          │ │
+│ │ @@ -2786,7 +2786,11 │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ Option(Parameter):  │                     │       │           │          │ │
+│ │                  if │                     │       │           │          │ │
+│ │ isinstance(depreca… │                     │       │           │          │ │
+│ │ str)                │                     │       │           │          │ │
+│ │                  e… │                     │       │           │          │ │
+│ │ "(DEPRECATED)"      │                     │       │           │          │ │
+│ │              )      │                     │       │           │          │ │
+│ │ -            help = │                     │       │           │          │ │
+│ │ help +              │                     │       │           │          │ │
+│ │ deprecated_message  │                     │       │           │          │ │
+│ │ if help is not None │                     │       │           │          │ │
+│ │ else                │                     │       │           │          │ │
+│ │ deprecated_message  │                     │       │           │          │ │
+│ │ +            help = │                     │       │           │          │ │
+│ │ (                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ f"{help}            │                     │       │           │          │ │
+│ │ {deprecated_messag… │                     │       │           │          │ │
+│ │ +                if │                     │       │           │          │ │
+│ │ help is None        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ else                │                     │       │           │          │ │
+│ │ deprecated_message  │                     │       │           │          │ │
+│ │ +            )      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          self.prom… │                     │       │           │          │ │
+│ │ = prompt_text       │                     │       │           │          │ │
+│ │          self.conf… │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ confirmation_prompt │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
