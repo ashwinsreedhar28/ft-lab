@@ -1,399 +1,399 @@
-│ │ comments (#12864)  │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Diff:              │                    │       │           │            │ │
-│ │ ```diff            │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/pydantic/json_s… │                    │       │           │            │ │
-│ │ b/pydantic/json_s… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ b6da482e..29654707 │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/pydantic/json_s… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/pydantic/json_s… │                    │       │           │            │ │
-│ │ @@ -2649,15        │                    │       │           │            │ │
-│ │ +2649,58 @@ class  │                    │       │           │            │ │
-│ │ WithJsonSchema:    │                    │       │           │            │ │
-│ │      """!!!        │                    │       │           │            │ │
-│ │ abstract "Usage    │                    │       │           │            │ │
-│ │ Documentation"     │                    │       │           │            │ │
-│ │          [`WithJs… │                    │       │           │            │ │
-│ │ Annotation](../co… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -    Add this as   │                    │       │           │            │ │
-│ │ an annotation on a │                    │       │           │            │ │
-│ │ field to override  │                    │       │           │            │ │
-│ │ the (base) JSON    │                    │       │           │            │ │
-│ │ schema that would  │                    │       │           │            │ │
-│ │ be generated for   │                    │       │           │            │ │
-│ │ that field.        │                    │       │           │            │ │
-│ │ -    This provides │                    │       │           │            │ │
-│ │ a way to set a     │                    │       │           │            │ │
-│ │ JSON schema for    │                    │       │           │            │ │
-│ │ types that would   │                    │       │           │            │ │
-│ │ otherwise raise    │                    │       │           │            │ │
-│ │ errors when        │                    │       │           │            │ │
-│ │ producing a JSON   │                    │       │           │            │ │
-│ │ schema,            │                    │       │           │            │ │
-│ │ -    such as       │                    │       │           │            │ │
-│ │ Callable, or types │                    │       │           │            │ │
-│ │ that have an       │                    │       │           │            │ │
-│ │ is-instance core   │                    │       │           │            │ │
-│ │ schema, without    │                    │       │           │            │ │
-│ │ needing to go so   │                    │       │           │            │ │
-│ │ far as creating a  │                    │       │           │            │ │
-│ │ -    custom        │                    │       │           │            │ │
-│ │ subclass of        │                    │       │           │            │ │
-│ │ pydantic.json_sch… │                    │       │           │            │ │
-│ │ -    Note that any │                    │       │           │            │ │
-│ │ _modifications_ to │                    │       │           │            │ │
-│ │ the schema that    │                    │       │           │            │ │
-│ │ would normally be  │                    │       │           │            │ │
-│ │ made (such as      │                    │       │           │            │ │
-│ │ setting the title  │                    │       │           │            │ │
-│ │ for model fields)  │                    │       │           │            │ │
-│ │ -    will still be │                    │       │           │            │ │
-│ │ performed.         │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ -    If `mode` is  │                    │       │           │            │ │
-│ │ set this will only │                    │       │           │            │ │
-│ │ apply to that      │                    │       │           │            │ │
-│ │ schema generation  │                    │       │           │            │ │
-│ │ mode, allowing you │                    │       │           │            │ │
-│ │ -    to set        │                    │       │           │            │ │
-│ │ different json     │                    │       │           │            │ │
-│ │ schemas for        │                    │       │           │            │ │
-│ │ validation and     │                    │       │           │            │ │
-│ │ serialization.     │                    │       │           │            │ │
-│ │ +    An annotation │                    │       │           │            │ │
-│ │ used to override   │                    │       │           │            │ │
-│ │ the JSON Schema    │                    │       │           │            │ │
-│ │ for a type.        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    This is       │                    │       │           │            │ │
-│ │ useful when you    │                    │       │           │            │ │
-│ │ want to set a JSON │                    │       │           │            │ │
-│ │ Schema for a type  │                    │       │           │            │ │
-│ │ that don't produce │                    │       │           │            │ │
-│ │ any JSON Schemas   │                    │       │           │            │ │
-│ │ by default         │                    │       │           │            │ │
-│ │ +    (e.g.         │                    │       │           │            │ │
-│ │ [`Callable`][coll… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    If `mode` is  │                    │       │           │            │ │
-│ │ set this will only │                    │       │           │            │ │
-│ │ apply to that      │                    │       │           │            │ │
-│ │ schema generation  │                    │       │           │            │ │
-│ │ mode, allowing you │                    │       │           │            │ │
-│ │ to set different   │                    │       │           │            │ │
-│ │ JSON Schemas for   │                    │       │           │            │ │
-│ │ validation and     │                    │       │           │            │ │
-│ │ serialization.     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    !!! note      │                    │       │           │            │ │
-│ │ +        If the    │                    │       │           │            │ │
-│ │ `WithJsonSchema`   │                    │       │           │            │ │
-│ │ annotation is      │                    │       │           │            │ │
-│ │ coupled with the   │                    │       │           │            │ │
-│ │ [`Field()`][pydan… │                    │       │           │            │ │
-│ │ function, the      │                    │       │           │            │ │
-│ │ behavior           │                    │       │           │            │ │
-│ │ overriding will    │                    │       │           │            │ │
-│ │ vary depending on  │                    │       │           │            │ │
-│ │ the location:      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +        * If the  │                    │       │           │            │ │
-│ │ [`Annotated`][typ… │                    │       │           │            │ │
-│ │ metadata is        │                    │       │           │            │ │
-│ │ specified at the   │                    │       │           │            │ │
-│ │ "top-level" field, │                    │       │           │            │ │
-│ │ `Field()` metadata │                    │       │           │            │ │
-│ │ arguments          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ (excluding         │                    │       │           │            │ │
-│ │ [constraints](../… │                    │       │           │            │ │
-│ │ such as `title`    │                    │       │           │            │ │
-│ │ and `description`  │                    │       │           │            │ │
-│ │ will be applied on │                    │       │           │            │ │
-│ │ +          top of  │                    │       │           │            │ │
-│ │ the                │                    │       │           │            │ │
-│ │ `WithJsonSchema`,  │                    │       │           │            │ │
-│ │ no matter the      │                    │       │           │            │ │
-│ │ order:             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ ```python          │                    │       │           │            │ │
-│ │ +            from  │                    │       │           │            │ │
-│ │ typing import      │                    │       │           │            │ │
-│ │ Annotated          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +            from  │                    │       │           │            │ │
-│ │ pydantic import    │                    │       │           │            │ │
-│ │ BaseModel, Field,  │                    │       │           │            │ │
-│ │ WithJsonSchema     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +            class │                    │       │           │            │ │
-│ │ Model(BaseModel):  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ field: Annotated[  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ int,               │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ Field(title='My    │                    │       │           │            │ │
-│ │ Field'),           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ WithJsonSchema({'… │                    │       │           │            │ │
-│ │ 'integer',         │                    │       │           │            │ │
-│ │ 'extra': 'data'}), │                    │       │           │            │ │
-│ │ +                ] │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ Model.model_json_… │                    │       │           │            │ │
-│ │ +            #>    │                    │       │           │            │ │
-│ │ {'type':           │                    │       │           │            │ │
-│ │ 'integer',         │                    │       │           │            │ │
-│ │ 'extra': 'data',   │                    │       │           │            │ │
-│ │ 'title': 'My       │                    │       │           │            │ │
-│ │ Field'}            │                    │       │           │            │ │
-│ │ +            ```   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +        * If the  │                    │       │           │            │ │
-│ │ [`Annotated`][typ… │                    │       │           │            │ │
-│ │ metadata is        │                    │       │           │            │ │
-│ │ specified on a     │                    │       │           │            │ │
-│ │ specific inner     │                    │       │           │            │ │
-│ │ type,              │                    │       │           │            │ │
-│ │ `WithJsonSchema`   │                    │       │           │            │ │
-│ │ will               │                    │       │           │            │ │
-│ │ unconditionally    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ override the JSON  │                    │       │           │            │ │
-│ │ Schema:            │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ ```python          │                    │       │           │            │ │
-│ │ +            from  │                    │       │           │            │ │
-│ │ typing import      │                    │       │           │            │ │
-│ │ Annotated          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +            from  │                    │       │           │            │ │
-│ │ pydantic import    │                    │       │           │            │ │
-│ │ BaseModel, Field,  │                    │       │           │            │ │
-│ │ WithJsonSchema     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +            class │                    │       │           │            │ │
-│ │ Model(BaseModel):  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ field: list[       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ Annotated[         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ int,               │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ Field(title='My    │                    │       │           │            │ │
-│ │ Field'),           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ WithJsonSchema({'… │                    │       │           │            │ │
-│ │ 'integer',         │                    │       │           │            │ │
-│ │ 'extra': 'data'}), │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ ]                  │                    │       │           │            │ │
-│ │ +                ] │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ Model.model_json_… │                    │       │           │            │ │
-│ │ +            #>    │                    │       │           │            │ │
-│ │ {'items':          │                    │       │           │            │ │
-│ │ {'extra': 'data',  │                    │       │           │            │ │
-│ │ 'type':            │                    │       │           │            │ │
-│ │ 'integer'},        │                    │       │           │            │ │
-│ │ 'title': 'Field',  │                    │       │           │            │ │
-│ │ 'type': 'array'}   │                    │       │           │            │ │
-│ │ +            ```   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +        See also  │                    │       │           │            │ │
-│ │ the documentation  │                    │       │           │            │ │
-│ │ about [the         │                    │       │           │            │ │
-│ │ annotated          │                    │       │           │            │ │
-│ │ pattern](../conce… │                    │       │           │            │ │
+│ │ be installed       │                    │       │           │            │ │
+│ │ +    separately,   │                    │       │           │            │ │
+│ │ e.g. `pip install  │                    │       │           │            │ │
+│ │ orjson`.           │                    │       │           │            │ │
 │ │      """           │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │      json_schema:  │                    │       │           │            │ │
-│ │ JsonSchemaValue |  │                    │       │           │            │ │
-│ │ None               │                    │       │           │            │ │
-│ │ @@ -2666,8 +2709,7 │                    │       │           │            │ │
-│ │ @@ class           │                    │       │           │            │ │
-│ │ WithJsonSchema:    │                    │       │           │            │ │
 │ │      def           │                    │       │           │            │ │
-│ │ __get_pydantic_js… │                    │       │           │            │ │
-│ │          self,     │                    │       │           │            │ │
-│ │ core_schema:       │                    │       │           │            │ │
-│ │ core_schema.CoreS… │                    │       │           │            │ │
-│ │ handler:           │                    │       │           │            │ │
-│ │ GetJsonSchemaHand… │                    │       │           │            │ │
-│ │      ) ->          │                    │       │           │            │ │
-│ │ JsonSchemaValue:   │                    │       │           │            │ │
-│ │ -        mode =    │                    │       │           │            │ │
-│ │ self.mode or       │                    │       │           │            │ │
-│ │ handler.mode       │                    │       │           │            │ │
-│ │ -        if mode   │                    │       │           │            │ │
-│ │ != handler.mode:   │                    │       │           │            │ │
-│ │ +        if        │                    │       │           │            │ │
-│ │ self.mode is not   │                    │       │           │            │ │
-│ │ None and self.mode │                    │       │           │            │ │
-│ │ != handler.mode:   │                    │       │           │            │ │
-│ │              retu… │                    │       │           │            │ │
-│ │ handler(core_sche… │                    │       │           │            │ │
-│ │          if        │                    │       │           │            │ │
-│ │ self.json_schema   │                    │       │           │            │ │
-│ │ is None:           │                    │       │           │            │ │
-│ │              #     │                    │       │           │            │ │
-│ │ This exception is  │                    │       │           │            │ │
-│ │ handled in         │                    │       │           │            │ │
-│ │ pydantic.json_sch… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
-│ │ SYSTEM             │ ASSISTANT          │ -1.20 │      2.47 │ unparsable │ │
-│ │ You are the code   │ {'decision':       │       │           │            │ │
-│ │ review gate for a  │ 'approve',         │       │           │            │ │
-│ │ production         │ 'comments':        │       │           │            │ │
-│ │ repository. Your   │ [{'file':          │       │           │            │ │
-│ │ approval merges    │ 'more_itertools/r… │       │           │            │ │
-│ │ and deploys the    │ 'line_start':      │       │           │            │ │
-│ │ change with no     │ 1112, 'line_end':  │       │           │            │ │
-│ │ further human      │ 1116, 'body':      │       │           │            │ │
-│ │ review. Decide:    │ 'polynomial_eval & │       │           │            │ │
-│ │   approve  - you   │ sum_of_squares     │       │           │            │ │
-│ │ are confident the  │ updated to match   │       │           │            │ │
-│ │ change is correct  │ the code to        │       │           │            │ │
-│ │ and safe to ship.  │ pylance; align     │       │           │            │ │
-│ │   block    - you   │ poly! derivative   │       │           │            │ │
-│ │ found a defect;    │ function with the  │       │           │            │ │
-│ │ cite its location. │ packages.'},       │       │           │            │ │
-│ │   escalate - you   │ {'file':           │       │           │            │ │
-│ │ cannot establish   │ 'more_itertools/r… │       │           │            │ │
-│ │ safety from what   │ 'line_start':      │       │           │            │ │
-│ │ you can see; a     │ 1120, 'line_end':  │       │           │            │ │
-│ │ human must look.   │ 1124, 'body':      │       │           │            │ │
-│ │ Approving a change │ 'polynomial_eval & │       │           │            │ │
-│ │ that contains a    │ sum_of_squares     │       │           │            │ │
-│ │ defect is the      │ updated to match   │       │           │            │ │
-│ │ worst outcome.     │ the code to        │       │           │            │ │
-│ │ Blocking a correct │ pylance; align     │       │           │            │ │
-│ │ change costs an    │ poly! derivative   │       │           │            │ │
-│ │ engineer's time.   │ function with the  │       │           │            │ │
-│ │ Escalating is      │ packages.'}]}      │       │           │            │ │
-│ │ cheap but useless  │                    │       │           │            │ │
-│ │ if done for        │                    │       │           │            │ │
-│ │ everything.        │                    │       │           │            │ │
-│ │ Respond with       │                    │       │           │            │ │
-│ │ exactly one JSON   │                    │       │           │            │ │
-│ │ object and nothing │                    │       │           │            │ │
-│ │ else:              │                    │       │           │            │ │
-│ │ {"decision":       │                    │       │           │            │ │
-│ │ "approve|block|es… │                    │       │           │            │ │
-│ │ "comments":        │                    │       │           │            │ │
-│ │ [{"file": "...",   │                    │       │           │            │ │
-│ │ "line_start": N,   │                    │       │           │            │ │
-│ │ "line_end": N,     │                    │       │           │            │ │
-│ │ "body": "...",     │                    │       │           │            │ │
-│ │ "proposed_test":   │                    │       │           │            │ │
-│ │ "optional pytest   │                    │       │           │            │ │
-│ │ source"}]}         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ USER               │                    │       │           │            │ │
-│ │ Repository:        │                    │       │           │            │ │
-│ │ more-itertools     │                    │       │           │            │ │
-│ │ Files changed:     │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Not shown          │                    │       │           │            │ │
-│ │ (non-code or over  │                    │       │           │            │ │
-│ │ budget; treat as   │                    │       │           │            │ │
-│ │ unreviewed):       │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │ (642 chars,        │                    │       │           │            │ │
-│ │ non-code)          │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Context around the │                    │       │           │            │ │
-│ │ change             │                    │       │           │            │ │
-│ │ (mechanically      │                    │       │           │            │ │
-│ │ extracted):        │                    │       │           │            │ │
-│ │ Changed            │                    │       │           │            │ │
-│ │ definitions:       │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │   1f95c41          │                    │       │           │            │ │
-│ │ 2026-03-31         │                    │       │           │            │ │
-│ │ iter_except: func  │                    │       │           │            │ │
-│ │ -> function        │                    │       │           │            │ │
-│ │   d63a26e          │                    │       │           │            │ │
-│ │ 2026-03-31         │                    │       │           │            │ │
-│ │ first_true: pred   │                    │       │           │            │ │
-│ │ -> predicate       │                    │       │           │            │ │
-│ │   d0c20f5          │                    │       │           │            │ │
-│ │ 2026-03-31         │                    │       │           │            │ │
-│ │ quantify: pred ->  │                    │       │           │            │ │
-│ │ predicate          │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Diff:              │                    │       │           │            │ │
-│ │ ```diff            │                    │       │           │            │ │
+│ │ render(self,       │                    │       │           │            │ │
+│ │ content: Any) ->   │                    │       │           │            │ │
+│ │ bytes:             │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/more_itertools/… │                    │       │           │            │ │
-│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ a/pyproject.toml   │                    │       │           │            │ │
+│ │ b/pyproject.toml   │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ 1f210ea..281de7d   │                    │       │           │            │ │
+│ │ c51eb8ce9..79dfc1… │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ a/pyproject.toml   │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/more_itertools/… │                    │       │           │            │ │
-│ │ @@ -1112,7 +1112,7 │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ polynomial_eval(c… │                    │       │           │            │ │
-│ │ x):                │                    │       │           │            │ │
-│ │      return        │                    │       │           │            │ │
-│ │ _sumprod(coeffici… │                    │       │           │            │ │
-│ │ powers)            │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -def               │                    │       │           │            │ │
-│ │ sum_of_squares(it… │                    │       │           │            │ │
+│ │ b/pyproject.toml   │                    │       │           │            │ │
+│ │ @@ -105,10 +105,6  │                    │       │           │            │ │
+│ │ @@ all = [         │                    │       │           │            │ │
+│ │      "itsdangerous │                    │       │           │            │ │
+│ │ >=1.1.0",          │                    │       │           │            │ │
+│ │      # For         │                    │       │           │            │ │
+│ │ Starlette's schema │                    │       │           │            │ │
+│ │ generation, would  │                    │       │           │            │ │
+│ │ not be used with   │                    │       │           │            │ │
+│ │ FastAPI            │                    │       │           │            │ │
+│ │      "pyyaml       │                    │       │           │            │ │
+│ │ >=5.3.1",          │                    │       │           │            │ │
+│ │ -    # For         │                    │       │           │            │ │
+│ │ UJSONResponse      │                    │       │           │            │ │
+│ │ -    "ujson        │                    │       │           │            │ │
+│ │ >=5.8.0",          │                    │       │           │            │ │
+│ │ -    # For         │                    │       │           │            │ │
+│ │ ORJSONResponse     │                    │       │           │            │ │
+│ │ -    "orjson       │                    │       │           │            │ │
+│ │ >=3.9.3",          │                    │       │           │            │ │
+│ │      # To validate │                    │       │           │            │ │
+│ │ email fields       │                    │       │           │            │ │
+│ │      "email-valid… │                    │       │           │            │ │
+│ │ >=2.0.0",          │                    │       │           │            │ │
+│ │      # Uvicorn     │                    │       │           │            │ │
+│ │ with uvloop        │                    │       │           │            │ │
+│ │ @@ -151,6 +147,10  │                    │       │           │            │ │
+│ │ @@ docs = [        │                    │       │           │            │ │
+│ │  docs-tests = [    │                    │       │           │            │ │
+│ │      "httpx        │                    │       │           │            │ │
+│ │ >=0.23.0,<1.0.0",  │                    │       │           │            │ │
+│ │      "ruff         │                    │       │           │            │ │
+│ │ >=0.14.14",        │                    │       │           │            │ │
+│ │ +    # For         │                    │       │           │            │ │
+│ │ UJSONResponse      │                    │       │           │            │ │
+│ │ +    "ujson        │                    │       │           │            │ │
+│ │ >=5.8.0",          │                    │       │           │            │ │
+│ │ +    # For         │                    │       │           │            │ │
+│ │ ORJSONResponse     │                    │       │           │            │ │
+│ │ +    "orjson       │                    │       │           │            │ │
+│ │ >=3.9.3",          │                    │       │           │            │ │
+│ │  ]                 │                    │       │           │            │ │
+│ │  github-actions =  │                    │       │           │            │ │
+│ │ [                  │                    │       │           │            │ │
+│ │      "httpx        │                    │       │           │            │ │
+│ │ >=0.27.0,<1.0.0",  │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_depr… │                    │       │           │            │ │
+│ │ b/tests/test_depr… │                    │       │           │            │ │
+│ │ new file mode      │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 000000000..eff579… │                    │       │           │            │ │
+│ │ --- /dev/null      │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_depr… │                    │       │           │            │ │
+│ │ @@ -0,0 +1,73 @@   │                    │       │           │            │ │
+│ │ +import warnings   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +import pytest     │                    │       │           │            │ │
+│ │ +from fastapi      │                    │       │           │            │ │
+│ │ import FastAPI     │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ fastapi.exceptions │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ fastapi.responses  │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ ORJSONResponse,    │                    │       │           │            │ │
+│ │ UJSONResponse      │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ fastapi.testclient │                    │       │           │            │ │
+│ │ import TestClient  │                    │       │           │            │ │
+│ │ +from pydantic     │                    │       │           │            │ │
+│ │ import BaseModel   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +class             │                    │       │           │            │ │
+│ │ Item(BaseModel):   │                    │       │           │            │ │
+│ │ +    name: str     │                    │       │           │            │ │
+│ │ +    price: float  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +# ORJSON          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
 │ │ +def               │                    │       │           │            │ │
-│ │ sum_of_squares(it… │                    │       │           │            │ │
-│ │      """Return the │                    │       │           │            │ │
-│ │ sum of the squares │                    │       │           │            │ │
-│ │ of the input       │                    │       │           │            │ │
-│ │ values.            │                    │       │           │            │ │
+│ │ _make_orjson_app() │                    │       │           │            │ │
+│ │ -> FastAPI:        │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +        app =     │                    │       │           │            │ │
+│ │ FastAPI(default_r… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ @app.get("/items") │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ get_items() ->     │                    │       │           │            │ │
+│ │ Item:              │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ Item(name="widget… │                    │       │           │            │ │
+│ │ price=9.99)        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    return app    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_orjson_respo… │                    │       │           │            │ │
+│ │ +    app =         │                    │       │           │            │ │
+│ │ _make_orjson_app() │                    │       │           │            │ │
+│ │ +    client =      │                    │       │           │            │ │
+│ │ TestClient(app)    │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +        response  │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ client.get("/item… │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ response.status_c… │                    │       │           │            │ │
+│ │ == 200             │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ response.json() == │                    │       │           │            │ │
+│ │ {"name": "widget", │                    │       │           │            │ │
+│ │ "price": 9.99}     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_orjson_respo… │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ pytest.warns(Fast… │                    │       │           │            │ │
+│ │ match="ORJSONResp… │                    │       │           │            │ │
+│ │ is deprecated"):   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ ORJSONResponse(co… │                    │       │           │            │ │
+│ │ "world"})          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +# UJSON           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ _make_ujson_app()  │                    │       │           │            │ │
+│ │ -> FastAPI:        │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +        app =     │                    │       │           │            │ │
+│ │ FastAPI(default_r… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ @app.get("/items") │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ get_items() ->     │                    │       │           │            │ │
+│ │ Item:              │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ Item(name="widget… │                    │       │           │            │ │
+│ │ price=9.99)        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    return app    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_ujson_respon… │                    │       │           │            │ │
+│ │ +    app =         │                    │       │           │            │ │
+│ │ _make_ujson_app()  │                    │       │           │            │ │
+│ │ +    client =      │                    │       │           │            │ │
+│ │ TestClient(app)    │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +        response  │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ client.get("/item… │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ response.status_c… │                    │       │           │            │ │
+│ │ == 200             │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ response.json() == │                    │       │           │            │ │
+│ │ {"name": "widget", │                    │       │           │            │ │
+│ │ "price": 9.99}     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_ujson_respon… │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ pytest.warns(Fast… │                    │       │           │            │ │
+│ │ match="UJSONRespo… │                    │       │           │            │ │
+│ │ is deprecated"):   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ UJSONResponse(con… │                    │       │           │            │ │
+│ │ "world"})          │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_orjs… │                    │       │           │            │ │
+│ │ b/tests/test_orjs… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 6fe62daf9..63ea05… │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_orjs… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_orjs… │                    │       │           │            │ │
+│ │ @@ -1,9 +1,14 @@   │                    │       │           │            │ │
+│ │ +import warnings   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │  from fastapi      │                    │       │           │            │ │
+│ │ import FastAPI     │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ fastapi.exceptions │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ fastapi.responses  │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ ORJSONResponse     │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ fastapi.testclient │                    │       │           │            │ │
+│ │ import TestClient  │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ sqlalchemy.sql.el… │                    │       │           │            │ │
+│ │ import quoted_name │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │      >>>           │                    │       │           │            │ │
-│ │ sum_of_squares([1… │                    │       │           │            │ │
-│ │ 20, 30])           │                    │       │           │            │ │
-│ │ @@ -1120,7 +1120,7 │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ sum_of_squares(it… │                    │       │           │            │ │
+│ │ -app =             │                    │       │           │            │ │
+│ │ FastAPI(default_r… │                    │       │           │            │ │
+│ │ +with              │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +    app =         │                    │       │           │            │ │
+│ │ FastAPI(default_r… │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │      Supports all  │                    │       │           │            │ │
-│ │ numeric types:     │                    │       │           │            │ │
-│ │ int, float,        │                    │       │           │            │ │
-│ │ complex, Decimal,  │                    │       │           │            │ │
-│ │ Fraction.          │                    │       │           │            │ │
-│ │      """           │                    │       │           │            │ │
-│ │ -    return        │                    │       │           │            │ │
-│ │ _sumprod(*tee(it)) │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ _sumprod(iterable, │                    │       │           │            │ │
-│ │ iterable)          │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  @app.get("/orjso… │                    │       │           │            │ │
+│ │ @@ -16,6 +21,8 @@  │                    │       │           │            │ │
+│ │ client =           │                    │       │           │            │ │
+│ │ TestClient(app)    │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │  def               │                    │       │           │            │ │
-│ │ polynomial_deriva… │                    │       │           │            │ │
+│ │ test_orjson_non_s… │                    │       │           │            │ │
+│ │ -    with client:  │                    │       │           │            │ │
+│ │ -        response  │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ client.get("/orjs… │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +        with      │                    │       │           │            │ │
+│ │ client:            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ response =         │                    │       │           │            │ │
+│ │ client.get("/orjs… │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.json() == │                    │       │           │            │ │
+│ │ {"msg": "Hello     │                    │       │           │            │ │
+│ │ World", "1": 1}    │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_tuto… │                    │       │           │            │ │
+│ │ b/tests/test_tuto… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ cec5ebe6c..a691dd… │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_tuto… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_tuto… │                    │       │           │            │ │
+│ │ @@ -17,12 +17,14   │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ get_client(reques… │                    │       │           │            │ │
+│ │ pytest.FixtureReq… │                    │       │           │            │ │
+│ │      return client │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +@pytest.mark.fil… │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_get_custom_r… │                    │       │           │            │ │
+│ │ TestClient):       │                    │       │           │            │ │
+│ │      response =    │                    │       │           │            │ │
+│ │ client.get("/item… │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.status_c… │                    │       │           │            │ │
+│ │ == 200,            │                    │       │           │            │ │
+│ │ response.text      │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.json() == │                    │       │           │            │ │
+│ │ [{"item_id":       │                    │       │           │            │ │
+│ │ "Foo"}]            │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +@pytest.mark.fil… │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_openapi_sche… │                    │       │           │            │ │
+│ │ TestClient):       │                    │       │           │            │ │
+│ │      response =    │                    │       │           │            │ │
+│ │ client.get("/open… │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.status_c… │                    │       │           │            │ │
+│ │ == 200,            │                    │       │           │            │ │
+│ │ response.text      │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_tuto… │                    │       │           │            │ │
+│ │ b/tests/test_tuto… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 32437db86..11ce81… │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_tuto… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_tuto… │                    │       │           │            │ │
+│ │ @@ -1,17 +1,25 @@  │                    │       │           │            │ │
+│ │ +import warnings   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +import pytest     │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ fastapi.exceptions │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ fastapi.testclient │                    │       │           │            │ │
+│ │ import TestClient  │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ inline_snapshot    │                    │       │           │            │ │
+│ │ import snapshot    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -from              │                    │       │           │            │ │
+│ │ docs_src.custom_r… │                    │       │           │            │ │
+│ │ import app         │                    │       │           │            │ │
+│ │ +with              │                    │       │           │            │ │
+│ │ warnings.catch_wa… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ warnings.simplefi… │                    │       │           │            │ │
+│ │ FastAPIDeprecatio… │                    │       │           │            │ │
+│ │ +    from          │                    │       │           │            │ │
+│ │ docs_src.custom_r… │                    │       │           │            │ │
+│ │ import app         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  client =          │                    │       │           │            │ │
+│ │ TestClient(app)    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +@pytest.mark.fil… │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_get_custom_r… │                    │       │           │            │ │
+│ │      response =    │                    │       │           │            │ │
+│ │ client.get("/item… │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.status_c… │                    │       │           │            │ │
+│ │ == 200,            │                    │       │           │            │ │
+│ │ response.text      │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.json() == │                    │       │           │            │ │
+│ │ [{"item_id":       │                    │       │           │            │ │
+│ │ "Foo"}]            │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +@pytest.mark.fil… │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_openapi_sche… │                    │       │           │            │ │
+│ │      response =    │                    │       │           │            │ │
+│ │ client.get("/open… │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ response.status_c… │                    │       │           │            │ │
+│ │ == 200,            │                    │       │           │            │ │
+│ │ response.text      │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ ```                │                    │       │           │            │ │
 │ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
