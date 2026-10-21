@@ -30,8 +30,6 @@ _THINK = re.compile(r"<rationale>(.*?)</rationale>", re.S)
 
 
 def main():
-    import os
-    os.environ.setdefault("REVIEW_THINKING_BUDGET", "0")   # visible rationale is the point; hidden thinking ate the token budget and drew refusals
     ap = argparse.ArgumentParser()
     ap.add_argument("--tasks", default="review/bench/public_train.jsonl")
     ap.add_argument("--model", default="claude-sonnet-5-5")
@@ -40,7 +38,12 @@ def main():
     ap.add_argument("--balance", action="store_true")
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--max-tokens", type=int, default=2500)
+    ap.add_argument("--thinking", action="store_true", help="leave the teacher's hidden thinking on (default off: the visible rationale is the point)")
+    ap.add_argument("--retries", type=int, default=3, help="re-call on refusal / truncated rationale (both are stochastic)")
     a = ap.parse_args()
+    import review.agent.run as run_mod
+    if not a.thinking:
+        run_mod.THINKING_BUDGET = 0
     tasks = [json.loads(l) for l in Path(a.tasks).read_text().splitlines() if l.strip()]
     done = {}
     rp = Path(a.raw)
@@ -55,8 +58,13 @@ def main():
         if t["id"] in done:
             return done[t["id"]]
         prompt = build_prompt(t, "diff+graph", None) + ASK
-        text, usage, usd = call_anthropic(a.model, prompt, a.max_tokens)
-        return {"task_id": t["id"], "kind": t["kind"], "raw": text, "usage": usage, "usd": usd}
+        spent, text, usage = 0.0, "", (0, 0)
+        for _ in range(a.retries):
+            text, usage, usd = call_anthropic(a.model, prompt, a.max_tokens)
+            spent += usd
+            if not text.startswith("API_") and _THINK.search(text):
+                break
+        return {"task_id": t["id"], "kind": t["kind"], "raw": text, "usage": usage, "usd": spent}
 
     rp.parent.mkdir(parents=True, exist_ok=True)
     rows = []
