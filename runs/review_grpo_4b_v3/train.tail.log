@@ -1,400 +1,400 @@
-│ │ @@ -0,0 +1,173 @@  │                    │         │           │          │ │
-│ │ +"""Test using     │                    │         │           │          │ │
-│ │ special types      │                    │         │           │          │ │
-│ │ (Response,         │                    │         │           │          │ │
-│ │ Request,           │                    │         │           │          │ │
-│ │ BackgroundTasks)   │                    │         │           │          │ │
-│ │ as dependency      │                    │         │           │          │ │
-│ │ annotations.       │                    │         │           │          │ │
+│ │ test_returns_colo… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        When      │                    │         │           │          │ │
+│ │ colors=True,       │                    │         │           │          │ │
+│ │ returns            │                    │         │           │          │ │
+│ │ _ColorfulStyles    │                    │         │           │          │ │
+│ │ class.             │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        styles =  │                    │         │           │          │ │
+│ │ dev.ConsoleRender… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +These tests       │                    │         │           │          │ │
-│ │ verify that        │                    │         │           │          │ │
-│ │ special FastAPI    │                    │         │           │          │ │
-│ │ types can be used  │                    │         │           │          │ │
-│ │ with Depends()     │                    │         │           │          │ │
-│ │ annotations        │                    │         │           │          │ │
-│ │ +and that the      │                    │         │           │          │ │
-│ │ dependency         │                    │         │           │          │ │
-│ │ injection system   │                    │         │           │          │ │
-│ │ properly handles   │                    │         │           │          │ │
-│ │ them.              │                    │         │           │          │ │
-│ │ +"""               │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +from typing       │                    │         │           │          │ │
-│ │ import Annotated   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +from fastapi      │                    │         │           │          │ │
-│ │ import             │                    │         │           │          │ │
-│ │ BackgroundTasks,   │                    │         │           │          │ │
-│ │ Depends, FastAPI,  │                    │         │           │          │ │
-│ │ Request, Response  │                    │         │           │          │ │
-│ │ +from              │                    │         │           │          │ │
-│ │ fastapi.responses  │                    │         │           │          │ │
-│ │ import             │                    │         │           │          │ │
-│ │ JSONResponse       │                    │         │           │          │ │
-│ │ +from              │                    │         │           │          │ │
-│ │ fastapi.testclient │                    │         │           │          │ │
-│ │ import TestClient  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_response_wit… │                    │         │           │          │ │
-│ │ +    """Response   │                    │         │           │          │ │
-│ │ type hint should   │                    │         │           │          │ │
-│ │ work with          │                    │         │           │          │ │
-│ │ Annotated[Respons… │                    │         │           │          │ │
-│ │ Depends(...)]."""  │                    │         │           │          │ │
-│ │ +    app =         │                    │         │           │          │ │
-│ │ FastAPI()          │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ styles is          │                    │         │           │          │ │
+│ │ dev._ColorfulStyl… │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ hasattr(styles,    │                    │         │           │          │ │
+│ │ "reset")           │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ hasattr(styles,    │                    │         │           │          │ │
+│ │ "bright")          │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ hasattr(styles,    │                    │         │           │          │ │
+│ │ "level_critical")  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ hasattr(styles,    │                    │         │           │          │ │
+│ │ "kv_key")          │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ hasattr(styles,    │                    │         │           │          │ │
+│ │ "kv_value")        │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
 │ │ +    def           │                    │         │           │          │ │
-│ │ modify_response(r… │                    │         │           │          │ │
-│ │ Response) ->       │                    │         │           │          │ │
-│ │ Response:          │                    │         │           │          │ │
+│ │ test_returns_plai… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        When      │                    │         │           │          │ │
+│ │ colors=False,      │                    │         │           │          │ │
+│ │ returns            │                    │         │           │          │ │
+│ │ _PlainStyles       │                    │         │           │          │ │
+│ │ class.             │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        styles =  │                    │         │           │          │ │
+│ │ dev.ConsoleRender… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ response.headers[… │                    │         │           │          │ │
-│ │ = "modified"       │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ response           │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ styles is          │                    │         │           │          │ │
+│ │ dev._PlainStyles   │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ styles.reset == "" │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ styles.bright ==   │                    │         │           │          │ │
+│ │ ""                 │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ styles.level_crit… │                    │         │           │          │ │
+│ │ == ""              │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ styles.kv_key ==   │                    │         │           │          │ │
+│ │ ""                 │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ styles.kv_value == │                    │         │           │          │ │
+│ │ ""                 │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    @app.get("/") │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ @pytest.mark.skip… │                    │         │           │          │ │
+│ │ +        not       │                    │         │           │          │ │
+│ │ dev._IS_WINDOWS or │                    │         │           │          │ │
+│ │ dev.colorama is    │                    │         │           │          │ │
+│ │ not None,          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ reason="Only       │                    │         │           │          │ │
+│ │ relevant on        │                    │         │           │          │ │
+│ │ Windows without    │                    │         │           │          │ │
+│ │ colorama",         │                    │         │           │          │ │
+│ │ +    )             │                    │         │           │          │ │
 │ │ +    def           │                    │         │           │          │ │
-│ │ endpoint(response: │                    │         │           │          │ │
-│ │ Annotated[Respons… │                    │         │           │          │ │
-│ │ Depends(modify_re… │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ {"status": "ok"}   │                    │         │           │          │ │
+│ │ test_raises_syste… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        On        │                    │         │           │          │ │
+│ │ Windows without    │                    │         │           │          │ │
+│ │ colorama, raises   │                    │         │           │          │ │
+│ │ SystemError when   │                    │         │           │          │ │
+│ │ colors=True.       │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ pytest.raises(Sys… │                    │         │           │          │ │
+│ │ match="requires    │                    │         │           │          │ │
+│ │ the colorama       │                    │         │           │          │ │
+│ │ package"):         │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    client =      │                    │         │           │          │ │
-│ │ TestClient(app)    │                    │         │           │          │ │
-│ │ +    resp =        │                    │         │           │          │ │
-│ │ client.get("/")    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.status_code   │                    │         │           │          │ │
-│ │ == 200             │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.json() ==     │                    │         │           │          │ │
-│ │ {"status": "ok"}   │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.headers.get(… │                    │         │           │          │ │
-│ │ == "modified"      │                    │         │           │          │ │
+│ │ dev.ConsoleRender… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_response_wit… │                    │         │           │          │ │
-│ │ +    """Response   │                    │         │           │          │ │
-│ │ type hint should   │                    │         │           │          │ │
-│ │ work with Response │                    │         │           │          │ │
-│ │ = Depends(...).""" │                    │         │           │          │ │
-│ │ +    app =         │                    │         │           │          │ │
-│ │ FastAPI()          │                    │         │           │          │ │
+│ │ @pytest.mark.skip… │                    │         │           │          │ │
+│ │ +        not       │                    │         │           │          │ │
+│ │ dev._IS_WINDOWS or │                    │         │           │          │ │
+│ │ dev.colorama is    │                    │         │           │          │ │
+│ │ None,              │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
+│ │ reason="Only       │                    │         │           │          │ │
+│ │ relevant on        │                    │         │           │          │ │
+│ │ Windows with       │                    │         │           │          │ │
+│ │ colorama",         │                    │         │           │          │ │
+│ │ +    )             │                    │         │           │          │ │
 │ │ +    def           │                    │         │           │          │ │
-│ │ modify_response(r… │                    │         │           │          │ │
-│ │ Response) ->       │                    │         │           │          │ │
-│ │ Response:          │                    │         │           │          │ │
+│ │ test_initializes_… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        On        │                    │         │           │          │ │
+│ │ Windows with       │                    │         │           │          │ │
+│ │ colorama,          │                    │         │           │          │ │
+│ │ force_colors=True  │                    │         │           │          │ │
+│ │ reinitializes      │                    │         │           │          │ │
+│ │ colorama.          │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ mock.patch.object( │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ response.headers[… │                    │         │           │          │ │
-│ │ = "modified"       │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ response           │                    │         │           │          │ │
+│ │ dev.colorama,      │                    │         │           │          │ │
+│ │ "init"             │                    │         │           │          │ │
+│ │ +        ) as      │                    │         │           │          │ │
+│ │ mock_init,         │                    │         │           │          │ │
+│ │ mock.patch.object( │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    @app.get("/") │                    │         │           │          │ │
-│ │ +    def           │                    │         │           │          │ │
-│ │ endpoint(response: │                    │         │           │          │ │
-│ │ Response =         │                    │         │           │          │ │
-│ │ Depends(modify_re… │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ {"status": "ok"}   │                    │         │           │          │ │
+│ │ dev.colorama,      │                    │         │           │          │ │
+│ │ "deinit"           │                    │         │           │          │ │
+│ │ +        ) as      │                    │         │           │          │ │
+│ │ mock_deinit:       │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    client =      │                    │         │           │          │ │
-│ │ TestClient(app)    │                    │         │           │          │ │
-│ │ +    resp =        │                    │         │           │          │ │
-│ │ client.get("/")    │                    │         │           │          │ │
+│ │ styles =           │                    │         │           │          │ │
+│ │ dev.ConsoleRender… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.status_code   │                    │         │           │          │ │
-│ │ == 200             │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.json() ==     │                    │         │           │          │ │
-│ │ {"status": "ok"}   │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.headers.get(… │                    │         │           │          │ │
-│ │ == "modified"      │                    │         │           │          │ │
+│ │ colors=True,       │                    │         │           │          │ │
+│ │ force_colors=True  │                    │         │           │          │ │
+│ │ +            )     │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_response_wit… │                    │         │           │          │ │
-│ │ +    """Regular    │                    │         │           │          │ │
-│ │ Response injection │                    │         │           │          │ │
-│ │ should still       │                    │         │           │          │ │
-│ │ work."""           │                    │         │           │          │ │
-│ │ +    app =         │                    │         │           │          │ │
-│ │ FastAPI()          │                    │         │           │          │ │
+│ │ assert styles is   │                    │         │           │          │ │
+│ │ dev._ColorfulStyl… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    @app.get("/") │                    │         │           │          │ │
-│ │ +    def           │                    │         │           │          │ │
-│ │ endpoint(response: │                    │         │           │          │ │
-│ │ Response):         │                    │         │           │          │ │
+│ │ mock_deinit.asser… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ response.headers[… │                    │         │           │          │ │
-│ │ = "set"            │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ {"status": "ok"}   │                    │         │           │          │ │
+│ │ mock_init.assert_… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    client =      │                    │         │           │          │ │
-│ │ TestClient(app)    │                    │         │           │          │ │
-│ │ +    resp =        │                    │         │           │          │ │
-│ │ client.get("/")    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.status_code   │                    │         │           │          │ │
-│ │ == 200             │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.json() ==     │                    │         │           │          │ │
-│ │ {"status": "ok"}   │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.headers.get(… │                    │         │           │          │ │
-│ │ == "set"           │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_response_dep… │                    │         │           │          │ │
-│ │ +    """Response   │                    │         │           │          │ │
-│ │ dependency should  │                    │         │           │          │ │
-│ │ work in a chain of │                    │         │           │          │ │
-│ │ dependencies."""   │                    │         │           │          │ │
-│ │ +    app =         │                    │         │           │          │ │
-│ │ FastAPI()          │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    def           │                    │         │           │          │ │
-│ │ first_modifier(re… │                    │         │           │          │ │
-│ │ Response) ->       │                    │         │           │          │ │
-│ │ Response:          │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ response.headers[… │                    │         │           │          │ │
-│ │ = "1"              │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ response           │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    def           │                    │         │           │          │ │
-│ │ second_modifier(   │                    │         │           │          │ │
-│ │ +        response: │                    │         │           │          │ │
-│ │ Annotated[Respons… │                    │         │           │          │ │
-│ │ Depends(first_mod… │                    │         │           │          │ │
-│ │ +    ) ->          │                    │         │           │          │ │
-│ │ Response:          │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ response.headers[… │                    │         │           │          │ │
-│ │ = "2"              │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ response           │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    @app.get("/") │                    │         │           │          │ │
-│ │ +    def           │                    │         │           │          │ │
-│ │ endpoint(response: │                    │         │           │          │ │
-│ │ Annotated[Respons… │                    │         │           │          │ │
-│ │ Depends(second_mo… │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ {"status": "ok"}   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    client =      │                    │         │           │          │ │
-│ │ TestClient(app)    │                    │         │           │          │ │
-│ │ +    resp =        │                    │         │           │          │ │
-│ │ client.get("/")    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.status_code   │                    │         │           │          │ │
-│ │ == 200             │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.headers.get(… │                    │         │           │          │ │
-│ │ == "1"             │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.headers.get(… │                    │         │           │          │ │
-│ │ == "2"             │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_response_dep… │                    │         │           │          │ │
-│ │ +    """Dependency │                    │         │           │          │ │
-│ │ that returns a     │                    │         │           │          │ │
-│ │ different Response │                    │         │           │          │ │
-│ │ instance should    │                    │         │           │          │ │
-│ │ work.              │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    When a        │                    │         │           │          │ │
-│ │ dependency returns │                    │         │           │          │ │
-│ │ a new Response     │                    │         │           │          │ │
-│ │ object (e.g.,      │                    │         │           │          │ │
-│ │ JSONResponse)      │                    │         │           │          │ │
-│ │ instead            │                    │         │           │          │ │
-│ │ +    of modifying  │                    │         │           │          │ │
-│ │ the injected one,  │                    │         │           │          │ │
-│ │ the returned       │                    │         │           │          │ │
-│ │ response should be │                    │         │           │          │ │
-│ │ used and any       │                    │         │           │          │ │
-│ │ +    modifications │                    │         │           │          │ │
-│ │ to it in the       │                    │         │           │          │ │
-│ │ endpoint should be │                    │         │           │          │ │
-│ │ preserved.         │                    │         │           │          │ │
-│ │ +    """           │                    │         │           │          │ │
-│ │ +    app =         │                    │         │           │          │ │
-│ │ FastAPI()          │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    def           │                    │         │           │          │ │
-│ │ default_response() │                    │         │           │          │ │
-│ │ -> Response:       │                    │         │           │          │ │
-│ │ +        response  │                    │         │           │          │ │
-│ │ =                  │                    │         │           │          │ │
-│ │ JSONResponse(cont… │                    │         │           │          │ │
-│ │ "ok"})             │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ response.headers[… │                    │         │           │          │ │
-│ │ = "initial"        │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ response           │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    @app.get("/") │                    │         │           │          │ │
-│ │ +    def           │                    │         │           │          │ │
-│ │ endpoint(response: │                    │         │           │          │ │
-│ │ Annotated[Respons… │                    │         │           │          │ │
-│ │ Depends(default_r… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ response.headers[… │                    │         │           │          │ │
-│ │ = "modified"       │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ response           │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    client =      │                    │         │           │          │ │
-│ │ TestClient(app)    │                    │         │           │          │ │
-│ │ +    resp =        │                    │         │           │          │ │
-│ │ client.get("/")    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.status_code   │                    │         │           │          │ │
-│ │ == 200             │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.json() ==     │                    │         │           │          │ │
-│ │ {"status": "ok"}   │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.headers.get(… │                    │         │           │          │ │
-│ │ == "modified"      │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +# Tests for       │                    │         │           │          │ │
-│ │ Request type hint  │                    │         │           │          │ │
-│ │ with Depends       │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_request_with… │                    │         │           │          │ │
-│ │ +    """Request    │                    │         │           │          │ │
-│ │ type hint should   │                    │         │           │          │ │
-│ │ work in dependency │                    │         │           │          │ │
-│ │ chain."""          │                    │         │           │          │ │
-│ │ +    app =         │                    │         │           │          │ │
-│ │ FastAPI()          │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    def           │                    │         │           │          │ │
-│ │ extract_request_i… │                    │         │           │          │ │
-│ │ Request) -> dict:  │                    │         │           │          │ │
-│ │ +        return {  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ "path":            │                    │         │           │          │ │
-│ │ request.url.path,  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ "user_agent":      │                    │         │           │          │ │
-│ │ request.headers.g… │                    │         │           │          │ │
-│ │ "unknown"),        │                    │         │           │          │ │
-│ │ +        }         │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    @app.get("/") │                    │         │           │          │ │
-│ │ +    def endpoint( │                    │         │           │          │ │
-│ │ +        info:     │                    │         │           │          │ │
-│ │ Annotated[dict,    │                    │         │           │          │ │
-│ │ Depends(extract_r… │                    │         │           │          │ │
-│ │ +    ):            │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ info               │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    client =      │                    │         │           │          │ │
-│ │ TestClient(app)    │                    │         │           │          │ │
-│ │ +    resp =        │                    │         │           │          │ │
-│ │ client.get("/",    │                    │         │           │          │ │
-│ │ headers={"user-ag… │                    │         │           │          │ │
-│ │ "test-agent"})     │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.status_code   │                    │         │           │          │ │
-│ │ == 200             │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.json() ==     │                    │         │           │          │ │
-│ │ {"path": "/",      │                    │         │           │          │ │
-│ │ "user_agent":      │                    │         │           │          │ │
-│ │ "test-agent"}      │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +# Tests for       │                    │         │           │          │ │
-│ │ BackgroundTasks    │                    │         │           │          │ │
-│ │ type hint with     │                    │         │           │          │ │
-│ │ Depends            │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_background_t… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ """BackgroundTasks │                    │         │           │          │ │
-│ │ type hint should   │                    │         │           │          │ │
-│ │ work with          │                    │         │           │          │ │
-│ │ Annotated[Backgro… │                    │         │           │          │ │
-│ │ Depends(...)]."""  │                    │         │           │          │ │
-│ │ +    app =         │                    │         │           │          │ │
-│ │ FastAPI()          │                    │         │           │          │ │
-│ │ +    task_results  │                    │         │           │          │ │
-│ │ = []               │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    def           │                    │         │           │          │ │
-│ │ background_task(m… │                    │         │           │          │ │
-│ │ str):              │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ task_results.appe… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    def           │                    │         │           │          │ │
-│ │ add_background_ta… │                    │         │           │          │ │
-│ │ BackgroundTasks)   │                    │         │           │          │ │
-│ │ ->                 │                    │         │           │          │ │
-│ │ BackgroundTasks:   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ background_tasks.… │                    │         │           │          │ │
-│ │ "from dependency") │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ background_tasks   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    @app.get("/") │                    │         │           │          │ │
-│ │ +    def endpoint( │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ background_tasks:  │                    │         │           │          │ │
-│ │ Annotated[Backgro… │                    │         │           │          │ │
-│ │ Depends(add_backg… │                    │         │           │          │ │
-│ │ +    ):            │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ background_tasks.… │                    │         │           │          │ │
-│ │ "from endpoint")   │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ {"status": "ok"}   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    client =      │                    │         │           │          │ │
-│ │ TestClient(app)    │                    │         │           │          │ │
-│ │ +    resp =        │                    │         │           │          │ │
-│ │ client.get("/")    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ resp.status_code   │                    │         │           │          │ │
-│ │ == 200             │                    │         │           │          │ │
-│ │ +    assert "from  │                    │         │           │          │ │
-│ │ dependency" in     │                    │         │           │          │ │
-│ │ task_results       │                    │         │           │          │ │
-│ │ +    assert "from  │                    │         │           │          │ │
-│ │ endpoint" in       │                    │         │           │          │ │
-│ │ task_results       │                    │         │           │          │ │
+│ │      def           │                    │         │           │          │ │
+│ │ test_logger_name(… │                    │         │           │          │ │
+│ │ cr, styles,        │                    │         │           │          │ │
+│ │ padded):           │                    │         │           │          │ │
+│ │          """       │                    │         │           │          │ │
+│ │          Logger    │                    │         │           │          │ │
+│ │ names are appended │                    │         │           │          │ │
+│ │ after the event.   │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
+│ │ ```                │                    │         │           │          │ │
+│ ├────────────────────┼────────────────────┼─────────┼───────────┼──────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │    1.50 │      1.02 │ block    │ │
+│ │ You are the code   │ {"decision":       │         │           │          │ │
+│ │ review gate for a  │ "block",           │         │           │          │ │
+│ │ production         │ "comments":        │         │           │          │ │
+│ │ repository. Your   │ [{"file":          │         │           │          │ │
+│ │ approval merges    │ "fastapi/security… │         │           │          │ │
+│ │ and deploys the    │ "line_start": 11,  │         │           │          │ │
+│ │ change with no     │ "line_end": 11,    │         │           │          │ │
+│ │ further human      │ "body": "Change is │         │           │          │ │
+│ │ review. Decide:    │ dependent on the   │         │           │          │ │
+│ │   approve  - you   │ `/^Bearer ``       │         │           │          │ │
+│ │ are confident the  │ scheme. It should  │         │           │          │ │
+│ │ change is correct  │ parse only a       │         │           │          │ │
+│ │ and safe to ship.  │ single `Bearer`    │         │           │          │ │
+│ │   block    - you   │ value."}]}         │         │           │          │ │
+│ │ found a defect;    │                    │         │           │          │ │
+│ │ cite its location. │                    │         │           │          │ │
+│ │   escalate - you   │                    │         │           │          │ │
+│ │ cannot establish   │                    │         │           │          │ │
+│ │ safety from what   │                    │         │           │          │ │
+│ │ you can see; a     │                    │         │           │          │ │
+│ │ human must look.   │                    │         │           │          │ │
+│ │ Approving a change │                    │         │           │          │ │
+│ │ that contains a    │                    │         │           │          │ │
+│ │ defect is the      │                    │         │           │          │ │
+│ │ worst outcome.     │                    │         │           │          │ │
+│ │ Blocking a correct │                    │         │           │          │ │
+│ │ change costs an    │                    │         │           │          │ │
+│ │ engineer's time.   │                    │         │           │          │ │
+│ │ Escalating is      │                    │         │           │          │ │
+│ │ cheap but useless  │                    │         │           │          │ │
+│ │ if done for        │                    │         │           │          │ │
+│ │ everything.        │                    │         │           │          │ │
+│ │ Respond with       │                    │         │           │          │ │
+│ │ exactly one JSON   │                    │         │           │          │ │
+│ │ object and nothing │                    │         │           │          │ │
+│ │ else:              │                    │         │           │          │ │
+│ │ {"decision":       │                    │         │           │          │ │
+│ │ "approve|block|es… │                    │         │           │          │ │
+│ │ "comments":        │                    │         │           │          │ │
+│ │ [{"file": "...",   │                    │         │           │          │ │
+│ │ "line_start": N,   │                    │         │           │          │ │
+│ │ "line_end": N,     │                    │         │           │          │ │
+│ │ "body": "...",     │                    │         │           │          │ │
+│ │ "proposed_test":   │                    │         │           │          │ │
+│ │ "optional pytest   │                    │         │           │          │ │
+│ │ source"}]}         │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ USER               │                    │         │           │          │ │
+│ │ Repository:        │                    │         │           │          │ │
+│ │ fastapi            │                    │         │           │          │ │
+│ │ Files changed:     │                    │         │           │          │ │
+│ │ fastapi/security/… │                    │         │           │          │ │
+│ │ tests/test_securi… │                    │         │           │          │ │
+│ │ tests/test_securi… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ Context around the │                    │         │           │          │ │
+│ │ change             │                    │         │           │          │ │
+│ │ (mechanically      │                    │         │           │          │ │
+│ │ extracted):        │                    │         │           │          │ │
+│ │ Changed            │                    │         │           │          │ │
+│ │ definitions:       │                    │         │           │          │ │
+│ │ fastapi/security/… │                    │         │           │          │ │
+│ │ tests/test_securi… │                    │         │           │          │ │
+│ │ tests/test_securi… │                    │         │           │          │ │
+│ │ tests/test_securi… │                    │         │           │          │ │
+│ │ tests/test_securi… │                    │         │           │          │ │
+│ │ tests/test_securi… │                    │         │           │          │ │
+│ │ tests/test_securi… │                    │         │           │          │ │
+│ │ Recent history of  │                    │         │           │          │ │
+│ │ fastapi/security/… │                    │         │           │          │ │
+│ │   1c4fc96c9        │                    │         │           │          │ │
+│ │ 2025-12-17 ♻️      │                    │         │           │          │ │
+│ │ Upgrade internal   │                    │         │           │          │ │
+│ │ syntax to Python   │                    │         │           │          │ │
+│ │ 3.9+ 🎉 (#14564)   │                    │         │           │          │ │
+│ │   fdbd48be5        │                    │         │           │          │ │
+│ │ 2022-11-13 ⬆       │                    │         │           │          │ │
+│ │ Upgrade Starlette  │                    │         │           │          │ │
+│ │ to `0.21.0`,       │                    │         │           │          │ │
+│ │ including the new  │                    │         │           │          │ │
+│ │ [`TestClient`      │                    │         │           │          │ │
+│ │ based on           │                    │         │           │          │ │
+│ │ HTTPX](https://gi… │                    │         │           │          │ │
+│ │ (#5471)            │                    │         │           │          │ │
+│ │   4a0316bcf        │                    │         │           │          │ │
+│ │ 2018-12-28 :art:   │                    │         │           │          │ │
+│ │ Add missing type   │                    │         │           │          │ │
+│ │ definition         │                    │         │           │          │ │
+│ │ Recent history of  │                    │         │           │          │ │
+│ │ tests/test_securi… │                    │         │           │          │ │
+│ │   51ad909ff        │                    │         │           │          │ │
+│ │ 2025-11-24 🐛 Use  │                    │         │           │          │ │
+│ │ `401` status code  │                    │         │           │          │ │
+│ │ in security        │                    │         │           │          │ │
+│ │ classes when       │                    │         │           │          │ │
+│ │ credentials are    │                    │         │           │          │ │
+│ │ missing (#13786)   │                    │         │           │          │ │
+│ │   7dad5a820        │                    │         │           │          │ │
+│ │ 2023-06-30 ✨ Add  │                    │         │           │          │ │
+│ │ support for        │                    │         │           │          │ │
+│ │ OpenAPI 3.1.0      │                    │         │           │          │ │
+│ │ (#9770)            │                    │         │           │          │ │
+│ │   50c1a928f        │                    │         │           │          │ │
+│ │ 2023-05-08 ✅      │                    │         │           │          │ │
+│ │ Refactor OpenAPI   │                    │         │           │          │ │
+│ │ tests, prepare for │                    │         │           │          │ │
+│ │ Pydantic v2        │                    │         │           │          │ │
+│ │ (#9503)            │                    │         │           │          │ │
+│ │ Recent history of  │                    │         │           │          │ │
+│ │ tests/test_securi… │                    │         │           │          │ │
+│ │   7dad5a820        │                    │         │           │          │ │
+│ │ 2023-06-30 ✨ Add  │                    │         │           │          │ │
+│ │ support for        │                    │         │           │          │ │
+│ │ OpenAPI 3.1.0      │                    │         │           │          │ │
+│ │ (#9770)            │                    │         │           │          │ │
+│ │   50c1a928f        │                    │         │           │          │ │
+│ │ 2023-05-08 ✅      │                    │         │           │          │ │
+│ │ Refactor OpenAPI   │                    │         │           │          │ │
+│ │ tests, prepare for │                    │         │           │          │ │
+│ │ Pydantic v2        │                    │         │           │          │ │
+│ │ (#9503)            │                    │         │           │          │ │
+│ │   70a51b3af        │                    │         │           │          │ │
+│ │ 2020-07-10 ✨      │                    │         │           │          │ │
+│ │ Auto-generate      │                    │         │           │          │ │
+│ │ OpenAPI servers    │                    │         │           │          │ │
+│ │ from root_path     │                    │         │           │          │ │
+│ │ (#1596)            │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ Diff:              │                    │         │           │          │ │
+│ │ ```diff            │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/fastapi/securit… │                    │         │           │          │ │
+│ │ b/fastapi/securit… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 002e68b44..9b0f09… │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/fastapi/securit… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/fastapi/securit… │                    │         │           │          │ │
+│ │ @@ -7,4 +7,4 @@    │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ get_authorization… │                    │         │           │          │ │
+│ │      if not        │                    │         │           │          │ │
+│ │ authorization_hea… │                    │         │           │          │ │
+│ │          return    │                    │         │           │          │ │
+│ │ "", ""             │                    │         │           │          │ │
+│ │      scheme, _,    │                    │         │           │          │ │
+│ │ param =            │                    │         │           │          │ │
+│ │ authorization_hea… │                    │         │           │          │ │
+│ │ ")                 │                    │         │           │          │ │
+│ │ -    return        │                    │         │           │          │ │
+│ │ scheme, param      │                    │         │           │          │ │
+│ │ +    return        │                    │         │           │          │ │
+│ │ scheme, param[1:]  │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_secu… │                    │         │           │          │ │
+│ │ b/tests/test_secu… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 8cf259a75..ac38ee… │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_secu… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_secu… │                    │         │           │          │ │
+│ │ @@ -21,6 +21,12 @@ │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ test_security_htt… │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ {"scheme":         │                    │         │           │          │ │
+│ │ "Other",           │                    │         │           │          │ │
+│ │ "credentials":     │                    │         │           │          │ │
+│ │ "foobar"}          │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_security_htt… │                    │         │           │          │ │
+│ │ +    response =    │                    │         │           │          │ │
+│ │ client.get("/user… │                    │         │           │          │ │
+│ │ headers={"Authori… │                    │         │           │          │ │
+│ │ "Other  foobar "}) │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 200,            │                    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ {"scheme":         │                    │         │           │          │ │
+│ │ "Other",           │                    │         │           │          │ │
+│ │ "credentials":     │                    │         │           │          │ │
+│ │ "foobar"}          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_security_htt… │                    │         │           │          │ │
+│ │      response =    │                    │         │           │          │ │
+│ │ client.get("/user… │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 401,            │                    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_secu… │                    │         │           │          │ │
+│ │ b/tests/test_secu… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ f2097b149..66f53a… │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_secu… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_secu… │                    │         │           │          │ │
+│ │ @@ -37,6 +37,12 @@ │                    │         │           │          │ │
+│ │ def test_token():  │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ {"token":          │                    │         │           │          │ │
+│ │ "testtoken"}       │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_token_with_w… │                    │         │           │          │ │
+│ │ +    response =    │                    │         │           │          │ │
+│ │ client.get("/item… │                    │         │           │          │ │
+│ │ headers={"Authori… │                    │         │           │          │ │
+│ │ "Bearer  testtoken │                    │         │           │          │ │
+│ │ "})                │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 200,            │                    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ {"token":          │                    │         │           │          │ │
+│ │ "testtoken"}       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_openapi_sche… │                    │         │           │          │ │
+│ │      response =    │                    │         │           │          │ │
+│ │ client.get("/open… │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 200,            │                    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
 │ │ ```                │                    │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
