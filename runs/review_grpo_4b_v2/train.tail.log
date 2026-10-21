@@ -1,400 +1,400 @@
-│ │ take shortcuts for │                    │       │           │            │ │
-│ │ already            │                    │       │           │            │ │
-│ │      correctly     │                    │       │           │            │ │
-│ │ configured         │                    │       │           │            │ │
-│ │ streams.           │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -    :meta         │                    │       │           │            │ │
-│ │ private:           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │      :param name:  │                    │       │           │            │ │
-│ │ the name of the    │                    │       │           │            │ │
-│ │ stream to open.    │                    │       │           │            │ │
-│ │ Valid names are    │                    │       │           │            │ │
-│ │ ``'stdin'``,       │                    │       │           │            │ │
-│ │                  … │                    │       │           │            │ │
-│ │ and ``'stderr'``   │                    │       │           │            │ │
-│ │      :param        │                    │       │           │            │ │
-│ │ encoding:          │                    │       │           │            │ │
-│ │ overrides the      │                    │       │           │            │ │
-│ │ detected default   │                    │       │           │            │ │
-│ │ encoding.          │                    │       │           │            │ │
-│ │      :param        │                    │       │           │            │ │
-│ │ errors: overrides  │                    │       │           │            │ │
-│ │ the default error  │                    │       │           │            │ │
-│ │ mode.              │                    │       │           │            │ │
-│ │ +    :meta         │                    │       │           │            │ │
-│ │ private:           │                    │       │           │            │ │
-│ │      """           │                    │       │           │            │ │
-│ │      opener =      │                    │       │           │            │ │
-│ │ text_streams.get(… │                    │       │           │            │ │
-│ │      if opener is  │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ @@ -677,10 +675,11 │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ __getattr__(name:  │                    │       │           │            │ │
-│ │ str) -> object:    │                    │       │           │            │ │
-│ │          "make_de… │                    │       │           │            │ │
-│ │          "PacifyF… │                    │       │           │            │ │
-│ │          "safecal… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "get_text_stream", │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "get_binary_strea… │                    │       │           │            │ │
-│ │      }:            │                    │       │           │            │ │
-│ │          warnings… │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ f"'click.utils.{n… │                    │       │           │            │ │
-│ │ was never          │                    │       │           │            │ │
-│ │ intentionally      │                    │       │           │            │ │
-│ │ public and will    │                    │       │           │            │ │
-│ │ be"                │                    │       │           │            │ │
-│ │ -            "     │                    │       │           │            │ │
-│ │ renamed in Click   │                    │       │           │            │ │
-│ │ 9.0.",             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ f"'click.utils.{n… │                    │       │           │            │ │
-│ │ is deprecated and  │                    │       │           │            │ │
-│ │ will be removed in │                    │       │           │            │ │
-│ │ Click 9.0.",       │                    │       │           │            │ │
-│ │              Depr… │                    │       │           │            │ │
-│ │              stac… │                    │       │           │            │ │
-│ │          )         │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_depr… │                    │       │           │            │ │
-│ │ b/tests/test_depr… │                    │       │           │            │ │
-│ │ new file mode      │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 0000000..9985faa   │                    │       │           │            │ │
-│ │ --- /dev/null      │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_depr… │                    │       │           │            │ │
-│ │ @@ -0,0 +1,25 @@   │                    │       │           │            │ │
-│ │ +import pytest     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +import click      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +@pytest.mark.par… │                    │       │           │            │ │
-│ │ [click,            │                    │       │           │            │ │
-│ │ click.utils],      │                    │       │           │            │ │
-│ │ ids=["click",      │                    │       │           │            │ │
-│ │ "click.utils"])    │                    │       │           │            │ │
-│ │ +@pytest.mark.par… │                    │       │           │            │ │
-│ │ ["get_binary_stre… │                    │       │           │            │ │
-│ │ "get_text_stream"… │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_stream_helpe… │                    │       │           │            │ │
-│ │ name):             │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ pytest.warns(Depr… │                    │       │           │            │ │
-│ │ match=name):       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ getattr(module,    │                    │       │           │            │ │
-│ │ name)              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +@pytest.mark.par… │                    │       │           │            │ │
-│ │ +    "name",       │                    │       │           │            │ │
-│ │ +    [             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "LazyFile",        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "KeepOpenFile",    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "make_default_sho… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "PacifyFlushWrapp… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "safecall",        │                    │       │           │            │ │
-│ │ +    ],            │                    │       │           │            │ │
-│ │ +)                 │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_utilities_de… │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ pytest.warns(Depr… │                    │       │           │            │ │
-│ │ match=name):       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ getattr(click.uti… │                    │       │           │            │ │
-│ │ name)              │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_test… │                    │       │           │            │ │
-│ │ b/tests/test_test… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 6fae8cb..eb30d88   │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_test… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_test… │                    │       │           │            │ │
-│ │ @@ -10,14 +10,14   │                    │       │           │            │ │
-│ │ @@ import pytest   │                    │       │           │            │ │
-│ │  import click      │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ click.exceptions   │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ ClickException     │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ click.testing      │                    │       │           │            │ │
-│ │ import CliRunner   │                    │       │           │            │ │
-│ │ -from click.utils  │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ get_binary_stream  │                    │       │           │            │ │
-│ │ +from click.utils  │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ _get_binary_stream │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_runner():     │                    │       │           │            │ │
-│ │      @click.comma… │                    │       │           │            │ │
-│ │      def test():   │                    │       │           │            │ │
-│ │ -        i =       │                    │       │           │            │ │
-│ │ get_binary_stream… │                    │       │           │            │ │
-│ │ -        o =       │                    │       │           │            │ │
-│ │ get_binary_stream… │                    │       │           │            │ │
-│ │ +        i =       │                    │       │           │            │ │
-│ │ _get_binary_strea… │                    │       │           │            │ │
-│ │ +        o =       │                    │       │           │            │ │
-│ │ _get_binary_strea… │                    │       │           │            │ │
-│ │          while     │                    │       │           │            │ │
-│ │ True:              │                    │       │           │            │ │
-│ │              chunk │                    │       │           │            │ │
-│ │ = i.read(4096)     │                    │       │           │            │ │
-│ │              if    │                    │       │           │            │ │
-│ │ not chunk:         │                    │       │           │            │ │
-│ │ @@ -34,8 +34,8 @@  │                    │       │           │            │ │
-│ │ def test_runner(): │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_echo_stdin_s… │                    │       │           │            │ │
-│ │      @click.comma… │                    │       │           │            │ │
-│ │      def test():   │                    │       │           │            │ │
-│ │ -        i =       │                    │       │           │            │ │
-│ │ get_binary_stream… │                    │       │           │            │ │
-│ │ -        o =       │                    │       │           │            │ │
-│ │ get_binary_stream… │                    │       │           │            │ │
-│ │ +        i =       │                    │       │           │            │ │
-│ │ _get_binary_strea… │                    │       │           │            │ │
-│ │ +        o =       │                    │       │           │            │ │
-│ │ _get_binary_strea… │                    │       │           │            │ │
-│ │          while     │                    │       │           │            │ │
-│ │ True:              │                    │       │           │            │ │
-│ │              chunk │                    │       │           │            │ │
-│ │ = i.read(4096)     │                    │       │           │            │ │
-│ │              if    │                    │       │           │            │ │
-│ │ not chunk:         │                    │       │           │            │ │
-│ │ @@ -92,8 +92,8 @@  │                    │       │           │            │ │
-│ │ def                │                    │       │           │            │ │
-│ │ test_echo_stdin_p… │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_runner_with_… │                    │       │           │            │ │
-│ │      @click.comma… │                    │       │           │            │ │
-│ │      def test():   │                    │       │           │            │ │
-│ │ -        i =       │                    │       │           │            │ │
-│ │ get_binary_stream… │                    │       │           │            │ │
-│ │ -        o =       │                    │       │           │            │ │
-│ │ get_binary_stream… │                    │       │           │            │ │
-│ │ +        i =       │                    │       │           │            │ │
-│ │ _get_binary_strea… │                    │       │           │            │ │
-│ │ +        o =       │                    │       │           │            │ │
-│ │ _get_binary_strea… │                    │       │           │            │ │
-│ │          while     │                    │       │           │            │ │
-│ │ True:              │                    │       │           │            │ │
-│ │              chunk │                    │       │           │            │ │
-│ │ = i.read(4096)     │                    │       │           │            │ │
-│ │              if    │                    │       │           │            │ │
-│ │ not chunk:         │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
-│ │ SYSTEM             │ ASSISTANT          │  1.00 │      0.35 │ approve    │ │
-│ │ You are the code   │ {"decision":       │       │           │            │ │
-│ │ review gate for a  │ "approve",         │       │           │            │ │
-│ │ production         │ "comments":        │       │           │            │ │
-│ │ repository. Your   │ [{"file":          │       │           │            │ │
-│ │ approval merges    │ "more_itertools/m… │       │           │            │ │
-│ │ and deploys the    │ "line_start": 231, │       │           │            │ │
-│ │ change with no     │ "line_end": 233,   │       │           │            │ │
-│ │ further human      │ "body": "Check for │       │           │            │ │
-│ │ review. Decide:    │ n ≤ 0 in           │       │           │            │ │
-│ │   approve  - you   │ chunked"}]}        │       │           │            │ │
-│ │ are confident the  │                    │       │           │            │ │
-│ │ change is correct  │                    │       │           │            │ │
-│ │ and safe to ship.  │                    │       │           │            │ │
-│ │   block    - you   │                    │       │           │            │ │
-│ │ found a defect;    │                    │       │           │            │ │
-│ │ cite its location. │                    │       │           │            │ │
-│ │   escalate - you   │                    │       │           │            │ │
-│ │ cannot establish   │                    │       │           │            │ │
-│ │ safety from what   │                    │       │           │            │ │
-│ │ you can see; a     │                    │       │           │            │ │
-│ │ human must look.   │                    │       │           │            │ │
-│ │ Approving a change │                    │       │           │            │ │
-│ │ that contains a    │                    │       │           │            │ │
-│ │ defect is the      │                    │       │           │            │ │
-│ │ worst outcome.     │                    │       │           │            │ │
-│ │ Blocking a correct │                    │       │           │            │ │
-│ │ change costs an    │                    │       │           │            │ │
-│ │ engineer's time.   │                    │       │           │            │ │
-│ │ Escalating is      │                    │       │           │            │ │
-│ │ cheap but useless  │                    │       │           │            │ │
-│ │ if done for        │                    │       │           │            │ │
-│ │ everything.        │                    │       │           │            │ │
-│ │ Respond with       │                    │       │           │            │ │
-│ │ exactly one JSON   │                    │       │           │            │ │
-│ │ object and nothing │                    │       │           │            │ │
-│ │ else:              │                    │       │           │            │ │
-│ │ {"decision":       │                    │       │           │            │ │
-│ │ "approve|block|es… │                    │       │           │            │ │
-│ │ "comments":        │                    │       │           │            │ │
-│ │ [{"file": "...",   │                    │       │           │            │ │
-│ │ "line_start": N,   │                    │       │           │            │ │
-│ │ "line_end": N,     │                    │       │           │            │ │
-│ │ "body": "...",     │                    │       │           │            │ │
-│ │ "proposed_test":   │                    │       │           │            │ │
-│ │ "optional pytest   │                    │       │           │            │ │
-│ │ source"}]}         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ USER               │                    │       │           │            │ │
-│ │ Repository:        │                    │       │           │            │ │
-│ │ more-itertools     │                    │       │           │            │ │
-│ │ Files changed:     │                    │       │           │            │ │
-│ │ more_itertools/mo… │                    │       │           │            │ │
-│ │ tests/test_more.py │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Context around the │                    │       │           │            │ │
-│ │ change             │                    │       │           │            │ │
-│ │ (mechanically      │                    │       │           │            │ │
-│ │ extracted):        │                    │       │           │            │ │
-│ │ Changed            │                    │       │           │            │ │
-│ │ definitions:       │                    │       │           │            │ │
-│ │ more_itertools/mo… │                    │       │           │            │ │
-│ │ tests/test_more.p… │                    │       │           │            │ │
-│ │ tests/test_more.p… │                    │       │           │            │ │
-│ │ tests/test_more.p… │                    │       │           │            │ │
-│ │ tests/test_more.p… │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ more_itertools/mo… │                    │       │           │            │ │
-│ │   069b300          │                    │       │           │            │ │
-│ │ 2026-07-16 Issue   │                    │       │           │            │ │
-│ │ 1214: Update       │                    │       │           │            │ │
-│ │ __eq__ and         │                    │       │           │            │ │
-│ │ __hash__ for       │                    │       │           │            │ │
-│ │ numeric_range      │                    │       │           │            │ │
-│ │   07eb790          │                    │       │           │            │ │
-│ │ 2026-07-12 Add     │                    │       │           │            │ │
-│ │ threading to       │                    │       │           │            │ │
-│ │ lazy_modules.      │                    │       │           │            │ │
-│ │ Revert c6b640      │                    │       │           │            │ │
-│ │   4a02e36          │                    │       │           │            │ │
-│ │ 2026-07-10 Sort    │                    │       │           │            │ │
-│ │ `__all__`          │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ tests/test_more.p… │                    │       │           │            │ │
-│ │   069b300          │                    │       │           │            │ │
-│ │ 2026-07-16 Issue   │                    │       │           │            │ │
-│ │ 1214: Update       │                    │       │           │            │ │
-│ │ __eq__ and         │                    │       │           │            │ │
-│ │ __hash__ for       │                    │       │           │            │ │
-│ │ numeric_range      │                    │       │           │            │ │
-│ │   d992be0          │                    │       │           │            │ │
-│ │ 2026-07-12 Fix     │                    │       │           │            │ │
-│ │ stability in       │                    │       │           │            │ │
-│ │ running_min and    │                    │       │           │            │ │
-│ │ running_max        │                    │       │           │            │ │
-│ │   958990e          │                    │       │           │            │ │
-│ │ 2026-07-02 Raise   │                    │       │           │            │ │
-│ │ for negative slice │                    │       │           │            │ │
-│ │ sizes in sliced()  │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Diff:              │                    │       │           │            │ │
-│ │ ```diff            │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/more_itertools/… │                    │       │           │            │ │
-│ │ b/more_itertools/… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 7c3670a..5896d6d   │                    │       │           │            │ │
-│ │ 100755             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/more_itertools/… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/more_itertools/… │                    │       │           │            │ │
-│ │ @@ -230,6 +230,9   │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ chunked(iterable,  │                    │       │           │            │ │
-│ │ n, strict=False):  │                    │       │           │            │ │
-│ │      list is       │                    │       │           │            │ │
-│ │ yielded.           │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      """           │                    │       │           │            │ │
-│ │ +    if n is not   │                    │       │           │            │ │
-│ │ None and n < 0:    │                    │       │           │            │ │
-│ │ +        raise     │                    │       │           │            │ │
-│ │ ValueError('n must │                    │       │           │            │ │
-│ │ be at least 0')    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │      iterator =    │                    │       │           │            │ │
-│ │ iter(partial(take, │                    │       │           │            │ │
-│ │ n,                 │                    │       │           │            │ │
-│ │ iter(iterable)),   │                    │       │           │            │ │
-│ │ [])                │                    │       │           │            │ │
-│ │      if strict:    │                    │       │           │            │ │
-│ │          if n is   │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_more… │                    │       │           │            │ │
-│ │ b/tests/test_more… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 1f8d10c..3a562e2   │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_more… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_more… │                    │       │           │            │ │
-│ │ @@ -70,6 +70,15 @@ │                    │       │           │            │ │
-│ │ class              │                    │       │           │            │ │
-│ │ ChunkedTests(Test… │                    │       │           │            │ │
-│ │              list… │                    │       │           │            │ │
-│ │ None)), [['A',     │                    │       │           │            │ │
-│ │ 'B', 'C', 'D',     │                    │       │           │            │ │
-│ │ 'E']]              │                    │       │           │            │ │
-│ │          )         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ test_negative(sel… │                    │       │           │            │ │
-│ │ +        """Test   │                    │       │           │            │ │
-│ │ that a negative    │                    │       │           │            │ │
-│ │ ``n`` raises a     │                    │       │           │            │ │
-│ │ clear              │                    │       │           │            │ │
-│ │ ``ValueError``,    │                    │       │           │            │ │
-│ │ matching           │                    │       │           │            │ │
-│ │ +        the       │                    │       │           │            │ │
-│ │ behavior of        │                    │       │           │            │ │
-│ │ :func:`sliced`.""" │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.assertRaises… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ ValueError,        │                    │       │           │            │ │
-│ │ +            "n    │                    │       │           │            │ │
-│ │ must be at least   │                    │       │           │            │ │
-│ │ 0",                │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ lambda:            │                    │       │           │            │ │
-│ │ list(mi.chunked('… │                    │       │           │            │ │
-│ │ -1)),              │                    │       │           │            │ │
-│ │ +        )         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ test_strict_false… │                    │       │           │            │ │
-│ │          """Test   │                    │       │           │            │ │
-│ │ when ``n`` does    │                    │       │           │            │ │
-│ │ not divide evenly  │                    │       │           │            │ │
-│ │ into the length of │                    │       │           │            │ │
-│ │ the                │                    │       │           │            │ │
-│ │          iterable  │                    │       │           │            │ │
-│ │ and strict is      │                    │       │           │            │ │
-│ │ false.             │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
+│ │   7847d43           │                     │       │           │          │ │
+│ │ 2026-09-03 Don't    │                     │       │           │          │ │
+│ │ mask TypeError      │                     │       │           │          │ │
+│ │ raised while        │                     │       │           │          │ │
+│ │ iterating in        │                     │       │           │          │ │
+│ │ value_chain         │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ edb94d1..bd44cac    │                     │       │           │          │ │
+│ │ 100755              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ @@ -5672,9 +5672,6  │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ random_ordered_com… │                     │       │           │          │ │
+│ │ r):                 │                     │       │           │          │ │
+│ │  def                │                     │       │           │          │ │
+│ │ random_ordered_com… │                     │       │           │          │ │
+│ │ r):                 │                     │       │           │          │ │
+│ │      "Return        │                     │       │           │          │ │
+│ │ :func:`combination… │                     │       │           │          │ │
+│ │ tuples in randomly  │                     │       │           │          │ │
+│ │ shuffled order."    │                     │       │           │          │ │
+│ │      sequence =     │                     │       │           │          │ │
+│ │ tuple(iterable)     │                     │       │           │          │ │
+│ │ -    if not         │                     │       │           │          │ │
+│ │ sequence:           │                     │       │           │          │ │
+│ │ -        yield ()   │                     │       │           │          │ │
+│ │ -        return     │                     │       │           │          │ │
+│ │ -    n =            │                     │       │           │          │ │
+│ │ comb(len(sequence)  │                     │       │           │          │ │
+│ │ + r - 1, r)         │                     │       │           │          │ │
+│ │ +    n =            │                     │       │           │          │ │
+│ │ comb(len(sequence)  │                     │       │           │          │ │
+│ │ + r + 1, r) if      │                     │       │           │          │ │
+│ │ sequence else 0 if  │                     │       │           │          │ │
+│ │ r else 1            │                     │       │           │          │ │
+│ │      for index in   │                     │       │           │          │ │
+│ │ _random_ordered_in… │                     │       │           │          │ │
+│ │          yield      │                     │       │           │          │ │
+│ │ nth_combination_wi… │                     │       │           │          │ │
+│ │ r, index)           │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.35 │ approve  │ │
+│ │ You are the code    │ { "decision":       │       │           │          │ │
+│ │ review gate for a   │ "approve",          │       │           │          │ │
+│ │ production          │ "comments": [ {     │       │           │          │ │
+│ │ repository. Your    │ "file":             │       │           │          │ │
+│ │ approval merges and │ "src/structlog/dev… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 494,  │       │           │          │ │
+│ │ with no further     │ "line_end": 502,    │       │           │          │ │
+│ │ human review.       │ "body":             │       │           │          │ │
+│ │ Decide:             │ "DeprecationWarnin… │       │           │          │ │
+│ │   approve  - you    │ sent to all where   │       │           │          │ │
+│ │ are confident the   │ better-exceptions   │       │           │          │ │
+│ │ change is correct   │ is detected." }, {  │       │           │          │ │
+│ │ and safe to ship.   │ "file":             │       │           │          │ │
+│ │   block    - you    │ "tests/test_dev.py… │       │           │          │ │
+│ │ found a defect;     │ "line_start": 865,  │       │           │          │ │
+│ │ cite its location.  │ "line_end": 873,    │       │           │          │ │
+│ │   escalate - you    │ "body": "Test warns │       │           │          │ │
+│ │ cannot establish    │ of dep warning when │       │           │          │ │
+│ │ safety from what    │ better-exceptions   │       │           │          │ │
+│ │ you can see; a      │ is used." } ] }     │       │           │          │ │
+│ │ human must look.    │                     │       │           │          │ │
+│ │ Approving a change  │                     │       │           │          │ │
+│ │ that contains a     │                     │       │           │          │ │
+│ │ defect is the worst │                     │       │           │          │ │
+│ │ outcome. Blocking a │                     │       │           │          │ │
+│ │ correct change      │                     │       │           │          │ │
+│ │ costs an engineer's │                     │       │           │          │ │
+│ │ time. Escalating is │                     │       │           │          │ │
+│ │ cheap but useless   │                     │       │           │          │ │
+│ │ if done for         │                     │       │           │          │ │
+│ │ everything.         │                     │       │           │          │ │
+│ │ Respond with        │                     │       │           │          │ │
+│ │ exactly one JSON    │                     │       │           │          │ │
+│ │ object and nothing  │                     │       │           │          │ │
+│ │ else:               │                     │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │                     │       │           │          │ │
+│ │ "comments":         │                     │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │                     │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ structlog           │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ CHANGELOG.md,       │                     │       │           │          │ │
+│ │ docs/console-outpu… │                     │       │           │          │ │
+│ │ docs/exceptions.md, │                     │       │           │          │ │
+│ │ docs/getting-start… │                     │       │           │          │ │
+│ │ src/structlog/dev.… │                     │       │           │          │ │
+│ │ tests/test_dev.py   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │                     │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │                     │       │           │          │ │
+│ │ unreviewed):        │                     │       │           │          │ │
+│ │ CHANGELOG.md (756   │                     │       │           │          │ │
+│ │ chars, non-code),   │                     │       │           │          │ │
+│ │ docs/console-outpu… │                     │       │           │          │ │
+│ │ (2057 chars,        │                     │       │           │          │ │
+│ │ non-code),          │                     │       │           │          │ │
+│ │ docs/exceptions.md  │                     │       │           │          │ │
+│ │ (1169 chars,        │                     │       │           │          │ │
+│ │ non-code),          │                     │       │           │          │ │
+│ │ docs/getting-start… │                     │       │           │          │ │
+│ │ (1791 chars,        │                     │       │           │          │ │
+│ │ non-code)           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ src/structlog/dev.… │                     │       │           │          │ │
+│ │ src/structlog/dev.… │                     │       │           │          │ │
+│ │ tests/test_dev.py:… │                     │       │           │          │ │
+│ │ tests/test_dev.py:… │                     │       │           │          │ │
+│ │ tests/test_dev.py:… │                     │       │           │          │ │
+│ │ tests/test_dev.py:… │                     │       │           │          │ │
+│ │ tests/test_dev.py:… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ src/structlog/dev.… │                     │       │           │          │ │
+│ │   15a4c48           │                     │       │           │          │ │
+│ │ 2026-03-29 Drop 3.9 │                     │       │           │          │ │
+│ │ (#800)              │                     │       │           │          │ │
+│ │   abd2638           │                     │       │           │          │ │
+│ │ 2026-03-04 dev:     │                     │       │           │          │ │
+│ │ don't raise warning │                     │       │           │          │ │
+│ │ on rendered         │                     │       │           │          │ │
+│ │ exceptions (#790)   │                     │       │           │          │ │
+│ │   65ceffd           │                     │       │           │          │ │
+│ │ 2026-02-21 update   │                     │       │           │          │ │
+│ │ dev                 │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ tests/test_dev.py:  │                     │       │           │          │ │
+│ │   abd2638           │                     │       │           │          │ │
+│ │ 2026-03-04 dev:     │                     │       │           │          │ │
+│ │ don't raise warning │                     │       │           │          │ │
+│ │ on rendered         │                     │       │           │          │ │
+│ │ exceptions (#790)   │                     │       │           │          │ │
+│ │   65ceffd           │                     │       │           │          │ │
+│ │ 2026-02-21 update   │                     │       │           │          │ │
+│ │ dev                 │                     │       │           │          │ │
+│ │   de1a79e           │                     │       │           │          │ │
+│ │ 2025-10-27 Drop     │                     │       │           │          │ │
+│ │ Python 3.8 (#768)   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/src/structlog/de… │                     │       │           │          │ │
+│ │ b/src/structlog/de… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 0f08d7a..255402a    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/src/structlog/de… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/src/structlog/de… │                     │       │           │          │ │
+│ │ @@ -494,7 +494,16   │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ better_traceback(s… │                     │       │           │          │ │
+│ │ TextIO, exc_info:   │                     │       │           │          │ │
+│ │ ExcInfo) -> None:   │                     │       │           │          │ │
+│ │      Used by        │                     │       │           │          │ │
+│ │ default if          │                     │       │           │          │ │
+│ │ *better-exceptions* │                     │       │           │          │ │
+│ │ is installed and    │                     │       │           │          │ │
+│ │ Rich is absent.     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      ..             │                     │       │           │          │ │
+│ │ versionadded::      │                     │       │           │          │ │
+│ │ 21.2.0              │                     │       │           │          │ │
+│ │ +    ..             │                     │       │           │          │ │
+│ │ deprecated:: 26.1.0 │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ *better-exceptions* │                     │       │           │          │ │
+│ │ support is          │                     │       │           │          │ │
+│ │ deprecated and will │                     │       │           │          │ │
+│ │ be removed in a     │                     │       │           │          │ │
+│ │ +       future      │                     │       │           │          │ │
+│ │ release. Use Rich   │                     │       │           │          │ │
+│ │ instead.            │                     │       │           │          │ │
+│ │      """            │                     │       │           │          │ │
+│ │ +    warnings.warn( │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "better-exceptions  │                     │       │           │          │ │
+│ │ support is          │                     │       │           │          │ │
+│ │ deprecated or will  │                     │       │           │          │ │
+│ │ be removed "        │                     │       │           │          │ │
+│ │ +        "in a      │                     │       │           │          │ │
+│ │ future release. Use │                     │       │           │          │ │
+│ │ Rich instead.",     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ DeprecationWarning, │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ stacklevel=2,       │                     │       │           │          │ │
+│ │ +    )              │                     │       │           │          │ │
+│ │      sio.write("\n" │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "".join(better_exc… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -502,6 +511,12   │                     │       │           │          │ │
+│ │ @@ if rich is not   │                     │       │           │          │ │
+│ │ None:               │                     │       │           │          │ │
+│ │      default_excep… │                     │       │           │          │ │
+│ │ = rich_traceback    │                     │       │           │          │ │
+│ │  elif               │                     │       │           │          │ │
+│ │ better_exceptions   │                     │       │           │          │ │
+│ │ is not None:        │                     │       │           │          │ │
+│ │      default_excep… │                     │       │           │          │ │
+│ │ = better_traceback  │                     │       │           │          │ │
+│ │ +    warnings.warn( │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "better-exceptions  │                     │       │           │          │ │
+│ │ support is          │                     │       │           │          │ │
+│ │ deprecated and will │                     │       │           │          │ │
+│ │ be removed "        │                     │       │           │          │ │
+│ │ +        "in a      │                     │       │           │          │ │
+│ │ future release. Use │                     │       │           │          │ │
+│ │ Rich instead.",     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ DeprecationWarning, │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ stacklevel=2,       │                     │       │           │          │ │
+│ │ +    )              │                     │       │           │          │ │
+│ │  else:              │                     │       │           │          │ │
+│ │      default_excep… │                     │       │           │          │ │
+│ │ = plain_traceback   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -511,8 +526,8 @@ │                     │       │           │          │ │
+│ │ class               │                     │       │           │          │ │
+│ │ ConsoleRenderer:    │                     │       │           │          │ │
+│ │      Render         │                     │       │           │          │ │
+│ │ ``event_dict``      │                     │       │           │          │ │
+│ │ nicely aligned,     │                     │       │           │          │ │
+│ │ possibly in colors, │                     │       │           │          │ │
+│ │ and ordered.        │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      If             │                     │       │           │          │ │
+│ │ ``event_dict``      │                     │       │           │          │ │
+│ │ contains a true-ish │                     │       │           │          │ │
+│ │ ``exc_info`` key,   │                     │       │           │          │ │
+│ │ it will be rendered │                     │       │           │          │ │
+│ │ -    *after* the    │                     │       │           │          │ │
+│ │ log line. If Rich_  │                     │       │           │          │ │
+│ │ or                  │                     │       │           │          │ │
+│ │ better-exceptions_  │                     │       │           │          │ │
+│ │ are present, in     │                     │       │           │          │ │
+│ │ colors              │                     │       │           │          │ │
+│ │ -    and with extra │                     │       │           │          │ │
+│ │ context.            │                     │       │           │          │ │
+│ │ +    *after* the    │                     │       │           │          │ │
+│ │ log line. If Rich_  │                     │       │           │          │ │
+│ │ is present, in      │                     │       │           │          │ │
+│ │ colors and with     │                     │       │           │          │ │
+│ │ extra               │                     │       │           │          │ │
+│ │ +    context.       │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      Tip:           │                     │       │           │          │ │
+│ │          Since      │                     │       │           │          │ │
+│ │ `ConsoleRenderer`   │                     │       │           │          │ │
+│ │ is mainly a         │                     │       │           │          │ │
+│ │ development helper, │                     │       │           │          │ │
+│ │ it is less          │                     │       │           │          │ │
+│ │ @@ -558,12 +573,10  │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ ConsoleRenderer:    │                     │       │           │          │ │
+│ │              are    │                     │       │           │          │ │
+│ │ passed.             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          exception… │                     │       │           │          │ │
+│ │ -            A      │                     │       │           │          │ │
+│ │ callable to render  │                     │       │           │          │ │
+│ │ ``exc_infos``. If   │                     │       │           │          │ │
+│ │ Rich_ or            │                     │       │           │          │ │
+│ │ better-exceptions_  │                     │       │           │          │ │
+│ │ -            are    │                     │       │           │          │ │
+│ │ installed, they are │                     │       │           │          │ │
+│ │ used for            │                     │       │           │          │ │
+│ │ pretty-printing by  │                     │       │           │          │ │
+│ │ default (rich_      │                     │       │           │          │ │
+│ │ -            taking │                     │       │           │          │ │
+│ │ precedence). You    │                     │       │           │          │ │
+│ │ can also manually   │                     │       │           │          │ │
+│ │ set it to           │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ `plain_traceback`,  │                     │       │           │          │ │
+│ │ `better_traceback`, │                     │       │           │          │ │
+│ │ an instance of      │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ `RichTracebackForm… │                     │       │           │          │ │
+│ │ like                │                     │       │           │          │ │
+│ │ `rich_traceback`,   │                     │       │           │          │ │
+│ │ or implement your   │                     │       │           │          │ │
+│ │ -            own.   │                     │       │           │          │ │
+│ │ +            A      │                     │       │           │          │ │
+│ │ callable to render  │                     │       │           │          │ │
+│ │ ``exc_infos``. If   │                     │       │           │          │ │
+│ │ Rich_ is installed, │                     │       │           │          │ │
+│ │ it is               │                     │       │           │          │ │
+│ │ +            used   │                     │       │           │          │ │
+│ │ for pretty-printing │                     │       │           │          │ │
+│ │ by default. You can │                     │       │           │          │ │
+│ │ also manually set   │                     │       │           │          │ │
+│ │ it                  │                     │       │           │          │ │
+│ │ +            to     │                     │       │           │          │ │
+│ │ `plain_traceback`,  │                     │       │           │          │ │
+│ │ an instance of      │                     │       │           │          │ │
+│ │ `RichTracebackForm… │                     │       │           │          │ │
+│ │ like                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ `rich_traceback`,   │                     │       │           │          │ │
+│ │ or implement your   │                     │       │           │          │ │
+│ │ own.                │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          sort_keys: │                     │       │           │          │ │
+│ │              Wheth… │                     │       │           │          │ │
+│ │ to sort keys when   │                     │       │           │          │ │
+│ │ formatting. `True`  │                     │       │           │          │ │
+│ │ by default. Ignored │                     │       │           │          │ │
+│ │ if                  │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_dev.py │                     │       │           │          │ │
+│ │ b/tests/test_dev.py │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 7c6a20b..45b0756    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_dev.py │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_dev.py │                     │       │           │          │ │
+│ │ @@ -865,10 +865,22  │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ TestBetterTracebac… │                     │       │           │          │ │
+│ │          try:       │                     │       │           │          │ │
+│ │              0 / 0  │                     │       │           │          │ │
+│ │          except     │                     │       │           │          │ │
+│ │ ZeroDivisionError:  │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ dev.better_traceba… │                     │       │           │          │ │
+│ │ sys.exc_info())     │                     │       │           │          │ │
+│ │ +            with   │                     │       │           │          │ │
+│ │ pytest.warns(Depre… │                     │       │           │          │ │
+│ │ match="better-exce… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ dev.better_traceba… │                     │       │           │          │ │
+│ │ sys.exc_info())     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          assert     │                     │       │           │          │ │
+│ │ sio.getvalue().sta… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_deprecation_w… │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ better_traceback    │                     │       │           │          │ │
+│ │ emits a             │                     │       │           │          │ │
+│ │ DeprecationWarning. │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        sio =      │                     │       │           │          │ │
+│ │ StringIO()          │                     │       │           │          │ │
+│ │ +        try:       │                     │       │           │          │ │
+│ │ +            0 / 0  │                     │       │           │          │ │
+│ │ +        except     │                     │       │           │          │ │
+│ │ ZeroDivisionError:  │                     │       │           │          │ │
+│ │ +            with   │                     │       │           │          │ │
+│ │ pytest.warns(Depre… │                     │       │           │          │ │
+│ │ match="better-exce… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ dev.better_traceba… │                     │       │           │          │ │
+│ │ sys.exc_info())     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  class              │                     │       │           │          │ │
+│ │ TestLogLevelColumn… │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ test_no_style(self… │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
