@@ -1,400 +1,400 @@
-│ │ multiline help      │                     │       │           │          │ │
-│ │ strings correctly   │                     │       │           │          │ │
-│ │ (#3126)             │                     │       │           │          │ │
-│ │   701b313           │                     │       │           │          │ │
-│ │ 2025-08-09 Fix      │                     │       │           │          │ │
-│ │ completions for     │                     │       │           │          │ │
-│ │ quoted/escaped      │                     │       │           │          │ │
-│ │ parameters in Fish  │                     │       │           │          │ │
-│ │ (#3013)             │                     │       │           │          │ │
-│ │   11f48e2           │                     │       │           │          │ │
-│ │ 2025-08-06 Merge    │                     │       │           │          │ │
-│ │ branch 'stable'     │                     │       │           │          │ │
-│ │ into                │                     │       │           │          │ │
-│ │ bugfix/OptionsAuto… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Diff:               │                     │       │           │          │ │
-│ │ ```diff             │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/src/click/shell_… │                     │       │           │          │ │
-│ │ b/src/click/shell_… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 7235f10..9a4b80d    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/src/click/shell_… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/src/click/shell_… │                     │       │           │          │ │
-│ │ @@ -43,12 +43,13 @@ │                     │       │           │          │ │
-│ │ def shell_complete( │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      comp =         │                     │       │           │          │ │
-│ │ comp_cls(cli,       │                     │       │           │          │ │
-│ │ ctx_args,           │                     │       │           │          │ │
-│ │ prog_name,          │                     │       │           │          │ │
-│ │ complete_var)       │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ +    # Write bytes, │                     │       │           │          │ │
-│ │ otherwise Windows   │                     │       │           │          │ │
-│ │ text stdout         │                     │       │           │          │ │
-│ │ translates LF to    │                     │       │           │          │ │
-│ │ CRLF and breaks.    │                     │       │           │          │ │
-│ │      if instruction │                     │       │           │          │ │
-│ │ == "source":        │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ echo(comp.source()) │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ echo(comp.source()… │                     │       │           │          │ │
-│ │ nl=False)           │                     │       │           │          │ │
-│ │          return 0   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      if instruction │                     │       │           │          │ │
-│ │ == "complete":      │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ echo(comp.complete… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ echo(comp.complete… │                     │       │           │          │ │
-│ │          return 0   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      return 1       │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_shell… │                     │       │           │          │ │
-│ │ b/tests/test_shell… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 492231e..23c5ff0    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/tests/test_shell… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_shell… │                     │       │           │          │ │
-│ │ @@ -1,3 +1,4 @@     │                     │       │           │          │ │
-│ │ +import io          │                     │       │           │          │ │
-│ │  import textwrap    │                     │       │           │          │ │
-│ │  import warnings    │                     │       │           │          │ │
-│ │  from               │                     │       │           │          │ │
-│ │ collections.abc     │                     │       │           │          │ │
-│ │ import Mapping      │                     │       │           │          │ │
-│ │ @@ -11,6 +12,7 @@   │                     │       │           │          │ │
-│ │ from click.core     │                     │       │           │          │ │
-│ │ import Group        │                     │       │           │          │ │
-│ │  from click.core    │                     │       │           │          │ │
-│ │ import Option       │                     │       │           │          │ │
-│ │  from               │                     │       │           │          │ │
-│ │ click.shell_comple… │                     │       │           │          │ │
-│ │ import              │                     │       │           │          │ │
-│ │ add_completion_cla… │                     │       │           │          │ │
-│ │  from               │                     │       │           │          │ │
-│ │ click.shell_comple… │                     │       │           │          │ │
-│ │ import              │                     │       │           │          │ │
-│ │ CompletionItem      │                     │       │           │          │ │
-│ │ +from               │                     │       │           │          │ │
-│ │ click.shell_comple… │                     │       │           │          │ │
-│ │ import              │                     │       │           │          │ │
-│ │ shell_complete      │                     │       │           │          │ │
-│ │  from               │                     │       │           │          │ │
-│ │ click.shell_comple… │                     │       │           │          │ │
-│ │ import              │                     │       │           │          │ │
-│ │ ShellComplete       │                     │       │           │          │ │
-│ │  from click.types   │                     │       │           │          │ │
-│ │ import Choice       │                     │       │           │          │ │
-│ │  from click.types   │                     │       │           │          │ │
-│ │ import File         │                     │       │           │          │ │
-│ │ @@ -370,6 +372,20   │                     │       │           │          │ │
-│ │ @@ def              │                     │       │           │          │ │
-│ │ test_full_complete… │                     │       │           │          │ │
-│ │ shell, env,         │                     │       │           │          │ │
-│ │ expect):            │                     │       │           │          │ │
-│ │      assert         │                     │       │           │          │ │
-│ │ result.output ==    │                     │       │           │          │ │
-│ │ expect              │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ test_source_uses_l… │                     │       │           │          │ │
-│ │ +    stdout =       │                     │       │           │          │ │
-│ │ io.BytesIO()        │                     │       │           │          │ │
-│ │ +    stream =       │                     │       │           │          │ │
-│ │ io.TextIOWrapper(s… │                     │       │           │          │ │
-│ │ encoding="utf-8",   │                     │       │           │          │ │
-│ │ newline="\r\n")     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ monkeypatch.setatt… │                     │       │           │          │ │
-│ │ lambda: stream)     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    cli =          │                     │       │           │          │ │
-│ │ Group("cli",        │                     │       │           │          │ │
-│ │ commands=[Command(… │                     │       │           │          │ │
-│ │ Command("b")])      │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ shell_complete(cli, │                     │       │           │          │ │
-│ │ {}, "cli",          │                     │       │           │          │ │
-│ │ "_CLI_COMPLETE",    │                     │       │           │          │ │
-│ │ "zsh_source") == 0  │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    stream.flush() │                     │       │           │          │ │
-│ │ +    output =       │                     │       │           │          │ │
-│ │ stdout.getvalue()   │                     │       │           │          │ │
-│ │ +    assert b"\r\n" │                     │       │           │          │ │
-│ │ not in output       │                     │       │           │          │ │
-│ │ +    assert b"\n"   │                     │       │           │          │ │
-│ │ in output           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │  @pytest.mark.para… │                     │       │           │          │ │
-│ │      ("env",        │                     │       │           │          │ │
-│ │ "expect"),          │                     │       │           │          │ │
-│ │      [              │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
-│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.54 │ approve  │ │
-│ │ You are the code    │ PMENT               │       │           │          │ │
-│ │ review gate for a   │ {"decision":        │       │           │          │ │
-│ │ production          │ "approve",          │       │           │          │ │
-│ │ repository. Your    │ "comments":         │       │           │          │ │
-│ │ approval merges and │ [{"file":           │       │           │          │ │
-│ │ deploys the change  │ "fastapi/dependenc… │       │           │          │ │
-│ │ with no further     │ "line_start": 522,  │       │           │          │ │
-│ │ human review.       │ "line_end": 523,    │       │           │          │ │
-│ │ Decide:             │ "body": "Improve    │       │           │          │ │
-│ │   approve  - you    │ readability:        │       │           │          │ │
-│ │ are confident the   │ located ✅ the      │       │           │          │ │
-│ │ change is correct   │ stack level based   │       │           │          │ │
-│ │ and safe to ship.   │ on which a message  │       │           │          │ │
-│ │   block    - you    │ was raised, the     │       │           │          │ │
-│ │ found a defect;     │ assert on `Field`   │       │           │          │ │
-│ │ cite its location.  │ now triggers an     │       │           │          │ │
-│ │   escalate - you    │ error message about │       │           │          │ │
-│ │ cannot establish    │ supported types     │       │           │          │ │
-│ │ safety from what    │ when submitting an  │       │           │          │ │
-│ │ you can see; a      │ invalid sequence    │       │           │          │ │
-│ │ human must look.    │ (like a dict, list, │       │           │          │ │
-│ │ Approving a change  │ tuple)., confirmed  │       │           │          │ │
-│ │ that contains a     │ via unit test with  │       │           │          │ │
-│ │ defect is the worst │ wording change in   │       │           │          │ │
-│ │ outcome. Blocking a │ test_invalid_seque… │       │           │          │ │
-│ │ correct change      │                     │       │           │          │ │
-│ │ costs an engineer's │                     │       │           │          │ │
-│ │ time. Escalating is │                     │       │           │          │ │
-│ │ cheap but useless   │                     │       │           │          │ │
-│ │ if done for         │                     │       │           │          │ │
-│ │ everything.         │                     │       │           │          │ │
-│ │ Respond with        │                     │       │           │          │ │
-│ │ exactly one JSON    │                     │       │           │          │ │
-│ │ object and nothing  │                     │       │           │          │ │
-│ │ else:               │                     │       │           │          │ │
-│ │ {"decision":        │                     │       │           │          │ │
-│ │ "approve|block|esc… │                     │       │           │          │ │
-│ │ "comments":         │                     │       │           │          │ │
-│ │ [{"file": "...",    │                     │       │           │          │ │
-│ │ "line_start": N,    │                     │       │           │          │ │
-│ │ "line_end": N,      │                     │       │           │          │ │
-│ │ "body": "...",      │                     │       │           │          │ │
-│ │ "proposed_test":    │                     │       │           │          │ │
-│ │ "optional pytest    │                     │       │           │          │ │
-│ │ source"}]}          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ USER                │                     │       │           │          │ │
-│ │ Repository: fastapi │                     │       │           │          │ │
-│ │ Files changed:      │                     │       │           │          │ │
-│ │ fastapi/dependenci… │                     │       │           │          │ │
-│ │ tests/test_invalid… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Context around the  │                     │       │           │          │ │
-│ │ change              │                     │       │           │          │ │
-│ │ (mechanically       │                     │       │           │          │ │
-│ │ extracted):         │                     │       │           │          │ │
-│ │ Changed             │                     │       │           │          │ │
-│ │ definitions:        │                     │       │           │          │ │
-│ │ fastapi/dependenci… │                     │       │           │          │ │
-│ │ tests/test_invalid… │                     │       │           │          │ │
-│ │ tests/test_invalid… │                     │       │           │          │ │
-│ │ tests/test_invalid… │                     │       │           │          │ │
-│ │ tests/test_invalid… │                     │       │           │          │ │
-│ │ tests/test_invalid… │                     │       │           │          │ │
-│ │ tests/test_invalid… │                     │       │           │          │ │
-│ │ tests/test_invalid… │                     │       │           │          │ │
-│ │ tests/test_invalid… │                     │       │           │          │ │
-│ │ Callers elsewhere   │                     │       │           │          │ │
-│ │ (file:line):        │                     │       │           │          │ │
-│ │   tests/test_opena… │                     │       │           │          │ │
-│ │ SubItem(BaseModel): │                     │       │           │          │ │
-│ │   tests/test_opena… │                     │       │           │          │ │
-│ │ sub=SubItem(subnam… │                     │       │           │          │ │
-│ │ Recent history of   │                     │       │           │          │ │
-│ │ fastapi/dependenci… │                     │       │           │          │ │
-│ │   f3f498100         │                     │       │           │          │ │
-│ │ 2026-02-03 👷 Run   │                     │       │           │          │ │
-│ │ mypy by pre-commit  │                     │       │           │          │ │
-│ │ (#14806)            │                     │       │           │          │ │
-│ │   e30063055         │                     │       │           │          │ │
-│ │ 2025-12-27 ➖ Drop  │                     │       │           │          │ │
-│ │ support for         │                     │       │           │          │ │
-│ │ `pydantic.v1`       │                     │       │           │          │ │
-│ │ (#14609)            │                     │       │           │          │ │
-│ │   535b5daa3         │                     │       │           │          │ │
-│ │ 2025-12-26 🔊 Add … │                     │       │           │          │ │
-│ │ custom              │                     │       │           │          │ │
-│ │ `FastAPIDeprecatio… │                     │       │           │          │ │
-│ │ (#14605)            │                     │       │           │          │ │
-│ │ Recent history of   │                     │       │           │          │ │
-│ │ tests/test_invalid… │                     │       │           │          │ │
-│ │   1c4fc96c9         │                     │       │           │          │ │
-│ │ 2025-12-17 ♻️       │                     │       │           │          │ │
-│ │ Upgrade internal    │                     │       │           │          │ │
-│ │ syntax to Python    │                     │       │           │          │ │
-│ │ 3.9+ 🎉 (#14564)    │                     │       │           │          │ │
-│ │   9262fa836         │                     │       │           │          │ │
-│ │ 2022-05-13 ✨ Add   │                     │       │           │          │ │
-│ │ support for not     │                     │       │           │          │ │
-│ │ needing `...` as    │                     │       │           │          │ │
-│ │ default value in    │                     │       │           │          │ │
-│ │ required Query(),   │                     │       │           │          │ │
-│ │ Path(), Header(),   │                     │       │           │          │ │
-│ │ etc. (#4906)        │                     │       │           │          │ │
-│ │   1f01ce961         │                     │       │           │          │ │
-│ │ 2020-06-28 📝 Use   │                     │       │           │          │ │
-│ │ Optional in docs    │                     │       │           │          │ │
-│ │ (#1644)             │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Diff:               │                     │       │           │          │ │
-│ │ ```diff             │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/fastapi/dependen… │                     │       │           │          │ │
-│ │ b/fastapi/dependen… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 2afc734ba..8188bd5… │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/fastapi/dependen… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/fastapi/dependen… │                     │       │           │          │ │
-│ │ @@ -519,7 +519,7 @@ │                     │       │           │          │ │
-│ │ def analyze_param(  │                     │       │           │          │ │
-│ │                   … │                     │       │           │          │ │
-│ │ For Pydantic v1     │                     │       │           │          │ │
-│ │                   … │                     │       │           │          │ │
-│ │ getattr(field,      │                     │       │           │          │ │
-│ │ "shape", 1) == 1    │                     │       │           │          │ │
-│ │                  )  │                     │       │           │          │ │
-│ │ -            )      │                     │       │           │          │ │
-│ │ +            ),     │                     │       │           │          │ │
-│ │ f"Path parameter    │                     │       │           │          │ │
-│ │ {param_name!r} must │                     │       │           │          │ │
-│ │ be one of the       │                     │       │           │          │ │
-│ │ supported types"    │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      return         │                     │       │           │          │ │
-│ │ ParamDetails(type_… │                     │       │           │          │ │
-│ │ depends=depends,    │                     │       │           │          │ │
-│ │ field=field)        │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_inval… │                     │       │           │          │ │
-│ │ b/tests/test_inval… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 2b8fd059e..3695344… │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/tests/test_inval… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_inval… │                     │       │           │          │ │
-│ │ @@ -6,7 +6,10 @@    │                     │       │           │          │ │
-│ │ from pydantic       │                     │       │           │          │ │
-│ │ import BaseModel    │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  def                │                     │       │           │          │ │
-│ │ test_invalid_seque… │                     │       │           │          │ │
-│ │ -    with           │                     │       │           │          │ │
-│ │ pytest.raises(Asse… │                     │       │           │          │ │
-│ │ +    with           │                     │       │           │          │ │
-│ │ pytest.raises(      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ AssertionError,     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ match="Query        │                     │       │           │          │ │
-│ │ parameter 'q' must  │                     │       │           │          │ │
-│ │ be one of the       │                     │       │           │          │ │
-│ │ supported types",   │                     │       │           │          │ │
-│ │ +    ):             │                     │       │           │          │ │
-│ │          app =      │                     │       │           │          │ │
-│ │ FastAPI()           │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          class      │                     │       │           │          │ │
-│ │ Item(BaseModel):    │                     │       │           │          │ │
-│ │ @@ -18,7 +21,10 @@  │                     │       │           │          │ │
-│ │ def                 │                     │       │           │          │ │
-│ │ test_invalid_seque… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  def                │                     │       │           │          │ │
-│ │ test_invalid_tuple… │                     │       │           │          │ │
-│ │ -    with           │                     │       │           │          │ │
-│ │ pytest.raises(Asse… │                     │       │           │          │ │
-│ │ +    with           │                     │       │           │          │ │
-│ │ pytest.raises(      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ AssertionError,     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ match="Query        │                     │       │           │          │ │
-│ │ parameter 'q' must  │                     │       │           │          │ │
-│ │ be one of the       │                     │       │           │          │ │
-│ │ supported types",   │                     │       │           │          │ │
-│ │ +    ):             │                     │       │           │          │ │
-│ │          app =      │                     │       │           │          │ │
-│ │ FastAPI()           │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          class      │                     │       │           │          │ │
-│ │ Item(BaseModel):    │                     │       │           │          │ │
-│ │ @@ -30,7 +36,10 @@  │                     │       │           │          │ │
-│ │ def                 │                     │       │           │          │ │
-│ │ test_invalid_tuple… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  def                │                     │       │           │          │ │
-│ │ test_invalid_dict(… │                     │       │           │          │ │
-│ │ -    with           │                     │       │           │          │ │
-│ │ pytest.raises(Asse… │                     │       │           │          │ │
-│ │ +    with           │                     │       │           │          │ │
-│ │ pytest.raises(      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ AssertionError,     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ match="Query        │                     │       │           │          │ │
-│ │ parameter 'q' must  │                     │       │           │          │ │
-│ │ be one of the       │                     │       │           │          │ │
-│ │ supported types",   │                     │       │           │          │ │
-│ │ +    ):             │                     │       │           │          │ │
-│ │          app =      │                     │       │           │          │ │
-│ │ FastAPI()           │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          class      │                     │       │           │          │ │
-│ │ Item(BaseModel):    │                     │       │           │          │ │
-│ │ @@ -42,7 +51,10 @@  │                     │       │           │          │ │
-│ │ def                 │                     │       │           │          │ │
-│ │ test_invalid_dict(… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  def                │                     │       │           │          │ │
-│ │ test_invalid_simpl… │                     │       │           │          │ │
-│ │ -    with           │                     │       │           │          │ │
-│ │ pytest.raises(Asse… │                     │       │           │          │ │
-│ │ +    with           │                     │       │           │          │ │
-│ │ pytest.raises(      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ AssertionError,     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ match="Query        │                     │       │           │          │ │
-│ │ parameter 'q' must  │                     │       │           │          │ │
-│ │ be one of the       │                     │       │           │          │ │
-│ │ supported types",   │                     │       │           │          │ │
-│ │ +    ):             │                     │       │           │          │ │
-│ │          app =      │                     │       │           │          │ │
-│ │ FastAPI()           │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          class      │                     │       │           │          │ │
-│ │ Item(BaseModel):    │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+│ │      prog_name:    │                    │       │           │            │ │
+│ │ str,               │                    │       │           │            │ │
+│ │      complete_var: │                    │       │           │            │ │
+│ │ str,               │                    │       │           │            │ │
+│ │      instruction:  │                    │       │           │            │ │
+│ │ str,               │                    │       │           │            │ │
+│ │ -) -> int:         │                    │       │           │            │ │
+│ │ +) -> t.Literal[0, │                    │       │           │            │ │
+│ │ 0]:                │                    │       │           │            │ │
+│ │      """Perform    │                    │       │           │            │ │
+│ │ shell completion   │                    │       │           │            │ │
+│ │ for the given CLI  │                    │       │           │            │ │
+│ │ program.           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      :param cli:   │                    │       │           │            │ │
+│ │ Command being      │                    │       │           │            │ │
+│ │ called.            │                    │       │           │            │ │
+│ │ @@ -55,7 +55,16 @@ │                    │       │           │            │ │
+│ │ def                │                    │       │           │            │ │
+│ │ shell_complete(    │                    │       │           │            │ │
+│ │      return 1      │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -class             │                    │       │           │            │ │
+│ │ CompletionItem:    │                    │       │           │            │ │
+│ │ +if                │                    │       │           │            │ │
+│ │ t.TYPE_CHECKING:   │                    │       │           │            │ │
+│ │ +    from          │                    │       │           │            │ │
+│ │ typing_extensions  │                    │       │           │            │ │
+│ │ import TypeVar     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # `Any` is    │                    │       │           │            │ │
+│ │ used as default    │                    │       │           │            │ │
+│ │ for backwards      │                    │       │           │            │ │
+│ │ compatibility      │                    │       │           │            │ │
+│ │ (instead of e.g.   │                    │       │           │            │ │
+│ │ `str`)             │                    │       │           │            │ │
+│ │ +    _ValueT_co =  │                    │       │           │            │ │
+│ │ TypeVar("_ValueT_… │                    │       │           │            │ │
+│ │ covariant=True,    │                    │       │           │            │ │
+│ │ default=t.Any)     │                    │       │           │            │ │
+│ │ +else:             │                    │       │           │            │ │
+│ │ +    _ValueT_co =  │                    │       │           │            │ │
+│ │ t.TypeVar("_Value… │                    │       │           │            │ │
+│ │ covariant=True)    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +class             │                    │       │           │            │ │
+│ │ CompletionItem(t.… │                    │       │           │            │ │
+│ │      """Represents │                    │       │           │            │ │
+│ │ a completion value │                    │       │           │            │ │
+│ │ and metadata about │                    │       │           │            │ │
+│ │ the value. The     │                    │       │           │            │ │
+│ │      default       │                    │       │           │            │ │
+│ │ metadata is        │                    │       │           │            │ │
+│ │ ``type`` to        │                    │       │           │            │ │
+│ │ indicate special   │                    │       │           │            │ │
+│ │ shell handling,    │                    │       │           │            │ │
+│ │      and ``help``  │                    │       │           │            │ │
+│ │ if a shell         │                    │       │           │            │ │
+│ │ supports showing a │                    │       │           │            │ │
+│ │ help string next   │                    │       │           │            │ │
+│ │ to the             │                    │       │           │            │ │
+│ │ @@ -78,12 +87,12   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ CompletionItem:    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      def __init__( │                    │       │           │            │ │
+│ │          self,     │                    │       │           │            │ │
+│ │ -        value:    │                    │       │           │            │ │
+│ │ t.Any,             │                    │       │           │            │ │
+│ │ +        value:    │                    │       │           │            │ │
+│ │ _ValueT_co,        │                    │       │           │            │ │
+│ │          type: str │                    │       │           │            │ │
+│ │ = "plain",         │                    │       │           │            │ │
+│ │          help: str │                    │       │           │            │ │
+│ │ | None = None,     │                    │       │           │            │ │
+│ │          **kwargs: │                    │       │           │            │ │
+│ │ t.Any,             │                    │       │           │            │ │
+│ │      ) -> None:    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ self.value: t.Any  │                    │       │           │            │ │
+│ │ = value            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.value:        │                    │       │           │            │ │
+│ │ _ValueT_co = value │                    │       │           │            │ │
+│ │          self.typ… │                    │       │           │            │ │
+│ │ str = type         │                    │       │           │            │ │
+│ │          self.hel… │                    │       │           │            │ │
+│ │ str | None = help  │                    │       │           │            │ │
+│ │          self._in… │                    │       │           │            │ │
+│ │ = kwargs           │                    │       │           │            │ │
+│ │ @@ -198,6 +207,12  │                    │       │           │            │ │
+│ │ @@ complete        │                    │       │           │            │ │
+│ │ --no-files         │                    │       │           │            │ │
+│ │ --command          │                    │       │           │            │ │
+│ │ %(prog_name)s      │                    │       │           │            │ │
+│ │ --arguments \      │                    │       │           │            │ │
+│ │  """               │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +class             │                    │       │           │            │ │
+│ │ _SourceVarsDict(t… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ complete_func: str │                    │       │           │            │ │
+│ │ +    complete_var: │                    │       │           │            │ │
+│ │ str                │                    │       │           │            │ │
+│ │ +    prog_name:    │                    │       │           │            │ │
+│ │ str                │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │  class             │                    │       │           │            │ │
+│ │ ShellComplete:     │                    │       │           │            │ │
+│ │      """Base class │                    │       │           │            │ │
+│ │ for providing      │                    │       │           │            │ │
+│ │ shell completion   │                    │       │           │            │ │
+│ │ support. A         │                    │       │           │            │ │
+│ │ subclass for       │                    │       │           │            │ │
+│ │      a given shell │                    │       │           │            │ │
+│ │ will override      │                    │       │           │            │ │
+│ │ attributes and     │                    │       │           │            │ │
+│ │ methods to         │                    │       │           │            │ │
+│ │ implement the      │                    │       │           │            │ │
+│ │ @@ -242,7 +257,7   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ ShellComplete:     │                    │       │           │            │ │
+│ │          safe_name │                    │       │           │            │ │
+│ │ = re.sub(r"\W*",   │                    │       │           │            │ │
+│ │ "",                │                    │       │           │            │ │
+│ │ self.prog_name.re… │                    │       │           │            │ │
+│ │ "_"),              │                    │       │           │            │ │
+│ │ flags=re.ASCII)    │                    │       │           │            │ │
+│ │          return    │                    │       │           │            │ │
+│ │ f"_{safe_name}_co… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    def           │                    │       │           │            │ │
+│ │ source_vars(self)  │                    │       │           │            │ │
+│ │ -> dict[str,       │                    │       │           │            │ │
+│ │ t.Any]:            │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ source_vars(self)  │                    │       │           │            │ │
+│ │ ->                 │                    │       │           │            │ │
+│ │ _SourceVarsDict:   │                    │       │           │            │ │
+│ │          """Vars   │                    │       │           │            │ │
+│ │ for formatting     │                    │       │           │            │ │
+│ │ :attr:`source_tem… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          By        │                    │       │           │            │ │
+│ │ default this       │                    │       │           │            │ │
+│ │ provides           │                    │       │           │            │ │
+│ │ ``complete_func``, │                    │       │           │            │ │
+│ │ ``complete_var``,  │                    │       │           │            │ │
+│ │ @@ -269,7 +284,9   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ ShellComplete:     │                    │       │           │            │ │
+│ │          """       │                    │       │           │            │ │
+│ │          raise     │                    │       │           │            │ │
+│ │ NotImplementedErr… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    def           │                    │       │           │            │ │
+│ │ get_completions(s… │                    │       │           │            │ │
+│ │ args: list[str],   │                    │       │           │            │ │
+│ │ incomplete: str)   │                    │       │           │            │ │
+│ │ ->                 │                    │       │           │            │ │
+│ │ list[CompletionIt… │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ get_completions(   │                    │       │           │            │ │
+│ │ +        self,     │                    │       │           │            │ │
+│ │ args: list[str],   │                    │       │           │            │ │
+│ │ incomplete: str    │                    │       │           │            │ │
+│ │ +    ) ->          │                    │       │           │            │ │
+│ │ list[CompletionIt… │                    │       │           │            │ │
+│ │          """Deter… │                    │       │           │            │ │
+│ │ the context and    │                    │       │           │            │ │
+│ │ last complete      │                    │       │           │            │ │
+│ │ command or         │                    │       │           │            │ │
+│ │ parameter          │                    │       │           │            │ │
+│ │          from the  │                    │       │           │            │ │
+│ │ complete args.     │                    │       │           │            │ │
+│ │ Call that object's │                    │       │           │            │ │
+│ │ ``shell_complete`` │                    │       │           │            │ │
+│ │          method to │                    │       │           │            │ │
+│ │ get the            │                    │       │           │            │ │
+│ │ completions for    │                    │       │           │            │ │
+│ │ the incomplete     │                    │       │           │            │ │
+│ │ value.             │                    │       │           │            │ │
+│ │ @@ -281,7 +298,7   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ ShellComplete:     │                    │       │           │            │ │
+│ │          obj,      │                    │       │           │            │ │
+│ │ incomplete =       │                    │       │           │            │ │
+│ │ _resolve_incomple… │                    │       │           │            │ │
+│ │ args, incomplete)  │                    │       │           │            │ │
+│ │          return    │                    │       │           │            │ │
+│ │ obj.shell_complet… │                    │       │           │            │ │
+│ │ incomplete)        │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    def           │                    │       │           │            │ │
+│ │ format_completion… │                    │       │           │            │ │
+│ │ item:              │                    │       │           │            │ │
+│ │ CompletionItem) -> │                    │       │           │            │ │
+│ │ str:               │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ format_completion… │                    │       │           │            │ │
+│ │ item:              │                    │       │           │            │ │
+│ │ CompletionItem[st… │                    │       │           │            │ │
+│ │ -> str:            │                    │       │           │            │ │
+│ │          """Format │                    │       │           │            │ │
+│ │ a completion item  │                    │       │           │            │ │
+│ │ into the form      │                    │       │           │            │ │
+│ │ recognized by the  │                    │       │           │            │ │
+│ │          shell     │                    │       │           │            │ │
+│ │ script. This must  │                    │       │           │            │ │
+│ │ be implemented by  │                    │       │           │            │ │
+│ │ subclasses.        │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ @@ -357,7 +374,7   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ BashComplete(Shel… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          return    │                    │       │           │            │ │
+│ │ args, incomplete   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    def           │                    │       │           │            │ │
+│ │ format_completion… │                    │       │           │            │ │
+│ │ item:              │                    │       │           │            │ │
+│ │ CompletionItem) -> │                    │       │           │            │ │
+│ │ str:               │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ format_completion… │                    │       │           │            │ │
+│ │ item:              │                    │       │           │            │ │
+│ │ CompletionItem[t.… │                    │       │           │            │ │
+│ │ -> str:            │                    │       │           │            │ │
+│ │          return    │                    │       │           │            │ │
+│ │ f"{item.type},{it… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ @@ -379,7 +396,7   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ ZshComplete(Shell… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          return    │                    │       │           │            │ │
+│ │ args, incomplete   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    def           │                    │       │           │            │ │
+│ │ format_completion… │                    │       │           │            │ │
+│ │ item:              │                    │       │           │            │ │
+│ │ CompletionItem) -> │                    │       │           │            │ │
+│ │ str:               │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ format_completion… │                    │       │           │            │ │
+│ │ item:              │                    │       │           │            │ │
+│ │ CompletionItem[st… │                    │       │           │            │ │
+│ │ -> str:            │                    │       │           │            │ │
+│ │          help_ =   │                    │       │           │            │ │
+│ │ item.help or "_"   │                    │       │           │            │ │
+│ │          # The zsh │                    │       │           │            │ │
+│ │ completion script  │                    │       │           │            │ │
+│ │ uses `_describe`   │                    │       │           │            │ │
+│ │ on items with help │                    │       │           │            │ │
+│ │          # texts   │                    │       │           │            │ │
+│ │ (which splits the  │                    │       │           │            │ │
+│ │ item help from the │                    │       │           │            │ │
+│ │ item value at the  │                    │       │           │            │ │
+│ │ @@ -417,7 +434,7   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ FishComplete(Shel… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          return    │                    │       │           │            │ │
+│ │ args, incomplete   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    def           │                    │       │           │            │ │
+│ │ format_completion… │                    │       │           │            │ │
+│ │ item:              │                    │       │           │            │ │
+│ │ CompletionItem) -> │                    │       │           │            │ │
+│ │ str:               │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ format_completion… │                    │       │           │            │ │
+│ │ item:              │                    │       │           │            │ │
+│ │ CompletionItem[st… │                    │       │           │            │ │
+│ │ -> str:            │                    │       │           │            │ │
+│ │          """       │                    │       │           │            │ │
+│ │          ..        │                    │       │           │            │ │
+│ │ versionchanged::   │                    │       │           │            │ │
+│ │ 8.4.2              │                    │       │           │            │ │
+│ │              Esca… │                    │       │           │            │ │
+│ │ newlines and       │                    │       │           │            │ │
+│ │ replace tabs with  │                    │       │           │            │ │
+│ │ spaces in the help │                    │       │           │            │ │
+│ │ text to            │                    │       │           │            │ │
+│ │ @@ -434,19 +451,18 │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ FishComplete(Shel… │                    │       │           │            │ │
+│ │          return    │                    │       │           │            │ │
+│ │ f"{item.type},{it… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -ShellCompleteType │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ t.TypeVar("ShellC… │                    │       │           │            │ │
+│ │ bound="type[Shell… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ -_available_shell… │                    │       │           │            │ │
+│ │ dict[str,          │                    │       │           │            │ │
+│ │ type[ShellComplet… │                    │       │           │            │ │
+│ │ = {                │                    │       │           │            │ │
+│ │ +_available_shell… │                    │       │           │            │ │
+│ │ t.Final[dict[str,  │                    │       │           │            │ │
+│ │ type[ShellComplet… │                    │       │           │            │ │
+│ │ = {                │                    │       │           │            │ │
+│ │      "bash":       │                    │       │           │            │ │
+│ │ BashComplete,      │                    │       │           │            │ │
+│ │      "fish":       │                    │       │           │            │ │
+│ │ FishComplete,      │                    │       │           │            │ │
+│ │      "zsh":        │                    │       │           │            │ │
+│ │ ZshComplete,       │                    │       │           │            │ │
+│ │  }                 │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +_ShellCompleteT = │                    │       │           │            │ │
+│ │ t.TypeVar("_Shell… │                    │       │           │            │ │
+│ │ bound="ShellCompl… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ add_completion_cl… │                    │       │           │            │ │
+│ │ -    cls:          │                    │       │           │            │ │
+│ │ ShellCompleteType, │                    │       │           │            │ │
+│ │ name: str | None = │                    │       │           │            │ │
+│ │ None               │                    │       │           │            │ │
+│ │ -) ->              │                    │       │           │            │ │
+│ │ ShellCompleteType: │                    │       │           │            │ │
+│ │ +    cls:          │                    │       │           │            │ │
+│ │ type[_ShellComple… │                    │       │           │            │ │
+│ │ name: str | None = │                    │       │           │            │ │
+│ │ None               │                    │       │           │            │ │
+│ │ +) ->              │                    │       │           │            │ │
+│ │ type[_ShellComple… │                    │       │           │            │ │
+│ │      """Register a │                    │       │           │            │ │
+│ │ :class:`ShellComp… │                    │       │           │            │ │
+│ │ subclass under the │                    │       │           │            │ │
+│ │ given name.        │                    │       │           │            │ │
+│ │      The name will │                    │       │           │            │ │
+│ │ be provided by the │                    │       │           │            │ │
+│ │ completion         │                    │       │           │            │ │
+│ │ instruction        │                    │       │           │            │ │
+│ │ environment        │                    │       │           │            │ │
+│ │      variable      │                    │       │           │            │ │
+│ │ during completion. │                    │       │           │            │ │
+│ │ @@ -464,6 +480,14  │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ add_completion_cl… │                    │       │           │            │ │
+│ │      return cls    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +@t.overload       │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ get_completion_cl… │                    │       │           │            │ │
+│ │ t.Literal["bash"]) │                    │       │           │            │ │
+│ │ ->                 │                    │       │           │            │ │
+│ │ type[BashComplete… │                    │       │           │            │ │
+│ │ ...                │                    │       │           │            │ │
+│ │ +@t.overload       │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ get_completion_cl… │                    │       │           │            │ │
+│ │ t.Literal["fish"]) │                    │       │           │            │ │
+│ │ ->                 │                    │       │           │            │ │
+│ │ type[FishComplete… │                    │       │           │            │ │
+│ │ ...                │                    │       │           │            │ │
+│ │ +@t.overload       │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ get_completion_cl… │                    │       │           │            │ │
+│ │ t.Literal["zsh"])  │                    │       │           │            │ │
+│ │ ->                 │                    │       │           │            │ │
+│ │ type[ZshComplete]: │                    │       │           │            │ │
+│ │ ...                │                    │       │           │            │ │
+│ │ +@t.overload       │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ get_completion_cl… │                    │       │           │            │ │
+│ │ str) ->            │                    │       │           │            │ │
+│ │ type[ShellComplet… │                    │       │           │            │ │
+│ │ | None: ...        │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ get_completion_cl… │                    │       │           │            │ │
+│ │ str) ->            │                    │       │           │            │ │
+│ │ type[ShellComplet… │                    │       │           │            │ │
+│ │ | None:            │                    │       │           │            │ │
+│ │      """Look up a  │                    │       │           │            │ │
+│ │ registered         │                    │       │           │            │ │
+│ │ :class:`ShellComp… │                    │       │           │            │ │
+│ │ subclass by the    │                    │       │           │            │ │
+│ │ name               │                    │       │           │            │ │
+│ │      provided by   │                    │       │           │            │ │
+│ │ the completion     │                    │       │           │            │ │
+│ │ instruction        │                    │       │           │            │ │
+│ │ environment        │                    │       │           │            │ │
+│ │ variable. If the   │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
