@@ -1,399 +1,399 @@
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/src/click/shell_… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/src/click/shell_… │                     │       │           │          │ │
-│ │ @@ -22,7 +22,7 @@   │                     │       │           │          │ │
-│ │ def shell_complete( │                     │       │           │          │ │
-│ │      prog_name:     │                     │       │           │          │ │
-│ │ str,                │                     │       │           │          │ │
-│ │      complete_var:  │                     │       │           │          │ │
-│ │ str,                │                     │       │           │          │ │
-│ │      instruction:   │                     │       │           │          │ │
-│ │ str,                │                     │       │           │          │ │
-│ │ -) -> int:          │                     │       │           │          │ │
-│ │ +) -> t.Literal[0,  │                     │       │           │          │ │
-│ │ 1]:                 │                     │       │           │          │ │
-│ │      """Perform     │                     │       │           │          │ │
-│ │ shell completion    │                     │       │           │          │ │
-│ │ for the given CLI   │                     │       │           │          │ │
-│ │ program.            │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      :param cli:    │                     │       │           │          │ │
-│ │ Command being       │                     │       │           │          │ │
-│ │ called.             │                     │       │           │          │ │
-│ │ @@ -55,7 +55,16 @@  │                     │       │           │          │ │
-│ │ def shell_complete( │                     │       │           │          │ │
-│ │      return 1       │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -class              │                     │       │           │          │ │
-│ │ CompletionItem:     │                     │       │           │          │ │
-│ │ +if                 │                     │       │           │          │ │
-│ │ t.TYPE_CHECKING:    │                     │       │           │          │ │
-│ │ +    from           │                     │       │           │          │ │
-│ │ typing_extensions   │                     │       │           │          │ │
-│ │ import TypeVar      │                     │       │           │          │ │
+│ │ +        def        │                     │       │           │          │ │
+│ │ hook(instance,      │                     │       │           │          │ │
+│ │ attrib, value):     │                     │       │           │          │ │
+│ │ +            yield  │                     │       │           │          │ │
+│ │ "yielded!"          │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ +    # `Any` is     │                     │       │           │          │ │
-│ │ used as default for │                     │       │           │          │ │
-│ │ backwards           │                     │       │           │          │ │
-│ │ compatibility       │                     │       │           │          │ │
-│ │ (instead of e.g.    │                     │       │           │          │ │
-│ │ `str`)              │                     │       │           │          │ │
-│ │ +    _ValueT_co =   │                     │       │           │          │ │
-│ │ TypeVar("_ValueT_c… │                     │       │           │          │ │
-│ │ covariant=True,     │                     │       │           │          │ │
-│ │ default=t.Any)      │                     │       │           │          │ │
-│ │ +else:              │                     │       │           │          │ │
-│ │ +    _ValueT_co =   │                     │       │           │          │ │
-│ │ t.TypeVar("_ValueT… │                     │       │           │          │ │
-│ │ covariant=True)     │                     │       │           │          │ │
+│ │ +        @attr.s    │                     │       │           │          │ │
+│ │ +        class      │                     │       │           │          │ │
+│ │ Hooked:             │                     │       │           │          │ │
+│ │ +            x =    │                     │       │           │          │ │
+│ │ attr.ib(on_setattr… │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
+│ │ +        h =        │                     │       │           │          │ │
+│ │ Hooked("x")         │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ +class              │                     │       │           │          │ │
-│ │ CompletionItem(t.G… │                     │       │           │          │ │
-│ │      """Represents  │                     │       │           │          │ │
-│ │ a completion value  │                     │       │           │          │ │
-│ │ and metadata about  │                     │       │           │          │ │
-│ │ the value. The      │                     │       │           │          │ │
-│ │      default        │                     │       │           │          │ │
-│ │ metadata is         │                     │       │           │          │ │
-│ │ ``type`` to         │                     │       │           │          │ │
-│ │ indicate special    │                     │       │           │          │ │
-│ │ shell handling,     │                     │       │           │          │ │
-│ │      and ``help``   │                     │       │           │          │ │
-│ │ if a shell supports │                     │       │           │          │ │
-│ │ showing a help      │                     │       │           │          │ │
-│ │ string next to the  │                     │       │           │          │ │
-│ │ @@ -78,12 +87,12 @@ │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ CompletionItem:     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      def __init__(  │                     │       │           │          │ │
-│ │          self,      │                     │       │           │          │ │
-│ │ -        value:     │                     │       │           │          │ │
-│ │ t.Any,              │                     │       │           │          │ │
-│ │ +        value:     │                     │       │           │          │ │
-│ │ _ValueT_co,         │                     │       │           │          │ │
-│ │          type: str  │                     │       │           │          │ │
-│ │ = "plain",          │                     │       │           │          │ │
-│ │          help: str  │                     │       │           │          │ │
-│ │ | None = None,      │                     │       │           │          │ │
-│ │          **kwargs:  │                     │       │           │          │ │
-│ │ t.Any,              │                     │       │           │          │ │
-│ │      ) -> None:     │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ self.value: t.Any = │                     │       │           │          │ │
+│ │ +        assert "x" │                     │       │           │          │ │
+│ │ == h.x              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        h.x =      │                     │       │           │          │ │
+│ │ "xxx"               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ "yielded!" == h.x   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_generator_hoo… │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        Generator  │                     │       │           │          │ │
+│ │ post-yield code     │                     │       │           │          │ │
+│ │ runs after the      │                     │       │           │          │ │
+│ │ value is set on the │                     │       │           │          │ │
+│ │ instance.           │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        calls = [] │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        def        │                     │       │           │          │ │
+│ │ hook(instance,      │                     │       │           │          │ │
+│ │ attrib, value):     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ calls.append(("pre… │                     │       │           │          │ │
+│ │ instance.x))        │                     │       │           │          │ │
+│ │ +            yield  │                     │       │           │          │ │
 │ │ value               │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ self.value:         │                     │       │           │          │ │
-│ │ _ValueT_co = value  │                     │       │           │          │ │
-│ │          self.type: │                     │       │           │          │ │
-│ │ str = type          │                     │       │           │          │ │
-│ │          self.help: │                     │       │           │          │ │
-│ │ str | None = help   │                     │       │           │          │ │
-│ │          self._info │                     │       │           │          │ │
-│ │ = kwargs            │                     │       │           │          │ │
-│ │ @@ -198,6 +207,12   │                     │       │           │          │ │
-│ │ @@ complete         │                     │       │           │          │ │
-│ │ --no-files          │                     │       │           │          │ │
-│ │ --command           │                     │       │           │          │ │
-│ │ %(prog_name)s       │                     │       │           │          │ │
-│ │ --arguments \       │                     │       │           │          │ │
-│ │  """                │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ +class              │                     │       │           │          │ │
-│ │ _SourceVarsDict(t.… │                     │       │           │          │ │
-│ │ +    complete_func: │                     │       │           │          │ │
-│ │ str                 │                     │       │           │          │ │
-│ │ +    complete_var:  │                     │       │           │          │ │
-│ │ str                 │                     │       │           │          │ │
-│ │ +    prog_name: str │                     │       │           │          │ │
+│ │ calls.append(("pos… │                     │       │           │          │ │
+│ │ instance.x))        │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
+│ │ +        @attr.s    │                     │       │           │          │ │
+│ │ +        class      │                     │       │           │          │ │
+│ │ Hooked:             │                     │       │           │          │ │
+│ │ +            x =    │                     │       │           │          │ │
+│ │ attr.ib(on_setattr… │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │  class              │                     │       │           │          │ │
-│ │ ShellComplete:      │                     │       │           │          │ │
-│ │      """Base class  │                     │       │           │          │ │
-│ │ for providing shell │                     │       │           │          │ │
-│ │ completion support. │                     │       │           │          │ │
-│ │ A subclass for      │                     │       │           │          │ │
-│ │      a given shell  │                     │       │           │          │ │
-│ │ will override       │                     │       │           │          │ │
-│ │ attributes and      │                     │       │           │          │ │
-│ │ methods to          │                     │       │           │          │ │
-│ │ implement the       │                     │       │           │          │ │
-│ │ @@ -242,7 +257,7 @@ │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ ShellComplete:      │                     │       │           │          │ │
-│ │          safe_name  │                     │       │           │          │ │
-│ │ = re.sub(r"\W*",    │                     │       │           │          │ │
-│ │ "",                 │                     │       │           │          │ │
-│ │ self.prog_name.rep… │                     │       │           │          │ │
-│ │ "_"),               │                     │       │           │          │ │
-│ │ flags=re.ASCII)     │                     │       │           │          │ │
-│ │          return     │                     │       │           │          │ │
-│ │ f"_{safe_name}_com… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -    def            │                     │       │           │          │ │
-│ │ source_vars(self)   │                     │       │           │          │ │
-│ │ -> dict[str,        │                     │       │           │          │ │
-│ │ t.Any]:             │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ source_vars(self)   │                     │       │           │          │ │
-│ │ -> _SourceVarsDict: │                     │       │           │          │ │
-│ │          """Vars    │                     │       │           │          │ │
-│ │ for formatting      │                     │       │           │          │ │
-│ │ :attr:`source_temp… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          By default │                     │       │           │          │ │
-│ │ this provides       │                     │       │           │          │ │
-│ │ ``complete_func``,  │                     │       │           │          │ │
-│ │ ``complete_var``,   │                     │       │           │          │ │
-│ │ @@ -269,7 +284,9 @@ │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ ShellComplete:      │                     │       │           │          │ │
+│ │ +        h =        │                     │       │           │          │ │
+│ │ Hooked("x")         │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        assert "x" │                     │       │           │          │ │
+│ │ == h.x              │                     │       │           │          │ │
+│ │ +        assert []  │                     │       │           │          │ │
+│ │ == calls            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        h.x =      │                     │       │           │          │ │
+│ │ "xxx"               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ [("pre", "x"),      │                     │       │           │          │ │
+│ │ ("post", "xxx")] == │                     │       │           │          │ │
+│ │ calls               │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ "xxx" == h.x        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ test_frozen_attrib… │                     │       │           │          │ │
 │ │          """        │                     │       │           │          │ │
-│ │          raise      │                     │       │           │          │ │
-│ │ NotImplementedError │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -    def            │                     │       │           │          │ │
-│ │ get_completions(se… │                     │       │           │          │ │
-│ │ args: list[str],    │                     │       │           │          │ │
-│ │ incomplete: str) -> │                     │       │           │          │ │
-│ │ list[CompletionIte… │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ get_completions(    │                     │       │           │          │ │
-│ │ +        self,      │                     │       │           │          │ │
-│ │ args: list[str],    │                     │       │           │          │ │
-│ │ incomplete: str     │                     │       │           │          │ │
-│ │ +    ) ->           │                     │       │           │          │ │
-│ │ list[CompletionIte… │                     │       │           │          │ │
-│ │          """Determ… │                     │       │           │          │ │
-│ │ the context and     │                     │       │           │          │ │
-│ │ last complete       │                     │       │           │          │ │
-│ │ command or          │                     │       │           │          │ │
-│ │ parameter           │                     │       │           │          │ │
-│ │          from the   │                     │       │           │          │ │
-│ │ complete args. Call │                     │       │           │          │ │
-│ │ that object's       │                     │       │           │          │ │
-│ │ ``shell_complete``  │                     │       │           │          │ │
-│ │          method to  │                     │       │           │          │ │
-│ │ get the completions │                     │       │           │          │ │
-│ │ for the incomplete  │                     │       │           │          │ │
-│ │ value.              │                     │       │           │          │ │
-│ │ @@ -281,7 +298,7 @@ │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ ShellComplete:      │                     │       │           │          │ │
-│ │          obj,       │                     │       │           │          │ │
-│ │ incomplete =        │                     │       │           │          │ │
-│ │ _resolve_incomplet… │                     │       │           │          │ │
-│ │ args, incomplete)   │                     │       │           │          │ │
-│ │          return     │                     │       │           │          │ │
-│ │ obj.shell_complete… │                     │       │           │          │ │
-│ │ incomplete)         │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -    def            │                     │       │           │          │ │
-│ │ format_completion(… │                     │       │           │          │ │
-│ │ item:               │                     │       │           │          │ │
-│ │ CompletionItem) ->  │                     │       │           │          │ │
-│ │ str:                │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ format_completion(… │                     │       │           │          │ │
-│ │ item:               │                     │       │           │          │ │
-│ │ CompletionItem[str… │                     │       │           │          │ │
-│ │ -> str:             │                     │       │           │          │ │
-│ │          """Format  │                     │       │           │          │ │
-│ │ a completion item   │                     │       │           │          │ │
-│ │ into the form       │                     │       │           │          │ │
-│ │ recognized by the   │                     │       │           │          │ │
-│ │          shell      │                     │       │           │          │ │
-│ │ script. This must   │                     │       │           │          │ │
-│ │ be implemented by   │                     │       │           │          │ │
-│ │ subclasses.         │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ @@ -357,7 +374,7 @@ │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ BashComplete(Shell… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          return     │                     │       │           │          │ │
-│ │ args, incomplete    │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -    def            │                     │       │           │          │ │
-│ │ format_completion(… │                     │       │           │          │ │
-│ │ item:               │                     │       │           │          │ │
-│ │ CompletionItem) ->  │                     │       │           │          │ │
-│ │ str:                │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ format_completion(… │                     │       │           │          │ │
-│ │ item:               │                     │       │           │          │ │
-│ │ CompletionItem[t.A… │                     │       │           │          │ │
-│ │ -> str:             │                     │       │           │          │ │
-│ │          return     │                     │       │           │          │ │
-│ │ f"{item.type},{ite… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ @@ -379,7 +396,7 @@ │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ ZshComplete(ShellC… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          return     │                     │       │           │          │ │
-│ │ args, incomplete    │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -    def            │                     │       │           │          │ │
-│ │ format_completion(… │                     │       │           │          │ │
-│ │ item:               │                     │       │           │          │ │
-│ │ CompletionItem) ->  │                     │       │           │          │ │
-│ │ str:                │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ format_completion(… │                     │       │           │          │ │
-│ │ item:               │                     │       │           │          │ │
-│ │ CompletionItem[str… │                     │       │           │          │ │
-│ │ -> str:             │                     │       │           │          │ │
-│ │          help_ =    │                     │       │           │          │ │
-│ │ item.help or "_"    │                     │       │           │          │ │
-│ │          # The zsh  │                     │       │           │          │ │
-│ │ completion script   │                     │       │           │          │ │
-│ │ uses `_describe` on │                     │       │           │          │ │
-│ │ items with help     │                     │       │           │          │ │
-│ │          # texts    │                     │       │           │          │ │
-│ │ (which splits the   │                     │       │           │          │ │
-│ │ item help from the  │                     │       │           │          │ │
-│ │ item value at the   │                     │       │           │          │ │
-│ │ @@ -417,7 +434,7 @@ │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ FishComplete(Shell… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          return     │                     │       │           │          │ │
-│ │ args, incomplete    │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -    def            │                     │       │           │          │ │
-│ │ format_completion(… │                     │       │           │          │ │
-│ │ item:               │                     │       │           │          │ │
-│ │ CompletionItem) ->  │                     │       │           │          │ │
-│ │ str:                │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ format_completion(… │                     │       │           │          │ │
-│ │ item:               │                     │       │           │          │ │
-│ │ CompletionItem[str… │                     │       │           │          │ │
-│ │ -> str:             │                     │       │           │          │ │
-│ │          """        │                     │       │           │          │ │
-│ │          ..         │                     │       │           │          │ │
-│ │ versionchanged::    │                     │       │           │          │ │
-│ │ 8.4.2               │                     │       │           │          │ │
-│ │              Escape │                     │       │           │          │ │
-│ │ newlines and        │                     │       │           │          │ │
-│ │ replace tabs with   │                     │       │           │          │ │
-│ │ spaces in the help  │                     │       │           │          │ │
-│ │ text to             │                     │       │           │          │ │
-│ │ @@ -434,19 +451,18  │                     │       │           │          │ │
+│ │          Frozen     │                     │       │           │          │ │
+│ │ attributes raise    │                     │       │           │          │ │
+│ │ FrozenAttributeErr… │                     │       │           │          │ │
+│ │ others are not      │                     │       │           │          │ │
+│ │ affected.           │                     │       │           │          │ │
+│ │ @@ -146,6 +191,145  │                     │       │           │          │ │
 │ │ @@ class            │                     │       │           │          │ │
-│ │ FishComplete(Shell… │                     │       │           │          │ │
-│ │          return     │                     │       │           │          │ │
-│ │ f"{item.type},{ite… │                     │       │           │          │ │
+│ │ TestSetAttr:        │                     │       │           │          │ │
+│ │          assert 42  │                     │       │           │          │ │
+│ │ == p.x1             │                     │       │           │          │ │
+│ │          assert 23  │                     │       │           │          │ │
+│ │ == p.x2             │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -ShellCompleteType  │                     │       │           │          │ │
-│ │ =                   │                     │       │           │          │ │
-│ │ t.TypeVar("ShellCo… │                     │       │           │          │ │
-│ │ bound="type[ShellC… │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ -_available_shells: │                     │       │           │          │ │
-│ │ dict[str,           │                     │       │           │          │ │
-│ │ type[ShellComplete… │                     │       │           │          │ │
-│ │ = {                 │                     │       │           │          │ │
-│ │ +_available_shells: │                     │       │           │          │ │
-│ │ t.Final[dict[str,   │                     │       │           │          │ │
-│ │ type[ShellComplete… │                     │       │           │          │ │
-│ │ = {                 │                     │       │           │          │ │
-│ │      "bash":        │                     │       │           │          │ │
-│ │ BashComplete,       │                     │       │           │          │ │
-│ │      "fish":        │                     │       │           │          │ │
-│ │ FishComplete,       │                     │       │           │          │ │
-│ │      "zsh":         │                     │       │           │          │ │
-│ │ ZshComplete,        │                     │       │           │          │ │
-│ │  }                  │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ +_ShellCompleteT =  │                     │       │           │          │ │
-│ │ t.TypeVar("_ShellC… │                     │       │           │          │ │
-│ │ bound="ShellComple… │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_generator_hoo… │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        Generator  │                     │       │           │          │ │
+│ │ hooks are not       │                     │       │           │          │ │
+│ │ invoked during      │                     │       │           │          │ │
+│ │ __init__, same as   │                     │       │           │          │ │
+│ │ regular hooks.      │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
+│ │ +        def        │                     │       │           │          │ │
+│ │ hook(instance,      │                     │       │           │          │ │
+│ │ attrib, value):     │                     │       │           │          │ │
+│ │ +            yield  │                     │       │           │          │ │
+│ │ "hooked"            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        @attr.s    │                     │       │           │          │ │
+│ │ +        class      │                     │       │           │          │ │
+│ │ Hooked:             │                     │       │           │          │ │
+│ │ +            x =    │                     │       │           │          │ │
+│ │ attr.ib(on_setattr… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        h =        │                     │       │           │          │ │
+│ │ Hooked("x")         │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        assert "x" │                     │       │           │          │ │
+│ │ == h.x              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        h.x =      │                     │       │           │          │ │
+│ │ "xxx"               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ "hooked" == h.x     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_generator_hoo… │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        Generator  │                     │       │           │          │ │
+│ │ hooks work with     │                     │       │           │          │ │
+│ │ attrs.define.       │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        def        │                     │       │           │          │ │
+│ │ hook(instance,      │                     │       │           │          │ │
+│ │ attrib, value):     │                     │       │           │          │ │
+│ │ +            yield  │                     │       │           │          │ │
+│ │ value.upper()       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ @attr.define        │                     │       │           │          │ │
+│ │ +        class C:   │                     │       │           │          │ │
+│ │ +            x: str │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ attr.field(on_seta… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        c =        │                     │       │           │          │ │
+│ │ C("hello")          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ "hello" == c.x      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        c.x =      │                     │       │           │          │ │
+│ │ "world"             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ "WORLD" == c.x      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_generator_hoo… │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        Generator  │                     │       │           │          │ │
+│ │ hooks work as       │                     │       │           │          │ │
+│ │ class-level         │                     │       │           │          │ │
+│ │ on_setattr.         │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        call_count │                     │       │           │          │ │
+│ │ = 0                 │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        def        │                     │       │           │          │ │
+│ │ hook(instance,      │                     │       │           │          │ │
+│ │ attrib, value):     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ nonlocal call_count │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ call_count += 1     │                     │       │           │          │ │
+│ │ +            yield  │                     │       │           │          │ │
+│ │ value               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ @attr.s(on_setattr… │                     │       │           │          │ │
+│ │ +        class C:   │                     │       │           │          │ │
+│ │ +            x =    │                     │       │           │          │ │
+│ │ attr.ib()           │                     │       │           │          │ │
+│ │ +            y =    │                     │       │           │          │ │
+│ │ attr.ib()           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        c = C(1,   │                     │       │           │          │ │
+│ │ 2)                  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        assert 1   │                     │       │           │          │ │
+│ │ == c.x              │                     │       │           │          │ │
+│ │ +        assert 2   │                     │       │           │          │ │
+│ │ == c.y              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        c.x = 10   │                     │       │           │          │ │
+│ │ +        assert 1   │                     │       │           │          │ │
+│ │ == call_count       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        c.y = 20   │                     │       │           │          │ │
+│ │ +        assert 2   │                     │       │           │          │ │
+│ │ == call_count       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_generator_pre… │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        If a       │                     │       │           │          │ │
+│ │ generator raises    │                     │       │           │          │ │
+│ │ before yielding,    │                     │       │           │          │ │
+│ │ the value is not    │                     │       │           │          │ │
+│ │ set.                │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        def        │                     │       │           │          │ │
+│ │ hook(instance,      │                     │       │           │          │ │
+│ │ attrib, value):     │                     │       │           │          │ │
+│ │ +            raise  │                     │       │           │          │ │
+│ │ ValueError("bad     │                     │       │           │          │ │
+│ │ value")             │                     │       │           │          │ │
+│ │ +            yield  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        @attr.s    │                     │       │           │          │ │
+│ │ +        class C:   │                     │       │           │          │ │
+│ │ +            x =    │                     │       │           │          │ │
+│ │ attr.ib(on_setattr… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        c =        │                     │       │           │          │ │
+│ │ C("original")       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ pytest.raises(Valu… │                     │       │           │          │ │
+│ │ match="bad value"): │                     │       │           │          │ │
+│ │ +            c.x =  │                     │       │           │          │ │
+│ │ "new"               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ "original" == c.x   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_generator_pos… │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        If a       │                     │       │           │          │ │
+│ │ generator raises    │                     │       │           │          │ │
+│ │ after yielding, the │                     │       │           │          │ │
+│ │ value is already    │                     │       │           │          │ │
+│ │ set and             │                     │       │           │          │ │
+│ │ +        the        │                     │       │           │          │ │
+│ │ exception           │                     │       │           │          │ │
+│ │ propagates.         │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        def        │                     │       │           │          │ │
+│ │ hook(instance,      │                     │       │           │          │ │
+│ │ attrib, value):     │                     │       │           │          │ │
+│ │ +            yield  │                     │       │           │          │ │
+│ │ value               │                     │       │           │          │ │
+│ │ +            raise  │                     │       │           │          │ │
+│ │ RuntimeError("post… │                     │       │           │          │ │
+│ │ failure")           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        @attr.s    │                     │       │           │          │ │
+│ │ +        class C:   │                     │       │           │          │ │
+│ │ +            x =    │                     │       │           │          │ │
+│ │ attr.ib(on_setattr… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        c =        │                     │       │           │          │ │
+│ │ C("original")       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ pytest.raises(Runt… │                     │       │           │          │ │
+│ │ match="post-yield   │                     │       │           │          │ │
+│ │ failure"):          │                     │       │           │          │ │
+│ │ +            c.x =  │                     │       │           │          │ │
+│ │ "new"               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ "new" == c.x        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_generator_yie… │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        Yielding   │                     │       │           │          │ │
+│ │ more than once      │                     │       │           │          │ │
+│ │ raises an error and │                     │       │           │          │ │
+│ │ closes the          │                     │       │           │          │ │
+│ │ generator.          │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        cleaned_up │                     │       │           │          │ │
+│ │ = False             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        def        │                     │       │           │          │ │
+│ │ hook(instance,      │                     │       │           │          │ │
+│ │ attrib, value):     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ nonlocal cleaned_up │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +            try:   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ yield "first"       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ yield "second"      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ finally:            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ cleaned_up = True   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        @attr.s    │                     │       │           │          │ │
+│ │ +        class C:   │                     │       │           │          │ │
+│ │ +            x =    │                     │       │           │          │ │
+│ │ attr.ib(on_setattr… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        c =        │                     │       │           │          │ │
+│ │ C("old")            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ pytest.raises(      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ RuntimeError,       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ match="Generator    │                     │       │           │          │ │
+│ │ on_setattr hook     │                     │       │           │          │ │
+│ │ yielded more than   │                     │       │           │          │ │
+│ │ once",              │                     │       │           │          │ │
+│ │ +        ):         │                     │       │           │          │ │
+│ │ +            c.x =  │                     │       │           │          │ │
+│ │ "new"               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ "first" == c.x      │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ cleaned_up is True  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ test_make_class(se… │                     │       │           │          │ │
+│ │          """        │                     │       │           │          │ │
+│ │          on_setattr │                     │       │           │          │ │
+│ │ of make_class gets  │                     │       │           │          │ │
+│ │ forwarded.          │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/typing-examples/… │                     │       │           │          │ │
+│ │ b/typing-examples/… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 15542ca..ae5207a    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/typing-examples/… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/typing-examples/… │                     │       │           │          │ │
+│ │ @@ -7,7 +7,7 @@     │                     │       │           │          │ │
+│ │ Baseline features   │                     │       │           │          │ │
+│ │ that should be      │                     │       │           │          │ │
+│ │ supported by all    │                     │       │           │          │ │
+│ │ type checkers.      │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
-│ │  def                │                     │       │           │          │ │
-│ │ add_completion_cla… │                     │       │           │          │ │
-│ │ -    cls:           │                     │       │           │          │ │
-│ │ ShellCompleteType,  │                     │       │           │          │ │
-│ │ name: str | None =  │                     │       │           │          │ │
-│ │ None                │                     │       │           │          │ │
-│ │ -) ->               │                     │       │           │          │ │
-│ │ ShellCompleteType:  │                     │       │           │          │ │
-│ │ +    cls:           │                     │       │           │          │ │
-│ │ type[_ShellComplet… │                     │       │           │          │ │
-│ │ name: str | None =  │                     │       │           │          │ │
-│ │ None                │                     │       │           │          │ │
+│ │  from __future__    │                     │       │           │          │ │
+│ │ import annotations  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -from typing import │                     │       │           │          │ │
+│ │ Any                 │                     │       │           │          │ │
+│ │ +from typing import │                     │       │           │          │ │
+│ │ Any, Generator      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  import attrs       │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -130,6 +130,12   │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ WithCustomRepr:     │                     │       │           │          │ │
+│ │      d: bool =      │                     │       │           │          │ │
+│ │ attrs.field(repr=s… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ gen_on_setattr_hoo… │                     │       │           │          │ │
+│ │ +    instance: Any, │                     │       │           │          │ │
+│ │ attribute:          │                     │       │           │          │ │
+│ │ attrs.Attribute[An… │                     │       │           │          │ │
+│ │ new_value: Any      │                     │       │           │          │ │
 │ │ +) ->               │                     │       │           │          │ │
-│ │ type[_ShellComplet… │                     │       │           │          │ │
-│ │      """Register a  │                     │       │           │          │ │
-│ │ :class:`ShellCompl… │                     │       │           │          │ │
-│ │ subclass under the  │                     │       │           │          │ │
-│ │ given name.         │                     │       │           │          │ │
-│ │      The name will  │                     │       │           │          │ │
-│ │ be provided by the  │                     │       │           │          │ │
-│ │ completion          │                     │       │           │          │ │
-│ │ instruction         │                     │       │           │          │ │
-│ │ environment         │                     │       │           │          │ │
-│ │      variable       │                     │       │           │          │ │
-│ │ during completion.  │                     │       │           │          │ │
-│ │ @@ -464,6 +480,14   │                     │       │           │          │ │
-│ │ @@ def              │                     │       │           │          │ │
-│ │ add_completion_cla… │                     │       │           │          │ │
-│ │      return cls     │                     │       │           │          │ │
+│ │ Generator[int]:     │                     │       │           │          │ │
+│ │ +    yield 42       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │  @attrs.define(on_… │                     │       │           │          │ │
+│ │  class              │                     │       │           │          │ │
+│ │ ValidatedSetter2:   │                     │       │           │          │ │
+│ │      a: int         │                     │       │           │          │ │
+│ │ @@ -143,6 +149,7 @@ │                     │       │           │          │ │
+│ │ class               │                     │       │           │          │ │
+│ │ ValidatedSetter2:   │                     │       │           │          │ │
+│ │              attrs… │                     │       │           │          │ │
+│ │ attrs.setters.vali… │                     │       │           │          │ │
+│ │          )          │                     │       │           │          │ │
+│ │      )              │                     │       │           │          │ │
+│ │ +    f: int =       │                     │       │           │          │ │
+│ │ attrs.field(on_set… │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
-│ │ +@t.overload        │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ get_completion_cla… │                     │       │           │          │ │
-│ │ t.Literal["bash"])  │                     │       │           │          │ │
-│ │ ->                  │                     │       │           │          │ │
-│ │ type[BashComplete]: │                     │       │           │          │ │
-│ │ ...                 │                     │       │           │          │ │
-│ │ +@t.overload        │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ get_completion_cla… │                     │       │           │          │ │
-│ │ t.Literal["fish"])  │                     │       │           │          │ │
-│ │ ->                  │                     │       │           │          │ │
-│ │ type[FishComplete]: │                     │       │           │          │ │
-│ │ ...                 │                     │       │           │          │ │
-│ │ +@t.overload        │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ get_completion_cla… │                     │       │           │          │ │
-│ │ t.Literal["zsh"])   │                     │       │           │          │ │
-│ │ ->                  │                     │       │           │          │ │
-│ │ type[ZshComplete]:  │                     │       │           │          │ │
-│ │ ...                 │                     │       │           │          │ │
-│ │ +@t.overload        │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ get_completion_cla… │                     │       │           │          │ │
-│ │ str) ->             │                     │       │           │          │ │
-│ │ type[ShellComplete] │                     │       │           │          │ │
-│ │ | None: ...         │                     │       │           │          │ │
-│ │  def                │                     │       │           │          │ │
-│ │ get_completion_cla… │                     │       │           │          │ │
-│ │ str) ->             │                     │       │           │          │ │
-│ │ type[ShellComplete] │                     │       │           │          │ │
-│ │ | None:             │                     │       │           │          │ │
-│ │      """Look up a   │                     │       │           │          │ │
-│ │ registered          │                     │       │           │          │ │
-│ │ :class:`ShellCompl… │                     │       │           │          │ │
-│ │ subclass by the     │                     │       │           │          │ │
-│ │ name                │                     │       │           │          │ │
-│ │      provided by    │                     │       │           │          │ │
-│ │ the completion      │                     │       │           │          │ │
-│ │ instruction         │                     │       │           │          │ │
-│ │ environment         │                     │       │           │          │ │
-│ │ variable. If the    │                     │       │           │          │ │
+│ │  @attrs.define(eq=… │                     │       │           │          │ │
+│ │ order=True)         │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
 │ │ ```                 │                     │       │           │          │ │
 │ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
