@@ -39,7 +39,7 @@ class PeriodicEval(TrainerCallback):
         tok = self.trainer.processing_class
         t0 = time.time()
         saved = vg.temperature
-        vg.temperature = 0.0
+        vg.temperature = 0.6 if self.cfg.enable_thinking else 0.0   # greedy loops in thinking mode (Qwen3 docs)
         try:
             vg.sync_weights()
             self.trainer._last_loaded_step = self.trainer.state.global_step

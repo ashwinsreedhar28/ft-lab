@@ -76,6 +76,9 @@ def run_eval(cfg_path: str, label: str, model: str | None, backend: str, max_tok
     # default the vLLM window and completion cap to what the config trains with
     max_model_len = max_model_len or int(cfg.grpo.get("vllm_max_model_length") or 4096)
     max_tokens = max_tokens or int(cfg.grpo.get("max_completion_length") or 1024)
+    if cfg.enable_thinking and temperature == 0.0:
+        # Qwen3 thinking mode + greedy decoding = endless repetition (their docs say so; SFT v4 lost 34/61 to it)
+        temperature = 0.6
     rows = [dict(r) for r in ds]
     t0 = time.time()
     if backend == "vllm":
