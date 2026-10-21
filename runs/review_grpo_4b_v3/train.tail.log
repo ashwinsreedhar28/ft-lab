@@ -1,400 +1,400 @@
-│ │      """Returns a │                   │         │           │            │ │
-│ │ system stream for │                   │         │           │            │ │
-│ │ byte processing.  │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │ +    ..           │                   │         │           │            │ │
-│ │ deprecated:: 8.5  │                   │         │           │            │ │
-│ │ +        Will be  │                   │         │           │            │ │
-│ │ removed in Click  │                   │         │           │            │ │
-│ │ 9.0.              │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │      :param name: │                   │         │           │            │ │
-│ │ the name of the   │                   │         │           │            │ │
-│ │ stream to open.   │                   │         │           │            │ │
-│ │ Valid names are   │                   │         │           │            │ │
-│ │ ``'stdin'``,      │                   │         │           │            │ │
-│ │                 … │                   │         │           │            │ │
-│ │ and ``'stderr'``  │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ +    :meta        │                   │         │           │            │ │
-│ │ private:          │                   │         │           │            │ │
-│ │      """          │                   │         │           │            │ │
-│ │      opener =     │                   │         │           │            │ │
-│ │ binary_streams.g… │                   │         │           │            │ │
-│ │      if opener is │                   │         │           │            │ │
-│ │ None:             │                   │         │           │            │ │
-│ │ @@ -356,11        │                   │         │           │            │ │
-│ │ +371,16 @@ def    │                   │         │           │            │ │
-│ │ get_text_stream(  │                   │         │           │            │ │
-│ │      encoding:    │                   │         │           │            │ │
-│ │ str | None =      │                   │         │           │            │ │
-│ │ None,             │                   │         │           │            │ │
-│ │      errors: str  │                   │         │           │            │ │
-│ │ | None =          │                   │         │           │            │ │
-│ │ "strict",         │                   │         │           │            │ │
-│ │  ) -> t.TextIO:   │                   │         │           │            │ │
-│ │ -    """Returns a │                   │         │           │            │ │
-│ │ system stream for │                   │         │           │            │ │
-│ │ text processing.  │                   │         │           │            │ │
-│ │ This usually      │                   │         │           │            │ │
-│ │ returns           │                   │         │           │            │ │
-│ │ -    a wrapped    │                   │         │           │            │ │
-│ │ stream around a   │                   │         │           │            │ │
-│ │ binary stream     │                   │         │           │            │ │
-│ │ returned from     │                   │         │           │            │ │
-│ │ +    """Returns a │                   │         │           │            │ │
-│ │ system stream for │                   │         │           │            │ │
-│ │ text processing.  │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ +    ..           │                   │         │           │            │ │
-│ │ deprecated:: 8.5  │                   │         │           │            │ │
-│ │ +        Will be  │                   │         │           │            │ │
-│ │ removed in Click  │                   │         │           │            │ │
-│ │ 9.0.              │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ +    This usually │                   │         │           │            │ │
-│ │ returns a wrapped │                   │         │           │            │ │
-│ │ stream around a   │                   │         │           │            │ │
-│ │ binary stream     │                   │         │           │            │ │
-│ │ returned from     │                   │         │           │            │ │
-│ │      :func:`get_… │                   │         │           │            │ │
-│ │ but it also can   │                   │         │           │            │ │
-│ │ take shortcuts    │                   │         │           │            │ │
-│ │ for already       │                   │         │           │            │ │
-│ │      correctly    │                   │         │           │            │ │
-│ │ configured        │                   │         │           │            │ │
-│ │ streams.          │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │ +    :meta        │                   │         │           │            │ │
-│ │ private:          │                   │         │           │            │ │
-│ │      :param name: │                   │         │           │            │ │
-│ │ the name of the   │                   │         │           │            │ │
-│ │ stream to open.   │                   │         │           │            │ │
-│ │ Valid names are   │                   │         │           │            │ │
-│ │ ``'stdin'``,      │                   │         │           │            │ │
-│ │                 … │                   │         │           │            │ │
-│ │ and ``'stderr'``  │                   │         │           │            │ │
-│ │      :param       │                   │         │           │            │ │
-│ │ encoding:         │                   │         │           │            │ │
-│ │ overrides the     │                   │         │           │            │ │
-│ │ detected default  │                   │         │           │            │ │
-│ │ encoding.         │                   │         │           │            │ │
-│ │ @@ -410,13        │                   │         │           │            │ │
-│ │ +430,13 @@ def    │                   │         │           │            │ │
-│ │ open_file(        │                   │         │           │            │ │
-│ │      """          │                   │         │           │            │ │
-│ │      if lazy:     │                   │         │           │            │ │
-│ │          return   │                   │         │           │            │ │
-│ │ t.cast(           │                   │         │           │            │ │
-│ │ -                 │                   │         │           │            │ │
-│ │ "t.IO[t.Any]",    │                   │         │           │            │ │
-│ │ LazyFile(filenam… │                   │         │           │            │ │
-│ │ mode, encoding,   │                   │         │           │            │ │
-│ │ errors,           │                   │         │           │            │ │
-│ │ atomic=atomic)    │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ "t.IO[t.Any]",    │                   │         │           │            │ │
-│ │ _LazyFile(filena… │                   │         │           │            │ │
-│ │ mode, encoding,   │                   │         │           │            │ │
-│ │ errors,           │                   │         │           │            │ │
-│ │ atomic=atomic)    │                   │         │           │            │ │
-│ │          )        │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │      f,           │                   │         │           │            │ │
-│ │ should_close =    │                   │         │           │            │ │
-│ │ open_stream(file… │                   │         │           │            │ │
-│ │ mode, encoding,   │                   │         │           │            │ │
-│ │ errors,           │                   │         │           │            │ │
-│ │ atomic=atomic)    │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │      if not       │                   │         │           │            │ │
-│ │ should_close:     │                   │         │           │            │ │
-│ │ -        f =      │                   │         │           │            │ │
-│ │ t.cast("t.IO[t.A… │                   │         │           │            │ │
-│ │ KeepOpenFile(f))  │                   │         │           │            │ │
-│ │ +        f =      │                   │         │           │            │ │
-│ │ t.cast("t.IO[t.A… │                   │         │           │            │ │
-│ │ _KeepOpenFile(f)) │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │      return f     │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │ @@ -512,13        │                   │         │           │            │ │
-│ │ +532,15 @@ def    │                   │         │           │            │ │
-│ │ get_app_dir(app_… │                   │         │           │            │ │
-│ │ str, roaming:     │                   │         │           │            │ │
-│ │ bool = True,      │                   │         │           │            │ │
-│ │ force_posix: bool │                   │         │           │            │ │
-│ │ = False)          │                   │         │           │            │ │
-│ │      )            │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │ -class            │                   │         │           │            │ │
-│ │ PacifyFlushWrapp… │                   │         │           │            │ │
-│ │ +class            │                   │         │           │            │ │
-│ │ _PacifyFlushWrap… │                   │         │           │            │ │
-│ │      """This      │                   │         │           │            │ │
-│ │ wrapper is used   │                   │         │           │            │ │
-│ │ to catch and      │                   │         │           │            │ │
-│ │ suppress          │                   │         │           │            │ │
-│ │ BrokenPipeErrors  │                   │         │           │            │ │
-│ │ resulting         │                   │         │           │            │ │
-│ │      from         │                   │         │           │            │ │
-│ │ ``.flush()``      │                   │         │           │            │ │
-│ │ being called on   │                   │         │           │            │ │
-│ │ broken pipe       │                   │         │           │            │ │
-│ │ during the        │                   │         │           │            │ │
-│ │ shutdown/final-GC │                   │         │           │            │ │
-│ │      of the       │                   │         │           │            │ │
-│ │ Python            │                   │         │           │            │ │
-│ │ interpreter.      │                   │         │           │            │ │
-│ │ Notably           │                   │         │           │            │ │
-│ │ ``.flush()`` is   │                   │         │           │            │ │
-│ │ always called on  │                   │         │           │            │ │
-│ │      ``sys.stdou… │                   │         │           │            │ │
-│ │ and               │                   │         │           │            │ │
-│ │ ``sys.stderr``.   │                   │         │           │            │ │
-│ │ So as to have     │                   │         │           │            │ │
-│ │ minimal impact on │                   │         │           │            │ │
-│ │ any               │                   │         │           │            │ │
-│ │      other        │                   │         │           │            │ │
-│ │ cleanup code, and │                   │         │           │            │ │
-│ │ the case where    │                   │         │           │            │ │
-│ │ the underlying    │                   │         │           │            │ │
-│ │ file is not a     │                   │         │           │            │ │
-│ │ broken            │                   │         │           │            │ │
-│ │      pipe, all    │                   │         │           │            │ │
-│ │ calls and         │                   │         │           │            │ │
-│ │ attributes are    │                   │         │           │            │ │
-│ │ proxied.          │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ +    :meta        │                   │         │           │            │ │
-│ │ private:          │                   │         │           │            │ │
-│ │      """          │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │      wrapped:     │                   │         │           │            │ │
-│ │ t.IO[t.Any]       │                   │         │           │            │ │
-│ │ @@ -644,3 +666,24 │                   │         │           │            │ │
-│ │ @@ def            │                   │         │           │            │ │
-│ │ _expand_args(     │                   │         │           │            │ │
-│ │              out… │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │      return out   │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ +def              │                   │         │           │            │ │
-│ │ __getattr__(name: │                   │         │           │            │ │
-│ │ str) -> object:   │                   │         │           │            │ │
-│ │ +    import       │                   │         │           │            │ │
-│ │ warnings          │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ +    if name in { │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ "LazyFile",       │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ "KeepOpenFile",   │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ "make_default_sh… │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ "PacifyFlushWrap… │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ "safecall",       │                   │         │           │            │ │
-│ │ +    }:           │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ warnings.warn(    │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ f"'click.utils.{… │                   │         │           │            │ │
-│ │ was never         │                   │         │           │            │ │
-│ │ intentionally     │                   │         │           │            │ │
-│ │ public and will   │                   │         │           │            │ │
-│ │ be"               │                   │         │           │            │ │
-│ │ +            "    │                   │         │           │            │ │
-│ │ renamed in Click  │                   │         │           │            │ │
-│ │ 9.0.",            │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ DeprecationWarni… │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ stacklevel=2,     │                   │         │           │            │ │
-│ │ +        )        │                   │         │           │            │ │
-│ │ +        return   │                   │         │           │            │ │
-│ │ globals()[f"_{na… │                   │         │           │            │ │
-│ │ +                 │                   │         │           │            │ │
-│ │ +    raise        │                   │         │           │            │ │
-│ │ AttributeError(n… │                   │         │           │            │ │
-│ │ diff --git        │                   │         │           │            │ │
-│ │ a/tests/test_tes… │                   │         │           │            │ │
-│ │ b/tests/test_tes… │                   │         │           │            │ │
-│ │ index             │                   │         │           │            │ │
-│ │ a7508b9..6fae8cb  │                   │         │           │            │ │
-│ │ 100644            │                   │         │           │            │ │
-│ │ ---               │                   │         │           │            │ │
-│ │ a/tests/test_tes… │                   │         │           │            │ │
-│ │ +++               │                   │         │           │            │ │
-│ │ b/tests/test_tes… │                   │         │           │            │ │
-│ │ @@ -10,13 +10,14  │                   │         │           │            │ │
-│ │ @@ import pytest  │                   │         │           │            │ │
-│ │  import click     │                   │         │           │            │ │
-│ │  from             │                   │         │           │            │ │
-│ │ click.exceptions  │                   │         │           │            │ │
-│ │ import            │                   │         │           │            │ │
-│ │ ClickException    │                   │         │           │            │ │
-│ │  from             │                   │         │           │            │ │
-│ │ click.testing     │                   │         │           │            │ │
-│ │ import CliRunner  │                   │         │           │            │ │
-│ │ +from click.utils │                   │         │           │            │ │
-│ │ import            │                   │         │           │            │ │
-│ │ get_binary_stream │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │  def              │                   │         │           │            │ │
-│ │ test_runner():    │                   │         │           │            │ │
-│ │      @click.comm… │                   │         │           │            │ │
-│ │      def test():  │                   │         │           │            │ │
-│ │ -        i =      │                   │         │           │            │ │
-│ │ click.get_binary… │                   │         │           │            │ │
-│ │ -        o =      │                   │         │           │            │ │
-│ │ click.get_binary… │                   │         │           │            │ │
-│ │ +        i =      │                   │         │           │            │ │
-│ │ get_binary_strea… │                   │         │           │            │ │
-│ │ +        o =      │                   │         │           │            │ │
-│ │ get_binary_strea… │                   │         │           │            │ │
-│ │          while    │                   │         │           │            │ │
-│ │ True:             │                   │         │           │            │ │
-│ │              chu… │                   │         │           │            │ │
-│ │ = i.read(4096)    │                   │         │           │            │ │
-│ │              if   │                   │         │           │            │ │
-│ │ not chunk:        │                   │         │           │            │ │
-│ │ @@ -33,8 +34,8 @@ │                   │         │           │            │ │
-│ │ def               │                   │         │           │            │ │
-│ │ test_runner():    │                   │         │           │            │ │
-│ │  def              │                   │         │           │            │ │
-│ │ test_echo_stdin_… │                   │         │           │            │ │
-│ │      @click.comm… │                   │         │           │            │ │
-│ │      def test():  │                   │         │           │            │ │
-│ │ -        i =      │                   │         │           │            │ │
-│ │ click.get_binary… │                   │         │           │            │ │
-│ │ -        o =      │                   │         │           │            │ │
-│ │ click.get_binary… │                   │         │           │            │ │
-│ │ +        i =      │                   │         │           │            │ │
-│ │ get_binary_strea… │                   │         │           │            │ │
-│ │ +        o =      │                   │         │           │            │ │
-│ │ get_binary_strea… │                   │         │           │            │ │
-│ │          while    │                   │         │           │            │ │
-│ │ True:             │                   │         │           │            │ │
-│ │              chu… │                   │         │           │            │ │
-│ │ = i.read(4096)    │                   │         │           │            │ │
-│ │              if   │                   │         │           │            │ │
-│ │ not chunk:        │                   │         │           │            │ │
-│ │ @@ -91,8 +92,8 @@ │                   │         │           │            │ │
-│ │ def               │                   │         │           │            │ │
-│ │ test_echo_stdin_… │                   │         │           │            │ │
-│ │  def              │                   │         │           │            │ │
-│ │ test_runner_with… │                   │         │           │            │ │
-│ │      @click.comm… │                   │         │           │            │ │
-│ │      def test():  │                   │         │           │            │ │
-│ │ -        i =      │                   │         │           │            │ │
-│ │ click.get_binary… │                   │         │           │            │ │
-│ │ -        o =      │                   │         │           │            │ │
-│ │ click.get_binary… │                   │         │           │            │ │
-│ │ +        i =      │                   │         │           │            │ │
-│ │ get_binary_strea… │                   │         │           │            │ │
-│ │ +        o =      │                   │         │           │            │ │
-│ │ get_binary_strea… │                   │         │           │            │ │
-│ │          while    │                   │         │           │            │ │
-│ │ True:             │                   │         │           │            │ │
-│ │              chu… │                   │         │           │            │ │
-│ │ = i.read(4096)    │                   │         │           │            │ │
-│ │              if   │                   │         │           │            │ │
-│ │ not chunk:        │                   │         │           │            │ │
-│ │ diff --git        │                   │         │           │            │ │
-│ │ a/tests/test_uti… │                   │         │           │            │ │
-│ │ b/tests/test_uti… │                   │         │           │            │ │
-│ │ index             │                   │         │           │            │ │
-│ │ 26bfe45..0ba2cab  │                   │         │           │            │ │
-│ │ 100644            │                   │         │           │            │ │
-│ │ ---               │                   │         │           │            │ │
-│ │ a/tests/test_uti… │                   │         │           │            │ │
-│ │ +++               │                   │         │           │            │ │
-│ │ b/tests/test_uti… │                   │         │           │            │ │
-│ │ @@ -6,5 +6,5 @@   │                   │         │           │            │ │
-│ │ def               │                   │         │           │            │ │
-│ │ test_iter_keepop… │                   │         │           │            │ │
-│ │      p =          │                   │         │           │            │ │
-│ │ tmpdir.mkdir("te… │                   │         │           │            │ │
-│ │      p.write("\n… │                   │         │           │            │ │
-│ │      with         │                   │         │           │            │ │
-│ │ p.open() as f:    │                   │         │           │            │ │
-│ │ -        for      │                   │         │           │            │ │
-│ │ e_line, a_line in │                   │         │           │            │ │
-│ │ zip(expected,     │                   │         │           │            │ │
-│ │ click.utils.Keep… │                   │         │           │            │ │
-│ │ strict=False):    │                   │         │           │            │ │
-│ │ +        for      │                   │         │           │            │ │
-│ │ e_line, a_line in │                   │         │           │            │ │
-│ │ zip(expected,     │                   │         │           │            │ │
-│ │ click.utils._Kee… │                   │         │           │            │ │
-│ │ strict=False):    │                   │         │           │            │ │
-│ │              ass… │                   │         │           │            │ │
-│ │ e_line ==         │                   │         │           │            │ │
-│ │ a_line.strip()    │                   │         │           │            │ │
-│ │ diff --git        │                   │         │           │            │ │
-│ │ a/tests/test_uti… │                   │         │           │            │ │
-│ │ b/tests/test_uti… │                   │         │           │            │ │
-│ │ index             │                   │         │           │            │ │
-│ │ e3dd09b..8d0775a  │                   │         │           │            │ │
-│ │ 100644            │                   │         │           │            │ │
-│ │ ---               │                   │         │           │            │ │
-│ │ a/tests/test_uti… │                   │         │           │            │ │
-│ │ +++               │                   │         │           │            │ │
-│ │ b/tests/test_uti… │                   │         │           │            │ │
-│ │ @@ -6,6 +6,6 @@   │                   │         │           │            │ │
-│ │ def               │                   │         │           │            │ │
-│ │ test_iter_lazyfi… │                   │         │           │            │ │
-│ │      p =          │                   │         │           │            │ │
-│ │ tmpdir.mkdir("te… │                   │         │           │            │ │
-│ │      p.write("\n… │                   │         │           │            │ │
-│ │      with         │                   │         │           │            │ │
-│ │ p.open() as f:    │                   │         │           │            │ │
-│ │ -        with     │                   │         │           │            │ │
-│ │ click.utils.Lazy… │                   │         │           │            │ │
-│ │ as lf:            │                   │         │           │            │ │
-│ │ +        with     │                   │         │           │            │ │
-│ │ click.utils._Laz… │                   │         │           │            │ │
-│ │ as lf:            │                   │         │           │            │ │
-│ │              for  │                   │         │           │            │ │
-│ │ e_line, a_line in │                   │         │           │            │ │
-│ │ zip(expected, lf, │                   │         │           │            │ │
-│ │ strict=False):    │                   │         │           │            │ │
-│ │                 … │                   │         │           │            │ │
-│ │ e_line ==         │                   │         │           │            │ │
-│ │ a_line.strip()    │                   │         │           │            │ │
-│ │ diff --git        │                   │         │           │            │ │
-│ │ a/tests/test_uti… │                   │         │           │            │ │
-│ │ b/tests/test_uti… │                   │         │           │            │ │
-│ │ index             │                   │         │           │            │ │
-│ │ cb9886c..c2a1f8e  │                   │         │           │            │ │
-│ │ 100644            │                   │         │           │            │ │
-│ │ ---               │                   │         │           │            │ │
-│ │ a/tests/test_uti… │                   │         │           │            │ │
-│ │ +++               │                   │         │           │            │ │
-│ │ b/tests/test_uti… │                   │         │           │            │ │
-│ │ @@ -35,5 +35,5 @@ │                   │         │           │            │ │
-│ │ def               │                   │         │           │            │ │
-│ │ test_make_defaul… │                   │         │           │            │ │
-│ │ max_length,       │                   │         │           │            │ │
-│ │ alter, expect):   │                   │         │           │            │ │
-│ │      if alter:    │                   │         │           │            │ │
-│ │          value =  │                   │         │           │            │ │
-│ │ alter(value)      │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │ -    out =        │                   │         │           │            │ │
-│ │ click.utils.make… │                   │         │           │            │ │
-│ │ max_length)       │                   │         │           │            │ │
-│ │ +    out =        │                   │         │           │            │ │
-│ │ click.utils._mak… │                   │         │           │            │ │
-│ │ max_length)       │                   │         │           │            │ │
-│ │      assert out   │                   │         │           │            │ │
-│ │ == expect         │                   │         │           │            │ │
-│ │                   │                   │         │           │            │ │
-│ │ ```               │                   │         │           │            │ │
-│ └───────────────────┴───────────────────┴─────────┴───────────┴────────────┘ │
+│ │ parameters         │                    │         │           │          │ │
+│ │          #: will   │                    │         │           │          │ │
+│ │ automatically be   │                    │         │           │          │ │
+│ │ handled before non │                    │         │           │          │ │
+│ │ eager ones.        │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self.params:       │                    │         │           │          │ │
+│ │ list[Parameter] =  │                    │         │           │          │ │
+│ │ params or []       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.params =      │                    │         │           │          │ │
+│ │ params or []       │                    │         │           │          │ │
+│ │          self.help │                    │         │           │          │ │
+│ │ = help             │                    │         │           │          │ │
+│ │          self.epi… │                    │         │           │          │ │
+│ │ = epilog           │                    │         │           │          │ │
+│ │          self.opt… │                    │         │           │          │ │
+│ │ = options_metavar  │                    │         │           │          │ │
+│ │ @@ -1592,6         │                    │         │           │          │ │
+│ │ +1636,12 @@ class  │                    │         │           │          │ │
+│ │ Group(Command):    │                    │         │           │          │ │
+│ │      group_class:  │                    │         │           │          │ │
+│ │ type[Group] |      │                    │         │           │          │ │
+│ │ type[type] | None  │                    │         │           │          │ │
+│ │ = None             │                    │         │           │          │ │
+│ │      #             │                    │         │           │          │ │
+│ │ Literal[type]      │                    │         │           │          │ │
+│ │ isn't valid, so    │                    │         │           │          │ │
+│ │ use Type[type]     │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +    commands:     │                    │         │           │          │ │
+│ │ cabc.MutableMappi… │                    │         │           │          │ │
+│ │ Command]           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ invoke_without_co… │                    │         │           │          │ │
+│ │ bool               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ subcommand_metava… │                    │         │           │          │ │
+│ │ str                │                    │         │           │          │ │
+│ │ +    chain: bool   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _result_callback:  │                    │         │           │          │ │
+│ │ t.Callable[...,    │                    │         │           │          │ │
+│ │ t.Any] | None      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      def __init__( │                    │         │           │          │ │
+│ │          self,     │                    │         │           │          │ │
+│ │          name: str │                    │         │           │          │ │
+│ │ | None = None,     │                    │         │           │          │ │
+│ │ @@ -1613,7 +1663,7 │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ Group(Command):    │                    │         │           │          │ │
+│ │              comm… │                    │         │           │          │ │
+│ │ = {c.name: c for c │                    │         │           │          │ │
+│ │ in commands if     │                    │         │           │          │ │
+│ │ c.name is not      │                    │         │           │          │ │
+│ │ None}              │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │          #: The    │                    │         │           │          │ │
+│ │ registered         │                    │         │           │          │ │
+│ │ subcommands by     │                    │         │           │          │ │
+│ │ their exported     │                    │         │           │          │ │
+│ │ names.             │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self.commands:     │                    │         │           │          │ │
+│ │ cabc.MutableMappi… │                    │         │           │          │ │
+│ │ Command] =         │                    │         │           │          │ │
+│ │ commands           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.commands =    │                    │         │           │          │ │
+│ │ commands           │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │          if        │                    │         │           │          │ │
+│ │ no_args_is_help is │                    │         │           │          │ │
+│ │ None:              │                    │         │           │          │ │
+│ │              no_a… │                    │         │           │          │ │
+│ │ = not              │                    │         │           │          │ │
+│ │ invoke_without_co… │                    │         │           │          │ │
+│ │ @@ -2012,6 +2062,8 │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ CommandCollection… │                    │         │           │          │ │
+│ │          group,    │                    │         │           │          │ │
+│ │ then each of its   │                    │         │           │          │ │
+│ │ sources.           │                    │         │           │          │ │
+│ │      """           │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +    sources:      │                    │         │           │          │ │
+│ │ list[Group]        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      def __init__( │                    │         │           │          │ │
+│ │          self,     │                    │         │           │          │ │
+│ │          name: str │                    │         │           │          │ │
+│ │ | None = None,     │                    │         │           │          │ │
+│ │ @@ -2020,7 +2072,7 │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ CommandCollection… │                    │         │           │          │ │
+│ │      ) -> None:    │                    │         │           │          │ │
+│ │          super().… │                    │         │           │          │ │
+│ │ **kwargs)          │                    │         │           │          │ │
+│ │          #: The    │                    │         │           │          │ │
+│ │ list of registered │                    │         │           │          │ │
+│ │ groups.            │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self.sources:      │                    │         │           │          │ │
+│ │ list[Group] =      │                    │         │           │          │ │
+│ │ sources or []      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.sources =     │                    │         │           │          │ │
+│ │ sources or []      │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      def           │                    │         │           │          │ │
+│ │ add_source(self,   │                    │         │           │          │ │
+│ │ group: Group) ->   │                    │         │           │          │ │
+│ │ None:              │                    │         │           │          │ │
+│ │          """Add a  │                    │         │           │          │ │
+│ │ group as a source  │                    │         │           │          │ │
+│ │ of commands."""    │                    │         │           │          │ │
+│ │ @@ -2052,7 +2104,7 │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ CommandCollection… │                    │         │           │          │ │
+│ │          return    │                    │         │           │          │ │
+│ │ sorted(rv)         │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ -def               │                    │         │           │          │ │
+│ │ _check_iter(value: │                    │         │           │          │ │
+│ │ t.Any) ->          │                    │         │           │          │ │
+│ │ cabc.Iterator[t.A… │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ _check_iter(value: │                    │         │           │          │ │
+│ │ cabc.Iterable[V])  │                    │         │           │          │ │
+│ │ ->                 │                    │         │           │          │ │
+│ │ cabc.Iterator[V]:  │                    │         │           │          │ │
+│ │      """Check if   │                    │         │           │          │ │
+│ │ the value is       │                    │         │           │          │ │
+│ │ iterable but not a │                    │         │           │          │ │
+│ │ string. Raises a   │                    │         │           │          │ │
+│ │ type               │                    │         │           │          │ │
+│ │      error, or     │                    │         │           │          │ │
+│ │ return an iterator │                    │         │           │          │ │
+│ │ over the value.    │                    │         │           │          │ │
+│ │      """           │                    │         │           │          │ │
+│ │ @@ -2155,6         │                    │         │           │          │ │
+│ │ +2207,25 @@ class  │                    │         │           │          │ │
+│ │ Parameter(ABC):    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      param_type_n… │                    │         │           │          │ │
+│ │ = "parameter"      │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +    name: str     │                    │         │           │          │ │
+│ │ +    opts:         │                    │         │           │          │ │
+│ │ list[str]          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ secondary_opts:    │                    │         │           │          │ │
+│ │ list[str]          │                    │         │           │          │ │
+│ │ +    #             │                    │         │           │          │ │
+│ │ `Parameter.type`   │                    │         │           │          │ │
+│ │ is annotated in    │                    │         │           │          │ │
+│ │ `__init__` to      │                    │         │           │          │ │
+│ │ avoid confusing    │                    │         │           │          │ │
+│ │ mypy               │                    │         │           │          │ │
+│ │ +    required:     │                    │         │           │          │ │
+│ │ bool               │                    │         │           │          │ │
+│ │ +    callback:     │                    │         │           │          │ │
+│ │ t.Callable[[Conte… │                    │         │           │          │ │
+│ │ Parameter, t.Any], │                    │         │           │          │ │
+│ │ t.Any] | None      │                    │         │           │          │ │
+│ │ +    nargs: int    │                    │         │           │          │ │
+│ │ +    multiple:     │                    │         │           │          │ │
+│ │ bool               │                    │         │           │          │ │
+│ │ +    expose_value: │                    │         │           │          │ │
+│ │ bool               │                    │         │           │          │ │
+│ │ +    default:      │                    │         │           │          │ │
+│ │ t.Any |            │                    │         │           │          │ │
+│ │ t.Callable[[],     │                    │         │           │          │ │
+│ │ t.Any] | None      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _default_explicit: │                    │         │           │          │ │
+│ │ bool               │                    │         │           │          │ │
+│ │ +    is_eager:     │                    │         │           │          │ │
+│ │ bool               │                    │         │           │          │ │
+│ │ +    metavar: str  │                    │         │           │          │ │
+│ │ | None             │                    │         │           │          │ │
+│ │ +    envvar: str | │                    │         │           │          │ │
+│ │ cabc.Sequence[str] │                    │         │           │          │ │
+│ │ | None             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _custom_shell_com… │                    │         │           │          │ │
+│ │ (                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ t.Callable[[Conte… │                    │         │           │          │ │
+│ │ Parameter, str],   │                    │         │           │          │ │
+│ │ list[CompletionIt… │                    │         │           │          │ │
+│ │ | list[str]] |     │                    │         │           │          │ │
+│ │ None               │                    │         │           │          │ │
+│ │ +    )             │                    │         │           │          │ │
+│ │ +    deprecated:   │                    │         │           │          │ │
+│ │ bool | str         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      def __init__( │                    │         │           │          │ │
+│ │          self,     │                    │         │           │          │ │
+│ │          param_de… │                    │         │           │          │ │
+│ │ cabc.Sequence[str] │                    │         │           │          │ │
+│ │ | None = None,     │                    │         │           │          │ │
+│ │ @@ -2184,9 +2255,6 │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ Parameter(ABC):    │                    │         │           │          │ │
+│ │          | None =  │                    │         │           │          │ │
+│ │ None,              │                    │         │           │          │ │
+│ │          deprecat… │                    │         │           │          │ │
+│ │ bool | str =       │                    │         │           │          │ │
+│ │ False,             │                    │         │           │          │ │
+│ │      ) -> None:    │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self.name: str     │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self.opts:         │                    │         │           │          │ │
+│ │ list[str]          │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self.secondary_op… │                    │         │           │          │ │
+│ │ list[str]          │                    │         │           │          │ │
+│ │          self.nam… │                    │         │           │          │ │
+│ │ self.opts,         │                    │         │           │          │ │
+│ │ self.secondary_op… │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ self._parse_decls( │                    │         │           │          │ │
+│ │              para… │                    │         │           │          │ │
+│ │ or (),             │                    │         │           │          │ │
+│ │ expose_value       │                    │         │           │          │ │
+│ │          )         │                    │         │           │          │ │
+│ │ @@ -2205,13        │                    │         │           │          │ │
+│ │ +2273,13 @@ class  │                    │         │           │          │ │
+│ │ Parameter(ABC):    │                    │         │           │          │ │
+│ │          self.nar… │                    │         │           │          │ │
+│ │ = nargs            │                    │         │           │          │ │
+│ │          self.mul… │                    │         │           │          │ │
+│ │ = multiple         │                    │         │           │          │ │
+│ │          self.exp… │                    │         │           │          │ │
+│ │ = expose_value     │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self.default:      │                    │         │           │          │ │
+│ │ t.Any |            │                    │         │           │          │ │
+│ │ t.Callable[[],     │                    │         │           │          │ │
+│ │ t.Any] | None =    │                    │         │           │          │ │
+│ │ default            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.default =     │                    │         │           │          │ │
+│ │ default            │                    │         │           │          │ │
+│ │          # Whether │                    │         │           │          │ │
+│ │ the user passed    │                    │         │           │          │ │
+│ │ ``default``        │                    │         │           │          │ │
+│ │ explicitly to the  │                    │         │           │          │ │
+│ │ constructor.       │                    │         │           │          │ │
+│ │          #         │                    │         │           │          │ │
+│ │ Captured before    │                    │         │           │          │ │
+│ │ any auto-derived   │                    │         │           │          │ │
+│ │ default (like      │                    │         │           │          │ │
+│ │ ``False`` for      │                    │         │           │          │ │
+│ │ boolean            │                    │         │           │          │ │
+│ │          # flags   │                    │         │           │          │ │
+│ │ in                 │                    │         │           │          │ │
+│ │ :class:`Option`)   │                    │         │           │          │ │
+│ │ replaces the       │                    │         │           │          │ │
+│ │ :data:`UNSET`      │                    │         │           │          │ │
+│ │ sentinel, so it    │                    │         │           │          │ │
+│ │          # remains │                    │         │           │          │ │
+│ │ ``False`` when the │                    │         │           │          │ │
+│ │ default was        │                    │         │           │          │ │
+│ │ inferred rather    │                    │         │           │          │ │
+│ │ than chosen.       │                    │         │           │          │ │
+│ │          # Refs:   │                    │         │           │          │ │
+│ │ https://github.co… │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self._default_exp… │                    │         │           │          │ │
+│ │ bool = default is  │                    │         │           │          │ │
+│ │ not UNSET          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self._default_exp… │                    │         │           │          │ │
+│ │ = default is not   │                    │         │           │          │ │
+│ │ UNSET              │                    │         │           │          │ │
+│ │          self.is_… │                    │         │           │          │ │
+│ │ = is_eager         │                    │         │           │          │ │
+│ │          self.met… │                    │         │           │          │ │
+│ │ = metavar          │                    │         │           │          │ │
+│ │          self.env… │                    │         │           │          │ │
+│ │ = envvar           │                    │         │           │          │ │
+│ │ @@ -2786,6         │                    │         │           │          │ │
+│ │ +2854,24 @@ class  │                    │         │           │          │ │
+│ │ Option(Parameter): │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      param_type_n… │                    │         │           │          │ │
+│ │ = "option"         │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +    prompt: str | │                    │         │           │          │ │
+│ │ None               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ confirmation_prom… │                    │         │           │          │ │
+│ │ bool | str         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ prompt_required:   │                    │         │           │          │ │
+│ │ bool               │                    │         │           │          │ │
+│ │ +    hide_input:   │                    │         │           │          │ │
+│ │ bool               │                    │         │           │          │ │
+│ │ +    hidden: bool  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _flag_needs_value: │                    │         │           │          │ │
+│ │ bool               │                    │         │           │          │ │
+│ │ +    is_flag: bool │                    │         │           │          │ │
+│ │ +    is_bool_flag: │                    │         │           │          │ │
+│ │ bool               │                    │         │           │          │ │
+│ │ +    flag_value:   │                    │         │           │          │ │
+│ │ t.Any              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    count: bool   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ allow_from_autoen… │                    │         │           │          │ │
+│ │ bool               │                    │         │           │          │ │
+│ │ +    help: str |   │                    │         │           │          │ │
+│ │ None               │                    │         │           │          │ │
+│ │ +    show_default: │                    │         │           │          │ │
+│ │ bool | str | None  │                    │         │           │          │ │
+│ │ +    show_choices: │                    │         │           │          │ │
+│ │ bool               │                    │         │           │          │ │
+│ │ +    show_envvar:  │                    │         │           │          │ │
+│ │ bool               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      def __init__( │                    │         │           │          │ │
+│ │          self,     │                    │         │           │          │ │
+│ │          param_de… │                    │         │           │          │ │
+│ │ cabc.Sequence[str] │                    │         │           │          │ │
+│ │ | None = None,     │                    │         │           │          │ │
+│ │ @@ -2818,7 +2904,7 │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ Option(Parameter): │                    │         │           │          │ │
+│ │              if    │                    │         │           │          │ │
+│ │ not self.name:     │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ TypeError("'name'  │                    │         │           │          │ │
+│ │ is required with   │                    │         │           │          │ │
+│ │ 'prompt=True'.")   │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ prompt_text: str | │                    │         │           │          │ │
+│ │ None =             │                    │         │           │          │ │
+│ │ self.name.replace… │                    │         │           │          │ │
+│ │ " ").capitalize()  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ prompt_text =      │                    │         │           │          │ │
+│ │ self.name.replace… │                    │         │           │          │ │
+│ │ " ").capitalize()  │                    │         │           │          │ │
+│ │          elif      │                    │         │           │          │ │
+│ │ prompt is False:   │                    │         │           │          │ │
+│ │              prom… │                    │         │           │          │ │
+│ │ = None             │                    │         │           │          │ │
+│ │          else:     │                    │         │           │          │ │
+│ │ @@ -2892,11        │                    │         │           │          │ │
+│ │ +2978,9 @@ class   │                    │         │           │          │ │
+│ │ Option(Parameter): │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ = guessed          │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self.is_flag: bool │                    │         │           │          │ │
+│ │ = bool(is_flag)    │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self.is_bool_flag: │                    │         │           │          │ │
+│ │ bool = bool(       │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ is_flag and        │                    │         │           │          │ │
+│ │ isinstance(self.t… │                    │         │           │          │ │
+│ │ types.BoolParamTy… │                    │         │           │          │ │
+│ │ -        )         │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self.flag_value:   │                    │         │           │          │ │
+│ │ t.Any = flag_value │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.is_flag =     │                    │         │           │          │ │
+│ │ bool(is_flag)      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.is_bool_flag  │                    │         │           │          │ │
+│ │ = self.is_flag and │                    │         │           │          │ │
+│ │ isinstance(self.t… │                    │         │           │          │ │
+│ │ types.BoolParamTy… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.flag_value =  │                    │         │           │          │ │
+│ │ flag_value         │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │          # Set     │                    │         │           │          │ │
+│ │ boolean flag       │                    │         │           │          │ │
+│ │ default to False   │                    │         │           │          │ │
+│ │ if unset and not   │                    │         │           │          │ │
+│ │ required.          │                    │         │           │          │ │
+│ │          if        │                    │         │           │          │ │
+│ │ self.is_bool_flag: │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ ```                │                    │         │           │          │ │
+│ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
