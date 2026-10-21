@@ -1,400 +1,400 @@
-│ │ +import pytest      │                     │       │           │          │ │
-│ │ +from fastapi       │                     │       │           │          │ │
-│ │ import FastAPI      │                     │       │           │          │ │
-│ │ +from               │                     │       │           │          │ │
-│ │ fastapi.exceptions  │                     │       │           │          │ │
-│ │ import FastAPIError │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ test_vibe_raises(): │                     │       │           │          │ │
-│ │ +    with           │                     │       │           │          │ │
-│ │ pytest.raises(Fast… │                     │       │           │          │ │
-│ │ match="Are you      │                     │       │           │          │ │
-│ │ kidding me"):       │                     │       │           │          │ │
-│ │ +        app =      │                     │       │           │          │ │
-│ │ FastAPI()           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        @app.vibe( │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ "/vibe/",           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ prompt="pls return  │                     │       │           │          │ │
-│ │ json of users from  │                     │       │           │          │ │
-│ │ database. make no   │                     │       │           │          │ │
-│ │ mistakes",          │                     │       │           │          │ │
-│ │ +        )          │                     │       │           │          │ │
-│ │ +        async def  │                     │       │           │          │ │
-│ │ ai_vibes(body:      │                     │       │           │          │ │
-│ │ Any):  # pragma:    │                     │       │           │          │ │
-│ │ nocover             │                     │       │           │          │ │
-│ │ +            pass   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
-│ │ SYSTEM              │ ASSISTANT           │ -0.50 │      0.55 │ block    │ │
-│ │ You are the code    │ {"decision":        │       │           │          │ │
-│ │ review gate for a   │ "block",            │       │           │          │ │
-│ │ production          │ "comments":         │       │           │          │ │
-│ │ repository. Your    │ [{"file":           │       │           │          │ │
-│ │ approval merges and │ "fastapi/applicati… │       │           │          │ │
-│ │ deploys the change  │ "line_start": 4573, │       │           │          │ │
-│ │ with no further     │ "line_end": 4573,   │       │           │          │ │
-│ │ human review.       │ "body": "The        │       │           │          │ │
-│ │ Decide:             │ approved change has │       │           │          │ │
-│ │   approve  - you    │ a defect: the       │       │           │          │ │
-│ │ are confident the   │ methods for `vibe`  │       │           │          │ │
-│ │ change is correct   │ and                 │       │           │          │ │
-│ │ and safe to ship.   │ `websocket_route`   │       │           │          │ │
-│ │   block    - you    │ are inconsistent.   │       │           │          │ │
-│ │ found a defect;     │ `vibe` doesn’t      │       │           │          │ │
-│ │ cite its location.  │ support arguments   │       │           │          │ │
-│ │   escalate - you    │ like `name`, but    │       │           │          │ │
-│ │ cannot establish    │ does support a      │       │           │          │ │
-│ │ safety from what    │ `prompt` argument   │       │           │          │ │
-│ │ you can see; a      │ with a default,     │       │           │          │ │
-│ │ human must look.    │ whereas             │       │           │          │ │
-│ │ Approving a change  │ `websocket_route`   │       │           │          │ │
-│ │ that contains a     │ does support        │       │           │          │ │
-│ │ defect is the worst │ `name`. Consider    │       │           │          │ │
-│ │ outcome. Blocking a │ fixing this         │       │           │          │ │
-│ │ correct change      │ discrepancy."}]}    │       │           │          │ │
-│ │ costs an engineer's │                     │       │           │          │ │
-│ │ time. Escalating is │                     │       │           │          │ │
-│ │ cheap but useless   │                     │       │           │          │ │
-│ │ if done for         │                     │       │           │          │ │
-│ │ everything.         │                     │       │           │          │ │
-│ │ Respond with        │                     │       │           │          │ │
-│ │ exactly one JSON    │                     │       │           │          │ │
-│ │ object and nothing  │                     │       │           │          │ │
-│ │ else:               │                     │       │           │          │ │
-│ │ {"decision":        │                     │       │           │          │ │
-│ │ "approve|block|esc… │                     │       │           │          │ │
-│ │ "comments":         │                     │       │           │          │ │
-│ │ [{"file": "...",    │                     │       │           │          │ │
-│ │ "line_start": N,    │                     │       │           │          │ │
-│ │ "line_end": N,      │                     │       │           │          │ │
-│ │ "body": "...",      │                     │       │           │          │ │
-│ │ "proposed_test":    │                     │       │           │          │ │
-│ │ "optional pytest    │                     │       │           │          │ │
-│ │ source"}]}          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ USER                │                     │       │           │          │ │
-│ │ Repository: fastapi │                     │       │           │          │ │
-│ │ Files changed:      │                     │       │           │          │ │
-│ │ docs/en/docs/advan… │                     │       │           │          │ │
-│ │ docs/en/mkdocs.yml, │                     │       │           │          │ │
-│ │ docs_src/vibe/tuto… │                     │       │           │          │ │
-│ │ fastapi/applicatio… │                     │       │           │          │ │
-│ │ tests/test_vibe.py  │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Not shown (non-code │                     │       │           │          │ │
-│ │ or over budget;     │                     │       │           │          │ │
-│ │ treat as            │                     │       │           │          │ │
-│ │ unreviewed):        │                     │       │           │          │ │
-│ │ docs/en/docs/advan… │                     │       │           │          │ │
-│ │ (2304 chars,        │                     │       │           │          │ │
-│ │ non-code)           │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Context around the  │                     │       │           │          │ │
-│ │ change              │                     │       │           │          │ │
-│ │ (mechanically       │                     │       │           │          │ │
-│ │ extracted):         │                     │       │           │          │ │
-│ │ Changed             │                     │       │           │          │ │
-│ │ definitions:        │                     │       │           │          │ │
-│ │ docs_src/vibe/tuto… │                     │       │           │          │ │
-│ │ fastapi/applicatio… │                     │       │           │          │ │
-│ │ fastapi/applicatio… │                     │       │           │          │ │
-│ │ fastapi/applicatio… │                     │       │           │          │ │
-│ │ fastapi/applicatio… │                     │       │           │          │ │
-│ │ fastapi/applicatio… │                     │       │           │          │ │
-│ │ tests/test_vibe.py… │                     │       │           │          │ │
-│ │ tests/test_vibe.py… │                     │       │           │          │ │
-│ │ Recent history of   │                     │       │           │          │ │
-│ │ fastapi/applicatio… │                     │       │           │          │ │
-│ │   98b269b51         │                     │       │           │          │ │
-│ │ 2026-03-15 👷 Add   │                     │       │           │          │ │
-│ │ `ty` to precommit   │                     │       │           │          │ │
-│ │ (#15091)            │                     │       │           │          │ │
-│ │   2686c7fbb         │                     │       │           │          │ │
-│ │ 2026-02-24 ♻️       │                     │       │           │          │ │
-│ │ Refactor logic to   │                     │       │           │          │ │
-│ │ handle OpenAPI and  │                     │       │           │          │ │
-│ │ Swagger UI escaping │                     │       │           │          │ │
-│ │ data (#14986)       │                     │       │           │          │ │
-│ │   22354a253         │                     │       │           │          │ │
-│ │ 2026-02-23 🔒️ Add   │                     │       │           │          │ │
-│ │ `strict_content_ty… │                     │       │           │          │ │
-│ │ checking for JSON   │                     │       │           │          │ │
-│ │ requests (#14978)   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Diff:               │                     │       │           │          │ │
-│ │ ```diff             │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/docs/en/mkdocs.y… │                     │       │           │          │ │
-│ │ b/docs/en/mkdocs.y… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 461419498..a84934f… │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/docs/en/mkdocs.y… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/docs/en/mkdocs.y… │                     │       │           │          │ │
-│ │ @@ -197,6 +197,7 @@ │                     │       │           │          │ │
-│ │ nav:                │                     │       │           │          │ │
-│ │      -              │                     │       │           │          │ │
-│ │ advanced/advanced-… │                     │       │           │          │ │
-│ │      -              │                     │       │           │          │ │
-│ │ advanced/json-base… │                     │       │           │          │ │
-│ │      -              │                     │       │           │          │ │
-│ │ advanced/strict-co… │                     │       │           │          │ │
-│ │ +    -              │                     │       │           │          │ │
-│ │ advanced/vibe.md    │                     │       │           │          │ │
-│ │    - fastapi-cli.md │                     │       │           │          │ │
-│ │    -                │                     │       │           │          │ │
-│ │ editor-support.md   │                     │       │           │          │ │
-│ │    - Deployment:    │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/docs_src/vibe/tu… │                     │       │           │          │ │
-│ │ b/docs_src/vibe/tu… │                     │       │           │          │ │
-│ │ new file mode       │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 000000000..4ec3d55… │                     │       │           │          │ │
-│ │ --- /dev/null       │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/docs_src/vibe/tu… │                     │       │           │          │ │
-│ │ @@ -0,0 +1,12 @@    │                     │       │           │          │ │
-│ │ +from typing import │                     │       │           │          │ │
-│ │ Any                 │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +from fastapi       │                     │       │           │          │ │
-│ │ import FastAPI      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +app = FastAPI()    │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +@app.vibe(         │                     │       │           │          │ │
-│ │ +    "/vibe/",      │                     │       │           │          │ │
-│ │ +    prompt="pls    │                     │       │           │          │ │
-│ │ return json of      │                     │       │           │          │ │
-│ │ users from          │                     │       │           │          │ │
-│ │ database. make no   │                     │       │           │          │ │
-│ │ mistakes",          │                     │       │           │          │ │
-│ │ +)                  │                     │       │           │          │ │
-│ │ +async def          │                     │       │           │          │ │
-│ │ ai_vibes(body:      │                     │       │           │          │ │
-│ │ Any): ...           │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/fastapi/applicat… │                     │       │           │          │ │
-│ │ b/fastapi/applicat… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 4af1146b0..dfd80d4… │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/fastapi/applicat… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/fastapi/applicat… │                     │       │           │          │ │
-│ │ @@ -10,7 +10,11 @@  │                     │       │           │          │ │
-│ │ from                │                     │       │           │          │ │
-│ │ fastapi.exception_… │                     │       │           │          │ │
-│ │ import (            │                     │       │           │          │ │
-│ │      request_valid… │                     │       │           │          │ │
-│ │      websocket_req… │                     │       │           │          │ │
-│ │  )                  │                     │       │           │          │ │
-│ │ -from               │                     │       │           │          │ │
-│ │ fastapi.exceptions  │                     │       │           │          │ │
-│ │ import              │                     │       │           │          │ │
-│ │ RequestValidationE… │                     │       │           │          │ │
-│ │ WebSocketRequestVa… │                     │       │           │          │ │
-│ │ +from               │                     │       │           │          │ │
-│ │ fastapi.exceptions  │                     │       │           │          │ │
-│ │ import (            │                     │       │           │          │ │
-│ │ +    FastAPIError,  │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ RequestValidationE… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ WebSocketRequestVa… │                     │       │           │          │ │
-│ │ +)                  │                     │       │           │          │ │
-│ │  from               │                     │       │           │          │ │
-│ │ fastapi.logger      │                     │       │           │          │ │
-│ │ import logger       │                     │       │           │          │ │
-│ │  from               │                     │       │           │          │ │
-│ │ fastapi.middleware… │                     │       │           │          │ │
-│ │ import              │                     │       │           │          │ │
-│ │ AsyncExitStackMidd… │                     │       │           │          │ │
-│ │  from               │                     │       │           │          │ │
-│ │ fastapi.openapi.do… │                     │       │           │          │ │
-│ │ import (            │                     │       │           │          │ │
-│ │ @@ -4559,6 +4563,60 │                     │       │           │          │ │
-│ │ @@ class            │                     │       │           │          │ │
-│ │ FastAPI(Starlette): │                     │       │           │          │ │
-│ │              gener… │                     │       │           │          │ │
-│ │          )          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ +    def vibe(      │                     │       │           │          │ │
-│ │ +        self,      │                     │       │           │          │ │
-│ │ +        path:      │                     │       │           │          │ │
-│ │ Annotated[          │                     │       │           │          │ │
-│ │ +            str,   │                     │       │           │          │ │
-│ │ +            Doc(   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ """                 │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ The URL path to be  │                     │       │           │          │ │
-│ │ used for this *path │                     │       │           │          │ │
-│ │ operation*.         │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ For example, in     │                     │       │           │          │ │
-│ │ `http://example.co… │                     │       │           │          │ │
-│ │ the path is         │                     │       │           │          │ │
-│ │ `/vibes`.           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ """                 │                     │       │           │          │ │
-│ │ +            ),     │                     │       │           │          │ │
-│ │ +        ],         │                     │       │           │          │ │
-│ │ +        *,         │                     │       │           │          │ │
-│ │ +        prompt:    │                     │       │           │          │ │
-│ │ Annotated[          │                     │       │           │          │ │
-│ │ +            str,   │                     │       │           │          │ │
-│ │ +            Doc(   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ """                 │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ The prompt to send  │                     │       │           │          │ │
-│ │ to the LLM provider │                     │       │           │          │ │
-│ │ along with the      │                     │       │           │          │ │
-│ │ payload.            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ This tells the LLM  │                     │       │           │          │ │
-│ │ what to do with the │                     │       │           │          │ │
-│ │ request body.       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ """                 │                     │       │           │          │ │
-│ │ +            ),     │                     │       │           │          │ │
-│ │ +        ] = "",    │                     │       │           │          │ │
-│ │ +    ) ->           │                     │       │           │          │ │
-│ │ Callable[[Decorate… │                     │       │           │          │ │
-│ │ DecoratedCallable]: │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        Add a      │                     │       │           │          │ │
-│ │ *vibe coding path   │                     │       │           │          │ │
-│ │ operation* that     │                     │       │           │          │ │
-│ │ receives any HTTP   │                     │       │           │          │ │
-│ │ method              │                     │       │           │          │ │
-│ │ +        and any    │                     │       │           │          │ │
-│ │ payload.            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        It's       │                     │       │           │          │ │
-│ │ intended to receive │                     │       │           │          │ │
-│ │ the request and     │                     │       │           │          │ │
-│ │ send the payload    │                     │       │           │          │ │
-│ │ directly            │                     │       │           │          │ │
-│ │ +        to an LLM  │                     │       │           │          │ │
-│ │ provider, and       │                     │       │           │          │ │
-│ │ return the response │                     │       │           │          │ │
-│ │ as is.              │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        Embrace    │                     │       │           │          │ │
-│ │ the freedom and     │                     │       │           │          │ │
-│ │ flexibility of not  │                     │       │           │          │ │
-│ │ having any data     │                     │       │           │          │ │
-│ │ validation,         │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ documentation, or   │                     │       │           │          │ │
-│ │ serialization.      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        ## Example │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        ```python  │                     │       │           │          │ │
-│ │ +        from       │                     │       │           │          │ │
-│ │ typing import Any   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        from       │                     │       │           │          │ │
-│ │ fastapi import      │                     │       │           │          │ │
-│ │ FastAPI             │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        app =      │                     │       │           │          │ │
-│ │ FastAPI()           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        @app.vibe( │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ "/vibe/",           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ prompt="pls return  │                     │       │           │          │ │
-│ │ json of users from  │                     │       │           │          │ │
-│ │ database. make no   │                     │       │           │          │ │
-│ │ mistakes",          │                     │       │           │          │ │
-│ │ +        )          │                     │       │           │          │ │
-│ │ +        async def  │                     │       │           │          │ │
-│ │ ai_vibes(body:      │                     │       │           │          │ │
-│ │ Any):               │                     │       │           │          │ │
-│ │ +            ...    │                     │       │           │          │ │
-│ │ +        ```        │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        raise      │                     │       │           │          │ │
-│ │ FastAPIError("Are   │                     │       │           │          │ │
-│ │ you kidding me?     │                     │       │           │          │ │
-│ │ Happy April         │                     │       │           │          │ │
-│ │ Fool's")            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ websocket_route(    │                     │       │           │          │ │
-│ │          self,      │                     │       │           │          │ │
-│ │ path: str, name:    │                     │       │           │          │ │
-│ │ str | None = None   │                     │       │           │          │ │
-│ │      ) ->           │                     │       │           │          │ │
-│ │ Callable[[Decorate… │                     │       │           │          │ │
-│ │ DecoratedCallable]: │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_vibe.… │                     │       │           │          │ │
-│ │ b/tests/test_vibe.… │                     │       │           │          │ │
-│ │ new file mode       │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 000000000..4a79d6b… │                     │       │           │          │ │
-│ │ --- /dev/null       │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_vibe.… │                     │       │           │          │ │
-│ │ @@ -0,0 +1,17 @@    │                     │       │           │          │ │
-│ │ +from typing import │                     │       │           │          │ │
-│ │ Any                 │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +import pytest      │                     │       │           │          │ │
-│ │ +from fastapi       │                     │       │           │          │ │
-│ │ import FastAPI      │                     │       │           │          │ │
-│ │ +from               │                     │       │           │          │ │
-│ │ fastapi.exceptions  │                     │       │           │          │ │
-│ │ import FastAPIError │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ test_vibe_raises(): │                     │       │           │          │ │
-│ │ +    with           │                     │       │           │          │ │
-│ │ pytest.raises(Fast… │                     │       │           │          │ │
-│ │ match="Are you      │                     │       │           │          │ │
-│ │ kidding me"):       │                     │       │           │          │ │
-│ │ +        app =      │                     │       │           │          │ │
-│ │ FastAPI()           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        @app.vibe( │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ "/vibe/",           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ prompt="pls return  │                     │       │           │          │ │
-│ │ json of users from  │                     │       │           │          │ │
-│ │ database. make no   │                     │       │           │          │ │
-│ │ mistakes",          │                     │       │           │          │ │
-│ │ +        )          │                     │       │           │          │ │
-│ │ +        async def  │                     │       │           │          │ │
-│ │ ai_vibes(body:      │                     │       │           │          │ │
-│ │ Any):  # pragma:    │                     │       │           │          │ │
-│ │ nocover             │                     │       │           │          │ │
-│ │ +            pass   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+│ │ index                │                     │      │           │          │ │
+│ │ 65080060..2039c488   │                     │      │           │          │ │
+│ │ 100644               │                     │      │           │          │ │
+│ │ ---                  │                     │      │           │          │ │
+│ │ a/pydantic/fields.py │                     │      │           │          │ │
+│ │ +++                  │                     │      │           │          │ │
+│ │ b/pydantic/fields.py │                     │      │           │          │ │
+│ │ @@ -827,13 +827,19   │                     │      │           │          │ │
+│ │ @@ class             │                     │      │           │          │ │
+│ │ FieldInfo(_repr.Rep… │                     │      │           │          │ │
+│ │          # Note: we  │                     │      │           │          │ │
+│ │ can't define a       │                     │      │           │          │ │
+│ │ custom `__copy__()`, │                     │      │           │          │ │
+│ │ as `FieldInfo` is    │                     │      │           │          │ │
+│ │ being subclassed     │                     │      │           │          │ │
+│ │          # by some   │                     │      │           │          │ │
+│ │ third-party          │                     │      │           │          │ │
+│ │ libraries with extra │                     │      │           │          │ │
+│ │ attributes defined   │                     │      │           │          │ │
+│ │ (and as `FieldInfo`  │                     │      │           │          │ │
+│ │          # is        │                     │      │           │          │ │
+│ │ slotted, we can't    │                     │      │           │          │ │
+│ │ make a copy of the   │                     │      │           │          │ │
+│ │ `__dict__`).         │                     │      │           │          │ │
+│ │ -        copied =    │                     │      │           │          │ │
+│ │ copy(self)           │                     │      │           │          │ │
+│ │ +        if          │                     │      │           │          │ │
+│ │ type(self) is        │                     │      │           │          │ │
+│ │ FieldInfo:           │                     │      │           │          │ │
+│ │ +            #       │                     │      │           │          │ │
+│ │ Fast-path if the     │                     │      │           │          │ │
+│ │ instance isn't a     │                     │      │           │          │ │
+│ │ subclass             │                     │      │           │          │ │
+│ │ (`copy.copy()`       │                     │      │           │          │ │
+│ │ relies on pickling   │                     │      │           │          │ │
+│ │ which is slower):    │                     │      │           │          │ │
+│ │ +            copied  │                     │      │           │          │ │
+│ │ =                    │                     │      │           │          │ │
+│ │ FieldInfo.__new__(F… │                     │      │           │          │ │
+│ │ +            for     │                     │      │           │          │ │
+│ │ attr_name in         │                     │      │           │          │ │
+│ │ FieldInfo.__slots__: │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ setattr(copied,      │                     │      │           │          │ │
+│ │ attr_name,           │                     │      │           │          │ │
+│ │ getattr(self,        │                     │      │           │          │ │
+│ │ attr_name))          │                     │      │           │          │ │
+│ │ +        else:       │                     │      │           │          │ │
+│ │ +            copied  │                     │      │           │          │ │
+│ │ = copy(self)         │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │          for         │                     │      │           │          │ │
+│ │ attr_name in         │                     │      │           │          │ │
+│ │ ('metadata',         │                     │      │           │          │ │
+│ │ '_attributes_set',   │                     │      │           │          │ │
+│ │ '_qualifiers'):      │                     │      │           │          │ │
+│ │              # Apply │                     │      │           │          │ │
+│ │ "deep-copy" behavior │                     │      │           │          │ │
+│ │ on collections       │                     │      │           │          │ │
+│ │ attributes:          │                     │      │           │          │ │
+│ │ -            value = │                     │      │           │          │ │
+│ │ getattr(copied,      │                     │      │           │          │ │
+│ │ attr_name).copy()    │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ setattr(copied,      │                     │      │           │          │ │
+│ │ attr_name, value)    │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ setattr(copied,      │                     │      │           │          │ │
+│ │ attr_name,           │                     │      │           │          │ │
+│ │ getattr(copied,      │                     │      │           │          │ │
+│ │ attr_name).copy())   │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ -        return      │                     │      │           │          │ │
+│ │ copied               │                     │      │           │          │ │
+│ │ +        return      │                     │      │           │          │ │
+│ │ copied  # pyright:   │                     │      │           │          │ │
+│ │ ignore[reportReturn… │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │      def             │                     │      │           │          │ │
+│ │ __repr_args__(self)  │                     │      │           │          │ │
+│ │ -> ReprArgs:         │                     │      │           │          │ │
+│ │          yield       │                     │      │           │          │ │
+│ │ 'annotation',        │                     │      │           │          │ │
+│ │ _repr.PlainRepr(_re… │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ ```                  │                     │      │           │          │ │
+│ ├──────────────────────┼─────────────────────┼──────┼───────────┼──────────┤ │
+│ │ SYSTEM               │ ASSISTANT           │ 1.00 │      0.25 │ block    │ │
+│ │ You are the code     │ {"decision":        │      │           │          │ │
+│ │ review gate for a    │ "block",            │      │           │          │ │
+│ │ production           │ "comments":         │      │           │          │ │
+│ │ repository. Your     │ [{"file":           │      │           │          │ │
+│ │ approval merges and  │ "pydantic/main.py", │      │           │          │ │
+│ │ deploys the change   │ "line_start": 341,  │      │           │          │ │
+│ │ with no further      │ "line_end": 341,    │      │           │          │ │
+│ │ human review.        │ "body": "The        │      │           │          │ │
+│ │ Decide:              │ `model_dump` method │      │           │          │ │
+│ │   approve  - you are │ was changed to      │      │           │          │ │
+│ │ confident the change │ return a `str`      │      │           │          │ │
+│ │ is correct and safe  │ instead of a        │      │           │          │ │
+│ │ to ship.             │ `dict`. This breaks │      │           │          │ │
+│ │   block    - you     │ backwards           │      │           │          │ │
+│ │ found a defect; cite │ compatibility with  │      │           │          │ │
+│ │ its location.        │ the `model_dump`    │      │           │          │ │
+│ │   escalate - you     │ function, which was │      │           │          │ │
+│ │ cannot establish     │ intended to return  │      │           │          │ │
+│ │ safety from what you │ a `dict`            │      │           │          │ │
+│ │ can see; a human     │ representation of   │      │           │          │ │
+│ │ must look.           │ the model data. You │      │           │          │ │
+│ │ Approving a change   │ should not consider │      │           │          │ │
+│ │ that contains a      │ this a bug, but     │      │           │          │ │
+│ │ defect is the worst  │ rather as a change  │      │           │          │ │
+│ │ outcome. Blocking a  │ in API behavior.    │      │           │          │ │
+│ │ correct change costs │ This change would   │      │           │          │ │
+│ │ an engineer's time.  │ break existing user │      │           │          │ │
+│ │ Escalating is cheap  │ code if they expect │      │           │          │ │
+│ │ but useless if done  │ the output of       │      │           │          │ │
+│ │ for everything.      │ `model_dump` to be  │      │           │          │ │
+│ │ Respond with exactly │ a `dict`."}]}       │      │           │          │ │
+│ │ one JSON object and  │                     │      │           │          │ │
+│ │ nothing else:        │                     │      │           │          │ │
+│ │ {"decision":         │                     │      │           │          │ │
+│ │ "approve|block|esca… │                     │      │           │          │ │
+│ │ "comments":          │                     │      │           │          │ │
+│ │ [{"file": "...",     │                     │      │           │          │ │
+│ │ "line_start": N,     │                     │      │           │          │ │
+│ │ "line_end": N,       │                     │      │           │          │ │
+│ │ "body": "...",       │                     │      │           │          │ │
+│ │ "proposed_test":     │                     │      │           │          │ │
+│ │ "optional pytest     │                     │      │           │          │ │
+│ │ source"}]}           │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ USER                 │                     │      │           │          │ │
+│ │ Repository: pydantic │                     │      │           │          │ │
+│ │ Files changed:       │                     │      │           │          │ │
+│ │ pydantic/main.py     │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ Context around the   │                     │      │           │          │ │
+│ │ change (mechanically │                     │      │           │          │ │
+│ │ extracted):          │                     │      │           │          │ │
+│ │ Changed definitions: │                     │      │           │          │ │
+│ │ pydantic/main.py:Ba… │                     │      │           │          │ │
+│ │ pydantic/main.py:mo… │                     │      │           │          │ │
+│ │ pydantic/main.py:mo… │                     │      │           │          │ │
+│ │ pydantic/main.py:mo… │                     │      │           │          │ │
+│ │ pydantic/main.py:mo… │                     │      │           │          │ │
+│ │ pydantic/main.py:mo… │                     │      │           │          │ │
+│ │ pydantic/main.py:__… │                     │      │           │          │ │
+│ │ pydantic/main.py:__… │                     │      │           │          │ │
+│ │ pydantic/main.py:__… │                     │      │           │          │ │
+│ │ pydantic/main.py:__… │                     │      │           │          │ │
+│ │ pydantic/main.py:__… │                     │      │           │          │ │
+│ │ pydantic/main.py:__… │                     │      │           │          │ │
+│ │ Recent history of    │                     │      │           │          │ │
+│ │ pydantic/main.py:    │                     │      │           │          │ │
+│ │   831893ed           │                     │      │           │          │ │
+│ │ 2026-09-09 Fix race  │                     │      │           │          │ │
+│ │ conditions in        │                     │      │           │          │ │
+│ │ freethreaded build   │                     │      │           │          │ │
+│ │ (#13785)             │                     │      │           │          │ │
+│ │   78a5c4c6           │                     │      │           │          │ │
+│ │ 2026-09-09 Add       │                     │      │           │          │ │
+│ │ support for          │                     │      │           │          │ │
+│ │ `TypeForm` (#13459)  │                     │      │           │          │ │
+│ │   d098ddce           │                     │      │           │          │ │
+│ │ 2026-08-27 Treat a   │                     │      │           │          │ │
+│ │ class attribute set  │                     │      │           │          │ │
+│ │ to `None` as         │                     │      │           │          │ │
+│ │ existing when        │                     │      │           │          │ │
+│ │ assigning with       │                     │      │           │          │ │
+│ │ `extra='allow'`      │                     │      │           │          │ │
+│ │ (#13718)             │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ Diff:                │                     │      │           │          │ │
+│ │ ```diff              │                     │      │           │          │ │
+│ │ diff --git           │                     │      │           │          │ │
+│ │ a/pydantic/main.py   │                     │      │           │          │ │
+│ │ b/pydantic/main.py   │                     │      │           │          │ │
+│ │ index                │                     │      │           │          │ │
+│ │ 395c3c85..c9e8c86e   │                     │      │           │          │ │
+│ │ 100644               │                     │      │           │          │ │
+│ │ ---                  │                     │      │           │          │ │
+│ │ a/pydantic/main.py   │                     │      │           │          │ │
+│ │ +++                  │                     │      │           │          │ │
+│ │ b/pydantic/main.py   │                     │      │           │          │ │
+│ │ @@ -291,7 +291,7 @@  │                     │      │           │          │ │
+│ │ class                │                     │      │           │          │ │
+│ │ BaseModel(metaclass… │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │      @_utils.deprec… │                     │      │           │          │ │
+│ │      @classmethod    │                     │      │           │          │ │
+│ │ -    def             │                     │      │           │          │ │
+│ │ model_fields(cls) -> │                     │      │           │          │ │
+│ │ dict[str,            │                     │      │           │          │ │
+│ │ FieldInfo]:          │                     │      │           │          │ │
+│ │ +    def             │                     │      │           │          │ │
+│ │ model_fields(cls) -> │                     │      │           │          │ │
+│ │ Dict[str,            │                     │      │           │          │ │
+│ │ FieldInfo]:  # noqa: │                     │      │           │          │ │
+│ │ UP006                │                     │      │           │          │ │
+│ │          """A        │                     │      │           │          │ │
+│ │ mapping of field     │                     │      │           │          │ │
+│ │ names to their       │                     │      │           │          │ │
+│ │ respective           │                     │      │           │          │ │
+│ │ [`FieldInfo`][pydan… │                     │      │           │          │ │
+│ │ instances.           │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │          !!! warning │                     │      │           │          │ │
+│ │ @@ -302,7 +302,7 @@  │                     │      │           │          │ │
+│ │ class                │                     │      │           │          │ │
+│ │ BaseModel(metaclass… │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │      @_utils.deprec… │                     │      │           │          │ │
+│ │      @classmethod    │                     │      │           │          │ │
+│ │ -    def             │                     │      │           │          │ │
+│ │ model_computed_fiel… │                     │      │           │          │ │
+│ │ -> dict[str,         │                     │      │           │          │ │
+│ │ ComputedFieldInfo]:  │                     │      │           │          │ │
+│ │ +    def             │                     │      │           │          │ │
+│ │ model_computed_fiel… │                     │      │           │          │ │
+│ │ -> Dict[str,         │                     │      │           │          │ │
+│ │ ComputedFieldInfo]:  │                     │      │           │          │ │
+│ │ # noqa: UP006        │                     │      │           │          │ │
+│ │          """A        │                     │      │           │          │ │
+│ │ mapping of computed  │                     │      │           │          │ │
+│ │ field names to their │                     │      │           │          │ │
+│ │ respective           │                     │      │           │          │ │
+│ │ [`ComputedFieldInfo… │                     │      │           │          │ │
+│ │ instances.           │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │          !!! warning │                     │      │           │          │ │
+│ │ @@ -312,7 +312,7 @@  │                     │      │           │          │ │
+│ │ class                │                     │      │           │          │ │
+│ │ BaseModel(metaclass… │                     │      │           │          │ │
+│ │          return      │                     │      │           │          │ │
+│ │ getattr(cls,         │                     │      │           │          │ │
+│ │ '__pydantic_compute… │                     │      │           │          │ │
+│ │ {})                  │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │      @property       │                     │      │           │          │ │
+│ │ -    def             │                     │      │           │          │ │
+│ │ model_extra(self) -> │                     │      │           │          │ │
+│ │ dict[str, Any] |     │                     │      │           │          │ │
+│ │ None:                │                     │      │           │          │ │
+│ │ +    def             │                     │      │           │          │ │
+│ │ model_extra(self) -> │                     │      │           │          │ │
+│ │ Dict[str, Any] |     │                     │      │           │          │ │
+│ │ None:  # noqa: UP006 │                     │      │           │          │ │
+│ │          """Get      │                     │      │           │          │ │
+│ │ extra fields set     │                     │      │           │          │ │
+│ │ during validation.   │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │          Returns:    │                     │      │           │          │ │
+│ │ @@ -486,7 +486,7 @@  │                     │      │           │          │ │
+│ │ class                │                     │      │           │          │ │
+│ │ BaseModel(metaclass… │                     │      │           │          │ │
+│ │          fallback:   │                     │      │           │          │ │
+│ │ Callable[[Any], Any] │                     │      │           │          │ │
+│ │ | None = None,       │                     │      │           │          │ │
+│ │          serialize_… │                     │      │           │          │ │
+│ │ bool = False,        │                     │      │           │          │ │
+│ │          polymorphi… │                     │      │           │          │ │
+│ │ bool | None = None,  │                     │      │           │          │ │
+│ │ -    ) -> dict[str,  │                     │      │           │          │ │
+│ │ Any]:                │                     │      │           │          │ │
+│ │ +    ) -> str:  #    │                     │      │           │          │ │
+│ │ noqa: UP006          │                     │      │           │          │ │
+│ │          """!!!      │                     │      │           │          │ │
+│ │ abstract "Usage      │                     │      │           │          │ │
+│ │ Documentation"       │                     │      │           │          │ │
+│ │              [`mode… │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ @@ -612,7 +612,7 @@  │                     │      │           │          │ │
+│ │ class                │                     │      │           │          │ │
+│ │ BaseModel(metaclass… │                     │      │           │          │ │
+│ │          mode:       │                     │      │           │          │ │
+│ │ JsonSchemaMode =     │                     │      │           │          │ │
+│ │ 'validation',        │                     │      │           │          │ │
+│ │          *,          │                     │      │           │          │ │
+│ │          union_form… │                     │      │           │          │ │
+│ │ Literal['any_of',    │                     │      │           │          │ │
+│ │ 'primitive_type_arr… │                     │      │           │          │ │
+│ │ = 'any_of',          │                     │      │           │          │ │
+│ │ -    ) -> dict[str,  │                     │      │           │          │ │
+│ │ Any]:                │                     │      │           │          │ │
+│ │ +    ) -> Dict[str,  │                     │      │           │          │ │
+│ │ Any]:  # noqa: UP006 │                     │      │           │          │ │
+│ │          """Generat… │                     │      │           │          │ │
+│ │ a JSON schema for a  │                     │      │           │          │ │
+│ │ model class.         │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │          Args:       │                     │      │           │          │ │
+│ │ @@ -1050,7 +1050,7   │                     │      │           │          │ │
+│ │ @@ class             │                     │      │           │          │ │
+│ │ BaseModel(metaclass… │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │          return m    │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ -    def             │                     │      │           │          │ │
+│ │ __deepcopy__(self,   │                     │      │           │          │ │
+│ │ memo: dict[int, Any] │                     │      │           │          │ │
+│ │ | None = None) ->    │                     │      │           │          │ │
+│ │ Self:                │                     │      │           │          │ │
+│ │ +    def             │                     │      │           │          │ │
+│ │ __deepcopy__(self,   │                     │      │           │          │ │
+│ │ memo: Dict[int, Any] │                     │      │           │          │ │
+│ │ | None = None) ->    │                     │      │           │          │ │
+│ │ Self:  # noqa: UP006 │                     │      │           │          │ │
+│ │          """Returns  │                     │      │           │          │ │
+│ │ a deep copy of the   │                     │      │           │          │ │
+│ │ model."""            │                     │      │           │          │ │
+│ │          cls =       │                     │      │           │          │ │
+│ │ type(self)           │                     │      │           │          │ │
+│ │          m =         │                     │      │           │          │ │
+│ │ cls.__new__(cls)     │                     │      │           │          │ │
+│ │ @@ -1205,7 +1205,7   │                     │      │           │          │ │
+│ │ @@ class             │                     │      │           │          │ │
+│ │ BaseModel(metaclass… │                     │      │           │          │ │
+│ │          def         │                     │      │           │          │ │
+│ │ __replace__(self,    │                     │      │           │          │ │
+│ │ **changes: Any) ->   │                     │      │           │          │ │
+│ │ Self:                │                     │      │           │          │ │
+│ │              return  │                     │      │           │          │ │
+│ │ self.model_copy(upd… │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ -    def             │                     │      │           │          │ │
+│ │ __getstate__(self)   │                     │      │           │          │ │
+│ │ -> dict[Any, Any]:   │                     │      │           │          │ │
+│ │ +    def             │                     │      │           │          │ │
+│ │ __getstate__(self)   │                     │      │           │          │ │
+│ │ -> Dict[Any, Any]:   │                     │      │           │          │ │
+│ │ # noqa: UP006        │                     │      │           │          │ │
+│ │          private =   │                     │      │           │          │ │
+│ │ self.__pydantic_pri… │                     │      │           │          │ │
+│ │          if private: │                     │      │           │          │ │
+│ │              private │                     │      │           │          │ │
+│ │ = {k: v for k, v in  │                     │      │           │          │ │
+│ │ private.items() if v │                     │      │           │          │ │
+│ │ is not               │                     │      │           │          │ │
+│ │ PydanticUndefined}   │                     │      │           │          │ │
+│ │ @@ -1216,7 +1216,7   │                     │      │           │          │ │
+│ │ @@ class             │                     │      │           │          │ │
+│ │ BaseModel(metaclass… │                     │      │           │          │ │
+│ │              '__pyd… │                     │      │           │          │ │
+│ │ private,             │                     │      │           │          │ │
+│ │          }           │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ -    def             │                     │      │           │          │ │
+│ │ __setstate__(self,   │                     │      │           │          │ │
+│ │ state: dict[Any,     │                     │      │           │          │ │
+│ │ Any]) -> None:       │                     │      │           │          │ │
+│ │ +    def             │                     │      │           │          │ │
+│ │ __setstate__(self,   │                     │      │           │          │ │
+│ │ state: Dict[Any,     │                     │      │           │          │ │
+│ │ Any]) -> None:  #    │                     │      │           │          │ │
+│ │ noqa: UP006          │                     │      │           │          │ │
+│ │          _object_se… │                     │      │           │          │ │
+│ │ '__pydantic_fields_… │                     │      │           │          │ │
+│ │ state.get('__pydant… │                     │      │           │          │ │
+│ │ {}))                 │                     │      │           │          │ │
+│ │          _object_se… │                     │      │           │          │ │
+│ │ '__pydantic_extra__… │                     │      │           │          │ │
+│ │ state.get('__pydant… │                     │      │           │          │ │
+│ │ {}))                 │                     │      │           │          │ │
+│ │          _object_se… │                     │      │           │          │ │
+│ │ '__pydantic_private… │                     │      │           │          │ │
+│ │ state.get('__pydant… │                     │      │           │          │ │
+│ │ {}))                 │                     │      │           │          │ │
+│ │ @@ -1361,7 +1361,7   │                     │      │           │          │ │
+│ │ @@ class             │                     │      │           │          │ │
+│ │ BaseModel(metaclass… │                     │      │           │          │ │
+│ │      @typing_extens… │                     │      │           │          │ │
+│ │          'The        │                     │      │           │          │ │
+│ │ `__fields__`         │                     │      │           │          │ │
+│ │ attribute is         │                     │      │           │          │ │
+│ │ deprecated, use the  │                     │      │           │          │ │
+│ │ `model_fields` class │                     │      │           │          │ │
+│ │ property instead.',  │                     │      │           │          │ │
+│ │ category=None        │                     │      │           │          │ │
+│ │      )               │                     │      │           │          │ │
+│ │ -    def             │                     │      │           │          │ │
+│ │ __fields__(self) ->  │                     │      │           │          │ │
+│ │ dict[str,            │                     │      │           │          │ │
+│ │ FieldInfo]:          │                     │      │           │          │ │
+│ │ +    def             │                     │      │           │          │ │
+│ │ __fields__(self) ->  │                     │      │           │          │ │
+│ │ Dict[str,            │                     │      │           │          │ │
+│ │ FieldInfo]:  # noqa: │                     │      │           │          │ │
+│ │ UP006                │                     │      │           │          │ │
+│ │          warnings.w… │                     │      │           │          │ │
+│ │              'The    │                     │      │           │          │ │
+│ │ `__fields__`         │                     │      │           │          │ │
+│ │ attribute is         │                     │      │           │          │ │
+│ │ deprecated, use the  │                     │      │           │          │ │
+│ │ `model_fields` class │                     │      │           │          │ │
+│ │ property instead.',  │                     │      │           │          │ │
+│ │              catego… │                     │      │           │          │ │
+│ │ ```                  │                     │      │           │          │ │
+│ └──────────────────────┴─────────────────────┴──────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
