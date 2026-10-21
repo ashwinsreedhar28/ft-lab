@@ -1,82 +1,184 @@
-│ │ =                  │                    │       │           │            │ │
-│ │ get_params_from_f… │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/typer/core.py    │                    │       │           │            │ │
-│ │ b/typer/core.py    │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ d0d888c..3500090   │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/typer/core.py    │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/typer/core.py    │                    │       │           │            │ │
-│ │ @@ -1,5 +1,4 @@    │                    │       │           │            │ │
-│ │  import errno      │                    │       │           │            │ │
-│ │ -import            │                    │       │           │            │ │
-│ │ importlib.util     │                    │       │           │            │ │
-│ │  import inspect    │                    │       │           │            │ │
-│ │  import os         │                    │       │           │            │ │
-│ │  import sys        │                    │       │           │            │ │
-│ │ @@ -28,8 +27,7 @@  │                    │       │           │            │ │
-│ │ from ._typing      │                    │       │           │            │ │
-│ │ import Literal     │                    │       │           │            │ │
-│ │  MarkupMode =      │                    │       │           │            │ │
-│ │ Literal["markdown… │                    │       │           │            │ │
-│ │ "rich", None]      │                    │       │           │            │ │
-│ │  MARKUP_MODE_KEY = │                    │       │           │            │ │
-│ │ "TYPER_RICH_MARKU… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -HAS_RICH =        │                    │       │           │            │ │
-│ │ importlib.util.fi… │                    │       │           │            │ │
-│ │ is not None        │                    │       │           │            │ │
-│ │ -HAS_SHELLINGHAM = │                    │       │           │            │ │
-│ │ importlib.util.fi… │                    │       │           │            │ │
-│ │ is not None        │                    │       │           │            │ │
-│ │ +HAS_RICH =        │                    │       │           │            │ │
-│ │ os.getenv("TYPER_… │                    │       │           │            │ │
-│ │ True)              │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  if HAS_RICH:      │                    │       │           │            │ │
-│ │      DEFAULT_MARK… │                    │       │           │            │ │
-│ │ MarkupMode =       │                    │       │           │            │ │
-│ │ "rich"             │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
-│ │ SYSTEM             │ ASSISTANT          │ -1.20 │     -0.54 │ unparsable │ │
-│ │ You are the code   │ {'decision':       │       │           │            │ │
-│ │ review gate for a  │ 'approve',         │       │           │            │ │
-│ │ production         │ 'comments':        │       │           │            │ │
-│ │ repository. Your   │ [{'file':          │       │           │            │ │
-│ │ approval merges    │ 'fastapi/_compat/… │       │           │            │ │
-│ │ and deploys the    │ 'line_start': 477, │       │           │            │ │
-│ │ change with no     │ 'line_end': 478,   │       │           │            │ │
-│ │ further human      │ 'body':            │       │           │            │ │
-│ │ review. Decide:    │ 'Conversion of     │       │           │            │ │
-│ │   approve  - you   │ return-value       │       │           │            │ │
-│ │ are confident the  │ type🔨⚡ Os x      │       │           │            │ │
-│ │ change is correct  │ (3.10) clueless    │       │           │            │ │
-│ │ and safe to ship.  │ subtyping.'}]}     │       │           │            │ │
-│ │   block    - you   │                    │       │           │            │ │
-│ │ found a defect;    │                    │       │           │            │ │
-│ │ cite its location. │                    │       │           │            │ │
-│ │   escalate - you   │                    │       │           │            │ │
-│ │ cannot establish   │                    │       │           │            │ │
-│ │ safety from what   │                    │       │           │            │ │
-│ │ you can see; a     │                    │       │           │            │ │
-│ │ human must look.   │                    │       │           │            │ │
-│ │ Approving a change │                    │       │           │            │ │
-│ │ that contains a    │                    │       │           │            │ │
-│ │ defect is the      │                    │       │           │            │ │
-│ │ worst outcome.     │                    │       │           │            │ │
-│ │ Blocking a correct │                    │       │           │            │ │
-│ │ change costs an    │                    │       │           │            │ │
-│ │ engineer's time.   │                    │       │           │            │ │
-│ │ Escalating is      │                    │       │           │            │ │
-│ │ cheap but useless  │                    │       │           │            │ │
-│ │ if done for        │                    │       │           │            │ │
-│ │ everything.        │                    │       │           │            │ │
-│ │ Respond with       │                    │       │           │            │ │
+│ │ tests/test_respons… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ starlette/response… │                     │       │           │          │ │
+│ │   9774b08           │                     │       │           │          │ │
+│ │ 2026-09-26 Stop     │                     │       │           │          │ │
+│ │ multipart range     │                     │       │           │          │ │
+│ │ responses on        │                     │       │           │          │ │
+│ │ unexpected EOF      │                     │       │           │          │ │
+│ │ (#3583)             │                     │       │           │          │ │
+│ │   4fe55eb           │                     │       │           │          │ │
+│ │ 2026-09-23 Preserve │                     │       │           │          │ │
+│ │ `FileResponse`      │                     │       │           │          │ │
+│ │ status for range    │                     │       │           │          │ │
+│ │ requests (#3568)    │                     │       │           │          │ │
+│ │   f04b676           │                     │       │           │          │ │
+│ │ 2026-09-05 Support  │                     │       │           │          │ │
+│ │ `partitioned` in    │                     │       │           │          │ │
+│ │ `Response.delete_c… │                     │       │           │          │ │
+│ │ (#3376)             │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ tests/test_respons… │                     │       │           │          │ │
+│ │   56d8858           │                     │       │           │          │ │
+│ │ 2026-09-27 Drop     │                     │       │           │          │ │
+│ │ Python 3.10 support │                     │       │           │          │ │
+│ │ (#3592)             │                     │       │           │          │ │
+│ │   9774b08           │                     │       │           │          │ │
+│ │ 2026-09-26 Stop     │                     │       │           │          │ │
+│ │ multipart range     │                     │       │           │          │ │
+│ │ responses on        │                     │       │           │          │ │
+│ │ unexpected EOF      │                     │       │           │          │ │
+│ │ (#3583)             │                     │       │           │          │ │
+│ │   4fe55eb           │                     │       │           │          │ │
+│ │ 2026-09-23 Preserve │                     │       │           │          │ │
+│ │ `FileResponse`      │                     │       │           │          │ │
+│ │ status for range    │                     │       │           │          │ │
+│ │ requests (#3568)    │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/starlette/respon… │                     │       │           │          │ │
+│ │ b/starlette/respon… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ dd4cc1c..60dbee8    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/starlette/respon… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/starlette/respon… │                     │       │           │          │ │
+│ │ @@ -462,6 +462,8 @@ │                     │       │           │          │ │
+│ │ class               │                     │       │           │          │ │
+│ │ FileResponse(Respo… │                     │       │           │          │ │
+│ │                  )  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ _should_use_range(… │                     │       │           │          │ │
+│ │ http_if_range: str) │                     │       │           │          │ │
+│ │ -> bool:            │                     │       │           │          │ │
+│ │ +        if         │                     │       │           │          │ │
+│ │ http_if_range.star… │                     │       │           │          │ │
+│ │ +            return │                     │       │           │          │ │
+│ │ False               │                     │       │           │          │ │
+│ │          return     │                     │       │           │          │ │
+│ │ http_if_range ==    │                     │       │           │          │ │
+│ │ self.headers["last… │                     │       │           │          │ │
+│ │ or http_if_range == │                     │       │           │          │ │
+│ │ self.headers["etag… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      @classmethod   │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_respo… │                     │       │           │          │ │
+│ │ b/tests/test_respo… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ d2c3251..a3e8754    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_respo… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_respo… │                     │       │           │          │ │
+│ │ @@ -365,6 +365,21   │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ test_file_response… │                     │       │           │          │ │
+│ │ Path,               │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │ Te                  │                     │       │           │          │ │
+│ │      assert         │                     │       │           │          │ │
+│ │ response.headers["… │                     │       │           │          │ │
+│ │ == f"bytes          │                     │       │           │          │ │
+│ │ 0-4/{len(content)}" │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_file_response… │                     │       │           │          │ │
+│ │ Path,               │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │ TestClientFactory)  │                     │       │           │          │ │
+│ │ -> None:            │                     │       │           │          │ │
+│ │ +    content =      │                     │       │           │          │ │
+│ │ b"file content"     │                     │       │           │          │ │
+│ │ +    path =         │                     │       │           │          │ │
+│ │ tmp_path /          │                     │       │           │          │ │
+│ │ "hello.txt"         │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ path.write_bytes(c… │                     │       │           │          │ │
+│ │ +    etag =         │                     │       │           │          │ │
+│ │ 'W/"a_weak_etag"'   │                     │       │           │          │ │
+│ │ +    app =          │                     │       │           │          │ │
+│ │ FileResponse(path=… │                     │       │           │          │ │
+│ │ headers={"etag":    │                     │       │           │          │ │
+│ │ etag})              │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    response =     │                     │       │           │          │ │
+│ │ client.get("/",     │                     │       │           │          │ │
+│ │ headers={"range":   │                     │       │           │          │ │
+│ │ "bytes=0-4",        │                     │       │           │          │ │
+│ │ "if-range": etag})  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.status_co… │                     │       │           │          │ │
+│ │ ==                  │                     │       │           │          │ │
+│ │ status.HTTP_200_OK  │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.content == │                     │       │           │          │ │
+│ │ content             │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ "content-range" not │                     │       │           │          │ │
+│ │ in response.headers │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │  @pytest.mark.anyio │                     │       │           │          │ │
+│ │  async def          │                     │       │           │          │ │
+│ │ test_file_response… │                     │       │           │          │ │
+│ │ Path) -> None:      │                     │       │           │          │ │
+│ │      path = tmpdir  │                     │       │           │          │ │
+│ │ / "xyz"             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ 95%|█████████▍| 284/300 [7:33:46<20:04, 75.30s/it]step 284  reward=-1.312  reward_std=1.846  kl=0.113  mean_length=115.188  clipped_ratio=0.000  step_time=45.420  loss=-0.070  gate=-1.312
+                                                    95%|█████████▍| 284/300 [7:33:46<20:04, 75.30s/it]{'loss': '-0.07044', 'grad_norm': '0.2527', 'learning_rate': '5e-05', 'num_tokens': '2.24e+07', 'completions/mean_length': '115.2', 'completions/min_length': '57', 'completions/max_length': '212', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '115.2', 'completions/min_terminated_length': '57', 'completions/max_terminated_length': '212', 'rewards/gate/mean': '-1.312', 'rewards/gate/std': '1.846', 'reward': '-1.312', 'reward_std': '1.846', 'frac_reward_zero_std': '0.25', 'review/approve_bug_frac': '0.1562', 'review/escalate_frac': '0', 'review/mean_tokens': '115.2', 'review/unparsable_frac': '0.625', 'sampling/sampling_logp_difference/mean': '0.02084', 'sampling/sampling_logp_difference/max': '0.344', 'sampling/importance_sampling_ratio/min': '0.5086', 'sampling/importance_sampling_ratio/mean': '0.9026', 'sampling/importance_sampling_ratio/max': '2.624', 'kl': '0.113', 'entropy': '2.193', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '45.42', 'epoch': '9.161'}
+╭────────────────────────────────── Step 284 ──────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┓ │
+│ ┃ Prompt             ┃ Completion         ┃  gate ┃ Advantage ┃ decision   ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━┩ │
+│ │ SYSTEM             │ ASSISTANT          │ -1.20 │      0.94 │ unparsable │ │
+│ │ You are the code   │ {"decision":       │       │           │            │ │
+│ │ review gate for a  │ "approve",         │       │           │            │ │
+│ │ production         │ "comments":        │       │           │            │ │
+│ │ repository. Your   │ [{"file":          │       │           │            │ │
+│ │ approval merges    │ "src/click/testin… │       │           │            │ │
+│ │ and deploys the    │ "line_start": 22,  │       │           │            │ │
+│ │ change with no     │ "line_end": 28,    │       │           │            │ │
+│ │ further human      │ "body": "We are    │       │           │            │ │
+│ │ review. Decide:    │ porting the        │       │           │            │ │
+│ │   approve  - you   │ capture mode       │       │           │            │ │
+│ │ are confident the  │ compatibility      │       │           │            │ │
+│ │ change is correct  │ within this        │       │           │            │ │
+│ │ and safe to ship.  │ Python盆地enabled  │       │           │            │ │
+│ │   block    - you   │ and                │       │           │            │ │
+│ │ found a defect;    │ platform-specific  │       │           │            │ │
+│ │ cite its location. │ logic.             │       │           │            │ │
+│ │   escalate - you   │ Otherwise,cdecl    │       │           │            │ │
+│ │ cannot establish   │ cmd executions     │       │           │            │ │
+│ │ safety from what   │ will break because │       │           │            │ │
+│ │ you can see; a     │ stdio can通常anks  │       │           │            │ │
+│ │ human must look.   │ in Windowsಕಯಮ when │       │           │            │ │
+│ │ Approving a change │ set by "\$$ into   │       │           │            │ │
+│ │ that contains a    │ systemd sessions.  │       │           │            │ │
+│ │ defect is the      │ This codifies      │       │           │            │ │
+│ │ worst outcome.     │ Windows-capabilit… │       │           │            │ │
+│ │ Blocking a correct │ ensures            │       │           │            │ │
+│ │ change costs an    │ consistency in kel │       │           │            │ │
+│ │ engineer's time.   │ as it’s adopted,   │       │           │            │ │
+│ │ Escalating is      │ and keeps it       │       │           │            │ │
+│ │ cheap but useless  │ aligned with how   │       │           │            │ │
+│ │ if done for        │ other CLI tools    │       │           │            │ │
+│ │ everything.        │ paint              │       │           │            │ │
+│ │ Respond with       │ зависимости."}]}   │       │           │            │ │
 │ │ exactly one JSON   │                    │       │           │            │ │
 │ │ object and nothing │                    │       │           │            │ │
 │ │ else:              │                    │       │           │            │ │
@@ -92,13 +194,9 @@
 │ │ source"}]}         │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ USER               │                    │       │           │            │ │
-│ │ Repository:        │                    │       │           │            │ │
-│ │ fastapi            │                    │       │           │            │ │
+│ │ Repository: click  │                    │       │           │            │ │
 │ │ Files changed:     │                    │       │           │            │ │
-│ │ .pre-commit-confi… │                    │       │           │            │ │
-│ │ fastapi/_compat/v… │                    │       │           │            │ │
-│ │ fastapi/dependenc… │                    │       │           │            │ │
-│ │ fastapi/utils.py   │                    │       │           │            │ │
+│ │ src/click/testing… │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ Context around the │                    │       │           │            │ │
 │ │ change             │                    │       │           │            │ │
@@ -106,295 +204,197 @@
 │ │ extracted):        │                    │       │           │            │ │
 │ │ Changed            │                    │       │           │            │ │
 │ │ definitions:       │                    │       │           │            │ │
-│ │ fastapi/_compat/v… │                    │       │           │            │ │
-│ │ fastapi/_compat/v… │                    │       │           │            │ │
-│ │ fastapi/_compat/v… │                    │       │           │            │ │
-│ │ fastapi/dependenc… │                    │       │           │            │ │
-│ │ fastapi/utils.py:… │                    │       │           │            │ │
+│ │ src/click/testing… │                    │       │           │            │ │
 │ │ Recent history of  │                    │       │           │            │ │
-│ │ fastapi/_compat/v… │                    │       │           │            │ │
-│ │   e30063055        │                    │       │           │            │ │
-│ │ 2025-12-27 ➖ Dro… │                    │       │           │            │ │
-│ │ support for        │                    │       │           │            │ │
-│ │ `pydantic.v1`      │                    │       │           │            │ │
-│ │ (#14609)           │                    │       │           │            │ │
-│ │   e2cd8a420        │                    │       │           │            │ │
-│ │ 2025-12-20 ➖ Dro… │                    │       │           │            │ │
-│ │ support for        │                    │       │           │            │ │
-│ │ Pydantic v1,       │                    │       │           │            │ │
-│ │ keeping short      │                    │       │           │            │ │
-│ │ temporary support  │                    │       │           │            │ │
-│ │ for Pydantic v2's  │                    │       │           │            │ │
-│ │ `pydantic.v1`      │                    │       │           │            │ │
-│ │ (#14575)           │                    │       │           │            │ │
-│ │   1c4fc96c9        │                    │       │           │            │ │
-│ │ 2025-12-17 ♻️      │                    │       │           │            │ │
-│ │ Upgrade internal   │                    │       │           │            │ │
-│ │ syntax to Python   │                    │       │           │            │ │
-│ │ 3.9+ 🎉 (#14564)   │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ fastapi/dependenc… │                    │       │           │            │ │
-│ │   e30063055        │                    │       │           │            │ │
-│ │ 2025-12-27 ➖ Dro… │                    │       │           │            │ │
-│ │ support for        │                    │       │           │            │ │
-│ │ `pydantic.v1`      │                    │       │           │            │ │
-│ │ (#14609)           │                    │       │           │            │ │
-│ │   535b5daa3        │                    │       │           │            │ │
-│ │ 2025-12-26 🔊 Add  │                    │       │           │            │ │
-│ │ a custom           │                    │       │           │            │ │
-│ │ `FastAPIDeprecati… │                    │       │           │            │ │
-│ │ (#14605)           │                    │       │           │            │ │
-│ │   6e42bcd8c        │                    │       │           │            │ │
-│ │ 2025-12-21 🔊 Add  │                    │       │           │            │ │
-│ │ deprecation        │                    │       │           │            │ │
-│ │ warnings when      │                    │       │           │            │ │
-│ │ using              │                    │       │           │            │ │
-│ │ `pydantic.v1`      │                    │       │           │            │ │
-│ │ (#14583)           │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ fastapi/utils.py:  │                    │       │           │            │ │
-│ │   e30063055        │                    │       │           │            │ │
-│ │ 2025-12-27 ➖ Dro… │                    │       │           │            │ │
-│ │ support for        │                    │       │           │            │ │
-│ │ `pydantic.v1`      │                    │       │           │            │ │
-│ │ (#14609)           │                    │       │           │            │ │
-│ │   535b5daa3        │                    │       │           │            │ │
-│ │ 2025-12-26 🔊 Add  │                    │       │           │            │ │
-│ │ a custom           │                    │       │           │            │ │
-│ │ `FastAPIDeprecati… │                    │       │           │            │ │
-│ │ (#14605)           │                    │       │           │            │ │
-│ │   e2cd8a420        │                    │       │           │            │ │
-│ │ 2025-12-20 ➖ Dro… │                    │       │           │            │ │
-│ │ support for        │                    │       │           │            │ │
-│ │ Pydantic v1,       │                    │       │           │            │ │
-│ │ keeping short      │                    │       │           │            │ │
-│ │ temporary support  │                    │       │           │            │ │
-│ │ for Pydantic v2's  │                    │       │           │            │ │
-│ │ `pydantic.v1`      │                    │       │           │            │ │
-│ │ (#14575)           │                    │       │           │            │ │
+│ │ src/click/testing… │                    │       │           │            │ │
+│ │   e39679a          │                    │       │           │            │ │
+│ │ 2026-05-18 Add     │                    │       │           │            │ │
+│ │ type annotations   │                    │       │           │            │ │
+│ │ for instance       │                    │       │           │            │ │
+│ │ attributes in      │                    │       │           │            │ │
+│ │ `testing`          │                    │       │           │            │ │
+│ │   ad39d74          │                    │       │           │            │ │
+│ │ 2026-03-05 Add     │                    │       │           │            │ │
+│ │ `capture`          │                    │       │           │            │ │
+│ │ parameter to       │                    │       │           │            │ │
+│ │ `CliRunner` and    │                    │       │           │            │ │
+│ │ revert             │                    │       │           │            │ │
+│ │ default-mode       │                    │       │           │            │ │
+│ │ `fileno` exposure  │                    │       │           │            │ │
+│ │   bb59ba0          │                    │       │           │            │ │
+│ │ 2026-04-14 Apply   │                    │       │           │            │ │
+│ │ format guidelines  │                    │       │           │            │ │
+│ │ to commits since   │                    │       │           │            │ │
+│ │ latest 8.3.2       │                    │       │           │            │ │
+│ │ release            │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ Diff:              │                    │       │           │            │ │
 │ │ ```diff            │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/.pre-commit-con… │                    │       │           │            │ │
-│ │ b/.pre-commit-con… │                    │       │           │            │ │
+│ │ a/src/click/testi… │                    │       │           │            │ │
+│ │ b/src/click/testi… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ d88b70b7b..64b84b… │                    │       │           │            │ │
+│ │ d4473ca..929d0b7   │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/.pre-commit-con… │                    │       │           │            │ │
+│ │ a/src/click/testi… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/.pre-commit-con… │                    │       │           │            │ │
-│ │ @@ -30,6 +30,13 @@ │                    │       │           │            │ │
-│ │ repos:             │                    │       │           │            │ │
-│ │          language: │                    │       │           │            │ │
-│ │ unsupported        │                    │       │           │            │ │
-│ │          types:    │                    │       │           │            │ │
-│ │ [python]           │                    │       │           │            │ │
+│ │ b/src/click/testi… │                    │       │           │            │ │
+│ │ @@ -22,7 +22,10 @@ │                    │       │           │            │ │
+│ │ if                 │                    │       │           │            │ │
+│ │ t.TYPE_CHECKING:   │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │ +      - id:       │                    │       │           │            │ │
-│ │ local-mypy         │                    │       │           │            │ │
-│ │ +        name:     │                    │       │           │            │ │
-│ │ mypy check         │                    │       │           │            │ │
-│ │ +        entry: uv │                    │       │           │            │ │
-│ │ run mypy fastapi   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ require_serial:    │                    │       │           │            │ │
-│ │ true               │                    │       │           │            │ │
-│ │ +        language: │                    │       │           │            │ │
-│ │ unsupported        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ pass_filenames:    │                    │       │           │            │ │
-│ │ false              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │        - id:       │                    │       │           │            │ │
-│ │ add-permalinks-pa… │                    │       │           │            │ │
-│ │          language: │                    │       │           │            │ │
-│ │ unsupported        │                    │       │           │            │ │
-│ │          name:     │                    │       │           │            │ │
-│ │ add-permalinks-pa… │                    │       │           │            │ │
+│ │      from .core    │                    │       │           │            │ │
+│ │ import Command     │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -CaptureMode:      │                    │       │           │            │ │
+│ │ t.TypeAlias =      │                    │       │           │            │ │
+│ │ t.Literal["sys",   │                    │       │           │            │ │
+│ │ "fd"]              │                    │       │           │            │ │
+│ │ +if sys.platform   │                    │       │           │            │ │
+│ │ != "win32":        │                    │       │           │            │ │
+│ │ +    CaptureMode:  │                    │       │           │            │ │
+│ │ t.TypeAlias =      │                    │       │           │            │ │
+│ │ t.Literal["sys"]   │                    │       │           │            │ │
+│ │ # pyright:         │                    │       │           │            │ │
+│ │ ignore[reportRede… │                    │       │           │            │ │
+│ │ +else:             │                    │       │           │            │ │
+│ │ +    CaptureMode:  │                    │       │           │            │ │
+│ │ t.TypeAlias =      │                    │       │           │            │ │
+│ │ t.Literal["sys",   │                    │       │           │            │ │
+│ │ "fd"]  # pyright:  │                    │       │           │            │ │
+│ │ ignore[reportRede… │                    │       │           │            │ │
+│ │  ExceptionInfo:    │                    │       │           │            │ │
+│ │ t.TypeAlias =      │                    │       │           │            │ │
+│ │ tuple[type[BaseEx… │                    │       │           │            │ │
+│ │ BaseException,     │                    │       │           │            │ │
+│ │ TracebackType]     │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │ -1.20 │      0.94 │ unparsable │ │
+│ │ You are the code   │ {'decision':       │       │           │            │ │
+│ │ review gate for a  │ 'approve',         │       │           │            │ │
+│ │ production         │ 'comments':        │       │           │            │ │
+│ │ repository. Your   │ [{'file':          │       │           │            │ │
+│ │ approval merges    │ 'src/click/testin… │       │           │            │ │
+│ │ and deploys the    │ 'line_start': 21,  │       │           │            │ │
+│ │ change with no     │ 'line_end': 26,    │       │           │            │ │
+│ │ further human      │ 'body': 'Adjust    │       │           │            │ │
+│ │ review. Decide:    │ platform-dependent │       │           │            │ │
+│ │   approve  - you   │ behavior of        │       │           │            │ │
+│ │ are confident the  │ `CaptureMode` in   │       │           │            │ │
+│ │ change is correct  │ EPA-related        │       │           │            │ │
+│ │ and safe to ship.  │ environments.\n\n… │       │           │            │ │
+│ │   block    - you   │ and align the      │       │           │            │ │
+│ │ found a defect;    │ input handling for │       │           │            │ │
+│ │ cite its location. │ objects across     │       │           │            │ │
+│ │   escalate - you   │ federal standards; │       │           │            │ │
+│ │ cannot establish   │ this biopsy        │       │           │            │ │
+│ │ safety from what   │ consolidates       │       │           │            │ │
+│ │ you can see; a     │ platform           │       │           │            │ │
+│ │ human must look.   │ processing to      │       │           │            │ │
+│ │ Approving a change │ avoid alternative  │       │           │            │ │
+│ │ that contains a    │ setup regimens.    │       │           │            │ │
+│ │ defect is the      │ This decision      │       │           │            │ │
+│ │ worst outcome.     │ stabilizes piped   │       │           │            │ │
+│ │ Blocking a correct │ inputs across OS   │       │           │            │ │
+│ │ change costs an    │ agnostics.         │       │           │            │ │
+│ │ engineer's time.   │ Legacy-OS args     │       │           │            │ │
+│ │ Escalating is      │ (e.g., `fd`)       │       │           │            │ │
+│ │ cheap but useless  │ without shared     │       │           │            │ │
+│ │ if done for        │ environment        │       │           │            │ │
+│ │ everything.        │ defaults           │       │           │            │ │
+│ │ Respond with       │ repopulate during  │       │           │            │ │
+│ │ exactly one JSON   │ regression         │       │           │            │ │
+│ │ object and nothing │ constraints.\n\nA… │       │           │            │ │
+│ │ else:              │ `CaptureMode` See  │       │           │            │ │
+│ │ {"decision":       │ docs on            │       │           │            │ │
+│ │ "approve|block|es… │ `click.testing.ca… │       │           │            │ │
+│ │ "comments":        │ @                  │       │           │            │ │
+│ │ [{"file": "...",   │ https://click.pal… │       │           │            │ │
+│ │ "line_start": N,   │ for more           │       │           │            │ │
+│ │ "line_end": N,     │ context.\n\nCapit… │       │           │            │ │
+│ │ "body": "...",     │ on `sed`-like      │       │           │            │ │
+│ │ "proposed_test":   │ contribution       │       │           │            │ │
+│ │ "optional pytest   │ bundling TROLS     │       │           │            │ │
+│ │ source"}]}         │ forיפוказ(service𒈨 │       │           │            │ │
+│ │                    │ ERROR if           │       │           │            │ │
+│ │ USER               │ attempting to take │       │           │            │ │
+│ │ Repository: click  │ in concrete system │       │           │            │ │
+│ │ Files changed:     │ handles on         │       │           │            │ │
+│ │ src/click/testing… │ non-legacy Win32   │       │           │            │ │
+│ │                    │ inputs without     │       │           │            │ │
+│ │ Context around the │ understood修身قدم  │       │           │            │ │
+│ │ change             │ ot.                │       │           │            │ │
+│ │ (mechanically      │ Platform-agnostic  │       │           │            │ │
+│ │ extracted):        │ adaptation derails │       │           │            │ │
+│ │ Changed            │ inputforcing       │       │           │            │ │
+│ │ definitions:       │ behavior, enable   │       │           │            │ │
+│ │ src/click/testing… │ handling-rich      │       │           │            │ │
+│ │ Recent history of  │ installation}.}}}} │       │           │            │ │
+│ │ src/click/testing… │                    │       │           │            │ │
+│ │   e39679a          │                    │       │           │            │ │
+│ │ 2026-05-18 Add     │                    │       │           │            │ │
+│ │ type annotations   │                    │       │           │            │ │
+│ │ for instance       │                    │       │           │            │ │
+│ │ attributes in      │                    │       │           │            │ │
+│ │ `testing`          │                    │       │           │            │ │
+│ │   ad39d74          │                    │       │           │            │ │
+│ │ 2026-03-05 Add     │                    │       │           │            │ │
+│ │ `capture`          │                    │       │           │            │ │
+│ │ parameter to       │                    │       │           │            │ │
+│ │ `CliRunner` and    │                    │       │           │            │ │
+│ │ revert             │                    │       │           │            │ │
+│ │ default-mode       │                    │       │           │            │ │
+│ │ `fileno` exposure  │                    │       │           │            │ │
+│ │   bb59ba0          │                    │       │           │            │ │
+│ │ 2026-04-14 Apply   │                    │       │           │            │ │
+│ │ format guidelines  │                    │       │           │            │ │
+│ │ to commits since   │                    │       │           │            │ │
+│ │ latest 8.3.2       │                    │       │           │            │ │
+│ │ release            │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Diff:              │                    │       │           │            │ │
+│ │ ```diff            │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/fastapi/_compat… │                    │       │           │            │ │
-│ │ b/fastapi/_compat… │                    │       │           │            │ │
+│ │ a/src/click/testi… │                    │       │           │            │ │
+│ │ b/src/click/testi… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ 25b681453..dae78a… │                    │       │           │            │ │
+│ │ d4473ca..929d0b7   │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/fastapi/_compat… │                    │       │           │            │ │
+│ │ a/src/click/testi… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/fastapi/_compat… │                    │       │           │            │ │
-│ │ @@ -477,7 +477,7   │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ get_model_fields(… │                    │       │           │            │ │
-│ │ type[BaseModel])   │                    │       │           │            │ │
-│ │ ->                 │                    │       │           │            │ │
-│ │ list[ModelField]:  │                    │       │           │            │ │
+│ │ b/src/click/testi… │                    │       │           │            │ │
+│ │ @@ -22,7 +22,10 @@ │                    │       │           │            │ │
+│ │ if                 │                    │       │           │            │ │
+│ │ t.TYPE_CHECKING:   │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │  @lru_cache        │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ get_cached_model_… │                    │       │           │            │ │
-│ │ type[BaseModel])   │                    │       │           │            │ │
-│ │ ->                 │                    │       │           │            │ │
-│ │ list[ModelField]:  │                    │       │           │            │ │
-│ │ -    return        │                    │       │           │            │ │
-│ │ get_model_fields(… │                    │       │           │            │ │
-│ │ # type:            │                    │       │           │            │ │
-│ │ ignore[return-val… │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ get_model_fields(… │                    │       │           │            │ │
+│ │      from .core    │                    │       │           │            │ │
+│ │ import Command     │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  # Duplicate of    │                    │       │           │            │ │
-│ │ several schema     │                    │       │           │            │ │
-│ │ functions from     │                    │       │           │            │ │
-│ │ Pydantic v1 to     │                    │       │           │            │ │
-│ │ make them          │                    │       │           │            │ │
-│ │ compatible with    │                    │       │           │            │ │
-│ │ @@ -500,13 +500,13 │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ get_model_name_ma… │                    │       │           │            │ │
-│ │ TypeModelSet) ->   │                    │       │           │            │ │
-│ │ dict[TypeModelOrE… │                    │       │           │            │ │
-│ │ str                │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ get_compat_model_… │                    │       │           │            │ │
-│ │ list[ModelField])  │                    │       │           │            │ │
-│ │ -> ModelNameMap:   │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ all_flat_models =  │                    │       │           │            │ │
-│ │ set()              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ all_flat_models:   │                    │       │           │            │ │
-│ │ TypeModelSet =     │                    │       │           │            │ │
-│ │ set()              │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      v2_model_fie… │                    │       │           │            │ │
-│ │ = [field for field │                    │       │           │            │ │
-│ │ in fields if       │                    │       │           │            │ │
-│ │ isinstance(field,  │                    │       │           │            │ │
-│ │ ModelField)]       │                    │       │           │            │ │
-│ │      v2_flat_mode… │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ get_flat_models_f… │                    │       │           │            │ │
-│ │ known_models=set(… │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ all_flat_models =  │                    │       │           │            │ │
-│ │ all_flat_models.u… │                    │       │           │            │ │
-│ │ # type:            │                    │       │           │            │ │
-│ │ ignore[arg-type]   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ all_flat_models =  │                    │       │           │            │ │
-│ │ all_flat_models.u… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ model_name_map =   │                    │       │           │            │ │
-│ │ get_model_name_ma… │                    │       │           │            │ │
-│ │ # type:            │                    │       │           │            │ │
-│ │ ignore[arg-type]   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ model_name_map =   │                    │       │           │            │ │
-│ │ get_model_name_ma… │                    │       │           │            │ │
-│ │      return        │                    │       │           │            │ │
-│ │ model_name_map     │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/fastapi/depende… │                    │       │           │            │ │
-│ │ b/fastapi/depende… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 45e1ff3ed..2afc73… │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/fastapi/depende… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/fastapi/depende… │                    │       │           │            │ │
-│ │ @@ -399,7 +399,7   │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ analyze_param(     │                    │       │           │            │ │
-│ │          if        │                    │       │           │            │ │
-│ │ isinstance(fastap… │                    │       │           │            │ │
-│ │ FieldInfo):        │                    │       │           │            │ │
-│ │              #     │                    │       │           │            │ │
-│ │ Copy `field_info`  │                    │       │           │            │ │
-│ │ because we mutate  │                    │       │           │            │ │
-│ │ `field_info.defau… │                    │       │           │            │ │
-│ │ below.             │                    │       │           │            │ │
-│ │              fiel… │                    │       │           │            │ │
-│ │ = copy_field_info( │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ field_info=fastap… │                    │       │           │            │ │
-│ │ # type:            │                    │       │           │            │ │
-│ │ ignore[arg-type]   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ field_info=fastap… │                    │       │           │            │ │
-│ │                  … │                    │       │           │            │ │
-│ │              )     │                    │       │           │            │ │
-│ │              asse… │                    │       │           │            │ │
-│ │ (                  │                    │       │           │            │ │
-│ │ @@ -433,7 +433,7   │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ analyze_param(     │                    │       │           │            │ │
-│ │              "Can… │                    │       │           │            │ │
-│ │ specify FastAPI    │                    │       │           │            │ │
-│ │ annotations in     │                    │       │           │            │ │
-│ │ `Annotated` and    │                    │       │           │            │ │
-│ │ default value"     │                    │       │           │            │ │
-│ │              f"    │                    │       │           │            │ │
-│ │ together for       │                    │       │           │            │ │
-│ │ {param_name!r}"    │                    │       │           │            │ │
-│ │          )         │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ field_info = value │                    │       │           │            │ │
-│ │ # type:            │                    │       │           │            │ │
-│ │ ignore[assignment] │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ field_info = value │                    │       │           │            │ │
-│ │          if        │                    │       │           │            │ │
-│ │ isinstance(field_… │                    │       │           │            │ │
-│ │ FieldInfo):        │                    │       │           │            │ │
-│ │              fiel… │                    │       │           │            │ │
-│ │ = type_annotation  │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/fastapi/utils.py │                    │       │           │            │ │
-│ │ b/fastapi/utils.py │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 78fdcbb5b..1c3a08… │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/fastapi/utils.py │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/fastapi/utils.py │                    │       │           │            │ │
-│ │ @@ -90,7 +90,7 @@  │                    │       │           │            │ │
-│ │ def                │                    │       │           │            │ │
-│ │ create_model_fiel… │                    │       │           │            │ │
-│ │      field_info =  │                    │       │           │            │ │
-│ │ field_info or      │                    │       │           │            │ │
-│ │ FieldInfo(annotat… │                    │       │           │            │ │
-│ │ default=default,   │                    │       │           │            │ │
-│ │ alias=alias)       │                    │       │           │            │ │
-│ │      kwargs =      │                    │       │           │            │ │
-│ │ {"mode": mode,     │                    │       │           │            │ │
-│ │ "name": name,      │                    │       │           │            │ │
-│ │ "field_info":      │                    │       │           │            │ │
-│ │ field_info}        │                    │       │           │            │ │
-│ │      try:          │                    │       │           │            │ │
-│ │ -        return    │                    │       │           │            │ │
-│ │ v2.ModelField(**k… │                    │       │           │            │ │
-│ │ # type:            │                    │       │           │            │ │
-│ │ ignore[return-val… │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ v2.ModelField(**k… │                    │       │           │            │ │
-│ │ # type:            │                    │       │           │            │ │
-│ │ ignore[arg-type]   │                    │       │           │            │ │
-│ │      except        │                    │       │           │            │ │
-│ │ PydanticSchemaGen… │                    │       │           │            │ │
-│ │          raise     │                    │       │           │            │ │
-│ │ fastapi.exception… │                    │       │           │            │ │
-│ │              _inv… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
+│ │ -CaptureMode:      │                    │       │           │            │ │
+│ │ t.TypeAlias =      │                    │       │           │            │ │
+│ │ t.Literal["sys",   │                    │       │           │            │ │
+│ │ "fd"]              │                    │       │           │            │ │
+│ │ +if sys.platform   │                    │       │           │            │ │
+│ │ != "win32":        │                    │       │           │            │ │
+│ │ +    CaptureMode:  │                    │       │           │            │ │
+│ │ t.TypeAlias =      │                    │       │           │            │ │
+│ │ t.Literal["sys"]   │                    │       │           │            │ │
+│ │ # pyright:         │                    │       │           │            │ │
+│ │ ignore[reportRede… │                    │       │           │            │ │
+│ │ +else:             │                    │       │           │            │ │
+│ │ +    CaptureMode:  │                    │       │           │            │ │
+│ │ t.TypeAlias =      │                    │       │           │            │ │
+│ │ t.Literal["sys",   │                    │       │           │            │ │
+│ │ "fd"]  # pyright:  │                    │       │           │            │ │
+│ │ ignore[reportRede… │                    │       │           │            │ │
+│ │  ExceptionInfo:    │                    │       │           │            │ │
+│ │ t.TypeAlias =      │                    │       │           │            │ │
+│ │ tuple[type[BaseEx… │                    │       │           │            │ │
+│ │ BaseException,     │                    │       │           │            │ │
+│ │ TracebackType]     │                    │       │           │            │ │
 │ │ ```                │                    │       │           │            │ │
 │ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
