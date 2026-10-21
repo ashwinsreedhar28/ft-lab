@@ -1,400 +1,400 @@
-│ │ Whether the model is │                     │      │           │          │ │
-│ │ being force-rebuilt  │                     │      │           │          │ │
-│ │ (if True, pre-built  │                     │      │           │          │ │
-│ │ serializers and      │                     │      │           │          │ │
-│ │ +                    │                     │      │           │          │ │
-│ │ validators are not   │                     │      │           │          │ │
-│ │ used, to avoid stale │                     │      │           │          │ │
-│ │ references).         │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │      Returns:        │                     │      │           │          │ │
-│ │          `True` if   │                     │      │           │          │ │
-│ │ the model is         │                     │      │           │          │ │
-│ │ successfully         │                     │      │           │          │ │
-│ │ completed, else      │                     │      │           │          │ │
-│ │ `False`.             │                     │      │           │          │ │
-│ │ @@ -686,8 +689,9 @@  │                     │      │           │          │ │
-│ │ def                  │                     │      │           │          │ │
-│ │ complete_model_clas… │                     │      │           │          │ │
-│ │          'create_mo… │                     │      │           │          │ │
-│ │ if                   │                     │      │           │          │ │
-│ │ create_model_module  │                     │      │           │          │ │
-│ │ else 'BaseModel',    │                     │      │           │          │ │
-│ │          core_confi… │                     │      │           │          │ │
-│ │          config_wra… │                     │      │           │          │ │
-│ │ +                    │                     │      │           │          │ │
-│ │ _use_prebuilt=not    │                     │      │           │          │ │
-│ │ is_force_rebuild,    │                     │      │           │          │ │
-│ │      )               │                     │      │           │          │ │
-│ │ -                    │                     │      │           │          │ │
-│ │ cls.__pydantic_seri… │                     │      │           │          │ │
-│ │ =                    │                     │      │           │          │ │
-│ │ SchemaSerializer(sc… │                     │      │           │          │ │
-│ │ core_config)         │                     │      │           │          │ │
-│ │ +                    │                     │      │           │          │ │
-│ │ cls.__pydantic_seri… │                     │      │           │          │ │
-│ │ =                    │                     │      │           │          │ │
-│ │ SchemaSerializer(sc… │                     │      │           │          │ │
-│ │ core_config,         │                     │      │           │          │ │
-│ │ _use_prebuilt=not    │                     │      │           │          │ │
-│ │ is_force_rebuild)    │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │      # set           │                     │      │           │          │ │
-│ │ __signature__ attr   │                     │      │           │          │ │
-│ │ only for model       │                     │      │           │          │ │
-│ │ class, but not for   │                     │      │           │          │ │
-│ │ its instances        │                     │      │           │          │ │
-│ │      # (because      │                     │      │           │          │ │
-│ │ instances can define │                     │      │           │          │ │
-│ │ `__call__`, and      │                     │      │           │          │ │
-│ │ `inspect.signature`  │                     │      │           │          │ │
-│ │ shouldn't            │                     │      │           │          │ │
-│ │ diff --git           │                     │      │           │          │ │
-│ │ a/pydantic/main.py   │                     │      │           │          │ │
-│ │ b/pydantic/main.py   │                     │      │           │          │ │
-│ │ index                │                     │      │           │          │ │
-│ │ b4cd3f6f..1eb1ebf0   │                     │      │           │          │ │
-│ │ 100644               │                     │      │           │          │ │
-│ │ ---                  │                     │      │           │          │ │
-│ │ a/pydantic/main.py   │                     │      │           │          │ │
-│ │ +++                  │                     │      │           │          │ │
-│ │ b/pydantic/main.py   │                     │      │           │          │ │
-│ │ @@ -679,6 +679,7 @@  │                     │      │           │          │ │
-│ │ class                │                     │      │           │          │ │
-│ │ BaseModel(metaclass… │                     │      │           │          │ │
-│ │              raise_… │                     │      │           │          │ │
-│ │              # If    │                     │      │           │          │ │
-│ │ the model was        │                     │      │           │          │ │
-│ │ already complete, we │                     │      │           │          │ │
-│ │ don't need to call   │                     │      │           │          │ │
-│ │ the hook again.      │                     │      │           │          │ │
-│ │              call_o… │                     │      │           │          │ │
-│ │ already_complete,    │                     │      │           │          │ │
-│ │ +                    │                     │      │           │          │ │
-│ │ is_force_rebuild=fo… │                     │      │           │          │ │
-│ │          )           │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │      @classmethod    │                     │      │           │          │ │
-│ │ diff --git           │                     │      │           │          │ │
-│ │ a/pydantic/plugin/_… │                     │      │           │          │ │
-│ │ b/pydantic/plugin/_… │                     │      │           │          │ │
-│ │ index                │                     │      │           │          │ │
-│ │ 83f2562b..0c75c29f   │                     │      │           │          │ │
-│ │ 100644               │                     │      │           │          │ │
-│ │ ---                  │                     │      │           │          │ │
-│ │ a/pydantic/plugin/_… │                     │      │           │          │ │
-│ │ +++                  │                     │      │           │          │ │
-│ │ b/pydantic/plugin/_… │                     │      │           │          │ │
-│ │ @@ -27,6 +27,7 @@    │                     │      │           │          │ │
-│ │ def                  │                     │      │           │          │ │
-│ │ create_schema_valid… │                     │      │           │          │ │
-│ │      schema_kind:    │                     │      │           │          │ │
-│ │ SchemaKind,          │                     │      │           │          │ │
-│ │      config:         │                     │      │           │          │ │
-│ │ CoreConfig | None =  │                     │      │           │          │ │
-│ │ None,                │                     │      │           │          │ │
-│ │      plugin_setting… │                     │      │           │          │ │
-│ │ dict[str, Any] |     │                     │      │           │          │ │
-│ │ None = None,         │                     │      │           │          │ │
-│ │ +    _use_prebuilt:  │                     │      │           │          │ │
-│ │ bool = True,         │                     │      │           │          │ │
-│ │  ) ->                │                     │      │           │          │ │
-│ │ SchemaValidator |    │                     │      │           │          │ │
-│ │ PluggableSchemaVali… │                     │      │           │          │ │
-│ │      """Create a     │                     │      │           │          │ │
-│ │ `SchemaValidator` or │                     │      │           │          │ │
-│ │ `PluggableSchemaVal… │                     │      │           │          │ │
-│ │ if plugins are       │                     │      │           │          │ │
-│ │ installed.           │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │ @@ -46,9 +47,10 @@   │                     │      │           │          │ │
-│ │ def                  │                     │      │           │          │ │
-│ │ create_schema_valid… │                     │      │           │          │ │
-│ │              config, │                     │      │           │          │ │
-│ │              plugin… │                     │      │           │          │ │
-│ │              plugin… │                     │      │           │          │ │
-│ │ or {},               │                     │      │           │          │ │
-│ │ +                    │                     │      │           │          │ │
-│ │ _use_prebuilt=_use_… │                     │      │           │          │ │
-│ │          )           │                     │      │           │          │ │
-│ │      else:           │                     │      │           │          │ │
-│ │ -        return      │                     │      │           │          │ │
-│ │ SchemaValidator(sch… │                     │      │           │          │ │
-│ │ config)              │                     │      │           │          │ │
-│ │ +        return      │                     │      │           │          │ │
-│ │ SchemaValidator(sch… │                     │      │           │          │ │
-│ │ config,              │                     │      │           │          │ │
-│ │ _use_prebuilt=_use_… │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │  class               │                     │      │           │          │ │
-│ │ PluggableSchemaVali… │                     │      │           │          │ │
-│ │ @@ -65,8 +67,9 @@    │                     │      │           │          │ │
-│ │ class                │                     │      │           │          │ │
-│ │ PluggableSchemaVali… │                     │      │           │          │ │
-│ │          config:     │                     │      │           │          │ │
-│ │ CoreConfig | None,   │                     │      │           │          │ │
-│ │          plugins:    │                     │      │           │          │ │
-│ │ Iterable[PydanticPl… │                     │      │           │          │ │
-│ │          plugin_set… │                     │      │           │          │ │
-│ │ dict[str, Any],      │                     │      │           │          │ │
-│ │ +                    │                     │      │           │          │ │
-│ │ _use_prebuilt: bool  │                     │      │           │          │ │
-│ │ = True,              │                     │      │           │          │ │
-│ │      ) -> None:      │                     │      │           │          │ │
-│ │ -                    │                     │      │           │          │ │
-│ │ self._schema_valida… │                     │      │           │          │ │
-│ │ =                    │                     │      │           │          │ │
-│ │ SchemaValidator(sch… │                     │      │           │          │ │
-│ │ config)              │                     │      │           │          │ │
-│ │ +                    │                     │      │           │          │ │
-│ │ self._schema_valida… │                     │      │           │          │ │
-│ │ =                    │                     │      │           │          │ │
-│ │ SchemaValidator(sch… │                     │      │           │          │ │
-│ │ config,              │                     │      │           │          │ │
-│ │ _use_prebuilt=_use_… │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │          python_eve… │                     │      │           │          │ │
-│ │ list[BaseValidateHa… │                     │      │           │          │ │
-│ │ = []                 │                     │      │           │          │ │
-│ │          json_event… │                     │      │           │          │ │
-│ │ list[BaseValidateHa… │                     │      │           │          │ │
-│ │ = []                 │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │ ```                  │                     │      │           │          │ │
-│ ├──────────────────────┼─────────────────────┼──────┼───────────┼──────────┤ │
-│ │ SYSTEM               │ ASSISTANT           │ 1.00 │      1.22 │ approve  │ │
-│ │ You are the code     │   def               │      │           │          │ │
-│ │ review gate for a    │ get_authorization_… │      │           │          │ │
-│ │ production           │     ...             │      │           │          │ │
-│ │ repository. Your     │   ) returns a       │      │           │          │ │
-│ │ approval merges and  │ "param" without     │      │           │          │ │
-│ │ deploys the change   │ trailing            │      │           │          │ │
-│ │ with no further      │ whitespaces, which  │      │           │          │ │
-│ │ human review.        │ fixes test failures │      │           │          │ │
-│ │ Decide:              │ in test cases where │      │           │          │ │
-│ │   approve  - you are │ server answers      │      │           │          │ │
-│ │ confident the change │ differ due to       │      │           │          │ │
-│ │ is correct and safe  │ excess or           │      │           │          │ │
-│ │ to ship.             │ incomplete white    │      │           │          │ │
-│ │   block    - you     │ space. The new      │      │           │          │ │
-│ │ found a defect; cite │ changes in the      │      │           │          │ │
-│ │ its location.        │ `utils.py` file are │      │           │          │ │
-│ │   escalate - you     │ well evaluated with │      │           │          │ │
-│ │ cannot establish     │ real and applied    │      │           │          │ │
-│ │ safety from what you │ test cases          │      │           │          │ │
-│ │ can see; a human     │ (tst-helpers) and   │      │           │          │ │
-│ │ must look.           │ combined with tests │      │           │          │ │
-│ │ Approving a change   │ that check for      │      │           │          │ │
-│ │ that contains a      │ authorization       │      │           │          │ │
-│ │ defect is the worst  │ schemes in          │      │           │          │ │
-│ │ outcome. Blocking a  │ different ways. The │      │           │          │ │
-│ │ correct change costs │ test suite looks    │      │           │          │ │
-│ │ an engineer's time.  │ solid with          │      │           │          │ │
-│ │ Escalating is cheap  │ real-world input    │      │           │          │ │
-│ │ but useless if done  │ samples. No         │      │           │          │ │
-│ │ for everything.      │ possible boardaus   │      │           │          │ │
-│ │ Respond with exactly │ to block or         │      │           │          │ │
-│ │ one JSON object and  │ defective tests     │      │           │          │ │
-│ │ nothing else:        │ were mentioned in   │      │           │          │ │
-│ │ {"decision":         │ the internal Regel. │      │           │          │ │
-│ │ "approve|block|esca… │ Patch muscle        │      │           │          │ │
-│ │ "comments":          │ protrusion occurs   │      │           │          │ │
-│ │ [{"file": "...",     │ with confidence,    │      │           │          │ │
-│ │ "line_start": N,     │ safety and          │      │           │          │ │
-│ │ "line_end": N,       │ correctness null.   │      │           │          │ │
-│ │ "body": "...",       │                     │      │           │          │ │
-│ │ "proposed_test":     │ {"decision":        │      │           │          │ │
-│ │ "optional pytest     │ "approve",          │      │           │          │ │
-│ │ source"}]}           │ "comments":         │      │           │          │ │
-│ │                      │ [{"file":           │      │           │          │ │
-│ │ USER                 │ "fastapi/security/… │      │           │          │ │
-│ │ Repository: fastapi  │ "line_start": 7,    │      │           │          │ │
-│ │ Files changed:       │ "line_end": 7,      │      │           │          │ │
-│ │ fastapi/security/ut… │ "body": "autofix    │      │           │          │ │
-│ │ tests/test_security… │ iloses-to-oauth     │      │           │          │ │
-│ │ tests/test_security… │ anthologies         │      │           │          │ │
-│ │                      │ التداولkek olly     │      │           │          │ │
-│ │ Context around the   │ burkmanترا في TST   │      │           │          │ │
-│ │ change (mechanically │ Cors oftes."}]}     │      │           │          │ │
-│ │ extracted):          │                     │      │           │          │ │
-│ │ Changed definitions: │                     │      │           │          │ │
-│ │ fastapi/security/ut… │                     │      │           │          │ │
-│ │ tests/test_security… │                     │      │           │          │ │
-│ │ tests/test_security… │                     │      │           │          │ │
-│ │ tests/test_security… │                     │      │           │          │ │
-│ │ tests/test_security… │                     │      │           │          │ │
-│ │ tests/test_security… │                     │      │           │          │ │
-│ │ tests/test_security… │                     │      │           │          │ │
-│ │ Recent history of    │                     │      │           │          │ │
-│ │ fastapi/security/ut… │                     │      │           │          │ │
-│ │   1c4fc96c9          │                     │      │           │          │ │
-│ │ 2025-12-17 ♻️        │                     │      │           │          │ │
-│ │ Upgrade internal     │                     │      │           │          │ │
-│ │ syntax to Python     │                     │      │           │          │ │
-│ │ 3.9+ 🎉 (#14564)     │                     │      │           │          │ │
-│ │   fdbd48be5          │                     │      │           │          │ │
-│ │ 2022-11-13 ⬆ Upgrade │                     │      │           │          │ │
-│ │ Starlette to         │                     │      │           │          │ │
-│ │ `0.21.0`, including  │                     │      │           │          │ │
-│ │ the new              │                     │      │           │          │ │
-│ │ [`TestClient` based  │                     │      │           │          │ │
-│ │ on                   │                     │      │           │          │ │
-│ │ HTTPX](https://gith… │                     │      │           │          │ │
-│ │ (#5471)              │                     │      │           │          │ │
-│ │   4a0316bcf          │                     │      │           │          │ │
-│ │ 2018-12-28 :art: Add │                     │      │           │          │ │
-│ │ missing type         │                     │      │           │          │ │
-│ │ definition           │                     │      │           │          │ │
-│ │ Recent history of    │                     │      │           │          │ │
-│ │ tests/test_security… │                     │      │           │          │ │
-│ │   51ad909ff          │                     │      │           │          │ │
-│ │ 2025-11-24 🐛 Use    │                     │      │           │          │ │
-│ │ `401` status code in │                     │      │           │          │ │
-│ │ security classes     │                     │      │           │          │ │
-│ │ when credentials are │                     │      │           │          │ │
-│ │ missing (#13786)     │                     │      │           │          │ │
-│ │   7dad5a820          │                     │      │           │          │ │
-│ │ 2023-06-30 ✨ Add    │                     │      │           │          │ │
-│ │ support for OpenAPI  │                     │      │           │          │ │
-│ │ 3.1.0 (#9770)        │                     │      │           │          │ │
-│ │   50c1a928f          │                     │      │           │          │ │
-│ │ 2023-05-08 ✅        │                     │      │           │          │ │
-│ │ Refactor OpenAPI     │                     │      │           │          │ │
-│ │ tests, prepare for   │                     │      │           │          │ │
-│ │ Pydantic v2 (#9503)  │                     │      │           │          │ │
-│ │ Recent history of    │                     │      │           │          │ │
-│ │ tests/test_security… │                     │      │           │          │ │
-│ │   7dad5a820          │                     │      │           │          │ │
-│ │ 2023-06-30 ✨ Add    │                     │      │           │          │ │
-│ │ support for OpenAPI  │                     │      │           │          │ │
-│ │ 3.1.0 (#9770)        │                     │      │           │          │ │
-│ │   50c1a928f          │                     │      │           │          │ │
-│ │ 2023-05-08 ✅        │                     │      │           │          │ │
-│ │ Refactor OpenAPI     │                     │      │           │          │ │
-│ │ tests, prepare for   │                     │      │           │          │ │
-│ │ Pydantic v2 (#9503)  │                     │      │           │          │ │
-│ │   70a51b3af          │                     │      │           │          │ │
-│ │ 2020-07-10 ✨        │                     │      │           │          │ │
-│ │ Auto-generate        │                     │      │           │          │ │
-│ │ OpenAPI servers from │                     │      │           │          │ │
-│ │ root_path (#1596)    │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │ Diff:                │                     │      │           │          │ │
-│ │ ```diff              │                     │      │           │          │ │
-│ │ diff --git           │                     │      │           │          │ │
-│ │ a/fastapi/security/… │                     │      │           │          │ │
-│ │ b/fastapi/security/… │                     │      │           │          │ │
-│ │ index                │                     │      │           │          │ │
-│ │ 002e68b44..fd349aec7 │                     │      │           │          │ │
-│ │ 100644               │                     │      │           │          │ │
-│ │ ---                  │                     │      │           │          │ │
-│ │ a/fastapi/security/… │                     │      │           │          │ │
-│ │ +++                  │                     │      │           │          │ │
-│ │ b/fastapi/security/… │                     │      │           │          │ │
-│ │ @@ -7,4 +7,4 @@ def  │                     │      │           │          │ │
-│ │ get_authorization_s… │                     │      │           │          │ │
-│ │      if not          │                     │      │           │          │ │
-│ │ authorization_heade… │                     │      │           │          │ │
-│ │          return "",  │                     │      │           │          │ │
-│ │ ""                   │                     │      │           │          │ │
-│ │      scheme, _,      │                     │      │           │          │ │
-│ │ param =              │                     │      │           │          │ │
-│ │ authorization_heade… │                     │      │           │          │ │
-│ │ ")                   │                     │      │           │          │ │
-│ │ -    return scheme,  │                     │      │           │          │ │
-│ │ param                │                     │      │           │          │ │
-│ │ +    return scheme,  │                     │      │           │          │ │
-│ │ param.strip()        │                     │      │           │          │ │
-│ │ diff --git           │                     │      │           │          │ │
-│ │ a/tests/test_securi… │                     │      │           │          │ │
-│ │ b/tests/test_securi… │                     │      │           │          │ │
-│ │ index                │                     │      │           │          │ │
-│ │ 8cf259a75..ac38ee718 │                     │      │           │          │ │
-│ │ 100644               │                     │      │           │          │ │
-│ │ ---                  │                     │      │           │          │ │
-│ │ a/tests/test_securi… │                     │      │           │          │ │
-│ │ +++                  │                     │      │           │          │ │
-│ │ b/tests/test_securi… │                     │      │           │          │ │
-│ │ @@ -21,6 +21,12 @@   │                     │      │           │          │ │
-│ │ def                  │                     │      │           │          │ │
-│ │ test_security_http_… │                     │      │           │          │ │
-│ │      assert          │                     │      │           │          │ │
-│ │ response.json() ==   │                     │      │           │          │ │
-│ │ {"scheme": "Other",  │                     │      │           │          │ │
-│ │ "credentials":       │                     │      │           │          │ │
-│ │ "foobar"}            │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │ +def                 │                     │      │           │          │ │
-│ │ test_security_http_… │                     │      │           │          │ │
-│ │ +    response =      │                     │      │           │          │ │
-│ │ client.get("/users/… │                     │      │           │          │ │
-│ │ headers={"Authoriza… │                     │      │           │          │ │
-│ │ "Other  foobar "})   │                     │      │           │          │ │
-│ │ +    assert          │                     │      │           │          │ │
-│ │ response.status_code │                     │      │           │          │ │
-│ │ == 200,              │                     │      │           │          │ │
-│ │ response.text        │                     │      │           │          │ │
-│ │ +    assert          │                     │      │           │          │ │
-│ │ response.json() ==   │                     │      │           │          │ │
-│ │ {"scheme": "Other",  │                     │      │           │          │ │
-│ │ "credentials":       │                     │      │           │          │ │
-│ │ "foobar"}            │                     │      │           │          │ │
-│ │ +                    │                     │      │           │          │ │
-│ │ +                    │                     │      │           │          │ │
-│ │  def                 │                     │      │           │          │ │
-│ │ test_security_http_… │                     │      │           │          │ │
-│ │      response =      │                     │      │           │          │ │
-│ │ client.get("/users/… │                     │      │           │          │ │
-│ │      assert          │                     │      │           │          │ │
-│ │ response.status_code │                     │      │           │          │ │
-│ │ == 401,              │                     │      │           │          │ │
-│ │ response.text        │                     │      │           │          │ │
-│ │ diff --git           │                     │      │           │          │ │
-│ │ a/tests/test_securi… │                     │      │           │          │ │
-│ │ b/tests/test_securi… │                     │      │           │          │ │
-│ │ index                │                     │      │           │          │ │
-│ │ f2097b149..66f53ab00 │                     │      │           │          │ │
-│ │ 100644               │                     │      │           │          │ │
-│ │ ---                  │                     │      │           │          │ │
-│ │ a/tests/test_securi… │                     │      │           │          │ │
-│ │ +++                  │                     │      │           │          │ │
-│ │ b/tests/test_securi… │                     │      │           │          │ │
-│ │ @@ -37,6 +37,12 @@   │                     │      │           │          │ │
-│ │ def test_token():    │                     │      │           │          │ │
-│ │      assert          │                     │      │           │          │ │
-│ │ response.json() ==   │                     │      │           │          │ │
-│ │ {"token":            │                     │      │           │          │ │
-│ │ "testtoken"}         │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │ +def                 │                     │      │           │          │ │
-│ │ test_token_with_whi… │                     │      │           │          │ │
-│ │ +    response =      │                     │      │           │          │ │
-│ │ client.get("/items", │                     │      │           │          │ │
-│ │ headers={"Authoriza… │                     │      │           │          │ │
-│ │ "Bearer  testtoken   │                     │      │           │          │ │
-│ │ "})                  │                     │      │           │          │ │
-│ │ +    assert          │                     │      │           │          │ │
-│ │ response.status_code │                     │      │           │          │ │
-│ │ == 200,              │                     │      │           │          │ │
-│ │ response.text        │                     │      │           │          │ │
-│ │ +    assert          │                     │      │           │          │ │
-│ │ response.json() ==   │                     │      │           │          │ │
-│ │ {"token":            │                     │      │           │          │ │
-│ │ "testtoken"}         │                     │      │           │          │ │
-│ │ +                    │                     │      │           │          │ │
-│ │ +                    │                     │      │           │          │ │
-│ │  def                 │                     │      │           │          │ │
-│ │ test_openapi_schema… │                     │      │           │          │ │
-│ │      response =      │                     │      │           │          │ │
-│ │ client.get("/openap… │                     │      │           │          │ │
-│ │      assert          │                     │      │           │          │ │
-│ │ response.status_code │                     │      │           │          │ │
-│ │ == 200,              │                     │      │           │          │ │
-│ │ response.text        │                     │      │           │          │ │
-│ │                      │                     │      │           │          │ │
-│ │ ```                  │                     │      │           │          │ │
-│ └──────────────────────┴─────────────────────┴──────┴───────────┴──────────┘ │
+│ │ to be of type      │                    │       │           │            │ │
+│ │ `Literal`',        │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ code='discriminat… │                    │       │           │            │ │
+│ │ -            )     │                    │       │           │            │ │
+│ │ +        match     │                    │       │           │            │ │
+│ │ schema:            │                    │       │           │            │ │
+│ │ +            case  │                    │       │           │            │ │
+│ │ {'type':           │                    │       │           │            │ │
+│ │ 'literal',         │                    │       │           │            │ │
+│ │ 'expected':        │                    │       │           │            │ │
+│ │ expected}:         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ return expected    │                    │       │           │            │ │
+│ │ +            case  │                    │       │           │            │ │
+│ │ {'type': 'none'}:  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ return [None]      │                    │       │           │            │ │
+│ │ +            case  │                    │       │           │            │ │
+│ │ {'type': 'union',  │                    │       │           │            │ │
+│ │ 'choices':         │                    │       │           │            │ │
+│ │ choices}:          │                    │       │           │            │ │
+│ │ +                # │                    │       │           │            │ │
+│ │ Generally when     │                    │       │           │            │ │
+│ │ multiple values    │                    │       │           │            │ │
+│ │ are allowed they   │                    │       │           │            │ │
+│ │ should be placed   │                    │       │           │            │ │
+│ │ in a single        │                    │       │           │            │ │
+│ │ `Literal`, but     │                    │       │           │            │ │
+│ │ +                # │                    │       │           │            │ │
+│ │ we add this case   │                    │       │           │            │ │
+│ │ to handle the      │                    │       │           │            │ │
+│ │ situation where a  │                    │       │           │            │ │
+│ │ field is annotated │                    │       │           │            │ │
+│ │ as a `Union` of    │                    │       │           │            │ │
+│ │ `Literal`s.        │                    │       │           │            │ │
+│ │ +                # │                    │       │           │            │ │
+│ │ For example, this  │                    │       │           │            │ │
+│ │ lets us handle     │                    │       │           │            │ │
+│ │ `Union[Literal['k… │                    │       │           │            │ │
+│ │ Union[Literal['Ke… │                    │       │           │            │ │
+│ │ Literal['KEY']]]`  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ values: list[Any]  │                    │       │           │            │ │
+│ │ = []               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ for choice in      │                    │       │           │            │ │
+│ │ choices:           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ choice_schema =    │                    │       │           │            │ │
+│ │ choice[0] if       │                    │       │           │            │ │
+│ │ isinstance(choice, │                    │       │           │            │ │
+│ │ tuple) else choice │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ choice_values =    │                    │       │           │            │ │
+│ │ self._infer_discr… │                    │       │           │            │ │
+│ │ source)            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ values.extend(cho… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ return values      │                    │       │           │            │ │
+│ │ +            case  │                    │       │           │            │ │
+│ │ {'type':           │                    │       │           │            │ │
+│ │ 'default',         │                    │       │           │            │ │
+│ │ 'schema':          │                    │       │           │            │ │
+│ │ inner_schema}:     │                    │       │           │            │ │
+│ │ +                # │                    │       │           │            │ │
+│ │ This will happen   │                    │       │           │            │ │
+│ │ if the field has a │                    │       │           │            │ │
+│ │ default value; we  │                    │       │           │            │ │
+│ │ ignore it while    │                    │       │           │            │ │
+│ │ extracting the     │                    │       │           │            │ │
+│ │ discriminator      │                    │       │           │            │ │
+│ │ values             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ return             │                    │       │           │            │ │
+│ │ self._infer_discr… │                    │       │           │            │ │
+│ │ source)            │                    │       │           │            │ │
+│ │ +            case  │                    │       │           │            │ │
+│ │ {'type':           │                    │       │           │            │ │
+│ │ 'function-after',  │                    │       │           │            │ │
+│ │ 'schema':          │                    │       │           │            │ │
+│ │ inner_schema}:     │                    │       │           │            │ │
+│ │ +                # │                    │       │           │            │ │
+│ │ After validators   │                    │       │           │            │ │
+│ │ don't affect the   │                    │       │           │            │ │
+│ │ discriminator      │                    │       │           │            │ │
+│ │ values             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ return             │                    │       │           │            │ │
+│ │ self._infer_discr… │                    │       │           │            │ │
+│ │ source)            │                    │       │           │            │ │
+│ │ +            case  │                    │       │           │            │ │
+│ │ {'type': 'model',  │                    │       │           │            │ │
+│ │ 'root_model':      │                    │       │           │            │ │
+│ │ True, 'schema':    │                    │       │           │            │ │
+│ │ inner_schema}:     │                    │       │           │            │ │
+│ │ +                # │                    │       │           │            │ │
+│ │ Support            │                    │       │           │            │ │
+│ │ RootModel[Literal… │                    │       │           │            │ │
+│ │ as discriminator   │                    │       │           │            │ │
+│ │ field type         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ return             │                    │       │           │            │ │
+│ │ self._infer_discr… │                    │       │           │            │ │
+│ │ source)            │                    │       │           │            │ │
+│ │ +            case  │                    │       │           │            │ │
+│ │ {'type':           │                    │       │           │            │ │
+│ │ 'function-before'  │                    │       │           │            │ │
+│ │ | 'function-wrap'  │                    │       │           │            │ │
+│ │ | 'function-plain' │                    │       │           │            │ │
+│ │ as schema_type}:   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ validator_type =   │                    │       │           │            │ │
+│ │ repr(schema_type.… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ raise              │                    │       │           │            │ │
+│ │ PydanticUserError( │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ f'Cannot use a     │                    │       │           │            │ │
+│ │ mode={validator_t… │                    │       │           │            │ │
+│ │ validator in the'  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ f' discriminator   │                    │       │           │            │ │
+│ │ field              │                    │       │           │            │ │
+│ │ {self.discriminat… │                    │       │           │            │ │
+│ │ of {source}',      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ code='discriminat… │                    │       │           │            │ │
+│ │ +                ) │                    │       │           │            │ │
+│ │ +            case  │                    │       │           │            │ │
+│ │ _:                 │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ raise              │                    │       │           │            │ │
+│ │ PydanticUserError( │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ f'{source} needs   │                    │       │           │            │ │
+│ │ field              │                    │       │           │            │ │
+│ │ {self.discriminat… │                    │       │           │            │ │
+│ │ to be of type      │                    │       │           │            │ │
+│ │ `Literal`',        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ code='discriminat… │                    │       │           │            │ │
+│ │ +                ) │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    def           │                    │       │           │            │ │
+│ │ _set_unique_choic… │                    │       │           │            │ │
+│ │ choice:            │                    │       │           │            │ │
+│ │ core_schema.CoreS… │                    │       │           │            │ │
+│ │ values:            │                    │       │           │            │ │
+│ │ Sequence[str |     │                    │       │           │            │ │
+│ │ int]) -> None:     │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ _set_unique_choic… │                    │       │           │            │ │
+│ │ choice:            │                    │       │           │            │ │
+│ │ core_schema.CoreS… │                    │       │           │            │ │
+│ │ values: list[Any]) │                    │       │           │            │ │
+│ │ -> None:           │                    │       │           │            │ │
+│ │          """This   │                    │       │           │            │ │
+│ │ method updates     │                    │       │           │            │ │
+│ │ `self.tagged_unio… │                    │       │           │            │ │
+│ │ so that all        │                    │       │           │            │ │
+│ │ provided           │                    │       │           │            │ │
+│ │ (discriminator)    │                    │       │           │            │ │
+│ │ `values` map to    │                    │       │           │            │ │
+│ │ the                │                    │       │           │            │ │
+│ │          provided  │                    │       │           │            │ │
+│ │ `choice`,          │                    │       │           │            │ │
+│ │ validating that    │                    │       │           │            │ │
+│ │ none of these      │                    │       │           │            │ │
+│ │ values already map │                    │       │           │            │ │
+│ │ to another         │                    │       │           │            │ │
+│ │ (different)        │                    │       │           │            │ │
+│ │ choice.            │                    │       │           │            │ │
+│ │          """       │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/pydantic/json_s… │                    │       │           │            │ │
+│ │ b/pydantic/json_s… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ c61378a5..c2183e19 │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/pydantic/json_s… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/pydantic/json_s… │                    │       │           │            │ │
+│ │ @@ -1384,6 +1384,8 │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ GenerateJsonSchem… │                    │       │           │            │ │
+│ │                  # │                    │       │           │            │ │
+│ │ Use the JSON       │                    │       │           │            │ │
+│ │ representation so  │                    │       │           │            │ │
+│ │ that the           │                    │       │           │            │ │
+│ │ discriminator      │                    │       │           │            │ │
+│ │ mapping            │                    │       │           │            │ │
+│ │                  # │                    │       │           │            │ │
+│ │ can be matched     │                    │       │           │            │ │
+│ │ against the        │                    │       │           │            │ │
+│ │ serialized payload │                    │       │           │            │ │
+│ │ value              │                    │       │           │            │ │
+│ │                  k │                    │       │           │            │ │
+│ │ = 'true' if k else │                    │       │           │            │ │
+│ │ 'false'            │                    │       │           │            │ │
+│ │ +            elif  │                    │       │           │            │ │
+│ │ k is None:         │                    │       │           │            │ │
+│ │ +                k │                    │       │           │            │ │
+│ │ = 'null'           │                    │       │           │            │ │
+│ │              try:  │                    │       │           │            │ │
+│ │                  # │                    │       │           │            │ │
+│ │ Use str(k) since   │                    │       │           │            │ │
+│ │ keys must be       │                    │       │           │            │ │
+│ │ strings for json;  │                    │       │           │            │ │
+│ │ while not          │                    │       │           │            │ │
+│ │ technically        │                    │       │           │            │ │
+│ │ correct,           │                    │       │           │            │ │
+│ │                  # │                    │       │           │            │ │
+│ │ it's the closest   │                    │       │           │            │ │
+│ │ that can be        │                    │       │           │            │ │
+│ │ represented in     │                    │       │           │            │ │
+│ │ valid JSON         │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_json… │                    │       │           │            │ │
+│ │ b/tests/test_json… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 2d67f01a..9cca3292 │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_json… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_json… │                    │       │           │            │ │
+│ │ @@ -3986,40        │                    │       │           │            │ │
+│ │ +3986,36 @@ def    │                    │       │           │            │ │
+│ │ test_bool_discrim… │                    │       │           │            │ │
+│ │ -> None:           │                    │       │           │            │ │
+│ │      class         │                    │       │           │            │ │
+│ │ Model(BaseModel):  │                    │       │           │            │ │
+│ │          setting:  │                    │       │           │            │ │
+│ │ Enabled | Disabled │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ Field(discriminat… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    assert        │                    │       │           │            │ │
+│ │ Model.model_json_… │                    │       │           │            │ │
+│ │ == {               │                    │       │           │            │ │
+│ │ -        '$defs':  │                    │       │           │            │ │
+│ │ {                  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'Disabled': {      │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'properties':      │                    │       │           │            │ │
+│ │ {'enabled':        │                    │       │           │            │ │
+│ │ {'const': False,   │                    │       │           │            │ │
+│ │ 'title':           │                    │       │           │            │ │
+│ │ 'Enabled', 'type': │                    │       │           │            │ │
+│ │ 'boolean'}},       │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'required':        │                    │       │           │            │ │
+│ │ ['enabled'],       │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'title':           │                    │       │           │            │ │
+│ │ 'Disabled',        │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'type': 'object',  │                    │       │           │            │ │
+│ │ -            },    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'Enabled': {       │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'properties': {    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'config':          │                    │       │           │            │ │
+│ │ {'title':          │                    │       │           │            │ │
+│ │ 'Config', 'type':  │                    │       │           │            │ │
+│ │ 'string'},         │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'enabled':         │                    │       │           │            │ │
+│ │ {'const': True,    │                    │       │           │            │ │
+│ │ 'title':           │                    │       │           │            │ │
+│ │ 'Enabled', 'type': │                    │       │           │            │ │
+│ │ 'boolean'},        │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ },                 │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'required':        │                    │       │           │            │ │
+│ │ ['enabled',        │                    │       │           │            │ │
+│ │ 'config'],         │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'title':           │                    │       │           │            │ │
+│ │ 'Enabled',         │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'type': 'object',  │                    │       │           │            │ │
+│ │ -            },    │                    │       │           │            │ │
+│ │ -        },        │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'properties': {    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'setting': {       │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'discriminator': { │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'mapping':         │                    │       │           │            │ │
+│ │ {'false':          │                    │       │           │            │ │
+│ │ '#/$defs/Disabled… │                    │       │           │            │ │
+│ │ 'true':            │                    │       │           │            │ │
+│ │ '#/$defs/Enabled'… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'propertyName':    │                    │       │           │            │ │
+│ │ 'enabled',         │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ },                 │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'oneOf': [{'$ref': │                    │       │           │            │ │
+│ │ '#/$defs/Enabled'… │                    │       │           │            │ │
+│ │ {'$ref':           │                    │       │           │            │ │
+│ │ '#/$defs/Disabled… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'title':           │                    │       │           │            │ │
+│ │ 'Setting',         │                    │       │           │            │ │
+│ │ -            }     │                    │       │           │            │ │
+│ │ -        },        │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ 'required':        │                    │       │           │            │ │
+│ │ ['setting'],       │                    │       │           │            │ │
+│ │ -        'title':  │                    │       │           │            │ │
+│ │ 'Model',           │                    │       │           │            │ │
+│ │ -        'type':   │                    │       │           │            │ │
+│ │ 'object',          │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ Model.model_json_… │                    │       │           │            │ │
+│ │ == {               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ 'mapping':         │                    │       │           │            │ │
+│ │ {'false':          │                    │       │           │            │ │
+│ │ '#/$defs/Disabled… │                    │       │           │            │ │
+│ │ 'true':            │                    │       │           │            │ │
+│ │ '#/$defs/Enabled'… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ 'propertyName':    │                    │       │           │            │ │
+│ │ 'enabled',         │                    │       │           │            │ │
+│ │      }             │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_none_discrim… │                    │       │           │            │ │
+│ │ -> None:           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ """https://github… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    class         │                    │       │           │            │ │
+│ │ A(BaseModel):      │                    │       │           │            │ │
+│ │ +        field:    │                    │       │           │            │ │
+│ │ Literal['A'] = 'A' │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    class         │                    │       │           │            │ │
+│ │ B(BaseModel):      │                    │       │           │            │ │
+│ │ +        field:    │                    │       │           │            │ │
+│ │ None = None        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    class         │                    │       │           │            │ │
+│ │ Model(BaseModel):  │                    │       │           │            │ │
+│ │ +        a_or_b:   │                    │       │           │            │ │
+│ │ Annotated[A | B,   │                    │       │           │            │ │
+│ │ Field(discriminat… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ Model.model_json_… │                    │       │           │            │ │
+│ │ == {               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ 'mapping': {'A':   │                    │       │           │            │ │
+│ │ '#/$defs/A',       │                    │       │           │            │ │
+│ │ 'null':            │                    │       │           │            │ │
+│ │ '#/$defs/B'},      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ 'propertyName':    │                    │       │           │            │ │
+│ │ 'field',           │                    │       │           │            │ │
+│ │ +    }             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    m =           │                    │       │           │            │ │
+│ │ Model.model_valid… │                    │       │           │            │ │
+│ │ {'field': None}})  │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ isinstance(m.a_or… │                    │       │           │            │ │
+│ │ B)                 │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    m2 =          │                    │       │           │            │ │
+│ │ Model.model_valid… │                    │       │           │            │ │
+│ │ {'field': 'A'}})   │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ isinstance(m2.a_o… │                    │       │           │            │ │
+│ │ A)                 │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_nested_discr… │                    │       │           │            │ │
+│ │      class         │                    │       │           │            │ │
+│ │ BlackCatWithHeigh… │                    │       │           │            │ │
+│ │          color:    │                    │       │           │            │ │
+│ │ Literal['black']   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
