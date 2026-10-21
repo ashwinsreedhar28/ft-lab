@@ -1,400 +1,400 @@
-│ │ @@ -0,0 +1,173 @@  │                    │       │           │            │ │
-│ │ +"""Test using     │                    │       │           │            │ │
-│ │ special types      │                    │       │           │            │ │
-│ │ (Response,         │                    │       │           │            │ │
-│ │ Request,           │                    │       │           │            │ │
-│ │ BackgroundTasks)   │                    │       │           │            │ │
-│ │ as dependency      │                    │       │           │            │ │
-│ │ annotations.       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +These tests       │                    │       │           │            │ │
-│ │ verify that        │                    │       │           │            │ │
-│ │ special FastAPI    │                    │       │           │            │ │
-│ │ types can be used  │                    │       │           │            │ │
-│ │ with Depends()     │                    │       │           │            │ │
-│ │ annotations        │                    │       │           │            │ │
-│ │ +and that the      │                    │       │           │            │ │
-│ │ dependency         │                    │       │           │            │ │
-│ │ injection system   │                    │       │           │            │ │
-│ │ properly handles   │                    │       │           │            │ │
-│ │ them.              │                    │       │           │            │ │
-│ │ +"""               │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +from typing       │                    │       │           │            │ │
-│ │ import Annotated   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +from fastapi      │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ BackgroundTasks,   │                    │       │           │            │ │
-│ │ Depends, FastAPI,  │                    │       │           │            │ │
-│ │ Request, Response  │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ fastapi.responses  │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ JSONResponse       │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ fastapi.testclient │                    │       │           │            │ │
-│ │ import TestClient  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_response_wit… │                    │       │           │            │ │
-│ │ +    """Response   │                    │       │           │            │ │
-│ │ type hint should   │                    │       │           │            │ │
-│ │ work with          │                    │       │           │            │ │
-│ │ Annotated[Respons… │                    │       │           │            │ │
-│ │ Depends(...)]."""  │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ FastAPI()          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ modify_response(r… │                    │       │           │            │ │
-│ │ Response) ->       │                    │       │           │            │ │
-│ │ Response:          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ response.headers[… │                    │       │           │            │ │
-│ │ = "modified"       │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ response           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    @app.get("/") │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ endpoint(response: │                    │       │           │            │ │
-│ │ Annotated[Respons… │                    │       │           │            │ │
-│ │ Depends(modify_re… │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ {"status": "ok"}   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │ +    resp =        │                    │       │           │            │ │
-│ │ client.get("/")    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.status_code   │                    │       │           │            │ │
-│ │ == 200             │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.json() ==     │                    │       │           │            │ │
-│ │ {"status": "ok"}   │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.headers.get(… │                    │       │           │            │ │
-│ │ == "modified"      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_response_wit… │                    │       │           │            │ │
-│ │ +    """Response   │                    │       │           │            │ │
-│ │ type hint should   │                    │       │           │            │ │
-│ │ work with Response │                    │       │           │            │ │
-│ │ = Depends(...).""" │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ FastAPI()          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ modify_response(r… │                    │       │           │            │ │
-│ │ Response) ->       │                    │       │           │            │ │
-│ │ Response:          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ response.headers[… │                    │       │           │            │ │
-│ │ = "modified"       │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ response           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    @app.get("/") │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ endpoint(response: │                    │       │           │            │ │
-│ │ Response =         │                    │       │           │            │ │
-│ │ Depends(modify_re… │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ {"status": "ok"}   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │ +    resp =        │                    │       │           │            │ │
-│ │ client.get("/")    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.status_code   │                    │       │           │            │ │
-│ │ == 200             │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.json() ==     │                    │       │           │            │ │
-│ │ {"status": "ok"}   │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.headers.get(… │                    │       │           │            │ │
-│ │ == "modified"      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_response_wit… │                    │       │           │            │ │
-│ │ +    """Regular    │                    │       │           │            │ │
-│ │ Response injection │                    │       │           │            │ │
-│ │ should still       │                    │       │           │            │ │
-│ │ work."""           │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ FastAPI()          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    @app.get("/") │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ endpoint(response: │                    │       │           │            │ │
-│ │ Response):         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ response.headers[… │                    │       │           │            │ │
-│ │ = "set"            │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ {"status": "ok"}   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │ +    resp =        │                    │       │           │            │ │
-│ │ client.get("/")    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.status_code   │                    │       │           │            │ │
-│ │ == 200             │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.json() ==     │                    │       │           │            │ │
-│ │ {"status": "ok"}   │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.headers.get(… │                    │       │           │            │ │
-│ │ == "set"           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_response_dep… │                    │       │           │            │ │
-│ │ +    """Response   │                    │       │           │            │ │
-│ │ dependency should  │                    │       │           │            │ │
-│ │ work in a chain of │                    │       │           │            │ │
-│ │ dependencies."""   │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ FastAPI()          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ first_modifier(re… │                    │       │           │            │ │
-│ │ Response) ->       │                    │       │           │            │ │
-│ │ Response:          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ response.headers[… │                    │       │           │            │ │
-│ │ = "1"              │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ response           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ second_modifier(   │                    │       │           │            │ │
-│ │ +        response: │                    │       │           │            │ │
-│ │ Annotated[Respons… │                    │       │           │            │ │
-│ │ Depends(first_mod… │                    │       │           │            │ │
-│ │ +    ) ->          │                    │       │           │            │ │
-│ │ Response:          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ response.headers[… │                    │       │           │            │ │
-│ │ = "2"              │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ response           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    @app.get("/") │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ endpoint(response: │                    │       │           │            │ │
-│ │ Annotated[Respons… │                    │       │           │            │ │
-│ │ Depends(second_mo… │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ {"status": "ok"}   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │ +    resp =        │                    │       │           │            │ │
-│ │ client.get("/")    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.status_code   │                    │       │           │            │ │
-│ │ == 200             │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.headers.get(… │                    │       │           │            │ │
-│ │ == "1"             │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.headers.get(… │                    │       │           │            │ │
-│ │ == "2"             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_response_dep… │                    │       │           │            │ │
-│ │ +    """Dependency │                    │       │           │            │ │
-│ │ that returns a     │                    │       │           │            │ │
-│ │ different Response │                    │       │           │            │ │
-│ │ instance should    │                    │       │           │            │ │
-│ │ work.              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    When a        │                    │       │           │            │ │
-│ │ dependency returns │                    │       │           │            │ │
-│ │ a new Response     │                    │       │           │            │ │
-│ │ object (e.g.,      │                    │       │           │            │ │
-│ │ JSONResponse)      │                    │       │           │            │ │
-│ │ instead            │                    │       │           │            │ │
-│ │ +    of modifying  │                    │       │           │            │ │
-│ │ the injected one,  │                    │       │           │            │ │
-│ │ the returned       │                    │       │           │            │ │
-│ │ response should be │                    │       │           │            │ │
-│ │ used and any       │                    │       │           │            │ │
-│ │ +    modifications │                    │       │           │            │ │
-│ │ to it in the       │                    │       │           │            │ │
-│ │ endpoint should be │                    │       │           │            │ │
-│ │ preserved.         │                    │       │           │            │ │
-│ │ +    """           │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ FastAPI()          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ default_response() │                    │       │           │            │ │
-│ │ -> Response:       │                    │       │           │            │ │
-│ │ +        response  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ JSONResponse(cont… │                    │       │           │            │ │
-│ │ "ok"})             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ response.headers[… │                    │       │           │            │ │
-│ │ = "initial"        │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ response           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    @app.get("/") │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ endpoint(response: │                    │       │           │            │ │
-│ │ Annotated[Respons… │                    │       │           │            │ │
-│ │ Depends(default_r… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ response.headers[… │                    │       │           │            │ │
-│ │ = "modified"       │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ response           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │ +    resp =        │                    │       │           │            │ │
-│ │ client.get("/")    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.status_code   │                    │       │           │            │ │
-│ │ == 200             │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.json() ==     │                    │       │           │            │ │
-│ │ {"status": "ok"}   │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.headers.get(… │                    │       │           │            │ │
-│ │ == "modified"      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +# Tests for       │                    │       │           │            │ │
-│ │ Request type hint  │                    │       │           │            │ │
-│ │ with Depends       │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_request_with… │                    │       │           │            │ │
-│ │ +    """Request    │                    │       │           │            │ │
-│ │ type hint should   │                    │       │           │            │ │
-│ │ work in dependency │                    │       │           │            │ │
-│ │ chain."""          │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ FastAPI()          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ extract_request_i… │                    │       │           │            │ │
-│ │ Request) -> dict:  │                    │       │           │            │ │
-│ │ +        return {  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "path":            │                    │       │           │            │ │
-│ │ request.url.path,  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "user_agent":      │                    │       │           │            │ │
-│ │ request.headers.g… │                    │       │           │            │ │
-│ │ "unknown"),        │                    │       │           │            │ │
-│ │ +        }         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    @app.get("/") │                    │       │           │            │ │
-│ │ +    def endpoint( │                    │       │           │            │ │
-│ │ +        info:     │                    │       │           │            │ │
-│ │ Annotated[dict,    │                    │       │           │            │ │
-│ │ Depends(extract_r… │                    │       │           │            │ │
-│ │ +    ):            │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ info               │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │ +    resp =        │                    │       │           │            │ │
-│ │ client.get("/",    │                    │       │           │            │ │
-│ │ headers={"user-ag… │                    │       │           │            │ │
-│ │ "test-agent"})     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.status_code   │                    │       │           │            │ │
-│ │ == 200             │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.json() ==     │                    │       │           │            │ │
-│ │ {"path": "/",      │                    │       │           │            │ │
-│ │ "user_agent":      │                    │       │           │            │ │
-│ │ "test-agent"}      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +# Tests for       │                    │       │           │            │ │
-│ │ BackgroundTasks    │                    │       │           │            │ │
-│ │ type hint with     │                    │       │           │            │ │
-│ │ Depends            │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_background_t… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ """BackgroundTasks │                    │       │           │            │ │
-│ │ type hint should   │                    │       │           │            │ │
-│ │ work with          │                    │       │           │            │ │
-│ │ Annotated[Backgro… │                    │       │           │            │ │
-│ │ Depends(...)]."""  │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ FastAPI()          │                    │       │           │            │ │
-│ │ +    task_results  │                    │       │           │            │ │
-│ │ = []               │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ background_task(m… │                    │       │           │            │ │
-│ │ str):              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ task_results.appe… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ add_background_ta… │                    │       │           │            │ │
-│ │ BackgroundTasks)   │                    │       │           │            │ │
-│ │ ->                 │                    │       │           │            │ │
-│ │ BackgroundTasks:   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ background_tasks.… │                    │       │           │            │ │
-│ │ "from dependency") │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ background_tasks   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    @app.get("/") │                    │       │           │            │ │
-│ │ +    def endpoint( │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ background_tasks:  │                    │       │           │            │ │
-│ │ Annotated[Backgro… │                    │       │           │            │ │
-│ │ Depends(add_backg… │                    │       │           │            │ │
-│ │ +    ):            │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ background_tasks.… │                    │       │           │            │ │
-│ │ "from endpoint")   │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ {"status": "ok"}   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │ +    resp =        │                    │       │           │            │ │
-│ │ client.get("/")    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ resp.status_code   │                    │       │           │            │ │
-│ │ == 200             │                    │       │           │            │ │
-│ │ +    assert "from  │                    │       │           │            │ │
-│ │ dependency" in     │                    │       │           │            │ │
-│ │ task_results       │                    │       │           │            │ │
-│ │ +    assert "from  │                    │       │           │            │ │
-│ │ endpoint" in       │                    │       │           │            │ │
-│ │ task_results       │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
+│ │ import get_type_ref │                     │       │           │          │ │
+│ │ +from . import      │                     │       │           │          │ │
+│ │ _type_refs,         │                     │       │           │          │ │
+│ │ _typing_extra       │                     │       │           │          │ │
+│ │  from ._forward_ref │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ PydanticRecursiveR… │                     │       │           │          │ │
+│ │  from ._utils       │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ all_identical,      │                     │       │           │          │ │
+│ │ is_model_class      │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -427,7 +426,7 @@ │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ generic_recursion_… │                     │       │           │          │ │
+│ │          token =    │                     │       │           │          │ │
+│ │ None                │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      try:           │                     │       │           │          │ │
+│ │ -        type_ref = │                     │       │           │          │ │
+│ │ get_type_ref(origi… │                     │       │           │          │ │
+│ │ args_override=args) │                     │       │           │          │ │
+│ │ +        type_ref = │                     │       │           │          │ │
+│ │ _type_refs.model_t… │                     │       │           │          │ │
+│ │ args_override=args) │                     │       │           │          │ │
+│ │          if         │                     │       │           │          │ │
+│ │ type_ref in         │                     │       │           │          │ │
+│ │ previously_seen_ty… │                     │       │           │          │ │
+│ │              self_… │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ PydanticRecursiveR… │                     │       │           │          │ │
+│ │              yield  │                     │       │           │          │ │
+│ │ self_type           │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/pydantic/_intern… │                     │       │           │          │ │
+│ │ b/pydantic/_intern… │                     │       │           │          │ │
+│ │ new file mode       │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 00000000..df8b65c5  │                     │       │           │          │ │
+│ │ --- /dev/null       │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/pydantic/_intern… │                     │       │           │          │ │
+│ │ @@ -0,0 +1,128 @@   │                     │       │           │          │ │
+│ │ +"""Logic related   │                     │       │           │          │ │
+│ │ to reference        │                     │       │           │          │ │
+│ │ computation for     │                     │       │           │          │ │
+│ │ types."""           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +from __future__    │                     │       │           │          │ │
+│ │ import annotations  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +import sys         │                     │       │           │          │ │
+│ │ +from enum import   │                     │       │           │          │ │
+│ │ Enum                │                     │       │           │          │ │
+│ │ +from typing import │                     │       │           │          │ │
+│ │ TYPE_CHECKING, Any, │                     │       │           │          │ │
+│ │ cast, get_args,     │                     │       │           │          │ │
+│ │ get_origin          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +from               │                     │       │           │          │ │
+│ │ typing_extensions   │                     │       │           │          │ │
+│ │ import Sentinel,    │                     │       │           │          │ │
+│ │ TypeAliasType       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +from . import      │                     │       │           │          │ │
+│ │ _repr               │                     │       │           │          │ │
+│ │ +from               │                     │       │           │          │ │
+│ │ ._import_utils      │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ import_cached_base… │                     │       │           │          │ │
+│ │ +from ._utils       │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ lenient_issubclass  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +if TYPE_CHECKING:  │                     │       │           │          │ │
+│ │ +    from pydantic  │                     │       │           │          │ │
+│ │ import BaseModel    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ _args_ref(args:     │                     │       │           │          │ │
+│ │ tuple[Any, ...]) -> │                     │       │           │          │ │
+│ │ str:                │                     │       │           │          │ │
+│ │ +    arg_refs:      │                     │       │           │          │ │
+│ │ list[str] = []      │                     │       │           │          │ │
+│ │ +    for arg in     │                     │       │           │          │ │
+│ │ args:               │                     │       │           │          │ │
+│ │ +        if         │                     │       │           │          │ │
+│ │ isinstance(arg,     │                     │       │           │          │ │
+│ │ str):               │                     │       │           │          │ │
+│ │ +            #      │                     │       │           │          │ │
+│ │ Handle string args  │                     │       │           │          │ │
+│ │ as a special case;  │                     │       │           │          │ │
+│ │ we may be able to   │                     │       │           │          │ │
+│ │ remove this special │                     │       │           │          │ │
+│ │ handling if we      │                     │       │           │          │ │
+│ │ +            # wrap │                     │       │           │          │ │
+│ │ them in a           │                     │       │           │          │ │
+│ │ ForwardRef at some  │                     │       │           │          │ │
+│ │ point.              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ arg_ref =           │                     │       │           │          │ │
+│ │ f'{arg}:str-{id(ar… │                     │       │           │          │ │
+│ │ +        else:      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ arg_ref =           │                     │       │           │          │ │
+│ │ f'{_repr.display_a… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ arg_refs.append(ar… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    if arg_refs:   │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ f'[{",".join(arg_r… │                     │       │           │          │ │
+│ │ +    else:          │                     │       │           │          │ │
+│ │ +        return ''  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ model_type_ref(typ… │                     │       │           │          │ │
+│ │ type[BaseModel],    │                     │       │           │          │ │
+│ │ args_override:      │                     │       │           │          │ │
+│ │ tuple[Any, ...] |   │                     │       │           │          │ │
+│ │ None = None) ->     │                     │       │           │          │ │
+│ │ str:                │                     │       │           │          │ │
+│ │ +    """Produce a   │                     │       │           │          │ │
+│ │ reference for       │                     │       │           │          │ │
+│ │ Pydantic base       │                     │       │           │          │ │
+│ │ models."""          │                     │       │           │          │ │
+│ │ +    try:           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ generic_metadata =  │                     │       │           │          │ │
+│ │ type_.__pydantic_g… │                     │       │           │          │ │
+│ │ +    except         │                     │       │           │          │ │
+│ │ AttributeError:     │                     │       │           │          │ │
+│ │ +        # `type_`  │                     │       │           │          │ │
+│ │ is `BaseModel`:     │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ f'{type_.__module_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    origin =       │                     │       │           │          │ │
+│ │ generic_metadata['… │                     │       │           │          │ │
+│ │ or type_            │                     │       │           │          │ │
+│ │ +    args =         │                     │       │           │          │ │
+│ │ generic_metadata['… │                     │       │           │          │ │
+│ │ +    if not args    │                     │       │           │          │ │
+│ │ and args_override   │                     │       │           │          │ │
+│ │ is not None:        │                     │       │           │          │ │
+│ │ +        args =     │                     │       │           │          │ │
+│ │ args_override       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    # While it is  │                     │       │           │          │ │
+│ │ typed as `str`,     │                     │       │           │          │ │
+│ │ `__module__` could  │                     │       │           │          │ │
+│ │ in theory be        │                     │       │           │          │ │
+│ │ `None`:             │                     │       │           │          │ │
+│ │ +    module_name =  │                     │       │           │          │ │
+│ │ cast(str | None,    │                     │       │           │          │ │
+│ │ origin.__module__)  │                     │       │           │          │ │
+│ │ +    if module_name │                     │       │           │          │ │
+│ │ is None:            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ module_name = '<No  │                     │       │           │          │ │
+│ │ __module__>'        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    return         │                     │       │           │          │ │
+│ │ f'{module_name}.{o… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ class_type_ref(typ… │                     │       │           │          │ │
+│ │ Any, origin:        │                     │       │           │          │ │
+│ │ type[Any] | None)   │                     │       │           │          │ │
+│ │ -> str:             │                     │       │           │          │ │
+│ │ +    """Produce a   │                     │       │           │          │ │
+│ │ reference for an    │                     │       │           │          │ │
+│ │ arbitrary class     │                     │       │           │          │ │
+│ │ (dataclasses, typed │                     │       │           │          │ │
+│ │ dictionaries, named │                     │       │           │          │ │
+│ │ tuples)."""         │                     │       │           │          │ │
+│ │ +    tp: type[Any]  │                     │       │           │          │ │
+│ │ = origin if origin  │                     │       │           │          │ │
+│ │ is not None else    │                     │       │           │          │ │
+│ │ type_               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    # While it is  │                     │       │           │          │ │
+│ │ typed as `str`,     │                     │       │           │          │ │
+│ │ `__module__` could  │                     │       │           │          │ │
+│ │ in theory be        │                     │       │           │          │ │
+│ │ `None`:             │                     │       │           │          │ │
+│ │ +    module_name =  │                     │       │           │          │ │
+│ │ cast(str | None,    │                     │       │           │          │ │
+│ │ tp.__module__)      │                     │       │           │          │ │
+│ │ +    if module_name │                     │       │           │          │ │
+│ │ is None:            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ module_name = '<No  │                     │       │           │          │ │
+│ │ __module__>'        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    return         │                     │       │           │          │ │
+│ │ f'{module_name}.{t… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +_NOT_PROVIDED =    │                     │       │           │          │ │
+│ │ Sentinel('_NOT_PRO… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ any_class_type_ref… │                     │       │           │          │ │
+│ │ Any, origin:        │                     │       │           │          │ │
+│ │ type[Any] | None |  │                     │       │           │          │ │
+│ │ _NOT_PROVIDED =     │                     │       │           │          │ │
+│ │ _NOT_PROVIDED) ->   │                     │       │           │          │ │
+│ │ str:                │                     │       │           │          │ │
+│ │ +    """Produce a   │                     │       │           │          │ │
+│ │ reference for any   │                     │       │           │          │ │
+│ │ class kind,         │                     │       │           │          │ │
+│ │ including Pydantic  │                     │       │           │          │ │
+│ │ models."""          │                     │       │           │          │ │
+│ │ +    BaseModel_ =   │                     │       │           │          │ │
+│ │ import_cached_base… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    if             │                     │       │           │          │ │
+│ │ lenient_issubclass… │                     │       │           │          │ │
+│ │ BaseModel_):        │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ model_type_ref(typ… │                     │       │           │          │ │
+│ │ # pyright:          │                     │       │           │          │ │
+│ │ ignore[reportArgum… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    origin =       │                     │       │           │          │ │
+│ │ get_origin(type_)   │                     │       │           │          │ │
+│ │ if origin is        │                     │       │           │          │ │
+│ │ _NOT_PROVIDED else  │                     │       │           │          │ │
+│ │ origin              │                     │       │           │          │ │
+│ │ +    return         │                     │       │           │          │ │
+│ │ class_type_ref(typ… │                     │       │           │          │ │
+│ │ origin)  # pyright: │                     │       │           │          │ │
+│ │ ignore[reportArgum… │                     │       │           │          │ │
+│ │ (https://github.co… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ any_type_ref(type_: │                     │       │           │          │ │
+│ │ Any, origin: Any |  │                     │       │           │          │ │
+│ │ _NOT_PROVIDED =     │                     │       │           │          │ │
+│ │ _NOT_PROVIDED) ->   │                     │       │           │          │ │
+│ │ str:                │                     │       │           │          │ │
+│ │ +    """Produce a   │                     │       │           │          │ │
+│ │ reference for any   │                     │       │           │          │ │
+│ │ object, including   │                     │       │           │          │ │
+│ │ non-class           │                     │       │           │          │ │
+│ │ objects."""         │                     │       │           │          │ │
+│ │ +    BaseModel_ =   │                     │       │           │          │ │
+│ │ import_cached_base… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    if             │                     │       │           │          │ │
+│ │ lenient_issubclass… │                     │       │           │          │ │
+│ │ BaseModel_):        │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ model_type_ref(typ… │                     │       │           │          │ │
+│ │ # pyright:          │                     │       │           │          │ │
+│ │ ignore[reportArgum… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    origin =       │                     │       │           │          │ │
+│ │ get_origin(type_)   │                     │       │           │          │ │
+│ │ if origin is        │                     │       │           │          │ │
+│ │ _NOT_PROVIDED else  │                     │       │           │          │ │
+│ │ origin              │                     │       │           │          │ │
+│ │ +    tp: Any =      │                     │       │           │          │ │
+│ │ origin if origin is │                     │       │           │          │ │
+│ │ not None else type_ │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    module_name =  │                     │       │           │          │ │
+│ │ getattr(tp,         │                     │       │           │          │ │
+│ │ '__module__', None) │                     │       │           │          │ │
+│ │ +    if module_name │                     │       │           │          │ │
+│ │ is None:            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ module_name = '<No  │                     │       │           │          │ │
+│ │ __module__>'        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    try:           │                     │       │           │          │ │
+│ │ +        qualname = │                     │       │           │          │ │
+│ │ getattr(tp,         │                     │       │           │          │ │
+│ │ '__qualname__',     │                     │       │           │          │ │
+│ │ f'<No __qualname__: │                     │       │           │          │ │
+│ │ {tp}>')             │                     │       │           │          │ │
+│ │ +    except         │                     │       │           │          │ │
+│ │ Exception:          │                     │       │           │          │ │
+│ │ +        qualname = │                     │       │           │          │ │
+│ │ getattr(tp,         │                     │       │           │          │ │
+│ │ '__qualname__',     │                     │       │           │          │ │
+│ │ '<No                │                     │       │           │          │ │
+│ │ __qualname__>')     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    return         │                     │       │           │          │ │
+│ │ f'{module_name}.{q… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ enum_type_ref(type… │                     │       │           │          │ │
+│ │ type[Enum]) -> str: │                     │       │           │          │ │
+│ │ +    """Produce a   │                     │       │           │          │ │
+│ │ reference for an    │                     │       │           │          │ │
+│ │ enum class."""      │                     │       │           │          │ │
+│ │ +    # While it is  │                     │       │           │          │ │
+│ │ typed as `str`,     │                     │       │           │          │ │
+│ │ `__module__` could  │                     │       │           │          │ │
+│ │ in theory be        │                     │       │           │          │ │
+│ │ `None`:             │                     │       │           │          │ │
+│ │ +    module_name =  │                     │       │           │          │ │
+│ │ cast(str | None,    │                     │       │           │          │ │
+│ │ type_.__module__)   │                     │       │           │          │ │
+│ │ +    if module_name │                     │       │           │          │ │
+│ │ is None:            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ module_name = '<No  │                     │       │           │          │ │
+│ │ __module__>'        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    return         │                     │       │           │          │ │
+│ │ f'{module_name}.{t… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ type_alias_type_re… │                     │       │           │          │ │
+│ │ TypeAliasType) ->   │                     │       │           │          │ │
+│ │ str:                │                     │       │           │          │ │
+│ │ +    """Produce a   │                     │       │           │          │ │
+│ │ reference for a     │                     │       │           │          │ │
+│ │ type alias."""      │                     │       │           │          │ │
+│ │ +    origin:        │                     │       │           │          │ │
+│ │ TypeAliasType =     │                     │       │           │          │ │
+│ │ get_origin(type_)   │                     │       │           │          │ │
+│ │ or type_            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    module_name =  │                     │       │           │          │ │
+│ │ type_.__module__    │                     │       │           │          │ │
+│ │ +    if module_name │                     │       │           │          │ │
+│ │ is None:            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ module_name = '<No  │                     │       │           │          │ │
+│ │ __module__>'        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    if             │                     │       │           │          │ │
+│ │ sys.version_info >= │                     │       │           │          │ │
+│ │ (3, 15):            │                     │       │           │          │ │
+│ │ +        type_ref = │                     │       │           │          │ │
+│ │ f'{module_name}.{o… │                     │       │           │          │ │
+│ │ +    else:          │                     │       │           │          │ │
+│ │ +        type_ref = │                     │       │           │          │ │
+│ │ f'{module_name}.{o… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    return         │                     │       │           │          │ │
+│ │ f'{type_ref}{_args… │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_edge_… │                     │       │           │          │ │
+│ │ b/tests/test_edge_… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 699a49da..f5e0de1a  │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_edge_… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_edge_… │                     │       │           │          │ │
+│ │ @@ -3209,3 +3209,12 │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ test_unhasbable_ge… │                     │       │           │          │ │
+│ │ -> None:            │                     │       │           │          │ │
+│ │      ta =           │                     │       │           │          │ │
+│ │ TypeAdapter(list[A… │                     │       │           │          │ │
+│ │ Meta()]])           │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      assert         │                     │       │           │          │ │
+│ │ ta.validate_python… │                     │       │           │          │ │
+│ │ == [1]              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_get_pydantic_… │                     │       │           │          │ │
+│ │ -> None:            │                     │       │           │          │ │
+│ │ +    class          │                     │       │           │          │ │
+│ │ SchemaProvider:     │                     │       │           │          │ │
+│ │ +        def        │                     │       │           │          │ │
+│ │ __get_pydantic_cor… │                     │       │           │          │ │
+│ │ source: Any,        │                     │       │           │          │ │
+│ │ handler:            │                     │       │           │          │ │
+│ │ GetCoreSchemaHandl… │                     │       │           │          │ │
+│ │ -> CoreSchema:      │                     │       │           │          │ │
+│ │ +            return │                     │       │           │          │ │
+│ │ core_schema.int_sc… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    ta =           │                     │       │           │          │ │
+│ │ TypeAdapter(Schema… │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ ta.validate_python… │                     │       │           │          │ │
+│ │ == 1                │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
