@@ -51,7 +51,7 @@ def main():
         for l in rp.read_text().splitlines():
             if l.strip():
                 d = json.loads(l)
-                if not d["raw"].startswith("API_"):      # refusals / errors are retried
+                if not d["raw"].startswith("API_") and _THINK.search(d["raw"]):   # refusals / truncations are retried
                     done[d["task_id"]] = d
 
     def one(t):
