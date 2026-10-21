@@ -1,400 +1,400 @@
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ __setitem__(self,  │                    │       │           │            │ │
-│ │ key: str, value:   │                    │       │           │            │ │
-│ │ typing.Any) ->     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.mark_modifie… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ super().__setitem… │                    │       │           │            │ │
-│ │ value)             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ __delitem__(self,  │                    │       │           │            │ │
-│ │ key: str) -> None: │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.mark_modifie… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ super().__delitem… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ clear(self) ->     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.mark_modifie… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ super().clear()    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def pop(self, │                    │       │           │            │ │
-│ │ key: str, *args:   │                    │       │           │            │ │
-│ │ typing.Any) ->     │                    │       │           │            │ │
-│ │ typing.Any:        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.modified =    │                    │       │           │            │ │
-│ │ self.modified or   │                    │       │           │            │ │
-│ │ key in self        │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ super().pop(key,   │                    │       │           │            │ │
-│ │ *args)             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ setdefault(self,   │                    │       │           │            │ │
-│ │ key: str, default: │                    │       │           │            │ │
-│ │ typing.Any = None) │                    │       │           │            │ │
-│ │ -> typing.Any:     │                    │       │           │            │ │
-│ │ +        if key    │                    │       │           │            │ │
-│ │ not in self:       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.mark_modifie… │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ super().setdefaul… │                    │       │           │            │ │
-│ │ default)           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ update(self,       │                    │       │           │            │ │
-│ │ *args: typing.Any, │                    │       │           │            │ │
-│ │ **kwargs:          │                    │       │           │            │ │
-│ │ typing.Any) ->     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.mark_modifie… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ super().update(*a… │                    │       │           │            │ │
-│ │ **kwargs)          │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/starlette/reque… │                    │       │           │            │ │
-│ │ b/starlette/reque… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 716f293..c57b4ae   │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/starlette/reque… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/starlette/reque… │                    │       │           │            │ │
-│ │ @@ -18,6 +18,7 @@  │                    │       │           │            │ │
-│ │ if TYPE_CHECKING:  │                    │       │           │            │ │
-│ │      from          │                    │       │           │            │ │
-│ │ python_multipart.… │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ parse_options_hea… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      from          │                    │       │           │            │ │
-│ │ starlette.applica… │                    │       │           │            │ │
-│ │ import Starlette   │                    │       │           │            │ │
-│ │ +    from          │                    │       │           │            │ │
-│ │ starlette.middlew… │                    │       │           │            │ │
-│ │ import Session     │                    │       │           │            │ │
-│ │      from          │                    │       │           │            │ │
-│ │ starlette.routing  │                    │       │           │            │ │
-│ │ import Router      │                    │       │           │            │ │
-│ │  else:             │                    │       │           │            │ │
-│ │      try:          │                    │       │           │            │ │
-│ │ @@ -167,7 +168,11  │                    │       │           │            │ │
-│ │ @@ class           │                    │       │           │            │ │
-│ │ HTTPConnection(Ma… │                    │       │           │            │ │
-│ │ Any],              │                    │       │           │            │ │
-│ │ Generic[StateT]):  │                    │       │           │            │ │
-│ │      @property     │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ session(self) ->   │                    │       │           │            │ │
-│ │ dict[str, Any]:    │                    │       │           │            │ │
-│ │          assert    │                    │       │           │            │ │
-│ │ "session" in       │                    │       │           │            │ │
-│ │ self.scope,        │                    │       │           │            │ │
-│ │ "SessionMiddleware │                    │       │           │            │ │
-│ │ must be installed  │                    │       │           │            │ │
-│ │ to access          │                    │       │           │            │ │
-│ │ request.session"   │                    │       │           │            │ │
-│ │ -        return    │                    │       │           │            │ │
-│ │ self.scope["sessi… │                    │       │           │            │ │
-│ │ # type:            │                    │       │           │            │ │
-│ │ ignore[no-any-ret… │                    │       │           │            │ │
-│ │ +        session:  │                    │       │           │            │ │
-│ │ Session =          │                    │       │           │            │ │
-│ │ self.scope["sessi… │                    │       │           │            │ │
-│ │ +        # We keep │                    │       │           │            │ │
-│ │ the hasattr in     │                    │       │           │            │ │
-│ │ case people        │                    │       │           │            │ │
-│ │ actually use their │                    │       │           │            │ │
-│ │ own                │                    │       │           │            │ │
-│ │ `SessionMiddlewar… │                    │       │           │            │ │
-│ │ implementation.    │                    │       │           │            │ │
-│ │ +        if        │                    │       │           │            │ │
-│ │ hasattr(session,   │                    │       │           │            │ │
-│ │ "mark_accessed"):  │                    │       │           │            │ │
-│ │ # pragma: no       │                    │       │           │            │ │
-│ │ branch             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ session.mark_acce… │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ session            │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      @property     │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ auth(self) -> Any: │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/middlewar… │                    │       │           │            │ │
-│ │ b/tests/middlewar… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ b4f3c64..0f5db79   │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/middlewar… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/middlewar… │                    │       │           │            │ │
-│ │ @@ -2,7 +2,7 @@    │                    │       │           │            │ │
-│ │ import re          │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ starlette.applica… │                    │       │           │            │ │
-│ │ import Starlette   │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ starlette.middlew… │                    │       │           │            │ │
-│ │ import Middleware  │                    │       │           │            │ │
-│ │ -from              │                    │       │           │            │ │
-│ │ starlette.middlew… │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ SessionMiddleware  │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ starlette.middlew… │                    │       │           │            │ │
-│ │ import Session,    │                    │       │           │            │ │
-│ │ SessionMiddleware  │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ starlette.requests │                    │       │           │            │ │
-│ │ import Request     │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ starlette.respons… │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ JSONResponse       │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ starlette.routing  │                    │       │           │            │ │
-│ │ import Mount,      │                    │       │           │            │ │
-│ │ Route              │                    │       │           │            │ │
-│ │ @@ -25,6 +25,10 @@ │                    │       │           │            │ │
-│ │ async def          │                    │       │           │            │ │
-│ │ clear_session(req… │                    │       │           │            │ │
-│ │ Request) ->        │                    │       │           │            │ │
-│ │ JSONResponse:      │                    │       │           │            │ │
-│ │      return        │                    │       │           │            │ │
-│ │ JSONResponse({"se… │                    │       │           │            │ │
-│ │ request.session})  │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ no_session_access… │                    │       │           │            │ │
-│ │ Request) ->        │                    │       │           │            │ │
-│ │ JSONResponse:      │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ JSONResponse({"st… │                    │       │           │            │ │
-│ │ "ok"})             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_session(test… │                    │       │           │            │ │
-│ │ TestClientFactory) │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │      app =         │                    │       │           │            │ │
-│ │ Starlette(         │                    │       │           │            │ │
-│ │          routes=[  │                    │       │           │            │ │
-│ │ @@ -198,3 +202,86  │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ test_domain_cooki… │                    │       │           │            │ │
-│ │ TestClientFactory) │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │      client.cooki… │                    │       │           │            │ │
-│ │      response =    │                    │       │           │            │ │
-│ │ client.get("/view… │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.json() == │                    │       │           │            │ │
-│ │ {"session": {}}    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_set_cookie_o… │                    │       │           │            │ │
-│ │ TestClientFactory) │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ Starlette(         │                    │       │           │            │ │
-│ │ +        routes=[  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ Route("/view_sess… │                    │       │           │            │ │
-│ │ endpoint=view_ses… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ Route("/update_se… │                    │       │           │            │ │
-│ │ endpoint=update_s… │                    │       │           │            │ │
-│ │ methods=["POST"]), │                    │       │           │            │ │
-│ │ +        ],        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ middleware=[Middl… │                    │       │           │            │ │
-│ │ secret_key="examp… │                    │       │           │            │ │
-│ │ +    )             │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ test_client_facto… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # Write to    │                    │       │           │            │ │
-│ │ session - should   │                    │       │           │            │ │
-│ │ send Set-Cookie    │                    │       │           │            │ │
-│ │ +    response =    │                    │       │           │            │ │
-│ │ client.post("/upd… │                    │       │           │            │ │
-│ │ json={"some":      │                    │       │           │            │ │
-│ │ "data"})           │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ "set-cookie" in    │                    │       │           │            │ │
-│ │ response.headers   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # Read-only   │                    │       │           │            │ │
-│ │ access - should    │                    │       │           │            │ │
-│ │ NOT send           │                    │       │           │            │ │
-│ │ Set-Cookie         │                    │       │           │            │ │
-│ │ +    response =    │                    │       │           │            │ │
-│ │ client.get("/view… │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ response.json() == │                    │       │           │            │ │
-│ │ {"session":        │                    │       │           │            │ │
-│ │ {"some": "data"}}  │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ "set-cookie" not   │                    │       │           │            │ │
-│ │ in                 │                    │       │           │            │ │
-│ │ response.headers   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_vary_cookie_… │                    │       │           │            │ │
-│ │ TestClientFactory) │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ Starlette(         │                    │       │           │            │ │
-│ │ +        routes=[  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ Route("/view_sess… │                    │       │           │            │ │
-│ │ endpoint=view_ses… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ Route("/update_se… │                    │       │           │            │ │
-│ │ endpoint=update_s… │                    │       │           │            │ │
-│ │ methods=["POST"]), │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ Route("/no_sessio… │                    │       │           │            │ │
-│ │ endpoint=no_sessi… │                    │       │           │            │ │
-│ │ +        ],        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ middleware=[Middl… │                    │       │           │            │ │
-│ │ secret_key="examp… │                    │       │           │            │ │
-│ │ +    )             │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ test_client_facto… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # Modifying   │                    │       │           │            │ │
-│ │ session should add │                    │       │           │            │ │
-│ │ Vary: Cookie       │                    │       │           │            │ │
-│ │ +    response =    │                    │       │           │            │ │
-│ │ client.post("/upd… │                    │       │           │            │ │
-│ │ json={"some":      │                    │       │           │            │ │
-│ │ "data"})           │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ "cookie" in        │                    │       │           │            │ │
-│ │ response.headers.… │                    │       │           │            │ │
-│ │ "").lower()        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # Reading a   │                    │       │           │            │ │
-│ │ non-empty session  │                    │       │           │            │ │
-│ │ should add Vary:   │                    │       │           │            │ │
-│ │ Cookie             │                    │       │           │            │ │
-│ │ +    response =    │                    │       │           │            │ │
-│ │ client.get("/view… │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ "cookie" in        │                    │       │           │            │ │
-│ │ response.headers.… │                    │       │           │            │ │
-│ │ "").lower()        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # Not         │                    │       │           │            │ │
-│ │ accessing session  │                    │       │           │            │ │
-│ │ at all should NOT  │                    │       │           │            │ │
-│ │ add Vary: Cookie   │                    │       │           │            │ │
-│ │ +    response =    │                    │       │           │            │ │
-│ │ client.get("/no_s… │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ "cookie" not in    │                    │       │           │            │ │
-│ │ response.headers.… │                    │       │           │            │ │
-│ │ "").lower()        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_session_trac… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │ +    session =     │                    │       │           │            │ │
-│ │ Session({"a": "1", │                    │       │           │            │ │
-│ │ "b": "2"})         │                    │       │           │            │ │
-│ │ +    assert not    │                    │       │           │            │ │
-│ │ session.modified   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # __setitem__ │                    │       │           │            │ │
-│ │ +    session["c"]  │                    │       │           │            │ │
-│ │ = "3"              │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ session.modified   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # __delitem__ │                    │       │           │            │ │
-│ │ +    session =     │                    │       │           │            │ │
-│ │ Session({"a":      │                    │       │           │            │ │
-│ │ "1"})              │                    │       │           │            │ │
-│ │ +    del           │                    │       │           │            │ │
-│ │ session["a"]       │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ session.modified   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # clear       │                    │       │           │            │ │
-│ │ +    session =     │                    │       │           │            │ │
-│ │ Session({"a":      │                    │       │           │            │ │
-│ │ "1"})              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ session.clear()    │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ session.modified   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # pop with    │                    │       │           │            │ │
-│ │ existing key       │                    │       │           │            │ │
-│ │ +    session =     │                    │       │           │            │ │
-│ │ Session({"a":      │                    │       │           │            │ │
-│ │ "1"})              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ session.pop("a")   │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ session.modified   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # pop with    │                    │       │           │            │ │
-│ │ missing key        │                    │       │           │            │ │
-│ │ +    session =     │                    │       │           │            │ │
-│ │ Session({"a":      │                    │       │           │            │ │
-│ │ "1"})              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ session.pop("miss… │                    │       │           │            │ │
-│ │ None)              │                    │       │           │            │ │
-│ │ +    assert not    │                    │       │           │            │ │
-│ │ session.modified   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # setdefault  │                    │       │           │            │ │
-│ │ with missing key   │                    │       │           │            │ │
-│ │ +    session =     │                    │       │           │            │ │
-│ │ Session({"a":      │                    │       │           │            │ │
-│ │ "1"})              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ session.setdefaul… │                    │       │           │            │ │
-│ │ "2")               │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ session.modified   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # setdefault  │                    │       │           │            │ │
-│ │ with existing key  │                    │       │           │            │ │
-│ │ +    session =     │                    │       │           │            │ │
-│ │ Session({"a":      │                    │       │           │            │ │
-│ │ "1"})              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ session.setdefaul… │                    │       │           │            │ │
-│ │ "2")               │                    │       │           │            │ │
-│ │ +    assert not    │                    │       │           │            │ │
-│ │ session.modified   │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
+│ │ +        i =        │                     │       │           │          │ │
+│ │ _get_binary_stream… │                     │       │           │          │ │
+│ │ +        o =        │                     │       │           │          │ │
+│ │ _get_binary_stream… │                     │       │           │          │ │
+│ │          while      │                     │       │           │          │ │
+│ │ True:               │                     │       │           │          │ │
+│ │              chunk  │                     │       │           │          │ │
+│ │ = i.read(4096)      │                     │       │           │          │ │
+│ │              if not │                     │       │           │          │ │
+│ │ chunk:              │                     │       │           │          │ │
+│ │ @@ -34,8 +34,8 @@   │                     │       │           │          │ │
+│ │ def test_runner():  │                     │       │           │          │ │
+│ │  def                │                     │       │           │          │ │
+│ │ test_echo_stdin_st… │                     │       │           │          │ │
+│ │      @click.comman… │                     │       │           │          │ │
+│ │      def test():    │                     │       │           │          │ │
+│ │ -        i =        │                     │       │           │          │ │
+│ │ get_binary_stream(… │                     │       │           │          │ │
+│ │ -        o =        │                     │       │           │          │ │
+│ │ get_binary_stream(… │                     │       │           │          │ │
+│ │ +        i =        │                     │       │           │          │ │
+│ │ _get_binary_stream… │                     │       │           │          │ │
+│ │ +        o =        │                     │       │           │          │ │
+│ │ _get_binary_stream… │                     │       │           │          │ │
+│ │          while      │                     │       │           │          │ │
+│ │ True:               │                     │       │           │          │ │
+│ │              chunk  │                     │       │           │          │ │
+│ │ = i.read(4096)      │                     │       │           │          │ │
+│ │              if not │                     │       │           │          │ │
+│ │ chunk:              │                     │       │           │          │ │
+│ │ @@ -92,8 +92,8 @@   │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ test_echo_stdin_pr… │                     │       │           │          │ │
+│ │  def                │                     │       │           │          │ │
+│ │ test_runner_with_s… │                     │       │           │          │ │
+│ │      @click.comman… │                     │       │           │          │ │
+│ │      def test():    │                     │       │           │          │ │
+│ │ -        i =        │                     │       │           │          │ │
+│ │ get_binary_stream(… │                     │       │           │          │ │
+│ │ -        o =        │                     │       │           │          │ │
+│ │ get_binary_stream(… │                     │       │           │          │ │
+│ │ +        i =        │                     │       │           │          │ │
+│ │ _get_binary_stream… │                     │       │           │          │ │
+│ │ +        o =        │                     │       │           │          │ │
+│ │ _get_binary_stream… │                     │       │           │          │ │
+│ │          while      │                     │       │           │          │ │
+│ │ True:               │                     │       │           │          │ │
+│ │              chunk  │                     │       │           │          │ │
+│ │ = i.read(4096)      │                     │       │           │          │ │
+│ │              if not │                     │       │           │          │ │
+│ │ chunk:              │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │  1.00 │      0.54 │ approve  │ │
+│ │ You are the code    │   Instead of making │       │           │          │ │
+│ │ review gate for a   │ an effort to        │       │           │          │ │
+│ │ production          │ distinguish the     │       │           │          │ │
+│ │ repository. Your    │ usage variations    │       │           │          │ │
+│ │ approval merges and │ with the            │       │           │          │ │
+│ │ deploys the change  │ `WithJsonSchema`    │       │           │          │ │
+│ │ with no further     │ and `Field()`       │       │           │          │ │
+│ │ human review.       │ simultaneously, a   │       │           │          │ │
+│ │ Decide:             │ more structured     │       │           │          │ │
+│ │   approve  - you    │ approach is to      │       │           │          │ │
+│ │ are confident the   │ explain it in a     │       │           │          │ │
+│ │ change is correct   │ __section           │       │           │          │ │
+│ │ and safe to ship.   │ containing          │       │           │          │ │
+│ │   block    - you    │ examples__, but in  │       │           │          │ │
+│ │ found a defect;     │ code form perhaps.  │       │           │          │ │
+│ │ cite its location.  │ Instead of          │       │           │          │ │
+│ │   escalate - you    │ best-effort         │       │           │          │ │
+│ │ cannot establish    │ rhetoric on the     │       │           │          │ │
+│ │ safety from what    │ transformations     │       │           │          │ │
+│ │ you can see; a      │ thatadopt           │       │           │          │ │
+│ │ human must look.    │ `WithJsonSchema`    │       │           │          │ │
+│ │ Approving a change  │ gives management    │       │           │          │ │
+│ │ that contains a     │ over base schema,   │       │           │          │ │
+│ │ defect is the worst │ we should provide   │       │           │          │ │
+│ │ outcome. Blocking a │ it in a structured  │       │           │          │ │
+│ │ correct change      │ way. Given the      │       │           │          │ │
+│ │ costs an engineer's │ context of prefix   │       │           │          │ │
+│ │ time. Escalating is │ used in Pydantic's  │       │           │          │ │
+│ │ cheap but useless   │ documentation, the  │       │           │          │ │
+│ │ if done for         │ code's              │       │           │          │ │
+│ │ everything.         │ documentation       │       │           │          │ │
+│ │ Respond with        │ review сравнивается │       │           │          │ │
+│ │ exactly one JSON    │ coherently, which   │       │           │          │ │
+│ │ object and nothing  │ is high quality for │       │           │          │ │
+│ │ else:               │ this repository.    │       │           │          │ │
+│ │ {"decision":        │                     │       │           │          │ │
+│ │ "approve|block|esc… │   Hence, the        │       │           │          │ │
+│ │ "comments":         │ decision is to      │       │           │          │ │
+│ │ [{"file": "...",    │ approve, as the     │       │           │          │ │
+│ │ "line_start": N,    │ code change aligns  │       │           │          │ │
+│ │ "line_end": N,      │ with the            │       │           │          │ │
+│ │ "body": "...",      │ repository's CLI    │       │           │          │ │
+│ │ "proposed_test":    │ and user review     │       │           │          │ │
+│ │ "optional pytest    │ expectations. The   │       │           │          │ │
+│ │ source"}]}          │ aesthetics are      │       │           │          │ │
+│ │                     │ clean, quantities   │       │           │          │ │
+│ │ USER                │ is small, and the   │       │           │          │ │
+│ │ Repository:         │ overall outcome     │       │           │          │ │
+│ │ pydantic            │ fully meets or      │       │           │          │ │
+│ │ Files changed:      │ exceeds standards   │       │           │          │ │
+│ │ docs/concepts/json… │ for safety and      │       │           │          │ │
+│ │ pydantic/json_sche… │ maintenability.     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Not shown (non-code │   {"decision":      │       │           │          │ │
+│ │ or over budget;     │ "approve",          │       │           │          │ │
+│ │ treat as            │ "comments":         │       │           │          │ │
+│ │ unreviewed):        │ [{"file":           │       │           │          │ │
+│ │ docs/concepts/json… │ "pydantic/json_sch… │       │           │          │ │
+│ │ (1962 chars,        │ "line_start": 2649, │       │           │          │ │
+│ │ non-code)           │ "line_end": 2805,   │       │           │          │ │
+│ │                     │ "body": "added      │       │           │          │ │
+│ │ Context around the  │ support for         │       │           │          │ │
+│ │ change              │ with_json_schema on │       │           │          │ │
+│ │ (mechanically       │ top of fields on an │       │           │          │ │
+│ │ extracted):         │ Annotated type, and │       │           │          │ │
+│ │ Changed             │ showed some         │       │           │          │ │
+│ │ definitions:        │ scenarios of        │       │           │          │ │
+│ │ pydantic/json_sche… │ different usage     │       │           │          │ │
+│ │ pydantic/json_sche… │ patterns with       │       │           │          │ │
+│ │ Recent history of   │ descriptions in     │       │           │          │ │
+│ │ pydantic/json_sche… │ code example and    │       │           │          │ │
+│ │   94dd544c          │ text snippet. how   │       │           │          │ │
+│ │ 2026-03-26 Push     │ this annotation     │       │           │          │ │
+│ │ down constraints in │ might work          │       │           │          │ │
+│ │ unions involving    │ consistently, what  │       │           │          │ │
+│ │ `MISSING` sentinel  │ this means in       │       │           │          │ │
+│ │ (#12908)            │ practice,           │       │           │          │ │
+│ │   a2fcb8ba          │ especially when     │       │           │          │ │
+│ │ 2026-03-02 Respect  │ used with Field or  │       │           │          │ │
+│ │ `extras_schema`     │ other annotations,  │       │           │          │ │
+│ │ when only           │ is clarified at     │       │           │          │ │
+│ │ `extra_fields_beha… │ this point."}]}     │       │           │          │ │
+│ │ is set on the       │                     │       │           │          │ │
+│ │ config in JSON      │                     │       │           │          │ │
+│ │ Schema generation   │                     │       │           │          │ │
+│ │ for typed           │                     │       │           │          │ │
+│ │ dictionaries        │                     │       │           │          │ │
+│ │ (#12810)            │                     │       │           │          │ │
+│ │   a6b0bb0a          │                     │       │           │          │ │
+│ │ 2026-02-26 Fix      │                     │       │           │          │ │
+│ │ duplicated words in │                     │       │           │          │ │
+│ │ internal schema     │                     │       │           │          │ │
+│ │ comments (#12864)   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/pydantic/json_sc… │                     │       │           │          │ │
+│ │ b/pydantic/json_sc… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ b6da482e..29654707  │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/pydantic/json_sc… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/pydantic/json_sc… │                     │       │           │          │ │
+│ │ @@ -2649,15         │                     │       │           │          │ │
+│ │ +2649,58 @@ class   │                     │       │           │          │ │
+│ │ WithJsonSchema:     │                     │       │           │          │ │
+│ │      """!!!         │                     │       │           │          │ │
+│ │ abstract "Usage     │                     │       │           │          │ │
+│ │ Documentation"      │                     │       │           │          │ │
+│ │          [`WithJso… │                     │       │           │          │ │
+│ │ Annotation](../con… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    Add this as an │                     │       │           │          │ │
+│ │ annotation on a     │                     │       │           │          │ │
+│ │ field to override   │                     │       │           │          │ │
+│ │ the (base) JSON     │                     │       │           │          │ │
+│ │ schema that would   │                     │       │           │          │ │
+│ │ be generated for    │                     │       │           │          │ │
+│ │ that field.         │                     │       │           │          │ │
+│ │ -    This provides  │                     │       │           │          │ │
+│ │ a way to set a JSON │                     │       │           │          │ │
+│ │ schema for types    │                     │       │           │          │ │
+│ │ that would          │                     │       │           │          │ │
+│ │ otherwise raise     │                     │       │           │          │ │
+│ │ errors when         │                     │       │           │          │ │
+│ │ producing a JSON    │                     │       │           │          │ │
+│ │ schema,             │                     │       │           │          │ │
+│ │ -    such as        │                     │       │           │          │ │
+│ │ Callable, or types  │                     │       │           │          │ │
+│ │ that have an        │                     │       │           │          │ │
+│ │ is-instance core    │                     │       │           │          │ │
+│ │ schema, without     │                     │       │           │          │ │
+│ │ needing to go so    │                     │       │           │          │ │
+│ │ far as creating a   │                     │       │           │          │ │
+│ │ -    custom         │                     │       │           │          │ │
+│ │ subclass of         │                     │       │           │          │ │
+│ │ pydantic.json_sche… │                     │       │           │          │ │
+│ │ -    Note that any  │                     │       │           │          │ │
+│ │ _modifications_ to  │                     │       │           │          │ │
+│ │ the schema that     │                     │       │           │          │ │
+│ │ would normally be   │                     │       │           │          │ │
+│ │ made (such as       │                     │       │           │          │ │
+│ │ setting the title   │                     │       │           │          │ │
+│ │ for model fields)   │                     │       │           │          │ │
+│ │ -    will still be  │                     │       │           │          │ │
+│ │ performed.          │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ -    If `mode` is   │                     │       │           │          │ │
+│ │ set this will only  │                     │       │           │          │ │
+│ │ apply to that       │                     │       │           │          │ │
+│ │ schema generation   │                     │       │           │          │ │
+│ │ mode, allowing you  │                     │       │           │          │ │
+│ │ -    to set         │                     │       │           │          │ │
+│ │ different json      │                     │       │           │          │ │
+│ │ schemas for         │                     │       │           │          │ │
+│ │ validation and      │                     │       │           │          │ │
+│ │ serialization.      │                     │       │           │          │ │
+│ │ +    An annotation  │                     │       │           │          │ │
+│ │ used to override    │                     │       │           │          │ │
+│ │ the JSON Schema for │                     │       │           │          │ │
+│ │ a type.             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    This is useful │                     │       │           │          │ │
+│ │ when you want to    │                     │       │           │          │ │
+│ │ set a JSON Schema   │                     │       │           │          │ │
+│ │ for a type that     │                     │       │           │          │ │
+│ │ don't produce any   │                     │       │           │          │ │
+│ │ JSON Schemas by     │                     │       │           │          │ │
+│ │ default             │                     │       │           │          │ │
+│ │ +    (e.g.          │                     │       │           │          │ │
+│ │ [`Callable`][colle… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    If `mode` is   │                     │       │           │          │ │
+│ │ set this will only  │                     │       │           │          │ │
+│ │ apply to that       │                     │       │           │          │ │
+│ │ schema generation   │                     │       │           │          │ │
+│ │ mode, allowing you  │                     │       │           │          │ │
+│ │ to set different    │                     │       │           │          │ │
+│ │ JSON Schemas for    │                     │       │           │          │ │
+│ │ validation and      │                     │       │           │          │ │
+│ │ serialization.      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    !!! note       │                     │       │           │          │ │
+│ │ +        If the     │                     │       │           │          │ │
+│ │ `WithJsonSchema`    │                     │       │           │          │ │
+│ │ annotation is       │                     │       │           │          │ │
+│ │ coupled with the    │                     │       │           │          │ │
+│ │ [`Field()`][pydant… │                     │       │           │          │ │
+│ │ function, the       │                     │       │           │          │ │
+│ │ behavior overriding │                     │       │           │          │ │
+│ │ will vary depending │                     │       │           │          │ │
+│ │ on the location:    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        * If the   │                     │       │           │          │ │
+│ │ [`Annotated`][typi… │                     │       │           │          │ │
+│ │ metadata is         │                     │       │           │          │ │
+│ │ specified at the    │                     │       │           │          │ │
+│ │ "top-level" field,  │                     │       │           │          │ │
+│ │ `Field()` metadata  │                     │       │           │          │ │
+│ │ arguments           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ (excluding          │                     │       │           │          │ │
+│ │ [constraints](../c… │                     │       │           │          │ │
+│ │ such as `title` and │                     │       │           │          │ │
+│ │ `description` will  │                     │       │           │          │ │
+│ │ be applied on       │                     │       │           │          │ │
+│ │ +          top of   │                     │       │           │          │ │
+│ │ the                 │                     │       │           │          │ │
+│ │ `WithJsonSchema`,   │                     │       │           │          │ │
+│ │ no matter the       │                     │       │           │          │ │
+│ │ order:              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ```python           │                     │       │           │          │ │
+│ │ +            from   │                     │       │           │          │ │
+│ │ typing import       │                     │       │           │          │ │
+│ │ Annotated           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +            from   │                     │       │           │          │ │
+│ │ pydantic import     │                     │       │           │          │ │
+│ │ BaseModel, Field,   │                     │       │           │          │ │
+│ │ WithJsonSchema      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +            class  │                     │       │           │          │ │
+│ │ Model(BaseModel):   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ field: Annotated[   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ int,                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ Field(title='My     │                     │       │           │          │ │
+│ │ Field'),            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ WithJsonSchema({'t… │                     │       │           │          │ │
+│ │ 'integer', 'extra': │                     │       │           │          │ │
+│ │ 'data'}),           │                     │       │           │          │ │
+│ │ +                ]  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ Model.model_json_s… │                     │       │           │          │ │
+│ │ +            #>     │                     │       │           │          │ │
+│ │ {'type': 'integer', │                     │       │           │          │ │
+│ │ 'extra': 'data',    │                     │       │           │          │ │
+│ │ 'title': 'My        │                     │       │           │          │ │
+│ │ Field'}             │                     │       │           │          │ │
+│ │ +            ```    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        * If the   │                     │       │           │          │ │
+│ │ [`Annotated`][typi… │                     │       │           │          │ │
+│ │ metadata is         │                     │       │           │          │ │
+│ │ specified on a      │                     │       │           │          │ │
+│ │ specific inner      │                     │       │           │          │ │
+│ │ type,               │                     │       │           │          │ │
+│ │ `WithJsonSchema`    │                     │       │           │          │ │
+│ │ will                │                     │       │           │          │ │
+│ │ unconditionally     │                     │       │           │          │ │
+│ │ +          override │                     │       │           │          │ │
+│ │ the JSON Schema:    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ```python           │                     │       │           │          │ │
+│ │ +            from   │                     │       │           │          │ │
+│ │ typing import       │                     │       │           │          │ │
+│ │ Annotated           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +            from   │                     │       │           │          │ │
+│ │ pydantic import     │                     │       │           │          │ │
+│ │ BaseModel, Field,   │                     │       │           │          │ │
+│ │ WithJsonSchema      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +            class  │                     │       │           │          │ │
+│ │ Model(BaseModel):   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ field: list[        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ Annotated[          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ int,                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ Field(title='My     │                     │       │           │          │ │
+│ │ Field'),            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ WithJsonSchema({'t… │                     │       │           │          │ │
+│ │ 'integer', 'extra': │                     │       │           │          │ │
+│ │ 'data'}),           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ]                   │                     │       │           │          │ │
+│ │ +                ]  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ Model.model_json_s… │                     │       │           │          │ │
+│ │ +            #>     │                     │       │           │          │ │
+│ │ {'items': {'extra': │                     │       │           │          │ │
+│ │ 'data', 'type':     │                     │       │           │          │ │
+│ │ 'integer'},         │                     │       │           │          │ │
+│ │ 'title': 'Field',   │                     │       │           │          │ │
+│ │ 'type': 'array'}    │                     │       │           │          │ │
+│ │ +            ```    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        See also   │                     │       │           │          │ │
+│ │ the documentation   │                     │       │           │          │ │
+│ │ about [the          │                     │       │           │          │ │
+│ │ annotated           │                     │       │           │          │ │
+│ │ pattern](../concep… │                     │       │           │          │ │
+│ │      """            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      json_schema:   │                     │       │           │          │ │
+│ │ JsonSchemaValue |   │                     │       │           │          │ │
+│ │ None                │                     │       │           │          │ │
+│ │ @@ -2666,8 +2709,7  │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ WithJsonSchema:     │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ __get_pydantic_jso… │                     │       │           │          │ │
+│ │          self,      │                     │       │           │          │ │
+│ │ core_schema:        │                     │       │           │          │ │
+│ │ core_schema.CoreSc… │                     │       │           │          │ │
+│ │ handler:            │                     │       │           │          │ │
+│ │ GetJsonSchemaHandl… │                     │       │           │          │ │
+│ │      ) ->           │                     │       │           │          │ │
+│ │ JsonSchemaValue:    │                     │       │           │          │ │
+│ │ -        mode =     │                     │       │           │          │ │
+│ │ self.mode or        │                     │       │           │          │ │
+│ │ handler.mode        │                     │       │           │          │ │
+│ │ -        if mode != │                     │       │           │          │ │
+│ │ handler.mode:       │                     │       │           │          │ │
+│ │ +        if         │                     │       │           │          │ │
+│ │ self.mode is not    │                     │       │           │          │ │
+│ │ None and self.mode  │                     │       │           │          │ │
+│ │ != handler.mode:    │                     │       │           │          │ │
+│ │              return │                     │       │           │          │ │
+│ │ handler(core_schem… │                     │       │           │          │ │
+│ │          if         │                     │       │           │          │ │
+│ │ self.json_schema is │                     │       │           │          │ │
+│ │ None:               │                     │       │           │          │ │
+│ │              # This │                     │       │           │          │ │
+│ │ exception is        │                     │       │           │          │ │
+│ │ handled in          │                     │       │           │          │ │
+│ │ pydantic.json_sche… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
