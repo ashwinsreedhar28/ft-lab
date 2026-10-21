@@ -1,400 +1,400 @@
-│ │ unquoted           │                    │       │           │            │ │
-│ │ `NameEmail`        │                    │       │           │            │ │
-│ │ display names      │                    │       │           │            │ │
-│ │ (#13206)           │                    │       │           │            │ │
-│ │   b9715628         │                    │       │           │            │ │
-│ │ 2026-04-30 Upgrade │                    │       │           │            │ │
-│ │ to pytest 9, use   │                    │       │           │            │ │
-│ │ strict mode        │                    │       │           │            │ │
-│ │ (#13110)           │                    │       │           │            │ │
-│ │   b36eaeb4         │                    │       │           │            │ │
-│ │ 2026-04-15 Drop    │                    │       │           │            │ │
-│ │ support for Python │                    │       │           │            │ │
-│ │ 3.9 (#13070)       │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Diff:              │                    │       │           │            │ │
-│ │ ```diff            │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/pydantic/networ… │                    │       │           │            │ │
-│ │ b/pydantic/networ… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 59bb0c6d..5ac453da │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/pydantic/networ… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/pydantic/networ… │                    │       │           │            │ │
-│ │ @@ -241,16 +241,24 │                    │       │           │            │ │
-│ │ @@ class _BaseUrl: │                    │       │           │            │ │
-│ │          return    │                    │       │           │            │ │
-│ │ self.__class__ is  │                    │       │           │            │ │
-│ │ other.__class__    │                    │       │           │            │ │
-│ │ and self._url ==   │                    │       │           │            │ │
-│ │ other._url         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ __lt__(self,       │                    │       │           │            │ │
-│ │ other: Any) ->     │                    │       │           │            │ │
-│ │ bool:              │                    │       │           │            │ │
-│ │ -        return    │                    │       │           │            │ │
-│ │ self.__class__ is  │                    │       │           │            │ │
-│ │ other.__class__    │                    │       │           │            │ │
-│ │ and self._url <    │                    │       │           │            │ │
-│ │ other._url         │                    │       │           │            │ │
-│ │ +        if        │                    │       │           │            │ │
-│ │ self.__class__ is  │                    │       │           │            │ │
-│ │ not                │                    │       │           │            │ │
-│ │ other.__class__:   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ return             │                    │       │           │            │ │
-│ │ NotImplemented     │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ self._url <        │                    │       │           │            │ │
-│ │ other._url         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ __gt__(self,       │                    │       │           │            │ │
-│ │ other: Any) ->     │                    │       │           │            │ │
-│ │ bool:              │                    │       │           │            │ │
-│ │ -        return    │                    │       │           │            │ │
-│ │ self.__class__ is  │                    │       │           │            │ │
-│ │ other.__class__    │                    │       │           │            │ │
-│ │ and self._url >    │                    │       │           │            │ │
-│ │ other._url         │                    │       │           │            │ │
-│ │ +        if        │                    │       │           │            │ │
-│ │ self.__class__ is  │                    │       │           │            │ │
-│ │ not                │                    │       │           │            │ │
-│ │ other.__class__:   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ return             │                    │       │           │            │ │
-│ │ NotImplemented     │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ self._url >        │                    │       │           │            │ │
-│ │ other._url         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ __le__(self,       │                    │       │           │            │ │
-│ │ other: Any) ->     │                    │       │           │            │ │
-│ │ bool:              │                    │       │           │            │ │
-│ │ -        return    │                    │       │           │            │ │
-│ │ self.__class__ is  │                    │       │           │            │ │
-│ │ other.__class__    │                    │       │           │            │ │
-│ │ and self._url <=   │                    │       │           │            │ │
-│ │ other._url         │                    │       │           │            │ │
-│ │ +        if        │                    │       │           │            │ │
-│ │ self.__class__ is  │                    │       │           │            │ │
-│ │ not                │                    │       │           │            │ │
-│ │ other.__class__:   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ return             │                    │       │           │            │ │
-│ │ NotImplemented     │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ self._url <        │                    │       │           │            │ │
-│ │ other._url         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ __ge__(self,       │                    │       │           │            │ │
-│ │ other: Any) ->     │                    │       │           │            │ │
-│ │ bool:              │                    │       │           │            │ │
-│ │ -        return    │                    │       │           │            │ │
-│ │ self.__class__ is  │                    │       │           │            │ │
-│ │ other.__class__    │                    │       │           │            │ │
-│ │ and self._url >=   │                    │       │           │            │ │
-│ │ other._url         │                    │       │           │            │ │
-│ │ +        if        │                    │       │           │            │ │
-│ │ self.__class__ is  │                    │       │           │            │ │
-│ │ not                │                    │       │           │            │ │
-│ │ other.__class__:   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ return             │                    │       │           │            │ │
-│ │ NotImplemented     │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ self._url >=       │                    │       │           │            │ │
-│ │ other._url         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ __hash__(self) ->  │                    │       │           │            │ │
-│ │ int:               │                    │       │           │            │ │
-│ │          return    │                    │       │           │            │ │
-│ │ hash(self._url)    │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_netw… │                    │       │           │            │ │
-│ │ b/tests/test_netw… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ ae25de2c..d9235c84 │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_netw… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_netw… │                    │       │           │            │ │
-│ │ @@ -1,4 +1,5 @@    │                    │       │           │            │ │
-│ │  import json       │                    │       │           │            │ │
-│ │ +import operator   │                    │       │           │            │ │
-│ │  from typing       │                    │       │           │            │ │
-│ │ import Annotated,  │                    │       │           │            │ │
-│ │ Any                │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  import pytest     │                    │       │           │            │ │
-│ │ @@ -1182,6         │                    │       │           │            │ │
-│ │ +1183,27 @@ def    │                    │       │           │            │ │
-│ │ test_any_url_comp… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ second_url >=      │                    │       │           │            │ │
-│ │ first_url          │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +@pytest.mark.par… │                    │       │           │            │ │
-│ │ ['https://a.com',  │                    │       │           │            │ │
-│ │ 5, None,           │                    │       │           │            │ │
-│ │ HttpUrl('https://… │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_any_url_orde… │                    │       │           │            │ │
-│ │ Any) -> None:      │                    │       │           │            │ │
-│ │ +    """Ordering   │                    │       │           │            │ │
-│ │ against a          │                    │       │           │            │ │
-│ │ different type is  │                    │       │           │            │ │
-│ │ unsupported,       │                    │       │           │            │ │
-│ │ rather than        │                    │       │           │            │ │
-│ │ silently           │                    │       │           │            │ │
-│ │ `False`."""        │                    │       │           │            │ │
-│ │ +    url =         │                    │       │           │            │ │
-│ │ AnyUrl('https://a… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    for op in     │                    │       │           │            │ │
-│ │ (operator.lt,      │                    │       │           │            │ │
-│ │ operator.gt,       │                    │       │           │            │ │
-│ │ operator.le,       │                    │       │           │            │ │
-│ │ operator.ge):      │                    │       │           │            │ │
-│ │ +        with      │                    │       │           │            │ │
-│ │ pytest.raises(Typ… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ op(url, other)     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_any_url_orde… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │ +    """`sorted()` │                    │       │           │            │ │
-│ │ on mixed URL types │                    │       │           │            │ │
-│ │ raises instead of  │                    │       │           │            │ │
-│ │ returning a        │                    │       │           │            │ │
-│ │ meaningless        │                    │       │           │            │ │
-│ │ order."""          │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ pytest.raises(Typ… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ sorted([AnyUrl('h… │                    │       │           │            │ │
-│ │ HttpUrl('https://… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # Equality is │                    │       │           │            │ │
-│ │ unaffected: unlike │                    │       │           │            │ │
-│ │ ordering,          │                    │       │           │            │ │
-│ │ comparing against  │                    │       │           │            │ │
-│ │ another type is    │                    │       │           │            │ │
-│ │ well defined.      │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ AnyUrl('https://a… │                    │       │           │            │ │
-│ │ !=                 │                    │       │           │            │ │
-│ │ HttpUrl('https://… │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ AnyUrl('https://a… │                    │       │           │            │ │
-│ │ != 'https://a.com' │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ AnyUrl('https://a… │                    │       │           │            │ │
-│ │ ==                 │                    │       │           │            │ │
-│ │ AnyUrl('https://a… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_max_length_b… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │      class         │                    │       │           │            │ │
-│ │ Model(BaseModel):  │                    │       │           │            │ │
-│ │          url:      │                    │       │           │            │ │
-│ │ AnyUrl =           │                    │       │           │            │ │
-│ │ Field(max_length=… │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
-│ │ SYSTEM             │ ASSISTANT          │ -5.00 │     -0.72 │ approve    │ │
-│ │ You are the code   │ {"decision":       │       │           │            │ │
-│ │ review gate for a  │ "approve",         │       │           │            │ │
-│ │ production         │ "comments":        │       │           │            │ │
-│ │ repository. Your   │ [{"file":          │       │           │            │ │
-│ │ approval merges    │ "pydantic/fields.… │       │           │            │ │
-│ │ and deploys the    │ "line_start": 829, │       │           │            │ │
-│ │ change with no     │ "line_end": 833,   │       │           │            │ │
-│ │ further human      │ "body":            │       │           │            │ │
-│ │ review. Decide:    │ "Unexpected: Here, │       │           │            │ │
-│ │   approve  - you   │ overusing 'copy()' │       │           │            │ │
-│ │ are confident the  │ could lead to      │       │           │            │ │
-│ │ change is correct  │ style inflation.   │       │           │            │ │
-│ │ and safe to ship.  │ Try first testing  │       │           │            │ │
-│ │   block    - you   │ with normal        │       │           │            │ │
-│ │ found a defect;    │ copying. Should    │       │           │            │ │
-│ │ cite its location. │ 'keyword_only' be  │       │           │            │ │
-│ │   escalate - you   │ also copied        │       │           │            │ │
-│ │ cannot establish   │ now?"}]}           │       │           │            │ │
-│ │ safety from what   │                    │       │           │            │ │
-│ │ you can see; a     │                    │       │           │            │ │
-│ │ human must look.   │                    │       │           │            │ │
-│ │ Approving a change │                    │       │           │            │ │
-│ │ that contains a    │                    │       │           │            │ │
-│ │ defect is the      │                    │       │           │            │ │
-│ │ worst outcome.     │                    │       │           │            │ │
-│ │ Blocking a correct │                    │       │           │            │ │
-│ │ change costs an    │                    │       │           │            │ │
-│ │ engineer's time.   │                    │       │           │            │ │
-│ │ Escalating is      │                    │       │           │            │ │
-│ │ cheap but useless  │                    │       │           │            │ │
-│ │ if done for        │                    │       │           │            │ │
-│ │ everything.        │                    │       │           │            │ │
-│ │ Respond with       │                    │       │           │            │ │
-│ │ exactly one JSON   │                    │       │           │            │ │
-│ │ object and nothing │                    │       │           │            │ │
-│ │ else:              │                    │       │           │            │ │
-│ │ {"decision":       │                    │       │           │            │ │
-│ │ "approve|block|es… │                    │       │           │            │ │
-│ │ "comments":        │                    │       │           │            │ │
-│ │ [{"file": "...",   │                    │       │           │            │ │
-│ │ "line_start": N,   │                    │       │           │            │ │
-│ │ "line_end": N,     │                    │       │           │            │ │
-│ │ "body": "...",     │                    │       │           │            │ │
-│ │ "proposed_test":   │                    │       │           │            │ │
-│ │ "optional pytest   │                    │       │           │            │ │
-│ │ source"}]}         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ USER               │                    │       │           │            │ │
-│ │ Repository:        │                    │       │           │            │ │
-│ │ pydantic           │                    │       │           │            │ │
-│ │ Files changed:     │                    │       │           │            │ │
-│ │ pydantic/fields.py │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Context around the │                    │       │           │            │ │
-│ │ change             │                    │       │           │            │ │
-│ │ (mechanically      │                    │       │           │            │ │
-│ │ extracted):        │                    │       │           │            │ │
-│ │ Changed            │                    │       │           │            │ │
-│ │ definitions:       │                    │       │           │            │ │
-│ │ pydantic/fields.p… │                    │       │           │            │ │
-│ │ pydantic/fields.p… │                    │       │           │            │ │
-│ │ pydantic/fields.p… │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ pydantic/fields.p… │                    │       │           │            │ │
-│ │   407934af         │                    │       │           │            │ │
-│ │ 2025-11-17         │                    │       │           │            │ │
-│ │ Refactor           │                    │       │           │            │ │
-│ │ `DecoratorInfos.b… │                    │       │           │            │ │
-│ │ implementation     │                    │       │           │            │ │
-│ │ (#12536)           │                    │       │           │            │ │
-│ │   ad9c3775         │                    │       │           │            │ │
-│ │ 2025-11-07 Fix     │                    │       │           │            │ │
-│ │ `InitVar` being    │                    │       │           │            │ │
-│ │ ignored when using │                    │       │           │            │ │
-│ │ with the           │                    │       │           │            │ │
-│ │ `pydantic.Field()` │                    │       │           │            │ │
-│ │ function (#12495)  │                    │       │           │            │ │
-│ │   27f75fd3         │                    │       │           │            │ │
-│ │ 2025-10-17 Add     │                    │       │           │            │ │
-│ │ `FieldInfo.asdict… │                    │       │           │            │ │
-│ │ method, improve    │                    │       │           │            │ │
-│ │ documentation      │                    │       │           │            │ │
-│ │ around `FieldInfo` │                    │       │           │            │ │
-│ │ (#12411)           │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Diff:              │                    │       │           │            │ │
-│ │ ```diff            │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/pydantic/fields… │                    │       │           │            │ │
-│ │ b/pydantic/fields… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 65080060..c58f79b1 │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/pydantic/fields… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/pydantic/fields… │                    │       │           │            │ │
-│ │ @@ -827,13 +827,19 │                    │       │           │            │ │
-│ │ @@ class           │                    │       │           │            │ │
-│ │ FieldInfo(_repr.R… │                    │       │           │            │ │
-│ │          # Note:   │                    │       │           │            │ │
-│ │ we can't define a  │                    │       │           │            │ │
-│ │ custom             │                    │       │           │            │ │
-│ │ `__copy__()`, as   │                    │       │           │            │ │
-│ │ `FieldInfo` is     │                    │       │           │            │ │
-│ │ being subclassed   │                    │       │           │            │ │
-│ │          # by some │                    │       │           │            │ │
-│ │ third-party        │                    │       │           │            │ │
-│ │ libraries with     │                    │       │           │            │ │
-│ │ extra attributes   │                    │       │           │            │ │
-│ │ defined (and as    │                    │       │           │            │ │
-│ │ `FieldInfo`        │                    │       │           │            │ │
-│ │          # is      │                    │       │           │            │ │
-│ │ slotted, we can't  │                    │       │           │            │ │
-│ │ make a copy of the │                    │       │           │            │ │
-│ │ `__dict__`).       │                    │       │           │            │ │
-│ │ -        copied =  │                    │       │           │            │ │
-│ │ copy(self)         │                    │       │           │            │ │
-│ │ +        if        │                    │       │           │            │ │
-│ │ type(self) is not  │                    │       │           │            │ │
-│ │ FieldInfo:         │                    │       │           │            │ │
-│ │ +            #     │                    │       │           │            │ │
-│ │ Fast-path if the   │                    │       │           │            │ │
-│ │ instance isn't a   │                    │       │           │            │ │
-│ │ subclass           │                    │       │           │            │ │
-│ │ (`copy.copy()`     │                    │       │           │            │ │
-│ │ relies on pickling │                    │       │           │            │ │
-│ │ which is slower):  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ copied =           │                    │       │           │            │ │
-│ │ FieldInfo.__new__… │                    │       │           │            │ │
-│ │ +            for   │                    │       │           │            │ │
-│ │ attr_name in       │                    │       │           │            │ │
-│ │ FieldInfo.__slots… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ setattr(copied,    │                    │       │           │            │ │
-│ │ attr_name,         │                    │       │           │            │ │
-│ │ getattr(self,      │                    │       │           │            │ │
-│ │ attr_name))        │                    │       │           │            │ │
-│ │ +        else:     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ copied =           │                    │       │           │            │ │
-│ │ copy(self)         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │          for       │                    │       │           │            │ │
-│ │ attr_name in       │                    │       │           │            │ │
-│ │ ('metadata',       │                    │       │           │            │ │
-│ │ '_attributes_set', │                    │       │           │            │ │
-│ │ '_qualifiers'):    │                    │       │           │            │ │
-│ │              #     │                    │       │           │            │ │
-│ │ Apply "deep-copy"  │                    │       │           │            │ │
-│ │ behavior on        │                    │       │           │            │ │
-│ │ collections        │                    │       │           │            │ │
-│ │ attributes:        │                    │       │           │            │ │
-│ │ -            value │                    │       │           │            │ │
-│ │ = getattr(copied,  │                    │       │           │            │ │
-│ │ attr_name).copy()  │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ setattr(copied,    │                    │       │           │            │ │
-│ │ attr_name, value)  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ setattr(copied,    │                    │       │           │            │ │
-│ │ attr_name,         │                    │       │           │            │ │
-│ │ getattr(copied,    │                    │       │           │            │ │
-│ │ attr_name).copy()) │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -        return    │                    │       │           │            │ │
-│ │ copied             │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ copied  # pyright: │                    │       │           │            │ │
-│ │ ignore[reportRetu… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ __repr_args__(sel… │                    │       │           │            │ │
-│ │ -> ReprArgs:       │                    │       │           │            │ │
-│ │          yield     │                    │       │           │            │ │
-│ │ 'annotation',      │                    │       │           │            │ │
-│ │ _repr.PlainRepr(_… │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
+│ │ -class Styles:       │                     │      │           │          │ │
+│ │ +class ColumnStyles: │                     │      │           │          │ │
+│ │      """             │                     │      │           │          │ │
+│ │ -    Style settings  │                     │      │           │          │ │
+│ │ for console          │                     │      │           │          │ │
+│ │ rendering.           │                     │      │           │          │ │
+│ │ +    Column styles   │                     │      │           │          │ │
+│ │ settings for console │                     │      │           │          │ │
+│ │ rendering.           │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │      These are       │                     │      │           │          │ │
+│ │ console ANSI codes   │                     │      │           │          │ │
+│ │ that are printed     │                     │      │           │          │ │
+│ │ before the           │                     │      │           │          │ │
+│ │ respective fields.   │                     │      │           │          │ │
+│ │      This allows for │                     │      │           │          │ │
+│ │ a certain amount of  │                     │      │           │          │ │
+│ │ customization if you │                     │      │           │          │ │
+│ │ don't want to        │                     │      │           │          │ │
+│ │ @@ -140,7 +140,7 @@  │                     │      │           │          │ │
+│ │ class Styles:        │                     │      │           │          │ │
+│ │      kv_value: str   │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ -_colorful_styles =  │                     │      │           │          │ │
+│ │ Styles(              │                     │      │           │          │ │
+│ │ +_colorful_styles =  │                     │      │           │          │ │
+│ │ ColumnStyles(        │                     │      │           │          │ │
+│ │      reset=RESET_AL… │                     │      │           │          │ │
+│ │      bright=BRIGHT,  │                     │      │           │          │ │
+│ │      level_critical… │                     │      │           │          │ │
+│ │ @@ -156,7 +156,7 @@  │                     │      │           │          │ │
+│ │ _colorful_styles =   │                     │      │           │          │ │
+│ │ Styles(              │                     │      │           │          │ │
+│ │      kv_value=MAGEN… │                     │      │           │          │ │
+│ │  )                   │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ -_plain_styles =     │                     │      │           │          │ │
+│ │ Styles(              │                     │      │           │          │ │
+│ │ +_plain_styles =     │                     │      │           │          │ │
+│ │ ColumnStyles(        │                     │      │           │          │ │
+│ │      reset="",       │                     │      │           │          │ │
+│ │      bright="",      │                     │      │           │          │ │
+│ │      level_critical… │                     │      │           │          │ │
+│ │ @@ -651,13 +651,83   │                     │      │           │          │ │
+│ │ @@ class             │                     │      │           │          │ │
+│ │ ConsoleRenderer:     │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │          styles =    │                     │      │           │          │ │
+│ │ self.get_default_co… │                     │      │           │          │ │
+│ │ force_colors)        │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ self._styles =       │                     │      │           │          │ │
+│ │ styles               │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ self._repr_native_s… │                     │      │           │          │ │
+│ │ = repr_native_str    │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ level_to_color = (   │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ self.get_default_le… │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ self._configure_col… │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ styles=styles,       │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ level_styles=self.g… │                     │      │           │          │ │
+│ │              if      │                     │      │           │          │ │
+│ │ level_styles is None │                     │      │           │          │ │
+│ │ -            else    │                     │      │           │          │ │
+│ │ level_styles         │                     │      │           │          │ │
+│ │ -        ).copy()    │                     │      │           │          │ │
+│ │ +            else    │                     │      │           │          │ │
+│ │ level_styles,        │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ pad_level=pad_level, │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ timestamp_key=times… │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ event_key=event_key, │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ pad_event=pad_event, │                     │      │           │          │ │
+│ │ +        )           │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ +    @classmethod    │                     │      │           │          │ │
+│ │ +    def             │                     │      │           │          │ │
+│ │ get_default_column_… │                     │      │           │          │ │
+│ │ +        cls,        │                     │      │           │          │ │
+│ │ colors: bool,        │                     │      │           │          │ │
+│ │ force_colors: bool = │                     │      │           │          │ │
+│ │ False                │                     │      │           │          │ │
+│ │ +    ) ->            │                     │      │           │          │ │
+│ │ ColumnStyles:        │                     │      │           │          │ │
+│ │ +        """         │                     │      │           │          │ │
+│ │ +        Configure   │                     │      │           │          │ │
+│ │ and return the       │                     │      │           │          │ │
+│ │ appropriate styles   │                     │      │           │          │ │
+│ │ class for console    │                     │      │           │          │ │
+│ │ output.              │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ +        This method │                     │      │           │          │ │
+│ │ handles the setup of │                     │      │           │          │ │
+│ │ colorful or plain    │                     │      │           │          │ │
+│ │ styles, including    │                     │      │           │          │ │
+│ │ +        proper      │                     │      │           │          │ │
+│ │ colorama             │                     │      │           │          │ │
+│ │ initialization on    │                     │      │           │          │ │
+│ │ Windows systems when │                     │      │           │          │ │
+│ │ colors are           │                     │      │           │          │ │
+│ │ +        enabled.    │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ +        Args:       │                     │      │           │          │ │
+│ │ +            colors: │                     │      │           │          │ │
+│ │ Whether to use       │                     │      │           │          │ │
+│ │ colorful output      │                     │      │           │          │ │
+│ │ styles.              │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ force_colors:        │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ Force colorful       │                     │      │           │          │ │
+│ │ output even in       │                     │      │           │          │ │
+│ │ non-interactive      │                     │      │           │          │ │
+│ │ environments.        │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ Only relevant on     │                     │      │           │          │ │
+│ │ Windows with         │                     │      │           │          │ │
+│ │ colorama.            │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ +        Returns:    │                     │      │           │          │ │
+│ │ +            The     │                     │      │           │          │ │
+│ │ configured styles.   │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ +        Raises:     │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ SystemError:         │                     │      │           │          │ │
+│ │ +                On  │                     │      │           │          │ │
+│ │ Windows when         │                     │      │           │          │ │
+│ │ colors=True but      │                     │      │           │          │ │
+│ │ colorama is not      │                     │      │           │          │ │
+│ │ installed.           │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ +        ..          │                     │      │           │          │ │
+│ │ versionadded::       │                     │      │           │          │ │
+│ │ 25.5.0               │                     │      │           │          │ │
+│ │ +        """         │                     │      │           │          │ │
+│ │ +        if not      │                     │      │           │          │ │
+│ │ colors:              │                     │      │           │          │ │
+│ │ +            return  │                     │      │           │          │ │
+│ │ _plain_styles        │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ +        if          │                     │      │           │          │ │
+│ │ _IS_WINDOWS:  #      │                     │      │           │          │ │
+│ │ pragma: no cover     │                     │      │           │          │ │
+│ │ +            # On    │                     │      │           │          │ │
+│ │ Windows, we can't do │                     │      │           │          │ │
+│ │ colorful output      │                     │      │           │          │ │
+│ │ without colorama.    │                     │      │           │          │ │
+│ │ +            if      │                     │      │           │          │ │
+│ │ colorama is None:    │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ raise SystemError(   │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ _MISSING.format(     │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ who=cls.__name__ + " │                     │      │           │          │ │
+│ │ with `colors=True`", │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ package="colorama",  │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ )                    │                     │      │           │          │ │
+│ │ +                )   │                     │      │           │          │ │
+│ │ +            #       │                     │      │           │          │ │
+│ │ Colorama must be     │                     │      │           │          │ │
+│ │ init'd on Windows,   │                     │      │           │          │ │
+│ │ but must NOT be      │                     │      │           │          │ │
+│ │ +            #       │                     │      │           │          │ │
+│ │ init'd on other      │                     │      │           │          │ │
+│ │ OSes, because it can │                     │      │           │          │ │
+│ │ break colors.        │                     │      │           │          │ │
+│ │ +            if      │                     │      │           │          │ │
+│ │ force_colors:        │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ colorama.deinit()    │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ colorama.init(strip… │                     │      │           │          │ │
+│ │ +            else:   │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ colorama.init()      │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ +        return      │                     │      │           │          │ │
+│ │ _colorful_styles     │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ +    def             │                     │      │           │          │ │
+│ │ _configure_columns(  │                     │      │           │          │ │
+│ │ +        self,       │                     │      │           │          │ │
+│ │ +        *,          │                     │      │           │          │ │
+│ │ +        styles:     │                     │      │           │          │ │
+│ │ ColumnStyles,        │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ level_styles:        │                     │      │           │          │ │
+│ │ dict[str, str],      │                     │      │           │          │ │
+│ │ +        pad_level:  │                     │      │           │          │ │
+│ │ bool,                │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ timestamp_key: str,  │                     │      │           │          │ │
+│ │ +        event_key:  │                     │      │           │          │ │
+│ │ str,                 │                     │      │           │          │ │
+│ │ +        pad_event:  │                     │      │           │          │ │
+│ │ int,                 │                     │      │           │          │ │
+│ │ +    ) -> None:      │                     │      │           │          │ │
+│ │ +        """         │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ Re-configures        │                     │      │           │          │ │
+│ │ columns according to │                     │      │           │          │ │
+│ │ the given styles and │                     │      │           │          │ │
+│ │ parameters.          │                     │      │           │          │ │
+│ │ +        """         │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ self._styles =       │                     │      │           │          │ │
+│ │ styles               │                     │      │           │          │ │
+│ │ +                    │                     │      │           │          │ │
+│ │ level_to_color =     │                     │      │           │          │ │
+│ │ level_styles.copy()  │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │          for key in  │                     │      │           │          │ │
+│ │ level_to_color:      │                     │      │           │          │ │
+│ │              level_… │                     │      │           │          │ │
+│ │ += styles.bright     │                     │      │           │          │ │
+│ │ @@ -665,8 +735,6 @@  │                     │      │           │          │ │
+│ │ class                │                     │      │           │          │ │
+│ │ ConsoleRenderer:     │                     │      │           │          │ │
+│ │              max(le… │                     │      │           │          │ │
+│ │ key=lambda e:        │                     │      │           │          │ │
+│ │ len(e))              │                     │      │           │          │ │
+│ │          )           │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ self._repr_native_s… │                     │      │           │          │ │
+│ │ = repr_native_str    │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │          self._defa… │                     │      │           │          │ │
+│ │ =                    │                     │      │           │          │ │
+│ │ KeyValueColumnForma… │                     │      │           │          │ │
+│ │              styles… │                     │      │           │          │ │
+│ │              styles… │                     │      │           │          │ │
+│ │ @@ -716,55 +784,6 @@ │                     │      │           │          │ │
+│ │ class                │                     │      │           │          │ │
+│ │ ConsoleRenderer:     │                     │      │           │          │ │
+│ │              Column… │                     │      │           │          │ │
+│ │ logger_name_formatt… │                     │      │           │          │ │
+│ │          ]           │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ -    @classmethod    │                     │      │           │          │ │
+│ │ -    def             │                     │      │           │          │ │
+│ │ get_default_column_… │                     │      │           │          │ │
+│ │ -        cls,        │                     │      │           │          │ │
+│ │ colors: bool,        │                     │      │           │          │ │
+│ │ force_colors: bool = │                     │      │           │          │ │
+│ │ False                │                     │      │           │          │ │
+│ │ -    ) -> Styles:    │                     │      │           │          │ │
+│ │ -        """         │                     │      │           │          │ │
+│ │ -        Configure   │                     │      │           │          │ │
+│ │ and return the       │                     │      │           │          │ │
+│ │ appropriate styles   │                     │      │           │          │ │
+│ │ class for console    │                     │      │           │          │ │
+│ │ output.              │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ -        This method │                     │      │           │          │ │
+│ │ handles the setup of │                     │      │           │          │ │
+│ │ colorful or plain    │                     │      │           │          │ │
+│ │ styles, including    │                     │      │           │          │ │
+│ │ -        proper      │                     │      │           │          │ │
+│ │ colorama             │                     │      │           │          │ │
+│ │ initialization on    │                     │      │           │          │ │
+│ │ Windows systems when │                     │      │           │          │ │
+│ │ colors are           │                     │      │           │          │ │
+│ │ -        enabled.    │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ -        Args:       │                     │      │           │          │ │
+│ │ -            colors: │                     │      │           │          │ │
+│ │ Whether to use       │                     │      │           │          │ │
+│ │ colorful output      │                     │      │           │          │ │
+│ │ styles.              │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ force_colors:        │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ Force colorful       │                     │      │           │          │ │
+│ │ output even in       │                     │      │           │          │ │
+│ │ non-interactive      │                     │      │           │          │ │
+│ │ environments.        │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ Only relevant on     │                     │      │           │          │ │
+│ │ Windows with         │                     │      │           │          │ │
+│ │ colorama.            │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ -        Returns:    │                     │      │           │          │ │
+│ │ -            The     │                     │      │           │          │ │
+│ │ configured styles.   │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ -        Raises:     │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ SystemError:         │                     │      │           │          │ │
+│ │ -                On  │                     │      │           │          │ │
+│ │ Windows when         │                     │      │           │          │ │
+│ │ colors=True but      │                     │      │           │          │ │
+│ │ colorama is not      │                     │      │           │          │ │
+│ │ installed.           │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ -        ..          │                     │      │           │          │ │
+│ │ versionadded::       │                     │      │           │          │ │
+│ │ 25.5.0               │                     │      │           │          │ │
+│ │ -        """         │                     │      │           │          │ │
+│ │ -        if not      │                     │      │           │          │ │
+│ │ colors:              │                     │      │           │          │ │
+│ │ -            return  │                     │      │           │          │ │
+│ │ _plain_styles        │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ -        if          │                     │      │           │          │ │
+│ │ _IS_WINDOWS:  #      │                     │      │           │          │ │
+│ │ pragma: no cover     │                     │      │           │          │ │
+│ │ -            # On    │                     │      │           │          │ │
+│ │ Windows, we can't do │                     │      │           │          │ │
+│ │ colorful output      │                     │      │           │          │ │
+│ │ without colorama.    │                     │      │           │          │ │
+│ │ -            if      │                     │      │           │          │ │
+│ │ colorama is None:    │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ raise SystemError(   │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ _MISSING.format(     │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ who=cls.__name__ + " │                     │      │           │          │ │
+│ │ with `colors=True`", │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ package="colorama",  │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ )                    │                     │      │           │          │ │
+│ │ -                )   │                     │      │           │          │ │
+│ │ -            #       │                     │      │           │          │ │
+│ │ Colorama must be     │                     │      │           │          │ │
+│ │ init'd on Windows,   │                     │      │           │          │ │
+│ │ but must NOT be      │                     │      │           │          │ │
+│ │ -            #       │                     │      │           │          │ │
+│ │ init'd on other      │                     │      │           │          │ │
+│ │ OSes, because it can │                     │      │           │          │ │
+│ │ break colors.        │                     │      │           │          │ │
+│ │ -            if      │                     │      │           │          │ │
+│ │ force_colors:        │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ colorama.deinit()    │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ colorama.init(strip… │                     │      │           │          │ │
+│ │ -            else:   │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ colorama.init()      │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │ -        return      │                     │      │           │          │ │
+│ │ _colorful_styles     │                     │      │           │          │ │
+│ │ -                    │                     │      │           │          │ │
+│ │      def _repr(self, │                     │      │           │          │ │
+│ │ val: Any) -> str:    │                     │      │           │          │ │
+│ │          """         │                     │      │           │          │ │
+│ │          Determine   │                     │      │           │          │ │
+│ │ representation of    │                     │      │           │          │ │
+│ │ *val* depending on   │                     │      │           │          │ │
+│ │ its type &           │                     │      │           │          │ │
+│ │ @@ -837,7 +856,7 @@  │                     │      │           │          │ │
+│ │ class                │                     │      │           │          │ │
+│ │ ConsoleRenderer:     │                     │      │           │          │ │
+│ │                  Wh… │                     │      │           │          │ │
+│ │ to use colorful      │                     │      │           │          │ │
+│ │ styles. This must    │                     │      │           │          │ │
+│ │ match the *colors*   │                     │      │           │          │ │
+│ │                  pa… │                     │      │           │          │ │
+│ │ to                   │                     │      │           │          │ │
+│ │ `ConsoleRenderer`.   │                     │      │           │          │ │
+│ │ Default: `True`.     │                     │      │           │          │ │
+│ │          """         │                     │      │           │          │ │
+│ │ -        styles:     │                     │      │           │          │ │
+│ │ Styles               │                     │      │           │          │ │
+│ │ +        styles:     │                     │      │           │          │ │
+│ │ ColumnStyles         │                     │      │           │          │ │
+│ │          styles =    │                     │      │           │          │ │
+│ │ _colorful_styles if  │                     │      │           │          │ │
+│ │ colors else          │                     │      │           │          │ │
+│ │ _plain_styles        │                     │      │           │          │ │
+│ │          return {    │                     │      │           │          │ │
+│ │              "criti… │                     │      │           │          │ │
+│ │ styles.level_critic… │                     │      │           │          │ │
+│ │                      │                     │      │           │          │ │
+│ │ ```                  │                     │      │           │          │ │
+│ └──────────────────────┴─────────────────────┴──────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
+100%|██████████| 300/300 [8:00:33<00:00, 96.11s/it]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:05<00:00,  5.65s/it]Writing model shards: 100%|██████████| 1/1 [00:05<00:00,  5.65s/it]
+{"name": "review_grpo_4b_v2", "model": "runs/review_sft_4b_v2/final", "task": "review", "lora": true, "steps": 300, "wall_s": 28834.0, "num_gpus": 1, "final_reward": -0.42500004172325134}
