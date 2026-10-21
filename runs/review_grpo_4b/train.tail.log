@@ -1,400 +1,400 @@
-│ │ +        def        │                     │       │           │          │ │
-│ │ hook(instance,      │                     │       │           │          │ │
-│ │ attrib, value):     │                     │       │           │          │ │
-│ │ +            yield  │                     │       │           │          │ │
-│ │ "yielded!"          │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        @attr.s    │                     │       │           │          │ │
-│ │ +        class      │                     │       │           │          │ │
-│ │ Hooked:             │                     │       │           │          │ │
-│ │ +            x =    │                     │       │           │          │ │
-│ │ attr.ib(on_setattr… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        h =        │                     │       │           │          │ │
-│ │ Hooked("x")         │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        assert "x" │                     │       │           │          │ │
-│ │ == h.x              │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        h.x =      │                     │       │           │          │ │
-│ │ "xxx"               │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        assert     │                     │       │           │          │ │
-│ │ "yielded!" == h.x   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ test_generator_hoo… │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        Generator  │                     │       │           │          │ │
-│ │ post-yield code     │                     │       │           │          │ │
-│ │ runs after the      │                     │       │           │          │ │
-│ │ value is set on the │                     │       │           │          │ │
-│ │ instance.           │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        calls = [] │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        def        │                     │       │           │          │ │
-│ │ hook(instance,      │                     │       │           │          │ │
-│ │ attrib, value):     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ calls.append(("pre… │                     │       │           │          │ │
-│ │ instance.x))        │                     │       │           │          │ │
-│ │ +            yield  │                     │       │           │          │ │
-│ │ value               │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ calls.append(("pos… │                     │       │           │          │ │
-│ │ instance.x))        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        @attr.s    │                     │       │           │          │ │
-│ │ +        class      │                     │       │           │          │ │
-│ │ Hooked:             │                     │       │           │          │ │
-│ │ +            x =    │                     │       │           │          │ │
-│ │ attr.ib(on_setattr… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        h =        │                     │       │           │          │ │
-│ │ Hooked("x")         │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        assert "x" │                     │       │           │          │ │
-│ │ == h.x              │                     │       │           │          │ │
-│ │ +        assert []  │                     │       │           │          │ │
-│ │ == calls            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        h.x =      │                     │       │           │          │ │
-│ │ "xxx"               │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        assert     │                     │       │           │          │ │
-│ │ [("pre", "x"),      │                     │       │           │          │ │
-│ │ ("post", "xxx")] == │                     │       │           │          │ │
-│ │ calls               │                     │       │           │          │ │
-│ │ +        assert     │                     │       │           │          │ │
-│ │ "xxx" == h.x        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ test_frozen_attrib… │                     │       │           │          │ │
-│ │          """        │                     │       │           │          │ │
-│ │          Frozen     │                     │       │           │          │ │
-│ │ attributes raise    │                     │       │           │          │ │
-│ │ FrozenAttributeErr… │                     │       │           │          │ │
-│ │ others are not      │                     │       │           │          │ │
-│ │ affected.           │                     │       │           │          │ │
-│ │ @@ -146,6 +191,145  │                     │       │           │          │ │
-│ │ @@ class            │                     │       │           │          │ │
-│ │ TestSetAttr:        │                     │       │           │          │ │
-│ │          assert 42  │                     │       │           │          │ │
-│ │ == p.x1             │                     │       │           │          │ │
-│ │          assert 23  │                     │       │           │          │ │
-│ │ == p.x2             │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ test_generator_hoo… │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        Generator  │                     │       │           │          │ │
-│ │ hooks are not       │                     │       │           │          │ │
-│ │ invoked during      │                     │       │           │          │ │
-│ │ __init__, same as   │                     │       │           │          │ │
-│ │ regular hooks.      │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        def        │                     │       │           │          │ │
-│ │ hook(instance,      │                     │       │           │          │ │
-│ │ attrib, value):     │                     │       │           │          │ │
-│ │ +            yield  │                     │       │           │          │ │
-│ │ "hooked"            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        @attr.s    │                     │       │           │          │ │
-│ │ +        class      │                     │       │           │          │ │
-│ │ Hooked:             │                     │       │           │          │ │
-│ │ +            x =    │                     │       │           │          │ │
-│ │ attr.ib(on_setattr… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        h =        │                     │       │           │          │ │
-│ │ Hooked("x")         │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        assert "x" │                     │       │           │          │ │
-│ │ == h.x              │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        h.x =      │                     │       │           │          │ │
-│ │ "xxx"               │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        assert     │                     │       │           │          │ │
-│ │ "hooked" == h.x     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ test_generator_hoo… │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        Generator  │                     │       │           │          │ │
-│ │ hooks work with     │                     │       │           │          │ │
-│ │ attrs.define.       │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        def        │                     │       │           │          │ │
-│ │ hook(instance,      │                     │       │           │          │ │
-│ │ attrib, value):     │                     │       │           │          │ │
-│ │ +            yield  │                     │       │           │          │ │
-│ │ value.upper()       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ @attr.define        │                     │       │           │          │ │
-│ │ +        class C:   │                     │       │           │          │ │
-│ │ +            x: str │                     │       │           │          │ │
-│ │ =                   │                     │       │           │          │ │
-│ │ attr.field(on_seta… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        c =        │                     │       │           │          │ │
-│ │ C("hello")          │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        assert     │                     │       │           │          │ │
-│ │ "hello" == c.x      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        c.x =      │                     │       │           │          │ │
-│ │ "world"             │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        assert     │                     │       │           │          │ │
-│ │ "WORLD" == c.x      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ test_generator_hoo… │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        Generator  │                     │       │           │          │ │
-│ │ hooks work as       │                     │       │           │          │ │
-│ │ class-level         │                     │       │           │          │ │
-│ │ on_setattr.         │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        call_count │                     │       │           │          │ │
-│ │ = 0                 │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        def        │                     │       │           │          │ │
-│ │ hook(instance,      │                     │       │           │          │ │
-│ │ attrib, value):     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ nonlocal call_count │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ call_count += 1     │                     │       │           │          │ │
-│ │ +            yield  │                     │       │           │          │ │
-│ │ value               │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ @attr.s(on_setattr… │                     │       │           │          │ │
-│ │ +        class C:   │                     │       │           │          │ │
-│ │ +            x =    │                     │       │           │          │ │
-│ │ attr.ib()           │                     │       │           │          │ │
-│ │ +            y =    │                     │       │           │          │ │
-│ │ attr.ib()           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        c = C(1,   │                     │       │           │          │ │
-│ │ 2)                  │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        assert 1   │                     │       │           │          │ │
-│ │ == c.x              │                     │       │           │          │ │
-│ │ +        assert 2   │                     │       │           │          │ │
-│ │ == c.y              │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        c.x = 10   │                     │       │           │          │ │
-│ │ +        assert 1   │                     │       │           │          │ │
-│ │ == call_count       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        c.y = 20   │                     │       │           │          │ │
-│ │ +        assert 2   │                     │       │           │          │ │
-│ │ == call_count       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ test_generator_pre… │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        If a       │                     │       │           │          │ │
-│ │ generator raises    │                     │       │           │          │ │
-│ │ before yielding,    │                     │       │           │          │ │
-│ │ the value is not    │                     │       │           │          │ │
-│ │ set.                │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        def        │                     │       │           │          │ │
-│ │ hook(instance,      │                     │       │           │          │ │
-│ │ attrib, value):     │                     │       │           │          │ │
-│ │ +            raise  │                     │       │           │          │ │
-│ │ ValueError("bad     │                     │       │           │          │ │
-│ │ value")             │                     │       │           │          │ │
-│ │ +            yield  │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        @attr.s    │                     │       │           │          │ │
-│ │ +        class C:   │                     │       │           │          │ │
-│ │ +            x =    │                     │       │           │          │ │
-│ │ attr.ib(on_setattr… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        c =        │                     │       │           │          │ │
-│ │ C("original")       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        with       │                     │       │           │          │ │
-│ │ pytest.raises(Valu… │                     │       │           │          │ │
-│ │ match="bad value"): │                     │       │           │          │ │
-│ │ +            c.x =  │                     │       │           │          │ │
-│ │ "new"               │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        assert     │                     │       │           │          │ │
-│ │ "original" == c.x   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ test_generator_pos… │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        If a       │                     │       │           │          │ │
-│ │ generator raises    │                     │       │           │          │ │
-│ │ after yielding, the │                     │       │           │          │ │
-│ │ value is already    │                     │       │           │          │ │
-│ │ set and             │                     │       │           │          │ │
-│ │ +        the        │                     │       │           │          │ │
-│ │ exception           │                     │       │           │          │ │
-│ │ propagates.         │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        def        │                     │       │           │          │ │
-│ │ hook(instance,      │                     │       │           │          │ │
-│ │ attrib, value):     │                     │       │           │          │ │
-│ │ +            yield  │                     │       │           │          │ │
-│ │ value               │                     │       │           │          │ │
-│ │ +            raise  │                     │       │           │          │ │
-│ │ RuntimeError("post… │                     │       │           │          │ │
-│ │ failure")           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        @attr.s    │                     │       │           │          │ │
-│ │ +        class C:   │                     │       │           │          │ │
-│ │ +            x =    │                     │       │           │          │ │
-│ │ attr.ib(on_setattr… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        c =        │                     │       │           │          │ │
-│ │ C("original")       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        with       │                     │       │           │          │ │
-│ │ pytest.raises(Runt… │                     │       │           │          │ │
-│ │ match="post-yield   │                     │       │           │          │ │
-│ │ failure"):          │                     │       │           │          │ │
-│ │ +            c.x =  │                     │       │           │          │ │
-│ │ "new"               │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        assert     │                     │       │           │          │ │
-│ │ "new" == c.x        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ test_generator_yie… │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        Yielding   │                     │       │           │          │ │
-│ │ more than once      │                     │       │           │          │ │
-│ │ raises an error and │                     │       │           │          │ │
-│ │ closes the          │                     │       │           │          │ │
-│ │ generator.          │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        cleaned_up │                     │       │           │          │ │
-│ │ = False             │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        def        │                     │       │           │          │ │
-│ │ hook(instance,      │                     │       │           │          │ │
-│ │ attrib, value):     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ nonlocal cleaned_up │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +            try:   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ yield "first"       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ yield "second"      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ finally:            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ cleaned_up = True   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        @attr.s    │                     │       │           │          │ │
-│ │ +        class C:   │                     │       │           │          │ │
-│ │ +            x =    │                     │       │           │          │ │
-│ │ attr.ib(on_setattr… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        c =        │                     │       │           │          │ │
-│ │ C("old")            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        with       │                     │       │           │          │ │
-│ │ pytest.raises(      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ RuntimeError,       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ match="Generator    │                     │       │           │          │ │
-│ │ on_setattr hook     │                     │       │           │          │ │
-│ │ yielded more than   │                     │       │           │          │ │
-│ │ once",              │                     │       │           │          │ │
-│ │ +        ):         │                     │       │           │          │ │
-│ │ +            c.x =  │                     │       │           │          │ │
-│ │ "new"               │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +        assert     │                     │       │           │          │ │
-│ │ "first" == c.x      │                     │       │           │          │ │
-│ │ +        assert     │                     │       │           │          │ │
-│ │ cleaned_up is True  │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ test_make_class(se… │                     │       │           │          │ │
-│ │          """        │                     │       │           │          │ │
-│ │          on_setattr │                     │       │           │          │ │
-│ │ of make_class gets  │                     │       │           │          │ │
-│ │ forwarded.          │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/typing-examples/… │                     │       │           │          │ │
-│ │ b/typing-examples/… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 15542ca..ae5207a    │                     │       │           │          │ │
 │ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/typing-examples/… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 000000000..38c3595… │                     │       │           │          │ │
+│ │ --- /dev/null       │                     │       │           │          │ │
 │ │ +++                 │                     │       │           │          │ │
-│ │ b/typing-examples/… │                     │       │           │          │ │
-│ │ @@ -7,7 +7,7 @@     │                     │       │           │          │ │
-│ │ Baseline features   │                     │       │           │          │ │
-│ │ that should be      │                     │       │           │          │ │
-│ │ supported by all    │                     │       │           │          │ │
-│ │ type checkers.      │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  from __future__    │                     │       │           │          │ │
-│ │ import annotations  │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -from typing import │                     │       │           │          │ │
-│ │ Any                 │                     │       │           │          │ │
+│ │ b/tests/test_respo… │                     │       │           │          │ │
+│ │ @@ -0,0 +1,173 @@   │                     │       │           │          │ │
+│ │ +"""Test using      │                     │       │           │          │ │
+│ │ special types       │                     │       │           │          │ │
+│ │ (Response, Request, │                     │       │           │          │ │
+│ │ BackgroundTasks) as │                     │       │           │          │ │
+│ │ dependency          │                     │       │           │          │ │
+│ │ annotations.        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +These tests verify │                     │       │           │          │ │
+│ │ that special        │                     │       │           │          │ │
+│ │ FastAPI types can   │                     │       │           │          │ │
+│ │ be used with        │                     │       │           │          │ │
+│ │ Depends()           │                     │       │           │          │ │
+│ │ annotations         │                     │       │           │          │ │
+│ │ +and that the       │                     │       │           │          │ │
+│ │ dependency          │                     │       │           │          │ │
+│ │ injection system    │                     │       │           │          │ │
+│ │ properly handles    │                     │       │           │          │ │
+│ │ them.               │                     │       │           │          │ │
+│ │ +"""                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
 │ │ +from typing import │                     │       │           │          │ │
-│ │ Any, Generator      │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  import attrs       │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ @@ -130,6 +130,12   │                     │       │           │          │ │
-│ │ @@ class            │                     │       │           │          │ │
-│ │ WithCustomRepr:     │                     │       │           │          │ │
-│ │      d: bool =      │                     │       │           │          │ │
-│ │ attrs.field(repr=s… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
+│ │ Annotated           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +from fastapi       │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ BackgroundTasks,    │                     │       │           │          │ │
+│ │ Depends, FastAPI,   │                     │       │           │          │ │
+│ │ Request, Response   │                     │       │           │          │ │
+│ │ +from               │                     │       │           │          │ │
+│ │ fastapi.responses   │                     │       │           │          │ │
+│ │ import JSONResponse │                     │       │           │          │ │
+│ │ +from               │                     │       │           │          │ │
+│ │ fastapi.testclient  │                     │       │           │          │ │
+│ │ import TestClient   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
 │ │ +def                │                     │       │           │          │ │
-│ │ gen_on_setattr_hoo… │                     │       │           │          │ │
-│ │ +    instance: Any, │                     │       │           │          │ │
-│ │ attribute:          │                     │       │           │          │ │
-│ │ attrs.Attribute[An… │                     │       │           │          │ │
-│ │ new_value: Any      │                     │       │           │          │ │
-│ │ +) ->               │                     │       │           │          │ │
-│ │ Generator[int]:     │                     │       │           │          │ │
-│ │ +    yield 42       │                     │       │           │          │ │
+│ │ test_response_with… │                     │       │           │          │ │
+│ │ +    """Response    │                     │       │           │          │ │
+│ │ type hint should    │                     │       │           │          │ │
+│ │ work with           │                     │       │           │          │ │
+│ │ Annotated[Response, │                     │       │           │          │ │
+│ │ Depends(...)]."""   │                     │       │           │          │ │
+│ │ +    app =          │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ modify_response(re… │                     │       │           │          │ │
+│ │ Response) ->        │                     │       │           │          │ │
+│ │ Response:           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ response.headers["… │                     │       │           │          │ │
+│ │ = "modified"        │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ response            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    @app.get("/")  │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ endpoint(response:  │                     │       │           │          │ │
+│ │ Annotated[Response, │                     │       │           │          │ │
+│ │ Depends(modify_res… │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ TestClient(app)     │                     │       │           │          │ │
+│ │ +    resp =         │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.status_code == │                     │       │           │          │ │
+│ │ 200                 │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.json() ==      │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.headers.get("… │                     │       │           │          │ │
+│ │ == "modified"       │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │  @attrs.define(on_… │                     │       │           │          │ │
-│ │  class              │                     │       │           │          │ │
-│ │ ValidatedSetter2:   │                     │       │           │          │ │
-│ │      a: int         │                     │       │           │          │ │
-│ │ @@ -143,6 +149,7 @@ │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ ValidatedSetter2:   │                     │       │           │          │ │
-│ │              attrs… │                     │       │           │          │ │
-│ │ attrs.setters.vali… │                     │       │           │          │ │
-│ │          )          │                     │       │           │          │ │
-│ │      )              │                     │       │           │          │ │
-│ │ +    f: int =       │                     │       │           │          │ │
-│ │ attrs.field(on_set… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  @attrs.define(eq=… │                     │       │           │          │ │
-│ │ order=True)         │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_response_with… │                     │       │           │          │ │
+│ │ +    """Response    │                     │       │           │          │ │
+│ │ type hint should    │                     │       │           │          │ │
+│ │ work with Response  │                     │       │           │          │ │
+│ │ = Depends(...)."""  │                     │       │           │          │ │
+│ │ +    app =          │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ modify_response(re… │                     │       │           │          │ │
+│ │ Response) ->        │                     │       │           │          │ │
+│ │ Response:           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ response.headers["… │                     │       │           │          │ │
+│ │ = "modified"        │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ response            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    @app.get("/")  │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ endpoint(response:  │                     │       │           │          │ │
+│ │ Response =          │                     │       │           │          │ │
+│ │ Depends(modify_res… │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ TestClient(app)     │                     │       │           │          │ │
+│ │ +    resp =         │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.status_code == │                     │       │           │          │ │
+│ │ 200                 │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.json() ==      │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.headers.get("… │                     │       │           │          │ │
+│ │ == "modified"       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_response_with… │                     │       │           │          │ │
+│ │ +    """Regular     │                     │       │           │          │ │
+│ │ Response injection  │                     │       │           │          │ │
+│ │ should still        │                     │       │           │          │ │
+│ │ work."""            │                     │       │           │          │ │
+│ │ +    app =          │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    @app.get("/")  │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ endpoint(response:  │                     │       │           │          │ │
+│ │ Response):          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ response.headers["… │                     │       │           │          │ │
+│ │ = "set"             │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ TestClient(app)     │                     │       │           │          │ │
+│ │ +    resp =         │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.status_code == │                     │       │           │          │ │
+│ │ 200                 │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.json() ==      │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.headers.get("… │                     │       │           │          │ │
+│ │ == "set"            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_response_depe… │                     │       │           │          │ │
+│ │ +    """Response    │                     │       │           │          │ │
+│ │ dependency should   │                     │       │           │          │ │
+│ │ work in a chain of  │                     │       │           │          │ │
+│ │ dependencies."""    │                     │       │           │          │ │
+│ │ +    app =          │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ first_modifier(res… │                     │       │           │          │ │
+│ │ Response) ->        │                     │       │           │          │ │
+│ │ Response:           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ response.headers["… │                     │       │           │          │ │
+│ │ = "1"               │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ response            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ second_modifier(    │                     │       │           │          │ │
+│ │ +        response:  │                     │       │           │          │ │
+│ │ Annotated[Response, │                     │       │           │          │ │
+│ │ Depends(first_modi… │                     │       │           │          │ │
+│ │ +    ) -> Response: │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ response.headers["… │                     │       │           │          │ │
+│ │ = "2"               │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ response            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    @app.get("/")  │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ endpoint(response:  │                     │       │           │          │ │
+│ │ Annotated[Response, │                     │       │           │          │ │
+│ │ Depends(second_mod… │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ TestClient(app)     │                     │       │           │          │ │
+│ │ +    resp =         │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.status_code == │                     │       │           │          │ │
+│ │ 200                 │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.headers.get("… │                     │       │           │          │ │
+│ │ == "1"              │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.headers.get("… │                     │       │           │          │ │
+│ │ == "2"              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_response_depe… │                     │       │           │          │ │
+│ │ +    """Dependency  │                     │       │           │          │ │
+│ │ that returns a      │                     │       │           │          │ │
+│ │ different Response  │                     │       │           │          │ │
+│ │ instance should     │                     │       │           │          │ │
+│ │ work.               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    When a         │                     │       │           │          │ │
+│ │ dependency returns  │                     │       │           │          │ │
+│ │ a new Response      │                     │       │           │          │ │
+│ │ object (e.g.,       │                     │       │           │          │ │
+│ │ JSONResponse)       │                     │       │           │          │ │
+│ │ instead             │                     │       │           │          │ │
+│ │ +    of modifying   │                     │       │           │          │ │
+│ │ the injected one,   │                     │       │           │          │ │
+│ │ the returned        │                     │       │           │          │ │
+│ │ response should be  │                     │       │           │          │ │
+│ │ used and any        │                     │       │           │          │ │
+│ │ +    modifications  │                     │       │           │          │ │
+│ │ to it in the        │                     │       │           │          │ │
+│ │ endpoint should be  │                     │       │           │          │ │
+│ │ preserved.          │                     │       │           │          │ │
+│ │ +    """            │                     │       │           │          │ │
+│ │ +    app =          │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ default_response()  │                     │       │           │          │ │
+│ │ -> Response:        │                     │       │           │          │ │
+│ │ +        response = │                     │       │           │          │ │
+│ │ JSONResponse(conte… │                     │       │           │          │ │
+│ │ "ok"})              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ response.headers["… │                     │       │           │          │ │
+│ │ = "initial"         │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ response            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    @app.get("/")  │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ endpoint(response:  │                     │       │           │          │ │
+│ │ Annotated[Response, │                     │       │           │          │ │
+│ │ Depends(default_re… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ response.headers["… │                     │       │           │          │ │
+│ │ = "modified"        │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ response            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ TestClient(app)     │                     │       │           │          │ │
+│ │ +    resp =         │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.status_code == │                     │       │           │          │ │
+│ │ 200                 │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.json() ==      │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.headers.get("… │                     │       │           │          │ │
+│ │ == "modified"       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +# Tests for        │                     │       │           │          │ │
+│ │ Request type hint   │                     │       │           │          │ │
+│ │ with Depends        │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_request_with_… │                     │       │           │          │ │
+│ │ +    """Request     │                     │       │           │          │ │
+│ │ type hint should    │                     │       │           │          │ │
+│ │ work in dependency  │                     │       │           │          │ │
+│ │ chain."""           │                     │       │           │          │ │
+│ │ +    app =          │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ extract_request_in… │                     │       │           │          │ │
+│ │ Request) -> dict:   │                     │       │           │          │ │
+│ │ +        return {   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "path":             │                     │       │           │          │ │
+│ │ request.url.path,   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "user_agent":       │                     │       │           │          │ │
+│ │ request.headers.ge… │                     │       │           │          │ │
+│ │ "unknown"),         │                     │       │           │          │ │
+│ │ +        }          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    @app.get("/")  │                     │       │           │          │ │
+│ │ +    def endpoint(  │                     │       │           │          │ │
+│ │ +        info:      │                     │       │           │          │ │
+│ │ Annotated[dict,     │                     │       │           │          │ │
+│ │ Depends(extract_re… │                     │       │           │          │ │
+│ │ +    ):             │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ info                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ TestClient(app)     │                     │       │           │          │ │
+│ │ +    resp =         │                     │       │           │          │ │
+│ │ client.get("/",     │                     │       │           │          │ │
+│ │ headers={"user-age… │                     │       │           │          │ │
+│ │ "test-agent"})      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.status_code == │                     │       │           │          │ │
+│ │ 200                 │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.json() ==      │                     │       │           │          │ │
+│ │ {"path": "/",       │                     │       │           │          │ │
+│ │ "user_agent":       │                     │       │           │          │ │
+│ │ "test-agent"}       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +# Tests for        │                     │       │           │          │ │
+│ │ BackgroundTasks     │                     │       │           │          │ │
+│ │ type hint with      │                     │       │           │          │ │
+│ │ Depends             │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_background_ta… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ """BackgroundTasks  │                     │       │           │          │ │
+│ │ type hint should    │                     │       │           │          │ │
+│ │ work with           │                     │       │           │          │ │
+│ │ Annotated[Backgrou… │                     │       │           │          │ │
+│ │ Depends(...)]."""   │                     │       │           │          │ │
+│ │ +    app =          │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +    task_results = │                     │       │           │          │ │
+│ │ []                  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ background_task(me… │                     │       │           │          │ │
+│ │ str):               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ task_results.appen… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ add_background_tas… │                     │       │           │          │ │
+│ │ BackgroundTasks) -> │                     │       │           │          │ │
+│ │ BackgroundTasks:    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ background_tasks.a… │                     │       │           │          │ │
+│ │ "from dependency")  │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ background_tasks    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    @app.get("/")  │                     │       │           │          │ │
+│ │ +    def endpoint(  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ background_tasks:   │                     │       │           │          │ │
+│ │ Annotated[Backgrou… │                     │       │           │          │ │
+│ │ Depends(add_backgr… │                     │       │           │          │ │
+│ │ +    ):             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ background_tasks.a… │                     │       │           │          │ │
+│ │ "from endpoint")    │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ TestClient(app)     │                     │       │           │          │ │
+│ │ +    resp =         │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.status_code == │                     │       │           │          │ │
+│ │ 200                 │                     │       │           │          │ │
+│ │ +    assert "from   │                     │       │           │          │ │
+│ │ dependency" in      │                     │       │           │          │ │
+│ │ task_results        │                     │       │           │          │ │
+│ │ +    assert "from   │                     │       │           │          │ │
+│ │ endpoint" in        │                     │       │           │          │ │
+│ │ task_results        │                     │       │           │          │ │
 │ │ ```                 │                     │       │           │          │ │
 │ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
