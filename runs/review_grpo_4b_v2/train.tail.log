@@ -1,3 +1,140 @@
+│ │ arg not in          │                     │       │           │          │ │
+│ │ known_models:       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ known_models.add(a… │                     │       │           │          │ │
+│ │ # type:             │                     │       │           │          │ │
+│ │ ignore[arg-type]    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ if                  │                     │       │           │          │ │
+│ │ lenient_issubclass… │                     │       │           │          │ │
+│ │ BaseModel):         │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ get_flat_models_fr… │                     │       │           │          │ │
+│ │ known_models=known… │                     │       │           │          │ │
+│ │              else:  │                     │       │           │          │ │
+│ │                  g… │                     │       │           │          │ │
+│ │ known_models=known… │                     │       │           │          │ │
+│ │      return         │                     │       │           │          │ │
+│ │ known_models        │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/fastapi/dependen… │                     │       │           │          │ │
+│ │ b/fastapi/dependen… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ dd42371ec..1e334c4… │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/fastapi/dependen… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/fastapi/dependen… │                     │       │           │          │ │
+│ │ @@ -512,7 +512,6 @@ │                     │       │           │          │ │
+│ │ def analyze_param(  │                     │       │           │          │ │
+│ │              type_… │                     │       │           │          │ │
+│ │              defau… │                     │       │           │          │ │
+│ │              alias… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ required=field_inf… │                     │       │           │          │ │
+│ │ in (RequiredParam,  │                     │       │           │          │ │
+│ │ Undefined),         │                     │       │           │          │ │
+│ │              field… │                     │       │           │          │ │
+│ │          )          │                     │       │           │          │ │
+│ │          if         │                     │       │           │          │ │
+│ │ is_path_param:      │                     │       │           │          │ │
+│ │ @@ -523,11 +522,7   │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ analyze_param(      │                     │       │           │          │ │
+│ │              assert │                     │       │           │          │ │
+│ │ (                   │                     │       │           │          │ │
+│ │                  i… │                     │       │           │          │ │
+│ │                  or │                     │       │           │          │ │
+│ │ is_scalar_sequence… │                     │       │           │          │ │
+│ │ -                or │                     │       │           │          │ │
+│ │ (                   │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ lenient_issubclass… │                     │       │           │          │ │
+│ │ BaseModel)          │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ # For Pydantic v1   │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ and getattr(field,  │                     │       │           │          │ │
+│ │ "shape", 1) == 1    │                     │       │           │          │ │
+│ │ -                )  │                     │       │           │          │ │
+│ │ +                or │                     │       │           │          │ │
+│ │ lenient_issubclass… │                     │       │           │          │ │
+│ │ BaseModel)          │                     │       │           │          │ │
+│ │              ),     │                     │       │           │          │ │
+│ │ f"Query parameter   │                     │       │           │          │ │
+│ │ {param_name!r} must │                     │       │           │          │ │
+│ │ be one of the       │                     │       │           │          │ │
+│ │ supported types"    │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      return         │                     │       │           │          │ │
+│ │ ParamDetails(type_… │                     │       │           │          │ │
+│ │ depends=depends,    │                     │       │           │          │ │
+│ │ field=field)        │                     │       │           │          │ │
+│ │ @@ -1021,7 +1016,6  │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ get_body_field(     │                     │       │           │          │ │
+│ │      final_field =  │                     │       │           │          │ │
+│ │ create_model_field( │                     │       │           │          │ │
+│ │          name="bod… │                     │       │           │          │ │
+│ │          type_=Bod… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ required=required,  │                     │       │           │          │ │
+│ │          alias="bo… │                     │       │           │          │ │
+│ │          field_inf… │                     │       │           │          │ │
+│ │      )              │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/fastapi/openapi/… │                     │       │           │          │ │
+│ │ b/fastapi/openapi/… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ ac6a6d52c..0959906… │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/fastapi/openapi/… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/fastapi/openapi/… │                     │       │           │          │ │
+│ │ @@ -143,10 +143,7   │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ Schema(BaseModelWi… │                     │       │           │          │ │
+│ │      else_:         │                     │       │           │          │ │
+│ │ Optional["SchemaOr… │                     │       │           │          │ │
+│ │ =                   │                     │       │           │          │ │
+│ │ Field(default=None, │                     │       │           │          │ │
+│ │ alias="else")       │                     │       │           │          │ │
+│ │      dependentSche… │                     │       │           │          │ │
+│ │ Optional[dict[str,  │                     │       │           │          │ │
+│ │ "SchemaOrBool"]] =  │                     │       │           │          │ │
+│ │ None                │                     │       │           │          │ │
+│ │      prefixItems:   │                     │       │           │          │ │
+│ │ Optional[list["Sch… │                     │       │           │          │ │
+│ │ = None              │                     │       │           │          │ │
+│ │ -    # TODO:        │                     │       │           │          │ │
+│ │ uncomment and       │                     │       │           │          │ │
+│ │ remove below when   │                     │       │           │          │ │
+│ │ deprecating         │                     │       │           │          │ │
+│ │ Pydantic v1         │                     │       │           │          │ │
+│ │ -    # It generates │                     │       │           │          │ │
+│ │ a list of schemas   │                     │       │           │          │ │
+│ │ for tuples, before  │                     │       │           │          │ │
+│ │ prefixItems was     │                     │       │           │          │ │
+│ │ available           │                     │       │           │          │ │
+│ │ -    # items:       │                     │       │           │          │ │
+│ │ Optional["SchemaOr… │                     │       │           │          │ │
+│ │ = None              │                     │       │           │          │ │
+│ │ -    items:         │                     │       │           │          │ │
+│ │ Optional[Union["Sc… │                     │       │           │          │ │
+│ │ list["SchemaOrBool… │                     │       │           │          │ │
+│ │ = None              │                     │       │           │          │ │
+│ │ +    items:         │                     │       │           │          │ │
+│ │ Optional["SchemaOr… │                     │       │           │          │ │
+│ │ = None              │                     │       │           │          │ │
+│ │      contains:      │                     │       │           │          │ │
+│ │ Optional["SchemaOr… │                     │       │           │          │ │
+│ │ = None              │                     │       │           │          │ │
+│ │      properties:    │                     │       │           │          │ │
+│ │ Optional[dict[str,  │                     │       │           │          │ │
+│ │ "SchemaOrBool"]] =  │                     │       │           │          │ │
+│ │ None                │                     │       │           │          │ │
 │ │      patternProper… │                     │       │           │          │ │
 │ │ Optional[dict[str,  │                     │       │           │          │ │
 │ │ "SchemaOrBool"]] =  │                     │       │           │          │ │
@@ -257,143 +394,6 @@
 │ │          raise      │                     │       │           │          │ │
 │ │ fastapi.exceptions… │                     │       │           │          │ │
 │ │              _inva… │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
-│ │ SYSTEM              │ ASSISTANT           │  1.00 │      0.00 │ approve  │ │
-│ │ You are the code    │ {"decision":        │       │           │          │ │
-│ │ review gate for a   │ "approve",          │       │           │          │ │
-│ │ production          │ "comments":         │       │           │          │ │
-│ │ repository. Your    │ [{"file":           │       │           │          │ │
-│ │ approval merges and │ "src/structlog/std… │       │           │          │ │
-│ │ deploys the change  │ "line_start": 76,   │       │           │          │ │
-│ │ with no further     │ "line_end": 107,    │       │           │          │ │
-│ │ human review.       │ "body": "The update │       │           │          │ │
-│ │ Decide:             │ aligns with the     │       │           │          │ │
-│ │   approve  - you    │ protocol to provide │       │           │          │ │
-│ │ are confident the   │ more transitions    │       │           │          │ │
-│ │ change is correct   │ from native         │       │           │          │ │
-│ │ and safe to ship.   │ logging. No         │       │           │          │ │
-│ │   block    - you    │ compelling evidence │       │           │          │ │
-│ │ found a defect;     │ or bug shadow is    │       │           │          │ │
-│ │ cite its location.  │ demonstrated, so    │       │           │          │ │
-│ │   escalate - you    │ the change can      │       │           │          │ │
-│ │ cannot establish    │ proceed safely."}]} │       │           │          │ │
-│ │ safety from what    │                     │       │           │          │ │
-│ │ you can see; a      │                     │       │           │          │ │
-│ │ human must look.    │                     │       │           │          │ │
-│ │ Approving a change  │                     │       │           │          │ │
-│ │ that contains a     │                     │       │           │          │ │
-│ │ defect is the worst │                     │       │           │          │ │
-│ │ outcome. Blocking a │                     │       │           │          │ │
-│ │ correct change      │                     │       │           │          │ │
-│ │ costs an engineer's │                     │       │           │          │ │
-│ │ time. Escalating is │                     │       │           │          │ │
-│ │ cheap but useless   │                     │       │           │          │ │
-│ │ if done for         │                     │       │           │          │ │
-│ │ everything.         │                     │       │           │          │ │
-│ │ Respond with        │                     │       │           │          │ │
-│ │ exactly one JSON    │                     │       │           │          │ │
-│ │ object and nothing  │                     │       │           │          │ │
-│ │ else:               │                     │       │           │          │ │
-│ │ {"decision":        │                     │       │           │          │ │
-│ │ "approve|block|esc… │                     │       │           │          │ │
-│ │ "comments":         │                     │       │           │          │ │
-│ │ [{"file": "...",    │                     │       │           │          │ │
-│ │ "line_start": N,    │                     │       │           │          │ │
-│ │ "line_end": N,      │                     │       │           │          │ │
-│ │ "body": "...",      │                     │       │           │          │ │
-│ │ "proposed_test":    │                     │       │           │          │ │
-│ │ "optional pytest    │                     │       │           │          │ │
-│ │ source"}]}          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ USER                │                     │       │           │          │ │
-│ │ Repository:         │                     │       │           │          │ │
-│ │ structlog           │                     │       │           │          │ │
-│ │ Files changed:      │                     │       │           │          │ │
-│ │ CHANGELOG.md,       │                     │       │           │          │ │
-│ │ src/structlog/stdl… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Not shown (non-code │                     │       │           │          │ │
-│ │ or over budget;     │                     │       │           │          │ │
-│ │ treat as            │                     │       │           │          │ │
-│ │ unreviewed):        │                     │       │           │          │ │
-│ │ CHANGELOG.md (456   │                     │       │           │          │ │
-│ │ chars, non-code)    │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Context around the  │                     │       │           │          │ │
-│ │ change              │                     │       │           │          │ │
-│ │ (mechanically       │                     │       │           │          │ │
-│ │ extracted):         │                     │       │           │          │ │
-│ │ Changed             │                     │       │           │          │ │
-│ │ definitions:        │                     │       │           │          │ │
-│ │ src/structlog/stdl… │                     │       │           │          │ │
-│ │ Recent history of   │                     │       │           │          │ │
-│ │ src/structlog/stdl… │                     │       │           │          │ │
-│ │   ab23bbe           │                     │       │           │          │ │
-│ │ 2025-01-12 Add      │                     │       │           │          │ │
-│ │ 'structlog.stdlib.… │                     │       │           │          │ │
-│ │ processor (#668)    │                     │       │           │          │ │
-│ │   a60ce7b           │                     │       │           │          │ │
-│ │ 2024-12-03 Update   │                     │       │           │          │ │
-│ │ Ruff                │                     │       │           │          │ │
-│ │   a022e06           │                     │       │           │          │ │
-│ │ 2024-11-10 Use real │                     │       │           │          │ │
-│ │ methods for         │                     │       │           │          │ │
-│ │ fatal/warn (#670)   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Diff:               │                     │       │           │          │ │
-│ │ ```diff             │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/src/structlog/st… │                     │       │           │          │ │
-│ │ b/src/structlog/st… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 282bf7c..b43f243    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/src/structlog/st… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/src/structlog/st… │                     │       │           │          │ │
-│ │ @@ -76,6 +76,7 @@   │                     │       │           │          │ │
-│ │ def                 │                     │       │           │          │ │
-│ │ recreate_defaults(… │                     │       │           │          │ │
-│ │ log_level: int |    │                     │       │           │          │ │
-│ │ None =              │                     │       │           │          │ │
-│ │ logging.NOTSET) ->  │                     │       │           │          │ │
-│ │ None:               │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      ..             │                     │       │           │          │ │
-│ │ versionadded::      │                     │       │           │          │ │
-│ │ 22.1.0              │                     │       │           │          │ │
-│ │      ..             │                     │       │           │          │ │
-│ │ versionchanged::    │                     │       │           │          │ │
-│ │ 23.3.0 Added        │                     │       │           │          │ │
-│ │ `add_logger_name`.  │                     │       │           │          │ │
-│ │ +    ..             │                     │       │           │          │ │
-│ │ versionchanged::    │                     │       │           │          │ │
-│ │ 25.1.0 Added        │                     │       │           │          │ │
-│ │ `PositionalArgumen… │                     │       │           │          │ │
-│ │      """            │                     │       │           │          │ │
-│ │      if log_level   │                     │       │           │          │ │
-│ │ is not None:        │                     │       │           │          │ │
-│ │          kw =       │                     │       │           │          │ │
-│ │ {"force": True}     │                     │       │           │          │ │
-│ │ @@ -90,6 +91,7 @@   │                     │       │           │          │ │
-│ │ def                 │                     │       │           │          │ │
-│ │ recreate_defaults(… │                     │       │           │          │ │
-│ │ log_level: int |    │                     │       │           │          │ │
-│ │ None =              │                     │       │           │          │ │
-│ │ logging.NOTSET) ->  │                     │       │           │          │ │
-│ │ None:               │                     │       │           │          │ │
-│ │      _config.reset… │                     │       │           │          │ │
-│ │      _config.confi… │                     │       │           │          │ │
-│ │          processor… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ PositionalArgument… │                     │       │           │          │ │
-│ │ # handled by native │                     │       │           │          │ │
-│ │ loggers             │                     │       │           │          │ │
-│ │              merge… │                     │       │           │          │ │
-│ │              add_l… │                     │       │           │          │ │
-│ │              add_l… │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
 │ │ ```                 │                     │       │           │          │ │
 │ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
