@@ -13,7 +13,7 @@ mkdir -p runs
   echo "tmux_ft_alive: $(tmux has-session -t ft 2>/dev/null && echo yes || echo no)"
   nvidia-smi --query-gpu=name,memory.used,memory.total,utilization.gpu --format=csv,noheader 2>/dev/null | sed 's/^/gpu: /'
   echo "---- last 25 log lines"
-  tail -n 25 "runs/${PHASE}.log" 2>/dev/null
+  tail -n 25 "$(ls -t runs/${PHASE}*.log 2>/dev/null | head -1)" 2>/dev/null   # newest phase log (phase3_v2.log etc.)
 } > runs/STATUS.txt
 # keep train.log tails small; full logs stay on the pod
 for f in runs/*/train.log; do [ -f "$f" ] && tail -n 400 "$f" > "${f%.log}.tail.log"; done
@@ -22,7 +22,7 @@ for f in runs/*/train.log; do [ -f "$f" ] && tail -n 400 "$f" > "${f%.log}.tail.
 export GIT_INDEX_FILE=/workspace/.results-index
 rm -f "$GIT_INDEX_FILE"
 git add -f pod/versions.lock 2>/dev/null
-find runs -type f -not -path "*/checkpoint-*" \( -name '*.json' -o -name '*.png' -o -name '*.yaml' -o -name '*.tail.log' -o -name 'STATUS.txt' -o -name "${PHASE}.log" \) -size -5M -print0 \
+find runs -type f -not -path "*/checkpoint-*" \( -name '*.json' -o -name '*.png' -o -name '*.yaml' -o -name '*.tail.log' -o -name 'STATUS.txt' -o -name "${PHASE}*.log" \) -size -5M -print0 \
   | xargs -0 git add -f 2>/dev/null
 TREE=$(git write-tree)
 PARENT=$(git rev-parse -q --verify "refs/remotes/origin/${BR}" 2>/dev/null || true)
