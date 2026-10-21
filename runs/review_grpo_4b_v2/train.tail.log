@@ -1,400 +1,400 @@
-│ │ to be of type      │                    │       │           │            │ │
-│ │ `Literal`',        │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ code='discriminat… │                    │       │           │            │ │
-│ │ -            )     │                    │       │           │            │ │
-│ │ +        match     │                    │       │           │            │ │
-│ │ schema:            │                    │       │           │            │ │
-│ │ +            case  │                    │       │           │            │ │
-│ │ {'type':           │                    │       │           │            │ │
-│ │ 'literal',         │                    │       │           │            │ │
-│ │ 'expected':        │                    │       │           │            │ │
-│ │ expected}:         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ return expected    │                    │       │           │            │ │
-│ │ +            case  │                    │       │           │            │ │
-│ │ {'type': 'none'}:  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ return [None]      │                    │       │           │            │ │
-│ │ +            case  │                    │       │           │            │ │
-│ │ {'type': 'union',  │                    │       │           │            │ │
-│ │ 'choices':         │                    │       │           │            │ │
-│ │ choices}:          │                    │       │           │            │ │
-│ │ +                # │                    │       │           │            │ │
-│ │ Generally when     │                    │       │           │            │ │
-│ │ multiple values    │                    │       │           │            │ │
-│ │ are allowed they   │                    │       │           │            │ │
-│ │ should be placed   │                    │       │           │            │ │
-│ │ in a single        │                    │       │           │            │ │
-│ │ `Literal`, but     │                    │       │           │            │ │
-│ │ +                # │                    │       │           │            │ │
-│ │ we add this case   │                    │       │           │            │ │
-│ │ to handle the      │                    │       │           │            │ │
-│ │ situation where a  │                    │       │           │            │ │
-│ │ field is annotated │                    │       │           │            │ │
-│ │ as a `Union` of    │                    │       │           │            │ │
-│ │ `Literal`s.        │                    │       │           │            │ │
-│ │ +                # │                    │       │           │            │ │
-│ │ For example, this  │                    │       │           │            │ │
-│ │ lets us handle     │                    │       │           │            │ │
-│ │ `Union[Literal['k… │                    │       │           │            │ │
-│ │ Union[Literal['Ke… │                    │       │           │            │ │
-│ │ Literal['KEY']]]`  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ values: list[Any]  │                    │       │           │            │ │
-│ │ = []               │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ for choice in      │                    │       │           │            │ │
-│ │ choices:           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ choice_schema =    │                    │       │           │            │ │
-│ │ choice[0] if       │                    │       │           │            │ │
-│ │ isinstance(choice, │                    │       │           │            │ │
-│ │ tuple) else choice │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ choice_values =    │                    │       │           │            │ │
-│ │ self._infer_discr… │                    │       │           │            │ │
-│ │ source)            │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ values.extend(cho… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ return values      │                    │       │           │            │ │
-│ │ +            case  │                    │       │           │            │ │
-│ │ {'type':           │                    │       │           │            │ │
-│ │ 'default',         │                    │       │           │            │ │
-│ │ 'schema':          │                    │       │           │            │ │
-│ │ inner_schema}:     │                    │       │           │            │ │
-│ │ +                # │                    │       │           │            │ │
-│ │ This will happen   │                    │       │           │            │ │
-│ │ if the field has a │                    │       │           │            │ │
-│ │ default value; we  │                    │       │           │            │ │
-│ │ ignore it while    │                    │       │           │            │ │
-│ │ extracting the     │                    │       │           │            │ │
-│ │ discriminator      │                    │       │           │            │ │
-│ │ values             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ return             │                    │       │           │            │ │
-│ │ self._infer_discr… │                    │       │           │            │ │
-│ │ source)            │                    │       │           │            │ │
-│ │ +            case  │                    │       │           │            │ │
-│ │ {'type':           │                    │       │           │            │ │
-│ │ 'function-after',  │                    │       │           │            │ │
-│ │ 'schema':          │                    │       │           │            │ │
-│ │ inner_schema}:     │                    │       │           │            │ │
-│ │ +                # │                    │       │           │            │ │
-│ │ After validators   │                    │       │           │            │ │
-│ │ don't affect the   │                    │       │           │            │ │
-│ │ discriminator      │                    │       │           │            │ │
-│ │ values             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ return             │                    │       │           │            │ │
-│ │ self._infer_discr… │                    │       │           │            │ │
-│ │ source)            │                    │       │           │            │ │
-│ │ +            case  │                    │       │           │            │ │
-│ │ {'type': 'model',  │                    │       │           │            │ │
-│ │ 'root_model':      │                    │       │           │            │ │
-│ │ True, 'schema':    │                    │       │           │            │ │
-│ │ inner_schema}:     │                    │       │           │            │ │
-│ │ +                # │                    │       │           │            │ │
-│ │ Support            │                    │       │           │            │ │
-│ │ RootModel[Literal… │                    │       │           │            │ │
-│ │ as discriminator   │                    │       │           │            │ │
-│ │ field type         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ return             │                    │       │           │            │ │
-│ │ self._infer_discr… │                    │       │           │            │ │
-│ │ source)            │                    │       │           │            │ │
-│ │ +            case  │                    │       │           │            │ │
-│ │ {'type':           │                    │       │           │            │ │
-│ │ 'function-before'  │                    │       │           │            │ │
-│ │ | 'function-wrap'  │                    │       │           │            │ │
-│ │ | 'function-plain' │                    │       │           │            │ │
-│ │ as schema_type}:   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ validator_type =   │                    │       │           │            │ │
-│ │ repr(schema_type.… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ raise              │                    │       │           │            │ │
-│ │ PydanticUserError( │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ f'Cannot use a     │                    │       │           │            │ │
-│ │ mode={validator_t… │                    │       │           │            │ │
-│ │ validator in the'  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ f' discriminator   │                    │       │           │            │ │
-│ │ field              │                    │       │           │            │ │
-│ │ {self.discriminat… │                    │       │           │            │ │
-│ │ of {source}',      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ code='discriminat… │                    │       │           │            │ │
-│ │ +                ) │                    │       │           │            │ │
-│ │ +            case  │                    │       │           │            │ │
-│ │ _:                 │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ raise              │                    │       │           │            │ │
-│ │ PydanticUserError( │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ f'{source} needs   │                    │       │           │            │ │
-│ │ field              │                    │       │           │            │ │
-│ │ {self.discriminat… │                    │       │           │            │ │
-│ │ to be of type      │                    │       │           │            │ │
-│ │ `Literal`',        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ code='discriminat… │                    │       │           │            │ │
-│ │ +                ) │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -    def           │                    │       │           │            │ │
-│ │ _set_unique_choic… │                    │       │           │            │ │
-│ │ choice:            │                    │       │           │            │ │
-│ │ core_schema.CoreS… │                    │       │           │            │ │
-│ │ values:            │                    │       │           │            │ │
-│ │ Sequence[str |     │                    │       │           │            │ │
-│ │ int]) -> None:     │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ _set_unique_choic… │                    │       │           │            │ │
-│ │ choice:            │                    │       │           │            │ │
-│ │ core_schema.CoreS… │                    │       │           │            │ │
-│ │ values: list[Any]) │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │          """This   │                    │       │           │            │ │
-│ │ method updates     │                    │       │           │            │ │
-│ │ `self.tagged_unio… │                    │       │           │            │ │
-│ │ so that all        │                    │       │           │            │ │
-│ │ provided           │                    │       │           │            │ │
-│ │ (discriminator)    │                    │       │           │            │ │
-│ │ `values` map to    │                    │       │           │            │ │
-│ │ the                │                    │       │           │            │ │
-│ │          provided  │                    │       │           │            │ │
-│ │ `choice`,          │                    │       │           │            │ │
-│ │ validating that    │                    │       │           │            │ │
-│ │ none of these      │                    │       │           │            │ │
-│ │ values already map │                    │       │           │            │ │
-│ │ to another         │                    │       │           │            │ │
-│ │ (different)        │                    │       │           │            │ │
-│ │ choice.            │                    │       │           │            │ │
-│ │          """       │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/pydantic/json_s… │                    │       │           │            │ │
-│ │ b/pydantic/json_s… │                    │       │           │            │ │
+│ │ a/src/structlog/d… │                    │       │           │            │ │
+│ │ b/src/structlog/d… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ c61378a5..c2183e19 │                    │       │           │            │ │
+│ │ f49b38a..974486f   │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/pydantic/json_s… │                    │       │           │            │ │
+│ │ a/src/structlog/d… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/pydantic/json_s… │                    │       │           │            │ │
-│ │ @@ -1384,6 +1384,8 │                    │       │           │            │ │
+│ │ b/src/structlog/d… │                    │       │           │            │ │
+│ │ @@ -567,7 +567,7   │                    │       │           │            │ │
 │ │ @@ class           │                    │       │           │            │ │
-│ │ GenerateJsonSchem… │                    │       │           │            │ │
-│ │                  # │                    │       │           │            │ │
-│ │ Use the JSON       │                    │       │           │            │ │
-│ │ representation so  │                    │       │           │            │ │
-│ │ that the           │                    │       │           │            │ │
-│ │ discriminator      │                    │       │           │            │ │
-│ │ mapping            │                    │       │           │            │ │
-│ │                  # │                    │       │           │            │ │
-│ │ can be matched     │                    │       │           │            │ │
-│ │ against the        │                    │       │           │            │ │
-│ │ serialized payload │                    │       │           │            │ │
-│ │ value              │                    │       │           │            │ │
-│ │                  k │                    │       │           │            │ │
-│ │ = 'true' if k else │                    │       │           │            │ │
-│ │ 'false'            │                    │       │           │            │ │
-│ │ +            elif  │                    │       │           │            │ │
-│ │ k is None:         │                    │       │           │            │ │
-│ │ +                k │                    │       │           │            │ │
-│ │ = 'null'           │                    │       │           │            │ │
-│ │              try:  │                    │       │           │            │ │
-│ │                  # │                    │       │           │            │ │
-│ │ Use str(k) since   │                    │       │           │            │ │
-│ │ keys must be       │                    │       │           │            │ │
-│ │ strings for json;  │                    │       │           │            │ │
-│ │ while not          │                    │       │           │            │ │
-│ │ technically        │                    │       │           │            │ │
-│ │ correct,           │                    │       │           │            │ │
-│ │                  # │                    │       │           │            │ │
-│ │ it's the closest   │                    │       │           │            │ │
-│ │ that can be        │                    │       │           │            │ │
-│ │ represented in     │                    │       │           │            │ │
-│ │ valid JSON         │                    │       │           │            │ │
+│ │ ConsoleRenderer:   │                    │       │           │            │ │
+│ │      ..            │                    │       │           │            │ │
+│ │ versionadded::     │                    │       │           │            │ │
+│ │ 24.2.0 *pad_level* │                    │       │           │            │ │
+│ │      """           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    def __init__( │                    │       │           │            │ │
+│ │ # noqa: PLR0912,   │                    │       │           │            │ │
+│ │ PLR0915            │                    │       │           │            │ │
+│ │ +    def __init__( │                    │       │           │            │ │
+│ │          self,     │                    │       │           │            │ │
+│ │          pad_even… │                    │       │           │            │ │
+│ │ int =              │                    │       │           │            │ │
+│ │ _EVENT_WIDTH,      │                    │       │           │            │ │
+│ │          colors:   │                    │       │           │            │ │
+│ │ bool =             │                    │       │           │            │ │
+│ │ _has_colors,       │                    │       │           │            │ │
+│ │ @@ -630,29 +630,7  │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ ConsoleRenderer:   │                    │       │           │            │ │
+│ │              retu… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          # Create  │                    │       │           │            │ │
+│ │ default columns    │                    │       │           │            │ │
+│ │ configuration.     │                    │       │           │            │ │
+│ │ -        styles:   │                    │       │           │            │ │
+│ │ Styles             │                    │       │           │            │ │
+│ │ -        if        │                    │       │           │            │ │
+│ │ colors:            │                    │       │           │            │ │
+│ │ -            if    │                    │       │           │            │ │
+│ │ _IS_WINDOWS:  #    │                    │       │           │            │ │
+│ │ pragma: no cover   │                    │       │           │            │ │
+│ │ -                # │                    │       │           │            │ │
+│ │ On Windows, we     │                    │       │           │            │ │
+│ │ can't do colorful  │                    │       │           │            │ │
+│ │ output without     │                    │       │           │            │ │
+│ │ colorama.          │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ if colorama is     │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ classname =        │                    │       │           │            │ │
+│ │ self.__class__.__… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ raise SystemError( │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ _MISSING.format(   │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ who=classname + "  │                    │       │           │            │ │
+│ │ with               │                    │       │           │            │ │
+│ │ `colors=True`",    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ package="colorama… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ )                  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ )                  │                    │       │           │            │ │
+│ │ -                # │                    │       │           │            │ │
+│ │ Colorama must be   │                    │       │           │            │ │
+│ │ init'd on Windows, │                    │       │           │            │ │
+│ │ but must NOT be    │                    │       │           │            │ │
+│ │ -                # │                    │       │           │            │ │
+│ │ init'd on other    │                    │       │           │            │ │
+│ │ OSes, because it   │                    │       │           │            │ │
+│ │ can break colors.  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ if force_colors:   │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ colorama.deinit()  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ colorama.init(str… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ colorama.init()    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ styles =           │                    │       │           │            │ │
+│ │ _ColorfulStyles    │                    │       │           │            │ │
+│ │ -        else:     │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ styles =           │                    │       │           │            │ │
+│ │ _PlainStyles       │                    │       │           │            │ │
+│ │ +        styles =  │                    │       │           │            │ │
+│ │ self.get_default_… │                    │       │           │            │ │
+│ │ force_colors)      │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          self._st… │                    │       │           │            │ │
+│ │ = styles           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ @@ -719,6 +697,53  │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ ConsoleRenderer:   │                    │       │           │            │ │
+│ │              Colu… │                    │       │           │            │ │
+│ │ logger_name_forma… │                    │       │           │            │ │
+│ │          ]         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +    @classmethod  │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ get_default_colum… │                    │       │           │            │ │
+│ │ +        cls,      │                    │       │           │            │ │
+│ │ colors: bool =     │                    │       │           │            │ │
+│ │ _has_colors,       │                    │       │           │            │ │
+│ │ force_colors: bool │                    │       │           │            │ │
+│ │ = False            │                    │       │           │            │ │
+│ │ +    ) -> Styles:  │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        Configure │                    │       │           │            │ │
+│ │ and return the     │                    │       │           │            │ │
+│ │ appropriate styles │                    │       │           │            │ │
+│ │ class for console  │                    │       │           │            │ │
+│ │ output.            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        This      │                    │       │           │            │ │
+│ │ method handles the │                    │       │           │            │ │
+│ │ setup of colorful  │                    │       │           │            │ │
+│ │ or plain styles,   │                    │       │           │            │ │
+│ │ including          │                    │       │           │            │ │
+│ │ +        proper    │                    │       │           │            │ │
+│ │ colorama           │                    │       │           │            │ │
+│ │ initialization on  │                    │       │           │            │ │
+│ │ Windows systems    │                    │       │           │            │ │
+│ │ when colors are    │                    │       │           │            │ │
+│ │ enabled.           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        Args:     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colors: Whether to │                    │       │           │            │ │
+│ │ use colorful       │                    │       │           │            │ │
+│ │ output styles.     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ force_colors:      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Force colorful     │                    │       │           │            │ │
+│ │ output even in     │                    │       │           │            │ │
+│ │ non-interactive    │                    │       │           │            │ │
+│ │ environments.      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Only relevant on   │                    │       │           │            │ │
+│ │ Windows with       │                    │       │           │            │ │
+│ │ colorama.          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        Returns:  │                    │       │           │            │ │
+│ │ +            The   │                    │       │           │            │ │
+│ │ configured styles  │                    │       │           │            │ │
+│ │ class              │                    │       │           │            │ │
+│ │ (_ColorfulStyles   │                    │       │           │            │ │
+│ │ or _PlainStyles).  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        Raises:   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ SystemError: On    │                    │       │           │            │ │
+│ │ Windows when       │                    │       │           │            │ │
+│ │ colors=True but    │                    │       │           │            │ │
+│ │ colorama is not    │                    │       │           │            │ │
+│ │ installed.         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        ..        │                    │       │           │            │ │
+│ │ versionadded::     │                    │       │           │            │ │
+│ │ 25.5.0             │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        if not    │                    │       │           │            │ │
+│ │ colors:            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ return             │                    │       │           │            │ │
+│ │ _PlainStyles       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        if        │                    │       │           │            │ │
+│ │ _IS_WINDOWS:  #    │                    │       │           │            │ │
+│ │ pragma: no cover   │                    │       │           │            │ │
+│ │ +            # On  │                    │       │           │            │ │
+│ │ Windows, we can't  │                    │       │           │            │ │
+│ │ do colorful output │                    │       │           │            │ │
+│ │ without colorama.  │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ colorama is None:  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ raise SystemError( │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ _MISSING.format(   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ who=cls.__name__ + │                    │       │           │            │ │
+│ │ " with             │                    │       │           │            │ │
+│ │ `colors=True`",    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ package="colorama… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ )                  │                    │       │           │            │ │
+│ │ +                ) │                    │       │           │            │ │
+│ │ +            #     │                    │       │           │            │ │
+│ │ Colorama must be   │                    │       │           │            │ │
+│ │ init'd on Windows, │                    │       │           │            │ │
+│ │ but must NOT be    │                    │       │           │            │ │
+│ │ +            #     │                    │       │           │            │ │
+│ │ init'd on other    │                    │       │           │            │ │
+│ │ OSes, because it   │                    │       │           │            │ │
+│ │ can break colors.  │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ not force_colors:  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colorama.deinit()  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colorama.init(str… │                    │       │           │            │ │
+│ │ +            else: │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colorama.init()    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ _ColorfulStyles    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ _repr(self, val:   │                    │       │           │            │ │
+│ │ Any) -> str:       │                    │       │           │            │ │
+│ │          """       │                    │       │           │            │ │
+│ │          Determine │                    │       │           │            │ │
+│ │ representation of  │                    │       │           │            │ │
+│ │ *val* depending on │                    │       │           │            │ │
+│ │ its type &         │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_json… │                    │       │           │            │ │
-│ │ b/tests/test_json… │                    │       │           │            │ │
+│ │ a/tests/test_dev.… │                    │       │           │            │ │
+│ │ b/tests/test_dev.… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ 2d67f01a..9cca3292 │                    │       │           │            │ │
+│ │ 58020d8..05da67d   │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_json… │                    │       │           │            │ │
+│ │ a/tests/test_dev.… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_json… │                    │       │           │            │ │
-│ │ @@ -3986,40        │                    │       │           │            │ │
-│ │ +3986,36 @@ def    │                    │       │           │            │ │
-│ │ test_bool_discrim… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │      class         │                    │       │           │            │ │
-│ │ Model(BaseModel):  │                    │       │           │            │ │
-│ │          setting:  │                    │       │           │            │ │
-│ │ Enabled | Disabled │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ Field(discriminat… │                    │       │           │            │ │
+│ │ b/tests/test_dev.… │                    │       │           │            │ │
+│ │ @@ -175,6 +175,64  │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ TestConsoleRender… │                    │       │           │            │ │
+│ │              +     │                    │       │           │            │ │
+│ │ styles.reset       │                    │       │           │            │ │
+│ │          ) == rv   │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │ -    assert        │                    │       │           │            │ │
-│ │ Model.model_json_… │                    │       │           │            │ │
-│ │ == {               │                    │       │           │            │ │
-│ │ -        '$defs':  │                    │       │           │            │ │
-│ │ {                  │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'Disabled': {      │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'properties':      │                    │       │           │            │ │
-│ │ {'enabled':        │                    │       │           │            │ │
-│ │ {'const': False,   │                    │       │           │            │ │
-│ │ 'title':           │                    │       │           │            │ │
-│ │ 'Enabled', 'type': │                    │       │           │            │ │
-│ │ 'boolean'}},       │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'required':        │                    │       │           │            │ │
-│ │ ['enabled'],       │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'title':           │                    │       │           │            │ │
-│ │ 'Disabled',        │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'type': 'object',  │                    │       │           │            │ │
-│ │ -            },    │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'Enabled': {       │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'properties': {    │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'config':          │                    │       │           │            │ │
-│ │ {'title':          │                    │       │           │            │ │
-│ │ 'Config', 'type':  │                    │       │           │            │ │
-│ │ 'string'},         │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'enabled':         │                    │       │           │            │ │
-│ │ {'const': True,    │                    │       │           │            │ │
-│ │ 'title':           │                    │       │           │            │ │
-│ │ 'Enabled', 'type': │                    │       │           │            │ │
-│ │ 'boolean'},        │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ },                 │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'required':        │                    │       │           │            │ │
-│ │ ['enabled',        │                    │       │           │            │ │
-│ │ 'config'],         │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'title':           │                    │       │           │            │ │
-│ │ 'Enabled',         │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'type': 'object',  │                    │       │           │            │ │
-│ │ -            },    │                    │       │           │            │ │
-│ │ -        },        │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'properties': {    │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'setting': {       │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'discriminator': { │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'mapping':         │                    │       │           │            │ │
-│ │ {'false':          │                    │       │           │            │ │
-│ │ '#/$defs/Disabled… │                    │       │           │            │ │
-│ │ 'true':            │                    │       │           │            │ │
-│ │ '#/$defs/Enabled'… │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'propertyName':    │                    │       │           │            │ │
-│ │ 'enabled',         │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ },                 │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'oneOf': [{'$ref': │                    │       │           │            │ │
-│ │ '#/$defs/Enabled'… │                    │       │           │            │ │
-│ │ {'$ref':           │                    │       │           │            │ │
-│ │ '#/$defs/Disabled… │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'title':           │                    │       │           │            │ │
-│ │ 'Setting',         │                    │       │           │            │ │
-│ │ -            }     │                    │       │           │            │ │
-│ │ -        },        │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ 'required':        │                    │       │           │            │ │
-│ │ ['setting'],       │                    │       │           │            │ │
-│ │ -        'title':  │                    │       │           │            │ │
-│ │ 'Model',           │                    │       │           │            │ │
-│ │ -        'type':   │                    │       │           │            │ │
-│ │ 'object',          │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ Model.model_json_… │                    │       │           │            │ │
-│ │ == {               │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_returns_colo… │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        When      │                    │       │           │            │ │
+│ │ colors=True,       │                    │       │           │            │ │
+│ │ returns            │                    │       │           │            │ │
+│ │ _ColorfulStyles    │                    │       │           │            │ │
+│ │ class.             │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        styles =  │                    │       │           │            │ │
+│ │ dev.ConsoleRender… │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ 'mapping':         │                    │       │           │            │ │
-│ │ {'false':          │                    │       │           │            │ │
-│ │ '#/$defs/Disabled… │                    │       │           │            │ │
-│ │ 'true':            │                    │       │           │            │ │
-│ │ '#/$defs/Enabled'… │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles is          │                    │       │           │            │ │
+│ │ dev._ColorfulStyl… │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "reset")           │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "bright")          │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "level_critical")  │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "kv_key")          │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "kv_value")        │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ 'propertyName':    │                    │       │           │            │ │
-│ │ 'enabled',         │                    │       │           │            │ │
-│ │      }             │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_none_discrim… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_returns_plai… │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        When      │                    │       │           │            │ │
+│ │ colors=False,      │                    │       │           │            │ │
+│ │ returns            │                    │       │           │            │ │
+│ │ _PlainStyles       │                    │       │           │            │ │
+│ │ class.             │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        styles =  │                    │       │           │            │ │
+│ │ dev.ConsoleRender… │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ """https://github… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    class         │                    │       │           │            │ │
-│ │ A(BaseModel):      │                    │       │           │            │ │
-│ │ +        field:    │                    │       │           │            │ │
-│ │ Literal['A'] = 'A' │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    class         │                    │       │           │            │ │
-│ │ B(BaseModel):      │                    │       │           │            │ │
-│ │ +        field:    │                    │       │           │            │ │
-│ │ None = None        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    class         │                    │       │           │            │ │
-│ │ Model(BaseModel):  │                    │       │           │            │ │
-│ │ +        a_or_b:   │                    │       │           │            │ │
-│ │ Annotated[A | B,   │                    │       │           │            │ │
-│ │ Field(discriminat… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ Model.model_json_… │                    │       │           │            │ │
-│ │ == {               │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ 'mapping': {'A':   │                    │       │           │            │ │
-│ │ '#/$defs/A',       │                    │       │           │            │ │
-│ │ 'null':            │                    │       │           │            │ │
-│ │ '#/$defs/B'},      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ 'propertyName':    │                    │       │           │            │ │
-│ │ 'field',           │                    │       │           │            │ │
-│ │ +    }             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    m =           │                    │       │           │            │ │
-│ │ Model.model_valid… │                    │       │           │            │ │
-│ │ {'field': None}})  │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ isinstance(m.a_or… │                    │       │           │            │ │
-│ │ B)                 │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    m2 =          │                    │       │           │            │ │
-│ │ Model.model_valid… │                    │       │           │            │ │
-│ │ {'field': 'A'}})   │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ isinstance(m2.a_o… │                    │       │           │            │ │
-│ │ A)                 │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles is          │                    │       │           │            │ │
+│ │ dev._PlainStyles   │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.reset == "" │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.bright ==   │                    │       │           │            │ │
+│ │ ""                 │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.level_crit… │                    │       │           │            │ │
+│ │ == ""              │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.kv_key ==   │                    │       │           │            │ │
+│ │ ""                 │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.kv_value == │                    │       │           │            │ │
+│ │ ""                 │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_nested_discr… │                    │       │           │            │ │
-│ │      class         │                    │       │           │            │ │
-│ │ BlackCatWithHeigh… │                    │       │           │            │ │
-│ │          color:    │                    │       │           │            │ │
-│ │ Literal['black']   │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
+│ │ @pytest.mark.skip… │                    │       │           │            │ │
+│ │ +        not       │                    │       │           │            │ │
+│ │ dev._IS_WINDOWS or │                    │       │           │            │ │
+│ │ dev.colorama is    │                    │       │           │            │ │
+│ │ not None,          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ reason="Only       │                    │       │           │            │ │
+│ │ relevant on        │                    │       │           │            │ │
+│ │ Windows without    │                    │       │           │            │ │
+│ │ colorama",         │                    │       │           │            │ │
+│ │ +    )             │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_raises_syste… │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        On        │                    │       │           │            │ │
+│ │ Windows without    │                    │       │           │            │ │
+│ │ colorama, raises   │                    │       │           │            │ │
+│ │ SystemError when   │                    │       │           │            │ │
+│ │ colors=True.       │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        with      │                    │       │           │            │ │
+│ │ pytest.raises(Sys… │                    │       │           │            │ │
+│ │ match="requires    │                    │       │           │            │ │
+│ │ the colorama       │                    │       │           │            │ │
+│ │ package"):         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ dev.ConsoleRender… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ @pytest.mark.skip… │                    │       │           │            │ │
+│ │ +        not       │                    │       │           │            │ │
+│ │ dev._IS_WINDOWS or │                    │       │           │            │ │
+│ │ dev.colorama is    │                    │       │           │            │ │
+│ │ None,              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ reason="Only       │                    │       │           │            │ │
+│ │ relevant on        │                    │       │           │            │ │
+│ │ Windows with       │                    │       │           │            │ │
+│ │ colorama",         │                    │       │           │            │ │
+│ │ +    )             │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_initializes_… │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        On        │                    │       │           │            │ │
+│ │ Windows with       │                    │       │           │            │ │
+│ │ colorama,          │                    │       │           │            │ │
+│ │ force_colors=True  │                    │       │           │            │ │
+│ │ reinitializes      │                    │       │           │            │ │
+│ │ colorama.          │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        with      │                    │       │           │            │ │
+│ │ mock.patch.object( │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ dev.colorama,      │                    │       │           │            │ │
+│ │ "init"             │                    │       │           │            │ │
+│ │ +        ) as      │                    │       │           │            │ │
+│ │ mock_init,         │                    │       │           │            │ │
+│ │ mock.patch.object( │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ dev.colorama,      │                    │       │           │            │ │
+│ │ "deinit"           │                    │       │           │            │ │
+│ │ +        ) as      │                    │       │           │            │ │
+│ │ mock_deinit:       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ styles =           │                    │       │           │            │ │
+│ │ dev.ConsoleRender… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colors=True,       │                    │       │           │            │ │
+│ │ force_colors=True  │                    │       │           │            │ │
+│ │ +            )     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ assert styles is   │                    │       │           │            │ │
+│ │ dev._ColorfulStyl… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ mock_deinit.asser… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ mock_init.assert_… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ test_logger_name(… │                    │       │           │            │ │
+│ │ cr, styles,        │                    │       │           │            │ │
+│ │ padded):           │                    │       │           │            │ │
+│ │          """       │                    │       │           │            │ │
+│ │          Logger    │                    │       │           │            │ │
+│ │ names are appended │                    │       │           │            │ │
+│ │ after the event.   │                    │       │           │            │ │
 │ │ ```                │                    │       │           │            │ │
 │ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
