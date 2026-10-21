@@ -24,12 +24,14 @@ from review.agent.run import SYSTEM, build_prompt, call_anthropic, parse_review
 
 # Asking for the text inside <think> tags made the API refuse every call (stop_reason=refusal, 128/128):
 # it reads as reasoning-tag injection. Ask for <rationale>, convert to Qwen3's <think> locally.
-ASK = ("\n\nBefore the JSON, write your reasoning inside <rationale> and </rationale>: at most 150 words, naming the "
-       "specific changed line(s) you judged and why they are correct or defective. Then the JSON object.")
+ASK = ("\n\nFirst, inside <rationale> and </rationale>, explain in at most 150 words which changed line(s) you "
+       "judged and why they are correct or defective. Then output the JSON object.")
 _THINK = re.compile(r"<rationale>(.*?)</rationale>", re.S)
 
 
 def main():
+    import os
+    os.environ.setdefault("REVIEW_THINKING_BUDGET", "0")   # visible rationale is the point; hidden thinking ate the token budget and drew refusals
     ap = argparse.ArgumentParser()
     ap.add_argument("--tasks", default="review/bench/public_train.jsonl")
     ap.add_argument("--model", default="claude-sonnet-5-5")
@@ -37,7 +39,7 @@ def main():
     ap.add_argument("--raw", default="review/agent/results/rationales_train.jsonl", help="every teacher reply, for the record")
     ap.add_argument("--balance", action="store_true")
     ap.add_argument("--workers", type=int, default=6)
-    ap.add_argument("--max-tokens", type=int, default=1500)
+    ap.add_argument("--max-tokens", type=int, default=2500)
     a = ap.parse_args()
     tasks = [json.loads(l) for l in Path(a.tasks).read_text().splitlines() if l.strip()]
     done = {}
@@ -69,7 +71,7 @@ def main():
     for r in rows:
         t = by_id[r["task_id"]]
         m = _THINK.search(r["raw"])
-        review, ok = parse_review(r["raw"], (0, 0), 0.0)
+        review, ok = parse_review(_THINK.sub("", r["raw"]), (0, 0), 0.0)   # braces in the prose break the JSON match
         if not ok or not m:
             stats["unparsable_or_no_rationale"] += 1; continue
         correct = (t["kind"] == "bug" and review.decision == "block") or (t["kind"] == "clean" and review.decision == "approve")
