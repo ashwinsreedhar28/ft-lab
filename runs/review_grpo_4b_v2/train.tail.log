@@ -1,400 +1,400 @@
-│ │      def __exit__( │                    │       │           │            │ │
-│ │ @@ -342,8 +352,13  │                    │       │           │            │ │
-│ │ @@ def echo(       │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ get_binary_stream… │                    │       │           │            │ │
-│ │ t.Literal["stdin", │                    │       │           │            │ │
-│ │ "stdout",          │                    │       │           │            │ │
-│ │ "stderr"]) ->      │                    │       │           │            │ │
-│ │ t.BinaryIO:        │                    │       │           │            │ │
-│ │      """Returns a  │                    │       │           │            │ │
-│ │ system stream for  │                    │       │           │            │ │
-│ │ byte processing.   │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +    ..            │                    │       │           │            │ │
-│ │ deprecated:: 8.5   │                    │       │           │            │ │
-│ │ +        Will be   │                    │       │           │            │ │
-│ │ removed in Click   │                    │       │           │            │ │
-│ │ 9.0.               │                    │       │           │            │ │
+│ │ -        type_ref  │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ get_type_ref(orig… │                    │       │           │            │ │
+│ │ args_override=arg… │                    │       │           │            │ │
+│ │ +        type_ref  │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ _type_refs.model_… │                    │       │           │            │ │
+│ │ args_override=arg… │                    │       │           │            │ │
+│ │          if        │                    │       │           │            │ │
+│ │ type_ref in        │                    │       │           │            │ │
+│ │ previously_seen_t… │                    │       │           │            │ │
+│ │              self… │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ PydanticRecursive… │                    │       │           │            │ │
+│ │              yield │                    │       │           │            │ │
+│ │ self_type          │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/pydantic/_inter… │                    │       │           │            │ │
+│ │ b/pydantic/_inter… │                    │       │           │            │ │
+│ │ new file mode      │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 00000000..df8b65c5 │                    │       │           │            │ │
+│ │ --- /dev/null      │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/pydantic/_inter… │                    │       │           │            │ │
+│ │ @@ -0,0 +1,128 @@  │                    │       │           │            │ │
+│ │ +"""Logic related  │                    │       │           │            │ │
+│ │ to reference       │                    │       │           │            │ │
+│ │ computation for    │                    │       │           │            │ │
+│ │ types."""          │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │      :param name:  │                    │       │           │            │ │
-│ │ the name of the    │                    │       │           │            │ │
-│ │ stream to open.    │                    │       │           │            │ │
-│ │ Valid names are    │                    │       │           │            │ │
-│ │ ``'stdin'``,       │                    │       │           │            │ │
-│ │                  … │                    │       │           │            │ │
-│ │ and ``'stderr'``   │                    │       │           │            │ │
+│ │ +from __future__   │                    │       │           │            │ │
+│ │ import annotations │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ +    :meta         │                    │       │           │            │ │
-│ │ private:           │                    │       │           │            │ │
-│ │      """           │                    │       │           │            │ │
-│ │      opener =      │                    │       │           │            │ │
-│ │ binary_streams.ge… │                    │       │           │            │ │
-│ │      if opener is  │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ @@ -356,11 +371,16 │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ get_text_stream(   │                    │       │           │            │ │
-│ │      encoding: str │                    │       │           │            │ │
-│ │ | None = None,     │                    │       │           │            │ │
-│ │      errors: str | │                    │       │           │            │ │
-│ │ None = "strict",   │                    │       │           │            │ │
-│ │  ) -> t.TextIO:    │                    │       │           │            │ │
-│ │ -    """Returns a  │                    │       │           │            │ │
-│ │ system stream for  │                    │       │           │            │ │
-│ │ text processing.   │                    │       │           │            │ │
-│ │ This usually       │                    │       │           │            │ │
-│ │ returns            │                    │       │           │            │ │
-│ │ -    a wrapped     │                    │       │           │            │ │
-│ │ stream around a    │                    │       │           │            │ │
-│ │ binary stream      │                    │       │           │            │ │
-│ │ returned from      │                    │       │           │            │ │
-│ │ +    """Returns a  │                    │       │           │            │ │
-│ │ system stream for  │                    │       │           │            │ │
-│ │ text processing.   │                    │       │           │            │ │
+│ │ +import sys        │                    │       │           │            │ │
+│ │ +from enum import  │                    │       │           │            │ │
+│ │ Enum               │                    │       │           │            │ │
+│ │ +from typing       │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ TYPE_CHECKING,     │                    │       │           │            │ │
+│ │ Any, cast,         │                    │       │           │            │ │
+│ │ get_args,          │                    │       │           │            │ │
+│ │ get_origin         │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ +    ..            │                    │       │           │            │ │
-│ │ deprecated:: 8.5   │                    │       │           │            │ │
-│ │ +        Will be   │                    │       │           │            │ │
-│ │ removed in Click   │                    │       │           │            │ │
-│ │ 9.0.               │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ typing_extensions  │                    │       │           │            │ │
+│ │ import Sentinel,   │                    │       │           │            │ │
+│ │ TypeAliasType      │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ +    This usually  │                    │       │           │            │ │
-│ │ returns a wrapped  │                    │       │           │            │ │
-│ │ stream around a    │                    │       │           │            │ │
-│ │ binary stream      │                    │       │           │            │ │
-│ │ returned from      │                    │       │           │            │ │
-│ │      :func:`get_b… │                    │       │           │            │ │
-│ │ but it also can    │                    │       │           │            │ │
-│ │ take shortcuts for │                    │       │           │            │ │
-│ │ already            │                    │       │           │            │ │
-│ │      correctly     │                    │       │           │            │ │
-│ │ configured         │                    │       │           │            │ │
-│ │ streams.           │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +    :meta         │                    │       │           │            │ │
-│ │ private:           │                    │       │           │            │ │
-│ │      :param name:  │                    │       │           │            │ │
-│ │ the name of the    │                    │       │           │            │ │
-│ │ stream to open.    │                    │       │           │            │ │
-│ │ Valid names are    │                    │       │           │            │ │
-│ │ ``'stdin'``,       │                    │       │           │            │ │
-│ │                  … │                    │       │           │            │ │
-│ │ and ``'stderr'``   │                    │       │           │            │ │
-│ │      :param        │                    │       │           │            │ │
-│ │ encoding:          │                    │       │           │            │ │
-│ │ overrides the      │                    │       │           │            │ │
-│ │ detected default   │                    │       │           │            │ │
-│ │ encoding.          │                    │       │           │            │ │
-│ │ @@ -410,13 +430,13 │                    │       │           │            │ │
-│ │ @@ def open_file(  │                    │       │           │            │ │
-│ │      """           │                    │       │           │            │ │
-│ │      if lazy:      │                    │       │           │            │ │
-│ │          return    │                    │       │           │            │ │
-│ │ t.cast(            │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ "t.IO[t.Any]",     │                    │       │           │            │ │
-│ │ LazyFile(filename, │                    │       │           │            │ │
-│ │ mode, encoding,    │                    │       │           │            │ │
-│ │ errors,            │                    │       │           │            │ │
-│ │ atomic=atomic)     │                    │       │           │            │ │
+│ │ +from . import     │                    │       │           │            │ │
+│ │ _repr              │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ ._import_utils     │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ import_cached_bas… │                    │       │           │            │ │
+│ │ +from ._utils      │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ lenient_issubclass │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ "t.IO[t.Any]",     │                    │       │           │            │ │
-│ │ _LazyFile(filenam… │                    │       │           │            │ │
-│ │ mode, encoding,    │                    │       │           │            │ │
-│ │ errors,            │                    │       │           │            │ │
-│ │ atomic=atomic)     │                    │       │           │            │ │
-│ │          )         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      f,            │                    │       │           │            │ │
-│ │ should_close =     │                    │       │           │            │ │
-│ │ open_stream(filen… │                    │       │           │            │ │
-│ │ mode, encoding,    │                    │       │           │            │ │
-│ │ errors,            │                    │       │           │            │ │
-│ │ atomic=atomic)     │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      if not        │                    │       │           │            │ │
-│ │ should_close:      │                    │       │           │            │ │
-│ │ -        f =       │                    │       │           │            │ │
-│ │ t.cast("t.IO[t.An… │                    │       │           │            │ │
-│ │ KeepOpenFile(f))   │                    │       │           │            │ │
-│ │ +        f =       │                    │       │           │            │ │
-│ │ t.cast("t.IO[t.An… │                    │       │           │            │ │
-│ │ _KeepOpenFile(f))  │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      return f      │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ @@ -512,13 +532,15 │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ get_app_dir(app_n… │                    │       │           │            │ │
-│ │ str, roaming: bool │                    │       │           │            │ │
-│ │ = True,            │                    │       │           │            │ │
-│ │ force_posix: bool  │                    │       │           │            │ │
-│ │ = False)           │                    │       │           │            │ │
-│ │      )             │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -class             │                    │       │           │            │ │
-│ │ PacifyFlushWrappe… │                    │       │           │            │ │
-│ │ +class             │                    │       │           │            │ │
-│ │ _PacifyFlushWrapp… │                    │       │           │            │ │
-│ │      """This       │                    │       │           │            │ │
-│ │ wrapper is used to │                    │       │           │            │ │
-│ │ catch and suppress │                    │       │           │            │ │
-│ │ BrokenPipeErrors   │                    │       │           │            │ │
-│ │ resulting          │                    │       │           │            │ │
-│ │      from          │                    │       │           │            │ │
-│ │ ``.flush()`` being │                    │       │           │            │ │
-│ │ called on broken   │                    │       │           │            │ │
-│ │ pipe during the    │                    │       │           │            │ │
-│ │ shutdown/final-GC  │                    │       │           │            │ │
-│ │      of the Python │                    │       │           │            │ │
-│ │ interpreter.       │                    │       │           │            │ │
-│ │ Notably            │                    │       │           │            │ │
-│ │ ``.flush()`` is    │                    │       │           │            │ │
-│ │ always called on   │                    │       │           │            │ │
-│ │      ``sys.stdout… │                    │       │           │            │ │
-│ │ and                │                    │       │           │            │ │
-│ │ ``sys.stderr``. So │                    │       │           │            │ │
-│ │ as to have minimal │                    │       │           │            │ │
-│ │ impact on any      │                    │       │           │            │ │
-│ │      other cleanup │                    │       │           │            │ │
-│ │ code, and the case │                    │       │           │            │ │
-│ │ where the          │                    │       │           │            │ │
-│ │ underlying file is │                    │       │           │            │ │
-│ │ not a broken       │                    │       │           │            │ │
-│ │      pipe, all     │                    │       │           │            │ │
-│ │ calls and          │                    │       │           │            │ │
-│ │ attributes are     │                    │       │           │            │ │
-│ │ proxied.           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    :meta         │                    │       │           │            │ │
-│ │ private:           │                    │       │           │            │ │
-│ │      """           │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      wrapped:      │                    │       │           │            │ │
-│ │ t.IO[t.Any]        │                    │       │           │            │ │
-│ │ @@ -644,3 +666,24  │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ _expand_args(      │                    │       │           │            │ │
-│ │              out.… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      return out    │                    │       │           │            │ │
+│ │ +if TYPE_CHECKING: │                    │       │           │            │ │
+│ │ +    from pydantic │                    │       │           │            │ │
+│ │ import BaseModel   │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
 │ │ +def               │                    │       │           │            │ │
-│ │ __getattr__(name:  │                    │       │           │            │ │
-│ │ str) -> object:    │                    │       │           │            │ │
-│ │ +    import        │                    │       │           │            │ │
-│ │ warnings           │                    │       │           │            │ │
+│ │ _args_ref(args:    │                    │       │           │            │ │
+│ │ tuple[Any, ...])   │                    │       │           │            │ │
+│ │ -> str:            │                    │       │           │            │ │
+│ │ +    arg_refs:     │                    │       │           │            │ │
+│ │ list[str] = []     │                    │       │           │            │ │
+│ │ +    for arg in    │                    │       │           │            │ │
+│ │ args:              │                    │       │           │            │ │
+│ │ +        if        │                    │       │           │            │ │
+│ │ isinstance(arg,    │                    │       │           │            │ │
+│ │ str):              │                    │       │           │            │ │
+│ │ +            #     │                    │       │           │            │ │
+│ │ Handle string args │                    │       │           │            │ │
+│ │ as a special case; │                    │       │           │            │ │
+│ │ we may be able to  │                    │       │           │            │ │
+│ │ remove this        │                    │       │           │            │ │
+│ │ special handling   │                    │       │           │            │ │
+│ │ if we              │                    │       │           │            │ │
+│ │ +            #     │                    │       │           │            │ │
+│ │ wrap them in a     │                    │       │           │            │ │
+│ │ ForwardRef at some │                    │       │           │            │ │
+│ │ point.             │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ +    if name in {  │                    │       │           │            │ │
+│ │ arg_ref =          │                    │       │           │            │ │
+│ │ f'{arg}:str-{id(a… │                    │       │           │            │ │
+│ │ +        else:     │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ "LazyFile",        │                    │       │           │            │ │
+│ │ arg_ref =          │                    │       │           │            │ │
+│ │ f'{_repr.display_… │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ "KeepOpenFile",    │                    │       │           │            │ │
+│ │ arg_refs.append(a… │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ "make_default_sho… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "PacifyFlushWrapp… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "safecall",        │                    │       │           │            │ │
-│ │ +    }:            │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.warn(     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ f"'click.utils.{n… │                    │       │           │            │ │
-│ │ was never          │                    │       │           │            │ │
-│ │ intentionally      │                    │       │           │            │ │
-│ │ public and will    │                    │       │           │            │ │
-│ │ be"                │                    │       │           │            │ │
-│ │ +            "     │                    │       │           │            │ │
-│ │ renamed in Click   │                    │       │           │            │ │
-│ │ 9.0.",             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ DeprecationWarnin… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ stacklevel=2,      │                    │       │           │            │ │
-│ │ +        )         │                    │       │           │            │ │
+│ │ +    if arg_refs:  │                    │       │           │            │ │
 │ │ +        return    │                    │       │           │            │ │
-│ │ globals()[f"_{nam… │                    │       │           │            │ │
+│ │ f'[{",".join(arg_… │                    │       │           │            │ │
+│ │ +    else:         │                    │       │           │            │ │
+│ │ +        return '' │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ +    raise         │                    │       │           │            │ │
-│ │ AttributeError(na… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ model_type_ref(ty… │                    │       │           │            │ │
+│ │ type[BaseModel],   │                    │       │           │            │ │
+│ │ args_override:     │                    │       │           │            │ │
+│ │ tuple[Any, ...] |  │                    │       │           │            │ │
+│ │ None = None) ->    │                    │       │           │            │ │
+│ │ str:               │                    │       │           │            │ │
+│ │ +    """Produce a  │                    │       │           │            │ │
+│ │ reference for      │                    │       │           │            │ │
+│ │ Pydantic base      │                    │       │           │            │ │
+│ │ models."""         │                    │       │           │            │ │
+│ │ +    try:          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ generic_metadata = │                    │       │           │            │ │
+│ │ type_.__pydantic_… │                    │       │           │            │ │
+│ │ +    except        │                    │       │           │            │ │
+│ │ AttributeError:    │                    │       │           │            │ │
+│ │ +        # `type_` │                    │       │           │            │ │
+│ │ is `BaseModel`:    │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ f'{type_.__module… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    origin =      │                    │       │           │            │ │
+│ │ generic_metadata[… │                    │       │           │            │ │
+│ │ or type_           │                    │       │           │            │ │
+│ │ +    args =        │                    │       │           │            │ │
+│ │ generic_metadata[… │                    │       │           │            │ │
+│ │ +    if not args   │                    │       │           │            │ │
+│ │ and args_override  │                    │       │           │            │ │
+│ │ is not None:       │                    │       │           │            │ │
+│ │ +        args =    │                    │       │           │            │ │
+│ │ args_override      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # While it is │                    │       │           │            │ │
+│ │ typed as `str`,    │                    │       │           │            │ │
+│ │ `__module__` could │                    │       │           │            │ │
+│ │ in theory be       │                    │       │           │            │ │
+│ │ `None`:            │                    │       │           │            │ │
+│ │ +    module_name = │                    │       │           │            │ │
+│ │ cast(str | None,   │                    │       │           │            │ │
+│ │ origin.__module__) │                    │       │           │            │ │
+│ │ +    if            │                    │       │           │            │ │
+│ │ module_name is     │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ module_name = '<No │                    │       │           │            │ │
+│ │ __module__>'       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    return        │                    │       │           │            │ │
+│ │ f'{module_name}.{… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ class_type_ref(ty… │                    │       │           │            │ │
+│ │ Any, origin:       │                    │       │           │            │ │
+│ │ type[Any] | None)  │                    │       │           │            │ │
+│ │ -> str:            │                    │       │           │            │ │
+│ │ +    """Produce a  │                    │       │           │            │ │
+│ │ reference for an   │                    │       │           │            │ │
+│ │ arbitrary class    │                    │       │           │            │ │
+│ │ (dataclasses,      │                    │       │           │            │ │
+│ │ typed              │                    │       │           │            │ │
+│ │ dictionaries,      │                    │       │           │            │ │
+│ │ named tuples)."""  │                    │       │           │            │ │
+│ │ +    tp: type[Any] │                    │       │           │            │ │
+│ │ = origin if origin │                    │       │           │            │ │
+│ │ is not None else   │                    │       │           │            │ │
+│ │ type_              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # While it is │                    │       │           │            │ │
+│ │ typed as `str`,    │                    │       │           │            │ │
+│ │ `__module__` could │                    │       │           │            │ │
+│ │ in theory be       │                    │       │           │            │ │
+│ │ `None`:            │                    │       │           │            │ │
+│ │ +    module_name = │                    │       │           │            │ │
+│ │ cast(str | None,   │                    │       │           │            │ │
+│ │ tp.__module__)     │                    │       │           │            │ │
+│ │ +    if            │                    │       │           │            │ │
+│ │ module_name is     │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ module_name = '<No │                    │       │           │            │ │
+│ │ __module__>'       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    return        │                    │       │           │            │ │
+│ │ f'{module_name}.{… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +_NOT_PROVIDED =   │                    │       │           │            │ │
+│ │ Sentinel('_NOT_PR… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ any_class_type_re… │                    │       │           │            │ │
+│ │ Any, origin:       │                    │       │           │            │ │
+│ │ type[Any] | None | │                    │       │           │            │ │
+│ │ _NOT_PROVIDED =    │                    │       │           │            │ │
+│ │ _NOT_PROVIDED) ->  │                    │       │           │            │ │
+│ │ str:               │                    │       │           │            │ │
+│ │ +    """Produce a  │                    │       │           │            │ │
+│ │ reference for any  │                    │       │           │            │ │
+│ │ class kind,        │                    │       │           │            │ │
+│ │ including Pydantic │                    │       │           │            │ │
+│ │ models."""         │                    │       │           │            │ │
+│ │ +    BaseModel_ =  │                    │       │           │            │ │
+│ │ import_cached_bas… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    if            │                    │       │           │            │ │
+│ │ lenient_issubclas… │                    │       │           │            │ │
+│ │ BaseModel_):       │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ model_type_ref(ty… │                    │       │           │            │ │
+│ │ # pyright:         │                    │       │           │            │ │
+│ │ ignore[reportArgu… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    origin =      │                    │       │           │            │ │
+│ │ get_origin(type_)  │                    │       │           │            │ │
+│ │ if origin is       │                    │       │           │            │ │
+│ │ _NOT_PROVIDED else │                    │       │           │            │ │
+│ │ origin             │                    │       │           │            │ │
+│ │ +    return        │                    │       │           │            │ │
+│ │ class_type_ref(ty… │                    │       │           │            │ │
+│ │ origin)  #         │                    │       │           │            │ │
+│ │ pyright:           │                    │       │           │            │ │
+│ │ ignore[reportArgu… │                    │       │           │            │ │
+│ │ (https://github.c… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ any_type_ref(type… │                    │       │           │            │ │
+│ │ Any, origin: Any | │                    │       │           │            │ │
+│ │ _NOT_PROVIDED =    │                    │       │           │            │ │
+│ │ _NOT_PROVIDED) ->  │                    │       │           │            │ │
+│ │ str:               │                    │       │           │            │ │
+│ │ +    """Produce a  │                    │       │           │            │ │
+│ │ reference for any  │                    │       │           │            │ │
+│ │ object, including  │                    │       │           │            │ │
+│ │ non-class          │                    │       │           │            │ │
+│ │ objects."""        │                    │       │           │            │ │
+│ │ +    BaseModel_ =  │                    │       │           │            │ │
+│ │ import_cached_bas… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    if            │                    │       │           │            │ │
+│ │ lenient_issubclas… │                    │       │           │            │ │
+│ │ BaseModel_):       │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ model_type_ref(ty… │                    │       │           │            │ │
+│ │ # pyright:         │                    │       │           │            │ │
+│ │ ignore[reportArgu… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    origin =      │                    │       │           │            │ │
+│ │ get_origin(type_)  │                    │       │           │            │ │
+│ │ if origin is       │                    │       │           │            │ │
+│ │ _NOT_PROVIDED else │                    │       │           │            │ │
+│ │ origin             │                    │       │           │            │ │
+│ │ +    tp: Any =     │                    │       │           │            │ │
+│ │ origin if origin   │                    │       │           │            │ │
+│ │ is not None else   │                    │       │           │            │ │
+│ │ type_              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    module_name = │                    │       │           │            │ │
+│ │ getattr(tp,        │                    │       │           │            │ │
+│ │ '__module__',      │                    │       │           │            │ │
+│ │ None)              │                    │       │           │            │ │
+│ │ +    if            │                    │       │           │            │ │
+│ │ module_name is     │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ module_name = '<No │                    │       │           │            │ │
+│ │ __module__>'       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    try:          │                    │       │           │            │ │
+│ │ +        qualname  │                    │       │           │            │ │
+│ │ = getattr(tp,      │                    │       │           │            │ │
+│ │ '__qualname__',    │                    │       │           │            │ │
+│ │ f'<No              │                    │       │           │            │ │
+│ │ __qualname__:      │                    │       │           │            │ │
+│ │ {tp}>')            │                    │       │           │            │ │
+│ │ +    except        │                    │       │           │            │ │
+│ │ Exception:         │                    │       │           │            │ │
+│ │ +        qualname  │                    │       │           │            │ │
+│ │ = getattr(tp,      │                    │       │           │            │ │
+│ │ '__qualname__',    │                    │       │           │            │ │
+│ │ '<No               │                    │       │           │            │ │
+│ │ __qualname__>')    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    return        │                    │       │           │            │ │
+│ │ f'{module_name}.{… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ enum_type_ref(typ… │                    │       │           │            │ │
+│ │ type[Enum]) ->     │                    │       │           │            │ │
+│ │ str:               │                    │       │           │            │ │
+│ │ +    """Produce a  │                    │       │           │            │ │
+│ │ reference for an   │                    │       │           │            │ │
+│ │ enum class."""     │                    │       │           │            │ │
+│ │ +    # While it is │                    │       │           │            │ │
+│ │ typed as `str`,    │                    │       │           │            │ │
+│ │ `__module__` could │                    │       │           │            │ │
+│ │ in theory be       │                    │       │           │            │ │
+│ │ `None`:            │                    │       │           │            │ │
+│ │ +    module_name = │                    │       │           │            │ │
+│ │ cast(str | None,   │                    │       │           │            │ │
+│ │ type_.__module__)  │                    │       │           │            │ │
+│ │ +    if            │                    │       │           │            │ │
+│ │ module_name is     │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ module_name = '<No │                    │       │           │            │ │
+│ │ __module__>'       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    return        │                    │       │           │            │ │
+│ │ f'{module_name}.{… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ type_alias_type_r… │                    │       │           │            │ │
+│ │ TypeAliasType) ->  │                    │       │           │            │ │
+│ │ str:               │                    │       │           │            │ │
+│ │ +    """Produce a  │                    │       │           │            │ │
+│ │ reference for a    │                    │       │           │            │ │
+│ │ type alias."""     │                    │       │           │            │ │
+│ │ +    origin:       │                    │       │           │            │ │
+│ │ TypeAliasType =    │                    │       │           │            │ │
+│ │ get_origin(type_)  │                    │       │           │            │ │
+│ │ or type_           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    module_name = │                    │       │           │            │ │
+│ │ type_.__module__   │                    │       │           │            │ │
+│ │ +    if            │                    │       │           │            │ │
+│ │ module_name is     │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ module_name = '<No │                    │       │           │            │ │
+│ │ __module__>'       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    if            │                    │       │           │            │ │
+│ │ sys.version_info   │                    │       │           │            │ │
+│ │ >= (3, 15):        │                    │       │           │            │ │
+│ │ +        type_ref  │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ f'{module_name}.{… │                    │       │           │            │ │
+│ │ +    else:         │                    │       │           │            │ │
+│ │ +        type_ref  │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ f'{module_name}.{… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    return        │                    │       │           │            │ │
+│ │ f'{type_ref}{_arg… │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_test… │                    │       │           │            │ │
-│ │ b/tests/test_test… │                    │       │           │            │ │
+│ │ a/tests/test_edge… │                    │       │           │            │ │
+│ │ b/tests/test_edge… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ a7508b9..6fae8cb   │                    │       │           │            │ │
+│ │ 699a49da..f5e0de1a │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_test… │                    │       │           │            │ │
+│ │ a/tests/test_edge… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_test… │                    │       │           │            │ │
-│ │ @@ -10,13 +10,14   │                    │       │           │            │ │
-│ │ @@ import pytest   │                    │       │           │            │ │
-│ │  import click      │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ click.exceptions   │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ ClickException     │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ click.testing      │                    │       │           │            │ │
-│ │ import CliRunner   │                    │       │           │            │ │
-│ │ +from click.utils  │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ get_binary_stream  │                    │       │           │            │ │
+│ │ b/tests/test_edge… │                    │       │           │            │ │
+│ │ @@ -3209,3         │                    │       │           │            │ │
+│ │ +3209,12 @@ def    │                    │       │           │            │ │
+│ │ test_unhasbable_g… │                    │       │           │            │ │
+│ │ -> None:           │                    │       │           │            │ │
+│ │      ta =          │                    │       │           │            │ │
+│ │ TypeAdapter(list[… │                    │       │           │            │ │
+│ │ Meta()]])          │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_runner():     │                    │       │           │            │ │
-│ │      @click.comma… │                    │       │           │            │ │
-│ │      def test():   │                    │       │           │            │ │
-│ │ -        i =       │                    │       │           │            │ │
-│ │ click.get_binary_… │                    │       │           │            │ │
-│ │ -        o =       │                    │       │           │            │ │
-│ │ click.get_binary_… │                    │       │           │            │ │
-│ │ +        i =       │                    │       │           │            │ │
-│ │ get_binary_stream… │                    │       │           │            │ │
-│ │ +        o =       │                    │       │           │            │ │
-│ │ get_binary_stream… │                    │       │           │            │ │
-│ │          while     │                    │       │           │            │ │
-│ │ True:              │                    │       │           │            │ │
-│ │              chunk │                    │       │           │            │ │
-│ │ = i.read(4096)     │                    │       │           │            │ │
-│ │              if    │                    │       │           │            │ │
-│ │ not chunk:         │                    │       │           │            │ │
-│ │ @@ -33,8 +34,8 @@  │                    │       │           │            │ │
-│ │ def test_runner(): │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_echo_stdin_s… │                    │       │           │            │ │
-│ │      @click.comma… │                    │       │           │            │ │
-│ │      def test():   │                    │       │           │            │ │
-│ │ -        i =       │                    │       │           │            │ │
-│ │ click.get_binary_… │                    │       │           │            │ │
-│ │ -        o =       │                    │       │           │            │ │
-│ │ click.get_binary_… │                    │       │           │            │ │
-│ │ +        i =       │                    │       │           │            │ │
-│ │ get_binary_stream… │                    │       │           │            │ │
-│ │ +        o =       │                    │       │           │            │ │
-│ │ get_binary_stream… │                    │       │           │            │ │
-│ │          while     │                    │       │           │            │ │
-│ │ True:              │                    │       │           │            │ │
-│ │              chunk │                    │       │           │            │ │
-│ │ = i.read(4096)     │                    │       │           │            │ │
-│ │              if    │                    │       │           │            │ │
-│ │ not chunk:         │                    │       │           │            │ │
-│ │ @@ -91,8 +92,8 @@  │                    │       │           │            │ │
-│ │ def                │                    │       │           │            │ │
-│ │ test_echo_stdin_p… │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_runner_with_… │                    │       │           │            │ │
-│ │      @click.comma… │                    │       │           │            │ │
-│ │      def test():   │                    │       │           │            │ │
-│ │ -        i =       │                    │       │           │            │ │
-│ │ click.get_binary_… │                    │       │           │            │ │
-│ │ -        o =       │                    │       │           │            │ │
-│ │ click.get_binary_… │                    │       │           │            │ │
-│ │ +        i =       │                    │       │           │            │ │
-│ │ get_binary_stream… │                    │       │           │            │ │
-│ │ +        o =       │                    │       │           │            │ │
-│ │ get_binary_stream… │                    │       │           │            │ │
-│ │          while     │                    │       │           │            │ │
-│ │ True:              │                    │       │           │            │ │
-│ │              chunk │                    │       │           │            │ │
-│ │ = i.read(4096)     │                    │       │           │            │ │
-│ │              if    │                    │       │           │            │ │
-│ │ not chunk:         │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_util… │                    │       │           │            │ │
-│ │ b/tests/test_util… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 26bfe45..0ba2cab   │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_util… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_util… │                    │       │           │            │ │
-│ │ @@ -6,5 +6,5 @@    │                    │       │           │            │ │
-│ │ def                │                    │       │           │            │ │
-│ │ test_iter_keepope… │                    │       │           │            │ │
-│ │      p =           │                    │       │           │            │ │
-│ │ tmpdir.mkdir("tes… │                    │       │           │            │ │
-│ │      p.write("\n"… │                    │       │           │            │ │
-│ │      with p.open() │                    │       │           │            │ │
-│ │ as f:              │                    │       │           │            │ │
-│ │ -        for       │                    │       │           │            │ │
-│ │ e_line, a_line in  │                    │       │           │            │ │
-│ │ zip(expected,      │                    │       │           │            │ │
-│ │ click.utils.KeepO… │                    │       │           │            │ │
-│ │ strict=False):     │                    │       │           │            │ │
-│ │ +        for       │                    │       │           │            │ │
-│ │ e_line, a_line in  │                    │       │           │            │ │
-│ │ zip(expected,      │                    │       │           │            │ │
-│ │ click.utils._Keep… │                    │       │           │            │ │
-│ │ strict=False):     │                    │       │           │            │ │
-│ │              asse… │                    │       │           │            │ │
-│ │ e_line ==          │                    │       │           │            │ │
-│ │ a_line.strip()     │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_util… │                    │       │           │            │ │
-│ │ b/tests/test_util… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ e3dd09b..8d0775a   │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_util… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_util… │                    │       │           │            │ │
-│ │ @@ -6,6 +6,6 @@    │                    │       │           │            │ │
-│ │ def                │                    │       │           │            │ │
-│ │ test_iter_lazyfil… │                    │       │           │            │ │
-│ │      p =           │                    │       │           │            │ │
-│ │ tmpdir.mkdir("tes… │                    │       │           │            │ │
-│ │      p.write("\n"… │                    │       │           │            │ │
-│ │      with p.open() │                    │       │           │            │ │
-│ │ as f:              │                    │       │           │            │ │
-│ │ -        with      │                    │       │           │            │ │
-│ │ click.utils.LazyF… │                    │       │           │            │ │
-│ │ as lf:             │                    │       │           │            │ │
-│ │ +        with      │                    │       │           │            │ │
-│ │ click.utils._Lazy… │                    │       │           │            │ │
-│ │ as lf:             │                    │       │           │            │ │
-│ │              for   │                    │       │           │            │ │
-│ │ e_line, a_line in  │                    │       │           │            │ │
-│ │ zip(expected, lf,  │                    │       │           │            │ │
-│ │ strict=False):     │                    │       │           │            │ │
-│ │                  … │                    │       │           │            │ │
-│ │ e_line ==          │                    │       │           │            │ │
-│ │ a_line.strip()     │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_util… │                    │       │           │            │ │
-│ │ b/tests/test_util… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ cb9886c..c2a1f8e   │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_util… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_util… │                    │       │           │            │ │
-│ │ @@ -35,5 +35,5 @@  │                    │       │           │            │ │
-│ │ def                │                    │       │           │            │ │
-│ │ test_make_default… │                    │       │           │            │ │
-│ │ max_length, alter, │                    │       │           │            │ │
-│ │ expect):           │                    │       │           │            │ │
-│ │      if alter:     │                    │       │           │            │ │
-│ │          value =   │                    │       │           │            │ │
-│ │ alter(value)       │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -    out =         │                    │       │           │            │ │
-│ │ click.utils.make_… │                    │       │           │            │ │
-│ │ max_length)        │                    │       │           │            │ │
-│ │ +    out =         │                    │       │           │            │ │
-│ │ click.utils._make… │                    │       │           │            │ │
-│ │ max_length)        │                    │       │           │            │ │
-│ │      assert out == │                    │       │           │            │ │
-│ │ expect             │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ ta.validate_pytho… │                    │       │           │            │ │
+│ │ == [1]             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_get_pydantic… │                    │       │           │            │ │
+│ │ -> None:           │                    │       │           │            │ │
+│ │ +    class         │                    │       │           │            │ │
+│ │ SchemaProvider:    │                    │       │           │            │ │
+│ │ +        def       │                    │       │           │            │ │
+│ │ __get_pydantic_co… │                    │       │           │            │ │
+│ │ source: Any,       │                    │       │           │            │ │
+│ │ handler:           │                    │       │           │            │ │
+│ │ GetCoreSchemaHand… │                    │       │           │            │ │
+│ │ -> CoreSchema:     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ return             │                    │       │           │            │ │
+│ │ core_schema.int_s… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    ta =          │                    │       │           │            │ │
+│ │ TypeAdapter(Schem… │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ ta.validate_pytho… │                    │       │           │            │ │
+│ │ == 1               │                    │       │           │            │ │
 │ │ ```                │                    │       │           │            │ │
 │ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
