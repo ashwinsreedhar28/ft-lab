@@ -1,400 +1,400 @@
-│ │ {"status": "ok"}    │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.headers.get("… │                     │       │           │          │ │
-│ │ == "modified"       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ test_response_with… │                     │       │           │          │ │
-│ │ +    """Regular     │                     │       │           │          │ │
-│ │ Response injection  │                     │       │           │          │ │
-│ │ should still        │                     │       │           │          │ │
-│ │ work."""            │                     │       │           │          │ │
-│ │ +    app =          │                     │       │           │          │ │
-│ │ FastAPI()           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    @app.get("/")  │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ endpoint(response:  │                     │       │           │          │ │
-│ │ Response):          │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ response.headers["… │                     │       │           │          │ │
-│ │ = "set"             │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ {"status": "ok"}    │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    client =       │                     │       │           │          │ │
-│ │ TestClient(app)     │                     │       │           │          │ │
-│ │ +    resp =         │                     │       │           │          │ │
-│ │ client.get("/")     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.status_code == │                     │       │           │          │ │
-│ │ 200                 │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.json() ==      │                     │       │           │          │ │
-│ │ {"status": "ok"}    │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.headers.get("… │                     │       │           │          │ │
-│ │ == "set"            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ test_response_depe… │                     │       │           │          │ │
-│ │ +    """Response    │                     │       │           │          │ │
-│ │ dependency should   │                     │       │           │          │ │
-│ │ work in a chain of  │                     │       │           │          │ │
-│ │ dependencies."""    │                     │       │           │          │ │
-│ │ +    app =          │                     │       │           │          │ │
-│ │ FastAPI()           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ first_modifier(res… │                     │       │           │          │ │
-│ │ Response) ->        │                     │       │           │          │ │
-│ │ Response:           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ response.headers["… │                     │       │           │          │ │
-│ │ = "1"               │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ response            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ second_modifier(    │                     │       │           │          │ │
-│ │ +        response:  │                     │       │           │          │ │
-│ │ Annotated[Response, │                     │       │           │          │ │
-│ │ Depends(first_modi… │                     │       │           │          │ │
-│ │ +    ) -> Response: │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ response.headers["… │                     │       │           │          │ │
-│ │ = "2"               │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ response            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    @app.get("/")  │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ endpoint(response:  │                     │       │           │          │ │
-│ │ Annotated[Response, │                     │       │           │          │ │
-│ │ Depends(second_mod… │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ {"status": "ok"}    │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    client =       │                     │       │           │          │ │
-│ │ TestClient(app)     │                     │       │           │          │ │
-│ │ +    resp =         │                     │       │           │          │ │
-│ │ client.get("/")     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.status_code == │                     │       │           │          │ │
-│ │ 200                 │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.headers.get("… │                     │       │           │          │ │
-│ │ == "1"              │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.headers.get("… │                     │       │           │          │ │
-│ │ == "2"              │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ test_response_depe… │                     │       │           │          │ │
-│ │ +    """Dependency  │                     │       │           │          │ │
-│ │ that returns a      │                     │       │           │          │ │
-│ │ different Response  │                     │       │           │          │ │
-│ │ instance should     │                     │       │           │          │ │
-│ │ work.               │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    When a         │                     │       │           │          │ │
-│ │ dependency returns  │                     │       │           │          │ │
-│ │ a new Response      │                     │       │           │          │ │
-│ │ object (e.g.,       │                     │       │           │          │ │
-│ │ JSONResponse)       │                     │       │           │          │ │
-│ │ instead             │                     │       │           │          │ │
-│ │ +    of modifying   │                     │       │           │          │ │
-│ │ the injected one,   │                     │       │           │          │ │
-│ │ the returned        │                     │       │           │          │ │
-│ │ response should be  │                     │       │           │          │ │
-│ │ used and any        │                     │       │           │          │ │
-│ │ +    modifications  │                     │       │           │          │ │
-│ │ to it in the        │                     │       │           │          │ │
-│ │ endpoint should be  │                     │       │           │          │ │
-│ │ preserved.          │                     │       │           │          │ │
-│ │ +    """            │                     │       │           │          │ │
-│ │ +    app =          │                     │       │           │          │ │
-│ │ FastAPI()           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ default_response()  │                     │       │           │          │ │
-│ │ -> Response:        │                     │       │           │          │ │
-│ │ +        response = │                     │       │           │          │ │
-│ │ JSONResponse(conte… │                     │       │           │          │ │
-│ │ "ok"})              │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ response.headers["… │                     │       │           │          │ │
-│ │ = "initial"         │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ response            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    @app.get("/")  │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ endpoint(response:  │                     │       │           │          │ │
-│ │ Annotated[Response, │                     │       │           │          │ │
-│ │ Depends(default_re… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ response.headers["… │                     │       │           │          │ │
-│ │ = "modified"        │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ response            │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    client =       │                     │       │           │          │ │
-│ │ TestClient(app)     │                     │       │           │          │ │
-│ │ +    resp =         │                     │       │           │          │ │
-│ │ client.get("/")     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.status_code == │                     │       │           │          │ │
-│ │ 200                 │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.json() ==      │                     │       │           │          │ │
-│ │ {"status": "ok"}    │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.headers.get("… │                     │       │           │          │ │
-│ │ == "modified"       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +# Tests for        │                     │       │           │          │ │
-│ │ Request type hint   │                     │       │           │          │ │
-│ │ with Depends        │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ test_request_with_… │                     │       │           │          │ │
-│ │ +    """Request     │                     │       │           │          │ │
-│ │ type hint should    │                     │       │           │          │ │
-│ │ work in dependency  │                     │       │           │          │ │
-│ │ chain."""           │                     │       │           │          │ │
-│ │ +    app =          │                     │       │           │          │ │
-│ │ FastAPI()           │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ extract_request_in… │                     │       │           │          │ │
-│ │ Request) -> dict:   │                     │       │           │          │ │
-│ │ +        return {   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ "path":             │                     │       │           │          │ │
-│ │ request.url.path,   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ "user_agent":       │                     │       │           │          │ │
-│ │ request.headers.ge… │                     │       │           │          │ │
-│ │ "unknown"),         │                     │       │           │          │ │
-│ │ +        }          │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    @app.get("/")  │                     │       │           │          │ │
-│ │ +    def endpoint(  │                     │       │           │          │ │
-│ │ +        info:      │                     │       │           │          │ │
-│ │ Annotated[dict,     │                     │       │           │          │ │
-│ │ Depends(extract_re… │                     │       │           │          │ │
-│ │ +    ):             │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ info                │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    client =       │                     │       │           │          │ │
-│ │ TestClient(app)     │                     │       │           │          │ │
-│ │ +    resp =         │                     │       │           │          │ │
-│ │ client.get("/",     │                     │       │           │          │ │
-│ │ headers={"user-age… │                     │       │           │          │ │
-│ │ "test-agent"})      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.status_code == │                     │       │           │          │ │
-│ │ 200                 │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.json() ==      │                     │       │           │          │ │
-│ │ {"path": "/",       │                     │       │           │          │ │
-│ │ "user_agent":       │                     │       │           │          │ │
-│ │ "test-agent"}       │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +# Tests for        │                     │       │           │          │ │
-│ │ BackgroundTasks     │                     │       │           │          │ │
-│ │ type hint with      │                     │       │           │          │ │
-│ │ Depends             │                     │       │           │          │ │
-│ │ +def                │                     │       │           │          │ │
-│ │ test_background_ta… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ """BackgroundTasks  │                     │       │           │          │ │
-│ │ type hint should    │                     │       │           │          │ │
-│ │ work with           │                     │       │           │          │ │
-│ │ Annotated[Backgrou… │                     │       │           │          │ │
-│ │ Depends(...)]."""   │                     │       │           │          │ │
-│ │ +    app =          │                     │       │           │          │ │
-│ │ FastAPI()           │                     │       │           │          │ │
-│ │ +    task_results = │                     │       │           │          │ │
-│ │ []                  │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ background_task(me… │                     │       │           │          │ │
-│ │ str):               │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ task_results.appen… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ add_background_tas… │                     │       │           │          │ │
-│ │ BackgroundTasks) -> │                     │       │           │          │ │
-│ │ BackgroundTasks:    │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ background_tasks.a… │                     │       │           │          │ │
-│ │ "from dependency")  │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ background_tasks    │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    @app.get("/")  │                     │       │           │          │ │
-│ │ +    def endpoint(  │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ background_tasks:   │                     │       │           │          │ │
-│ │ Annotated[Backgrou… │                     │       │           │          │ │
-│ │ Depends(add_backgr… │                     │       │           │          │ │
-│ │ +    ):             │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ background_tasks.a… │                     │       │           │          │ │
-│ │ "from endpoint")    │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ {"status": "ok"}    │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    client =       │                     │       │           │          │ │
-│ │ TestClient(app)     │                     │       │           │          │ │
-│ │ +    resp =         │                     │       │           │          │ │
-│ │ client.get("/")     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    assert         │                     │       │           │          │ │
-│ │ resp.status_code == │                     │       │           │          │ │
-│ │ 200                 │                     │       │           │          │ │
-│ │ +    assert "from   │                     │       │           │          │ │
-│ │ dependency" in      │                     │       │           │          │ │
-│ │ task_results        │                     │       │           │          │ │
-│ │ +    assert "from   │                     │       │           │          │ │
-│ │ endpoint" in        │                     │       │           │          │ │
-│ │ task_results        │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
-│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.35 │ approve  │ │
-│ │ You are the code    │ {"decision":        │       │           │          │ │
-│ │ review gate for a   │ "approve",          │       │           │          │ │
-│ │ production          │ "comments":         │       │           │          │ │
-│ │ repository. Your    │ [{"file":           │       │           │          │ │
-│ │ approval merges and │ "more_itertools/mo… │       │           │          │ │
-│ │ deploys the change  │ "line_start": 5672, │       │           │          │ │
-│ │ with no further     │ "line_end": 5672,   │       │           │          │ │
-│ │ human review.       │ "body": "Fixed      │       │           │          │ │
-│ │ Decide:             │ length calculation  │       │           │          │ │
-│ │   approve  - you    │ in                  │       │           │          │ │
-│ │ are confident the   │ random_ordered_com… │       │           │          │ │
-│ │ change is correct   │ Logic is now        │       │           │          │ │
-│ │ and safe to ship.   │ consistent with the │       │           │          │ │
-│ │   block    - you    │ new formula used in │       │           │          │ │
-│ │ found a defect;     │ the chapter of the  │       │           │          │ │
-│ │ cite its location.  │ Python              │       │           │          │ │
-│ │   escalate - you    │ Notebooks."}]}      │       │           │          │ │
-│ │ cannot establish    │                     │       │           │          │ │
-│ │ safety from what    │ The patch is safe   │       │           │          │ │
-│ │ you can see; a      │ and specific to the │       │           │          │ │
-│ │ human must look.    │ required behavior.  │       │           │          │ │
-│ │ Approving a change  │ The specific        │       │           │          │ │
-│ │ that contains a     │ calculation logic   │       │           │          │ │
-│ │ defect is the worst │ now conveys         │       │           │          │ │
-│ │ outcome. Blocking a │ exactness in the    │       │           │          │ │
-│ │ correct change      │ function as         │       │           │          │ │
-│ │ costs an engineer's │ intended. The       │       │           │          │ │
-│ │ time. Escalating is │ addition and        │       │           │          │ │
-│ │ cheap but useless   │ subtraction are     │       │           │          │ │
-│ │ if done for         │ necessary to ensure │       │           │          │ │
-│ │ everything.         │ the function        │       │           │          │ │
-│ │ Respond with        │ correctly           │       │           │          │ │
-│ │ exactly one JSON    │ calculates the size │       │           │          │ │
-│ │ object and nothing  │ of the outer part   │       │           │          │ │
-│ │ else:               │ of the combined     │       │           │          │ │
-│ │ {"decision":        │ items. This change  │       │           │          │ │
-│ │ "approve|block|esc… │ preserves the       │       │           │          │ │
-│ │ "comments":         │ status qua and      │       │           │          │ │
-│ │ [{"file": "...",    │ optimizes the       │       │           │          │ │
-│ │ "line_start": N,    │ compounding shell.  │       │           │          │ │
-│ │ "line_end": N,      │                     │       │           │          │ │
-│ │ "body": "...",      │                     │       │           │          │ │
-│ │ "proposed_test":    │                     │       │           │          │ │
-│ │ "optional pytest    │                     │       │           │          │ │
-│ │ source"}]}          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ USER                │                     │       │           │          │ │
-│ │ Repository:         │                     │       │           │          │ │
-│ │ more-itertools      │                     │       │           │          │ │
-│ │ Files changed:      │                     │       │           │          │ │
-│ │ more_itertools/mor… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Context around the  │                     │       │           │          │ │
-│ │ change              │                     │       │           │          │ │
-│ │ (mechanically       │                     │       │           │          │ │
-│ │ extracted):         │                     │       │           │          │ │
-│ │ Changed             │                     │       │           │          │ │
-│ │ definitions:        │                     │       │           │          │ │
-│ │ more_itertools/mor… │                     │       │           │          │ │
-│ │ Recent history of   │                     │       │           │          │ │
-│ │ more_itertools/mor… │                     │       │           │          │ │
-│ │   b8fe920           │                     │       │           │          │ │
-│ │ 2026-01-03 Add      │                     │       │           │          │ │
-│ │ random ordered      │                     │       │           │          │ │
-│ │ combinatoric        │                     │       │           │          │ │
-│ │ functions           │                     │       │           │          │ │
-│ │   ce676d2           │                     │       │           │          │ │
-│ │ 2026-09-04 Do not   │                     │       │           │          │ │
-│ │ yield an empty list │                     │       │           │          │ │
-│ │ for an empty        │                     │       │           │          │ │
-│ │ iterable when       │                     │       │           │          │ │
-│ │ maxsplit is 0       │                     │       │           │          │ │
-│ │   7847d43           │                     │       │           │          │ │
-│ │ 2026-09-03 Don't    │                     │       │           │          │ │
-│ │ mask TypeError      │                     │       │           │          │ │
-│ │ raised while        │                     │       │           │          │ │
-│ │ iterating in        │                     │       │           │          │ │
-│ │ value_chain         │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Diff:               │                     │       │           │          │ │
-│ │ ```diff             │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/more_itertools/m… │                     │       │           │          │ │
-│ │ b/more_itertools/m… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ edb94d1..bd44cac    │                     │       │           │          │ │
-│ │ 100755              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/more_itertools/m… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/more_itertools/m… │                     │       │           │          │ │
-│ │ @@ -5672,9 +5672,6  │                     │       │           │          │ │
-│ │ @@ def              │                     │       │           │          │ │
-│ │ random_ordered_com… │                     │       │           │          │ │
-│ │ r):                 │                     │       │           │          │ │
-│ │  def                │                     │       │           │          │ │
-│ │ random_ordered_com… │                     │       │           │          │ │
-│ │ r):                 │                     │       │           │          │ │
-│ │      "Return        │                     │       │           │          │ │
-│ │ :func:`combination… │                     │       │           │          │ │
-│ │ tuples in randomly  │                     │       │           │          │ │
-│ │ shuffled order."    │                     │       │           │          │ │
-│ │      sequence =     │                     │       │           │          │ │
-│ │ tuple(iterable)     │                     │       │           │          │ │
-│ │ -    if not         │                     │       │           │          │ │
-│ │ sequence:           │                     │       │           │          │ │
-│ │ -        yield ()   │                     │       │           │          │ │
-│ │ -        return     │                     │       │           │          │ │
-│ │ -    n =            │                     │       │           │          │ │
-│ │ comb(len(sequence)  │                     │       │           │          │ │
-│ │ + r - 1, r)         │                     │       │           │          │ │
-│ │ +    n =            │                     │       │           │          │ │
-│ │ comb(len(sequence)  │                     │       │           │          │ │
-│ │ + r + 1, r) if      │                     │       │           │          │ │
-│ │ sequence else 0 if  │                     │       │           │          │ │
-│ │ r else 1            │                     │       │           │          │ │
-│ │      for index in   │                     │       │           │          │ │
-│ │ _random_ordered_in… │                     │       │           │          │ │
-│ │          yield      │                     │       │           │          │ │
-│ │ nth_combination_wi… │                     │       │           │          │ │
-│ │ r, index)           │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │   069b300          │                    │       │           │            │ │
+│ │ 2026-07-16 Issue   │                    │       │           │            │ │
+│ │ 1214: Update       │                    │       │           │            │ │
+│ │ __eq__ and         │                    │       │           │            │ │
+│ │ __hash__ for       │                    │       │           │            │ │
+│ │ numeric_range      │                    │       │           │            │ │
+│ │   07eb790          │                    │       │           │            │ │
+│ │ 2026-07-12 Add     │                    │       │           │            │ │
+│ │ threading to       │                    │       │           │            │ │
+│ │ lazy_modules.      │                    │       │           │            │ │
+│ │ Revert c6b640      │                    │       │           │            │ │
+│ │   4a02e36          │                    │       │           │            │ │
+│ │ 2026-07-10 Sort    │                    │       │           │            │ │
+│ │ `__all__`          │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │   069b300          │                    │       │           │            │ │
+│ │ 2026-07-16 Issue   │                    │       │           │            │ │
+│ │ 1214: Update       │                    │       │           │            │ │
+│ │ __eq__ and         │                    │       │           │            │ │
+│ │ __hash__ for       │                    │       │           │            │ │
+│ │ numeric_range      │                    │       │           │            │ │
+│ │   d992be0          │                    │       │           │            │ │
+│ │ 2026-07-12 Fix     │                    │       │           │            │ │
+│ │ stability in       │                    │       │           │            │ │
+│ │ running_min and    │                    │       │           │            │ │
+│ │ running_max        │                    │       │           │            │ │
+│ │   958990e          │                    │       │           │            │ │
+│ │ 2026-07-02 Raise   │                    │       │           │            │ │
+│ │ for negative slice │                    │       │           │            │ │
+│ │ sizes in sliced()  │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Diff:              │                    │       │           │            │ │
+│ │ ```diff            │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 7c3670a..5896d6d   │                    │       │           │            │ │
+│ │ 100755             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ @@ -230,6 +230,9   │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ chunked(iterable,  │                    │       │           │            │ │
+│ │ n, strict=False):  │                    │       │           │            │ │
+│ │      list is       │                    │       │           │            │ │
+│ │ yielded.           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      """           │                    │       │           │            │ │
+│ │ +    if n is not   │                    │       │           │            │ │
+│ │ None and n < 0:    │                    │       │           │            │ │
+│ │ +        raise     │                    │       │           │            │ │
+│ │ ValueError('n must │                    │       │           │            │ │
+│ │ be at least 0')    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │      iterator =    │                    │       │           │            │ │
+│ │ iter(partial(take, │                    │       │           │            │ │
+│ │ n,                 │                    │       │           │            │ │
+│ │ iter(iterable)),   │                    │       │           │            │ │
+│ │ [])                │                    │       │           │            │ │
+│ │      if strict:    │                    │       │           │            │ │
+│ │          if n is   │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_more… │                    │       │           │            │ │
+│ │ b/tests/test_more… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 1f8d10c..3a562e2   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_more… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_more… │                    │       │           │            │ │
+│ │ @@ -70,6 +70,15 @@ │                    │       │           │            │ │
+│ │ class              │                    │       │           │            │ │
+│ │ ChunkedTests(Test… │                    │       │           │            │ │
+│ │              list… │                    │       │           │            │ │
+│ │ None)), [['A',     │                    │       │           │            │ │
+│ │ 'B', 'C', 'D',     │                    │       │           │            │ │
+│ │ 'E']]              │                    │       │           │            │ │
+│ │          )         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_negative(sel… │                    │       │           │            │ │
+│ │ +        """Test   │                    │       │           │            │ │
+│ │ that a negative    │                    │       │           │            │ │
+│ │ ``n`` raises a     │                    │       │           │            │ │
+│ │ clear              │                    │       │           │            │ │
+│ │ ``ValueError``,    │                    │       │           │            │ │
+│ │ matching           │                    │       │           │            │ │
+│ │ +        the       │                    │       │           │            │ │
+│ │ behavior of        │                    │       │           │            │ │
+│ │ :func:`sliced`.""" │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.assertRaises… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ ValueError,        │                    │       │           │            │ │
+│ │ +            "n    │                    │       │           │            │ │
+│ │ must be at least   │                    │       │           │            │ │
+│ │ 0",                │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ lambda:            │                    │       │           │            │ │
+│ │ list(mi.chunked('… │                    │       │           │            │ │
+│ │ -1)),              │                    │       │           │            │ │
+│ │ +        )         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ test_strict_false… │                    │       │           │            │ │
+│ │          """Test   │                    │       │           │            │ │
+│ │ when ``n`` does    │                    │       │           │            │ │
+│ │ not divide evenly  │                    │       │           │            │ │
+│ │ into the length of │                    │       │           │            │ │
+│ │ the                │                    │       │           │            │ │
+│ │          iterable  │                    │       │           │            │ │
+│ │ and strict is      │                    │       │           │            │ │
+│ │ false.             │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │ -5.00 │     -0.35 │ approve    │ │
+│ │ You are the code   │ {"decision":       │       │           │            │ │
+│ │ review gate for a  │ "approve",         │       │           │            │ │
+│ │ production         │ "comments":        │       │           │            │ │
+│ │ repository. Your   │ [{"file":          │       │           │            │ │
+│ │ approval merges    │ "more_itertools/m… │       │           │            │ │
+│ │ and deploys the    │ "line_start":      │       │           │            │ │
+│ │ change with no     │ 5227, "line_end":  │       │           │            │ │
+│ │ further human      │ 5227, "body":      │       │           │            │ │
+│ │ review. Decide:    │ "used 'first_true' │       │           │            │ │
+│ │   approve  - you   │ function with      │       │           │            │ │
+│ │ are confident the  │ 'pred' parameter   │       │           │            │ │
+│ │ change is correct  │ to replace         │       │           │            │ │
+│ │ and safe to ship.  │ is_prime to        │       │           │            │ │
+│ │   block    - you   │ optimize function. │       │           │            │ │
+│ │ found a defect;    │ This cut down      │       │           │            │ │
+│ │ cite its location. │ redundant checks   │       │           │            │ │
+│ │   escalate - you   │ significantly, and │       │           │            │ │
+│ │ cannot establish   │ improves           │       │           │            │ │
+│ │ safety from what   │ readability a      │       │           │            │ │
+│ │ you can see; a     │ lot."}, {"file":   │       │           │            │ │
+│ │ human must look.   │ "more_itertools/r… │       │           │            │ │
+│ │ Approving a change │ "line_start": 557, │       │           │            │ │
+│ │ that contains a    │ "line_end": 557,   │       │           │            │ │
+│ │ defect is the      │ "body": "Renamed   │       │           │            │ │
+│ │ worst outcome.     │ 'pred' to          │       │           │            │ │
+│ │ Blocking a correct │ 'predicate' to     │       │           │            │ │
+│ │ change costs an    │ match the          │       │           │            │ │
+│ │ engineer's time.   │ docstring          │       │           │            │ │
+│ │ Escalating is      │ terminology to     │       │           │            │ │
+│ │ cheap but useless  │ avoid confusion of │       │           │            │ │
+│ │ if done for        │ the parameter      │       │           │            │ │
+│ │ everything.        │ name. The second   │       │           │            │ │
+│ │ Respond with       │ parameter was      │       │           │            │ │
+│ │ exactly one JSON   │ previously having  │       │           │            │ │
+│ │ object and nothing │ default parameter  │       │           │            │ │
+│ │ else:              │ of None. This      │       │           │            │ │
+│ │ {"decision":       │ function now       │       │           │            │ │
+│ │ "approve|block|es… │ returns the first  │       │           │            │ │
+│ │ "comments":        │ element of the     │       │           │            │ │
+│ │ [{"file": "...",   │ input which        │       │           │            │ │
+│ │ "line_start": N,   │ satisfies the      │       │           │            │ │
+│ │ "line_end": N,     │ predicate, with an │       │           │            │ │
+│ │ "body": "...",     │ optional default   │       │           │            │ │
+│ │ "proposed_test":   │ if none is found,  │       │           │            │ │
+│ │ "optional pytest   │ which was涌现出    │       │           │            │ │
+│ │ source"}]}         │ some subtle issues │       │           │            │ │
+│ │                    │ before. The        │       │           │            │ │
+│ │ USER               │ function name and  │       │           │            │ │
+│ │ Repository:        │ parameters have    │       │           │            │ │
+│ │ more-itertools     │ been more clearly  │       │           │            │ │
+│ │ Files changed:     │ named and aligned  │       │           │            │ │
+│ │ more_itertools/mo… │ with Python        │       │           │            │ │
+│ │ more_itertools/re… │ definitionsDataBa… │       │           │            │ │
+│ │ more_itertools/re… │ {"file":           │       │           │            │ │
+│ │ tests/test_recipe… │ "tests/test_recip… │       │           │            │ │
+│ │                    │ "line_start": 522, │       │           │            │ │
+│ │ Not shown          │ "line_end": 522,   │       │           │            │ │
+│ │ (non-code or over  │ "body": "Test      │       │           │            │ │
+│ │ budget; treat as   │ cases for the      │       │           │            │ │
+│ │ unreviewed):       │ 'first_true'       │       │           │            │ │
+│ │ more_itertools/re… │ function. This     │       │           │            │ │
+│ │ (700 chars,        │ change is          │       │           │            │ │
+│ │ non-code)          │ consistent with    │       │           │            │ │
+│ │                    │ parameters         │       │           │            │ │
+│ │ Context around the │ renaming in the    │       │           │            │ │
+│ │ change             │ function           │       │           │            │ │
+│ │ (mechanically      │ definition, so the │       │           │            │ │
+│ │ extracted):        │ test cases won't   │       │           │            │ │
+│ │ Changed            │ break and have     │       │           │            │ │
+│ │ definitions:       │ passed for the     │       │           │            │ │
+│ │ more_itertools/mo… │ required test."}]} │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │ more_itertools/re… │                    │       │           │            │ │
+│ │ more_itertools/re… │                    │       │           │            │ │
+│ │ more_itertools/re… │                    │       │           │            │ │
+│ │ tests/test_recipe… │                    │       │           │            │ │
+│ │ tests/test_recipe… │                    │       │           │            │ │
+│ │ tests/test_recipe… │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │   e4d2a4a          │                    │       │           │            │ │
+│ │ 2026-03-31 Merge   │                    │       │           │            │ │
+│ │ pull request #1126 │                    │       │           │            │ │
+│ │ from               │                    │       │           │            │ │
+│ │ veeceey/fix/issue… │                    │       │           │            │ │
+│ │   18c57c7          │                    │       │           │            │ │
+│ │ 2026-03-31 Issue   │                    │       │           │            │ │
+│ │ #1134: Add         │                    │       │           │            │ │
+│ │ running_statistics │                    │       │           │            │ │
+│ │ (#1135)            │                    │       │           │            │ │
+│ │   b290c27          │                    │       │           │            │ │
+│ │ 2026-03-23 docs:   │                    │       │           │            │ │
+│ │ add                │                    │       │           │            │ │
+│ │ cross-references   │                    │       │           │            │ │
+│ │ between            │                    │       │           │            │ │
+│ │ groupby_transform, │                    │       │           │            │ │
+│ │ bucket, and        │                    │       │           │            │ │
+│ │ map_reduce         │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ more_itertools/re… │                    │       │           │            │ │
+│ │   d0c20f5          │                    │       │           │            │ │
+│ │ 2026-03-31         │                    │       │           │            │ │
+│ │ quantify: pred ->  │                    │       │           │            │ │
+│ │ predicate          │                    │       │           │            │ │
+│ │   a7bac4a          │                    │       │           │            │ │
+│ │ 2026-03-31         │                    │       │           │            │ │
+│ │ flatten:           │                    │       │           │            │ │
+│ │ listOfLists ->     │                    │       │           │            │ │
+│ │ list_of_lists      │                    │       │           │            │ │
+│ │   38b66e2          │                    │       │           │            │ │
+│ │ 2026-03-31         │                    │       │           │            │ │
+│ │ repeatfunc: func   │                    │       │           │            │ │
+│ │ -> function        │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ tests/test_recipe… │                    │       │           │            │ │
+│ │   18c57c7          │                    │       │           │            │ │
+│ │ 2026-03-31 Issue   │                    │       │           │            │ │
+│ │ #1134: Add         │                    │       │           │            │ │
+│ │ running_statistics │                    │       │           │            │ │
+│ │ (#1135)            │                    │       │           │            │ │
+│ │   db4f41b          │                    │       │           │            │ │
+│ │ 2026-02-09 Add     │                    │       │           │            │ │
+│ │ running_mean       │                    │       │           │            │ │
+│ │ recipe             │                    │       │           │            │ │
+│ │   def2d82          │                    │       │           │            │ │
+│ │ 2026-01-02         │                    │       │           │            │ │
+│ │ Simplify           │                    │       │           │            │ │
+│ │ nth_permutation.   │                    │       │           │            │ │
+│ │ Fix incorrect      │                    │       │           │            │ │
+│ │ exception.         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Diff:              │                    │       │           │            │ │
+│ │ ```diff            │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 6b0360e..8f1bfe7   │                    │       │           │            │ │
+│ │ 100755             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ @@ -5227,7 +5227,7 │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ nth_prime(n, *,    │                    │       │           │            │ │
+│ │ approximate=False… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      # Search from │                    │       │           │            │ │
+│ │ the midpoint and   │                    │       │           │            │ │
+│ │ return the first   │                    │       │           │            │ │
+│ │ odd prime          │                    │       │           │            │ │
+│ │      odd =         │                    │       │           │            │ │
+│ │ floor((lb + ub) /  │                    │       │           │            │ │
+│ │ 2) | 1             │                    │       │           │            │ │
+│ │ -    return        │                    │       │           │            │ │
+│ │ first_true(count(… │                    │       │           │            │ │
+│ │ step=2),           │                    │       │           │            │ │
+│ │ pred=is_prime)     │                    │       │           │            │ │
+│ │ +    return        │                    │       │           │            │ │
+│ │ first_true(count(… │                    │       │           │            │ │
+│ │ step=2))           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ argmin(iterable,   │                    │       │           │            │ │
+│ │ *, key=None):      │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 7548fc3..acab086   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ @@ -557,7 +557,7   │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ iter_except(func,  │                    │       │           │            │ │
+│ │ exception,         │                    │       │           │            │ │
+│ │ first=None):       │                    │       │           │            │ │
+│ │              yield │                    │       │           │            │ │
+│ │ func()             │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -def               │                    │       │           │            │ │
+│ │ first_true(iterab… │                    │       │           │            │ │
+│ │ default=None,      │                    │       │           │            │ │
+│ │ pred=None):        │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ first_true(iterab… │                    │       │           │            │ │
+│ │ default=None,      │                    │       │           │            │ │
+│ │ predicate=None):   │                    │       │           │            │ │
+│ │      """           │                    │       │           │            │ │
+│ │      Returns the   │                    │       │           │            │ │
+│ │ first true value   │                    │       │           │            │ │
+│ │ in the iterable.   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ @@ -568,13 +568,13 │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ first_true(iterab… │                    │       │           │            │ │
+│ │ default=None,      │                    │       │           │            │ │
+│ │ pred=None):        │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          >>>       │                    │       │           │            │ │
+│ │ first_true(range(… │                    │       │           │            │ │
+│ │          1         │                    │       │           │            │ │
+│ │ -        >>>       │                    │       │           │            │ │
+│ │ first_true(range(… │                    │       │           │            │ │
+│ │ pred=lambda x: x > │                    │       │           │            │ │
+│ │ 5)                 │                    │       │           │            │ │
+│ │ +        >>>       │                    │       │           │            │ │
+│ │ first_true(range(… │                    │       │           │            │ │
+│ │ predicate=lambda   │                    │       │           │            │ │
+│ │ x: x > 5)          │                    │       │           │            │ │
+│ │          6         │                    │       │           │            │ │
+│ │ -        >>>       │                    │       │           │            │ │
+│ │ first_true(range(… │                    │       │           │            │ │
+│ │ default='missing', │                    │       │           │            │ │
+│ │ pred=lambda x: x > │                    │       │           │            │ │
+│ │ 9)                 │                    │       │           │            │ │
+│ │ +        >>>       │                    │       │           │            │ │
+│ │ first_true(range(… │                    │       │           │            │ │
+│ │ default='missing', │                    │       │           │            │ │
+│ │ predicate=lambda   │                    │       │           │            │ │
+│ │ x: x > 9)          │                    │       │           │            │ │
+│ │          'missing' │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      """           │                    │       │           │            │ │
+│ │ -    return        │                    │       │           │            │ │
+│ │ next(filter(pred,  │                    │       │           │            │ │
+│ │ iterable),         │                    │       │           │            │ │
+│ │ default)           │                    │       │           │            │ │
+│ │ +    return        │                    │       │           │            │ │
+│ │ next(filter(predi… │                    │       │           │            │ │
+│ │ iterable),         │                    │       │           │            │ │
+│ │ default)           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ random_product(*i… │                    │       │           │            │ │
+│ │ repeat=1):         │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_reci… │                    │       │           │            │ │
+│ │ b/tests/test_reci… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 814b63f..dcbdde8   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_reci… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_reci… │                    │       │           │            │ │
+│ │ @@ -522,7 +522,7   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ FirstTrueTests(Te… │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ test_pred(self):   │                    │       │           │            │ │
+│ │          """Test   │                    │       │           │            │ │
+│ │ with a custom      │                    │       │           │            │ │
+│ │ predicate"""       │                    │       │           │            │ │
+│ │          self.ass… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ mi.first_true([2,  │                    │       │           │            │ │
+│ │ 4, 6], pred=lambda │                    │       │           │            │ │
+│ │ x: x % 3 == 0), 6  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ mi.first_true([2,  │                    │       │           │            │ │
+│ │ 4, 6],             │                    │       │           │            │ │
+│ │ predicate=lambda   │                    │       │           │            │ │
+│ │ x: x % 3 == 0), 6  │                    │       │           │            │ │
+│ │          )         │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
