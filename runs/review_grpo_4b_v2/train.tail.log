@@ -1,399 +1,399 @@
-│ │ PreparedRequest)   │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │      """           │                    │       │           │            │ │
-│ │      body_seek =   │                    │       │           │            │ │
-│ │ getattr(prepared_… │                    │       │           │            │ │
-│ │ "seek", None)      │                    │       │           │            │ │
-│ │      if body_seek  │                    │       │           │            │ │
-│ │ is not None and    │                    │       │           │            │ │
-│ │ isinstance(        │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ prepared_request.… │                    │       │           │            │ │
-│ │ # type:            │                    │       │           │            │ │
-│ │ ignore[reportPriv… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ prepared_request.… │                    │       │           │            │ │
-│ │          integer_… │                    │       │           │            │ │
-│ │      ):            │                    │       │           │            │ │
-│ │          try:      │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ body_seek(prepare… │                    │       │           │            │ │
-│ │ # type:            │                    │       │           │            │ │
-│ │ ignore[reportPriv… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ body_seek(prepare… │                    │       │           │            │ │
-│ │          except    │                    │       │           │            │ │
-│ │ OSError:           │                    │       │           │            │ │
-│ │              raise │                    │       │           │            │ │
-│ │ UnrewindableBodyE… │                    │       │           │            │ │
-│ │                  … │                    │       │           │            │ │
-│ │ error occurred     │                    │       │           │            │ │
-│ │ when rewinding     │                    │       │           │            │ │
-│ │ request body for   │                    │       │           │            │ │
-│ │ redirect."         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
-│ │ SYSTEM             │ ASSISTANT          │  1.00 │      0.72 │ approve    │ │
-│ │ You are the code   │ {"decision":       │       │           │            │ │
-│ │ review gate for a  │ "approve",         │       │           │            │ │
-│ │ production         │ "comments":        │       │           │            │ │
-│ │ repository. Your   │ [{"file":          │       │           │            │ │
-│ │ approval merges    │ "src/structlog/de… │       │           │            │ │
-│ │ and deploys the    │ "line_start": 495, │       │           │            │ │
-│ │ change with no     │ "line_end": 503,   │       │           │            │ │
-│ │ further human      │ "body":            │       │           │            │ │
-│ │ review. Decide:    │ "Deprecation       │       │           │            │ │
-│ │   approve  - you   │ warning added for  │       │           │            │ │
-│ │ are confident the  │ better-exceptions. │       │           │            │ │
-│ │ change is correct  │ This is needed for │       │           │            │ │
-│ │ and safe to ship.  │ this removal."}]}  │       │           │            │ │
-│ │   block    - you   │                    │       │           │            │ │
-│ │ found a defect;    │                    │       │           │            │ │
-│ │ cite its location. │                    │       │           │            │ │
-│ │   escalate - you   │                    │       │           │            │ │
-│ │ cannot establish   │                    │       │           │            │ │
-│ │ safety from what   │                    │       │           │            │ │
-│ │ you can see; a     │                    │       │           │            │ │
-│ │ human must look.   │                    │       │           │            │ │
-│ │ Approving a change │                    │       │           │            │ │
-│ │ that contains a    │                    │       │           │            │ │
-│ │ defect is the      │                    │       │           │            │ │
-│ │ worst outcome.     │                    │       │           │            │ │
-│ │ Blocking a correct │                    │       │           │            │ │
-│ │ change costs an    │                    │       │           │            │ │
-│ │ engineer's time.   │                    │       │           │            │ │
-│ │ Escalating is      │                    │       │           │            │ │
-│ │ cheap but useless  │                    │       │           │            │ │
-│ │ if done for        │                    │       │           │            │ │
-│ │ everything.        │                    │       │           │            │ │
-│ │ Respond with       │                    │       │           │            │ │
-│ │ exactly one JSON   │                    │       │           │            │ │
-│ │ object and nothing │                    │       │           │            │ │
-│ │ else:              │                    │       │           │            │ │
-│ │ {"decision":       │                    │       │           │            │ │
-│ │ "approve|block|es… │                    │       │           │            │ │
-│ │ "comments":        │                    │       │           │            │ │
-│ │ [{"file": "...",   │                    │       │           │            │ │
-│ │ "line_start": N,   │                    │       │           │            │ │
-│ │ "line_end": N,     │                    │       │           │            │ │
-│ │ "body": "...",     │                    │       │           │            │ │
-│ │ "proposed_test":   │                    │       │           │            │ │
-│ │ "optional pytest   │                    │       │           │            │ │
-│ │ source"}]}         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ USER               │                    │       │           │            │ │
-│ │ Repository:        │                    │       │           │            │ │
-│ │ structlog          │                    │       │           │            │ │
-│ │ Files changed:     │                    │       │           │            │ │
-│ │ CHANGELOG.md,      │                    │       │           │            │ │
-│ │ docs/console-outp… │                    │       │           │            │ │
-│ │ docs/exceptions.m… │                    │       │           │            │ │
-│ │ docs/getting-star… │                    │       │           │            │ │
-│ │ src/structlog/dev… │                    │       │           │            │ │
-│ │ tests/test_dev.py  │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Not shown          │                    │       │           │            │ │
-│ │ (non-code or over  │                    │       │           │            │ │
-│ │ budget; treat as   │                    │       │           │            │ │
-│ │ unreviewed):       │                    │       │           │            │ │
-│ │ CHANGELOG.md (756  │                    │       │           │            │ │
-│ │ chars, non-code),  │                    │       │           │            │ │
-│ │ docs/console-outp… │                    │       │           │            │ │
-│ │ (2057 chars,       │                    │       │           │            │ │
-│ │ non-code),         │                    │       │           │            │ │
-│ │ docs/exceptions.md │                    │       │           │            │ │
-│ │ (1169 chars,       │                    │       │           │            │ │
-│ │ non-code),         │                    │       │           │            │ │
-│ │ docs/getting-star… │                    │       │           │            │ │
-│ │ (1791 chars,       │                    │       │           │            │ │
-│ │ non-code)          │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Context around the │                    │       │           │            │ │
-│ │ change             │                    │       │           │            │ │
-│ │ (mechanically      │                    │       │           │            │ │
-│ │ extracted):        │                    │       │           │            │ │
-│ │ Changed            │                    │       │           │            │ │
-│ │ definitions:       │                    │       │           │            │ │
-│ │ src/structlog/dev… │                    │       │           │            │ │
-│ │ src/structlog/dev… │                    │       │           │            │ │
-│ │ tests/test_dev.py… │                    │       │           │            │ │
-│ │ tests/test_dev.py… │                    │       │           │            │ │
-│ │ tests/test_dev.py… │                    │       │           │            │ │
-│ │ tests/test_dev.py… │                    │       │           │            │ │
-│ │ tests/test_dev.py… │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ src/structlog/dev… │                    │       │           │            │ │
-│ │   15a4c48          │                    │       │           │            │ │
-│ │ 2026-03-29 Drop    │                    │       │           │            │ │
-│ │ 3.9 (#800)         │                    │       │           │            │ │
-│ │   abd2638          │                    │       │           │            │ │
-│ │ 2026-03-04 dev:    │                    │       │           │            │ │
-│ │ don't raise        │                    │       │           │            │ │
-│ │ warning on         │                    │       │           │            │ │
-│ │ rendered           │                    │       │           │            │ │
-│ │ exceptions (#790)  │                    │       │           │            │ │
-│ │   65ceffd          │                    │       │           │            │ │
-│ │ 2026-02-21 update  │                    │       │           │            │ │
-│ │ dev                │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ tests/test_dev.py: │                    │       │           │            │ │
-│ │   abd2638          │                    │       │           │            │ │
-│ │ 2026-03-04 dev:    │                    │       │           │            │ │
-│ │ don't raise        │                    │       │           │            │ │
-│ │ warning on         │                    │       │           │            │ │
-│ │ rendered           │                    │       │           │            │ │
-│ │ exceptions (#790)  │                    │       │           │            │ │
-│ │   65ceffd          │                    │       │           │            │ │
-│ │ 2026-02-21 update  │                    │       │           │            │ │
-│ │ dev                │                    │       │           │            │ │
-│ │   de1a79e          │                    │       │           │            │ │
-│ │ 2025-10-27 Drop    │                    │       │           │            │ │
-│ │ Python 3.8 (#768)  │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Diff:              │                    │       │           │            │ │
-│ │ ```diff            │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
 │ │ a/src/structlog/d… │                    │       │           │            │ │
 │ │ b/src/structlog/d… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ 0f08d7a..c521ea1   │                    │       │           │            │ │
+│ │ f49b38a..2c0a764   │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
 │ │ a/src/structlog/d… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
 │ │ b/src/structlog/d… │                    │       │           │            │ │
-│ │ @@ -494,7 +494,16  │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ better_traceback(… │                    │       │           │            │ │
-│ │ TextIO, exc_info:  │                    │       │           │            │ │
-│ │ ExcInfo) -> None:  │                    │       │           │            │ │
-│ │      Used by       │                    │       │           │            │ │
-│ │ default if         │                    │       │           │            │ │
-│ │ *better-exception… │                    │       │           │            │ │
-│ │ is installed and   │                    │       │           │            │ │
-│ │ Rich is absent.    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
+│ │ @@ -567,7 +567,7   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ ConsoleRenderer:   │                    │       │           │            │ │
 │ │      ..            │                    │       │           │            │ │
 │ │ versionadded::     │                    │       │           │            │ │
-│ │ 21.2.0             │                    │       │           │            │ │
-│ │ +    ..            │                    │       │           │            │ │
-│ │ deprecated::       │                    │       │           │            │ │
-│ │ 26.1.0             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ *better-exception… │                    │       │           │            │ │
-│ │ support is         │                    │       │           │            │ │
-│ │ deprecated and     │                    │       │           │            │ │
-│ │ will be removed in │                    │       │           │            │ │
-│ │ a                  │                    │       │           │            │ │
-│ │ +       future     │                    │       │           │            │ │
-│ │ release. Use Rich  │                    │       │           │            │ │
-│ │ instead.           │                    │       │           │            │ │
+│ │ 24.2.0 *pad_level* │                    │       │           │            │ │
 │ │      """           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.warn(     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "better-exceptions │                    │       │           │            │ │
-│ │ support is         │                    │       │           │            │ │
-│ │ deprecated and     │                    │       │           │            │ │
-│ │ will be removed "  │                    │       │           │            │ │
-│ │ +        "in a     │                    │       │           │            │ │
-│ │ future release.    │                    │       │           │            │ │
-│ │ Use Rich           │                    │       │           │            │ │
-│ │ instead.",         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ DeprecationWarnin… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ stacklevel=2,      │                    │       │           │            │ │
-│ │ +    )             │                    │       │           │            │ │
-│ │      sio.write("\… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "".join(better_ex… │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
+│ │ -    def __init__( │                    │       │           │            │ │
+│ │ # noqa: PLR0912,   │                    │       │           │            │ │
+│ │ PLR0915            │                    │       │           │            │ │
+│ │ +    def __init__( │                    │       │           │            │ │
+│ │          self,     │                    │       │           │            │ │
+│ │          pad_even… │                    │       │           │            │ │
+│ │ int =              │                    │       │           │            │ │
+│ │ _EVENT_WIDTH,      │                    │       │           │            │ │
+│ │          colors:   │                    │       │           │            │ │
+│ │ bool =             │                    │       │           │            │ │
+│ │ _has_colors,       │                    │       │           │            │ │
+│ │ @@ -630,29 +630,7  │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ ConsoleRenderer:   │                    │       │           │            │ │
+│ │              retu… │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │ @@ -502,6 +511,12  │                    │       │           │            │ │
-│ │ @@ if rich is not  │                    │       │           │            │ │
+│ │          # Create  │                    │       │           │            │ │
+│ │ default columns    │                    │       │           │            │ │
+│ │ configuration.     │                    │       │           │            │ │
+│ │ -        styles:   │                    │       │           │            │ │
+│ │ Styles             │                    │       │           │            │ │
+│ │ -        if        │                    │       │           │            │ │
+│ │ colors:            │                    │       │           │            │ │
+│ │ -            if    │                    │       │           │            │ │
+│ │ _IS_WINDOWS:  #    │                    │       │           │            │ │
+│ │ pragma: no cover   │                    │       │           │            │ │
+│ │ -                # │                    │       │           │            │ │
+│ │ On Windows, we     │                    │       │           │            │ │
+│ │ can't do colorful  │                    │       │           │            │ │
+│ │ output without     │                    │       │           │            │ │
+│ │ colorama.          │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ if colorama is     │                    │       │           │            │ │
 │ │ None:              │                    │       │           │            │ │
-│ │      default_exce… │                    │       │           │            │ │
-│ │ = rich_traceback   │                    │       │           │            │ │
-│ │  elif              │                    │       │           │            │ │
-│ │ better_exceptions  │                    │       │           │            │ │
-│ │ is not None:       │                    │       │           │            │ │
-│ │      default_exce… │                    │       │           │            │ │
-│ │ = better_traceback │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.warn(     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "better-exceptions │                    │       │           │            │ │
-│ │ support is         │                    │       │           │            │ │
-│ │ deprecated and     │                    │       │           │            │ │
-│ │ will be removed "  │                    │       │           │            │ │
-│ │ +        "in a     │                    │       │           │            │ │
-│ │ future release.    │                    │       │           │            │ │
-│ │ Use Rich           │                    │       │           │            │ │
-│ │ instead.",         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ DeprecationWarnin… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ stacklevel=2,      │                    │       │           │            │ │
-│ │ +    )             │                    │       │           │            │ │
-│ │  else:             │                    │       │           │            │ │
-│ │      default_exce… │                    │       │           │            │ │
-│ │ = plain_traceback  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ classname =        │                    │       │           │            │ │
+│ │ self.__class__.__… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ raise SystemError( │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ _MISSING.format(   │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ who=classname + "  │                    │       │           │            │ │
+│ │ with               │                    │       │           │            │ │
+│ │ `colors=True`",    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ package="colorama… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ )                  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ )                  │                    │       │           │            │ │
+│ │ -                # │                    │       │           │            │ │
+│ │ Colorama must be   │                    │       │           │            │ │
+│ │ init'd on Windows, │                    │       │           │            │ │
+│ │ but must NOT be    │                    │       │           │            │ │
+│ │ -                # │                    │       │           │            │ │
+│ │ init'd on other    │                    │       │           │            │ │
+│ │ OSes, because it   │                    │       │           │            │ │
+│ │ can break colors.  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ if force_colors:   │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ colorama.deinit()  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ colorama.init(str… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ colorama.init()    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ styles =           │                    │       │           │            │ │
+│ │ _ColorfulStyles    │                    │       │           │            │ │
+│ │ -        else:     │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ styles =           │                    │       │           │            │ │
+│ │ _PlainStyles       │                    │       │           │            │ │
+│ │ +        styles =  │                    │       │           │            │ │
+│ │ self.get_default_… │                    │       │           │            │ │
+│ │ force_colors)      │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │ @@ -511,8 +526,8   │                    │       │           │            │ │
+│ │          self._st… │                    │       │           │            │ │
+│ │ = styles           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ @@ -719,6 +697,53  │                    │       │           │            │ │
 │ │ @@ class           │                    │       │           │            │ │
 │ │ ConsoleRenderer:   │                    │       │           │            │ │
-│ │      Render        │                    │       │           │            │ │
-│ │ ``event_dict``     │                    │       │           │            │ │
-│ │ nicely aligned,    │                    │       │           │            │ │
-│ │ possibly in        │                    │       │           │            │ │
-│ │ colors, and        │                    │       │           │            │ │
-│ │ ordered.           │                    │       │           │            │ │
+│ │              Colu… │                    │       │           │            │ │
+│ │ logger_name_forma… │                    │       │           │            │ │
+│ │          ]         │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │      If            │                    │       │           │            │ │
-│ │ ``event_dict``     │                    │       │           │            │ │
-│ │ contains a         │                    │       │           │            │ │
-│ │ true-ish           │                    │       │           │            │ │
-│ │ ``exc_info`` key,  │                    │       │           │            │ │
-│ │ it will be         │                    │       │           │            │ │
-│ │ rendered           │                    │       │           │            │ │
-│ │ -    *after* the   │                    │       │           │            │ │
-│ │ log line. If Rich_ │                    │       │           │            │ │
-│ │ or                 │                    │       │           │            │ │
-│ │ better-exceptions_ │                    │       │           │            │ │
-│ │ are present, in    │                    │       │           │            │ │
-│ │ colors             │                    │       │           │            │ │
-│ │ -    and with      │                    │       │           │            │ │
-│ │ extra context.     │                    │       │           │            │ │
-│ │ +    *after* the   │                    │       │           │            │ │
-│ │ log line. If Rich_ │                    │       │           │            │ │
-│ │ is present, in     │                    │       │           │            │ │
-│ │ colors and with    │                    │       │           │            │ │
-│ │ extra              │                    │       │           │            │ │
-│ │ +    context.      │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      Tip:          │                    │       │           │            │ │
-│ │          Since     │                    │       │           │            │ │
-│ │ `ConsoleRenderer`  │                    │       │           │            │ │
-│ │ is mainly a        │                    │       │           │            │ │
-│ │ development        │                    │       │           │            │ │
-│ │ helper, it is less │                    │       │           │            │ │
-│ │ @@ -558,12 +573,10 │                    │       │           │            │ │
-│ │ @@ class           │                    │       │           │            │ │
-│ │ ConsoleRenderer:   │                    │       │           │            │ │
-│ │              are   │                    │       │           │            │ │
-│ │ passed.            │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │          exceptio… │                    │       │           │            │ │
-│ │ -            A     │                    │       │           │            │ │
-│ │ callable to render │                    │       │           │            │ │
-│ │ ``exc_infos``. If  │                    │       │           │            │ │
-│ │ Rich_ or           │                    │       │           │            │ │
-│ │ better-exceptions_ │                    │       │           │            │ │
-│ │ -            are   │                    │       │           │            │ │
-│ │ installed, they    │                    │       │           │            │ │
-│ │ are used for       │                    │       │           │            │ │
-│ │ pretty-printing by │                    │       │           │            │ │
-│ │ default (rich_     │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ taking             │                    │       │           │            │ │
-│ │ precedence). You   │                    │       │           │            │ │
-│ │ can also manually  │                    │       │           │            │ │
-│ │ set it to          │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ `plain_traceback`, │                    │       │           │            │ │
-│ │ `better_traceback… │                    │       │           │            │ │
-│ │ an instance of     │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ `RichTracebackFor… │                    │       │           │            │ │
-│ │ like               │                    │       │           │            │ │
-│ │ `rich_traceback`,  │                    │       │           │            │ │
-│ │ or implement your  │                    │       │           │            │ │
-│ │ -            own.  │                    │       │           │            │ │
-│ │ +            A     │                    │       │           │            │ │
-│ │ callable to render │                    │       │           │            │ │
-│ │ ``exc_infos``. If  │                    │       │           │            │ │
-│ │ Rich_ is           │                    │       │           │            │ │
-│ │ installed, it is   │                    │       │           │            │ │
-│ │ +            used  │                    │       │           │            │ │
-│ │ for                │                    │       │           │            │ │
-│ │ pretty-printing by │                    │       │           │            │ │
-│ │ default. You can   │                    │       │           │            │ │
-│ │ also manually set  │                    │       │           │            │ │
-│ │ it                 │                    │       │           │            │ │
-│ │ +            to    │                    │       │           │            │ │
-│ │ `plain_traceback`, │                    │       │           │            │ │
-│ │ an instance of     │                    │       │           │            │ │
-│ │ `RichTracebackFor… │                    │       │           │            │ │
-│ │ like               │                    │       │           │            │ │
+│ │ +    @classmethod  │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ get_default_colum… │                    │       │           │            │ │
+│ │ +        cls,      │                    │       │           │            │ │
+│ │ colors: bool =     │                    │       │           │            │ │
+│ │ _has_colors,       │                    │       │           │            │ │
+│ │ force_colors: bool │                    │       │           │            │ │
+│ │ = False            │                    │       │           │            │ │
+│ │ +    ) -> Styles:  │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        Configure │                    │       │           │            │ │
+│ │ and return the     │                    │       │           │            │ │
+│ │ appropriate styles │                    │       │           │            │ │
+│ │ class for console  │                    │       │           │            │ │
+│ │ output.            │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ `rich_traceback`,  │                    │       │           │            │ │
-│ │ or implement your  │                    │       │           │            │ │
-│ │ own.               │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │          sort_key… │                    │       │           │            │ │
-│ │              Whet… │                    │       │           │            │ │
-│ │ to sort keys when  │                    │       │           │            │ │
-│ │ formatting. `True` │                    │       │           │            │ │
-│ │ by default.        │                    │       │           │            │ │
-│ │ Ignored if         │                    │       │           │            │ │
+│ │ +        This      │                    │       │           │            │ │
+│ │ method handles the │                    │       │           │            │ │
+│ │ setup of colorful  │                    │       │           │            │ │
+│ │ or plain styles,   │                    │       │           │            │ │
+│ │ including          │                    │       │           │            │ │
+│ │ +        proper    │                    │       │           │            │ │
+│ │ colorama           │                    │       │           │            │ │
+│ │ initialization on  │                    │       │           │            │ │
+│ │ Windows systems    │                    │       │           │            │ │
+│ │ when colors are    │                    │       │           │            │ │
+│ │ enabled.           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        Args:     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colors: Whether to │                    │       │           │            │ │
+│ │ use colorful       │                    │       │           │            │ │
+│ │ output styles.     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ force_colors:      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Force colorful     │                    │       │           │            │ │
+│ │ output even in     │                    │       │           │            │ │
+│ │ non-interactive    │                    │       │           │            │ │
+│ │ environments.      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Only relevant on   │                    │       │           │            │ │
+│ │ Windows with       │                    │       │           │            │ │
+│ │ colorama.          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        Returns:  │                    │       │           │            │ │
+│ │ +            The   │                    │       │           │            │ │
+│ │ configured styles  │                    │       │           │            │ │
+│ │ class              │                    │       │           │            │ │
+│ │ (_ColorfulStyles   │                    │       │           │            │ │
+│ │ or _PlainStyles).  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        Raises:   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ SystemError: On    │                    │       │           │            │ │
+│ │ Windows when       │                    │       │           │            │ │
+│ │ colors=True but    │                    │       │           │            │ │
+│ │ colorama is not    │                    │       │           │            │ │
+│ │ installed.         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        ..        │                    │       │           │            │ │
+│ │ versionadded::     │                    │       │           │            │ │
+│ │ 25.5.0             │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        if not    │                    │       │           │            │ │
+│ │ colors:            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ return             │                    │       │           │            │ │
+│ │ _PlainStyles       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        if        │                    │       │           │            │ │
+│ │ _IS_WINDOWS:  #    │                    │       │           │            │ │
+│ │ pragma: no cover   │                    │       │           │            │ │
+│ │ +            # On  │                    │       │           │            │ │
+│ │ Windows, we can't  │                    │       │           │            │ │
+│ │ do colorful output │                    │       │           │            │ │
+│ │ without colorama.  │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ colorama is None:  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ raise SystemError( │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ _MISSING.format(   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ who=cls.__name__ + │                    │       │           │            │ │
+│ │ " with             │                    │       │           │            │ │
+│ │ `colors=True`",    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ package="colorama… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ )                  │                    │       │           │            │ │
+│ │ +                ) │                    │       │           │            │ │
+│ │ +            #     │                    │       │           │            │ │
+│ │ Colorama must be   │                    │       │           │            │ │
+│ │ init'd on Windows, │                    │       │           │            │ │
+│ │ but must NOT be    │                    │       │           │            │ │
+│ │ +            #     │                    │       │           │            │ │
+│ │ init'd on other    │                    │       │           │            │ │
+│ │ OSes, because it   │                    │       │           │            │ │
+│ │ can break colors.  │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ force_colors:      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colorama.deinit()  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colorama.init(str… │                    │       │           │            │ │
+│ │ +            else: │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colorama.init()    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ _ColorfulStyles    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ _repr(self, val:   │                    │       │           │            │ │
+│ │ Any) -> str:       │                    │       │           │            │ │
+│ │          """       │                    │       │           │            │ │
+│ │          Determine │                    │       │           │            │ │
+│ │ representation of  │                    │       │           │            │ │
+│ │ *val* depending on │                    │       │           │            │ │
+│ │ its type &         │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
 │ │ a/tests/test_dev.… │                    │       │           │            │ │
 │ │ b/tests/test_dev.… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ 7c6a20b..45b0756   │                    │       │           │            │ │
+│ │ 58020d8..05da67d   │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
 │ │ a/tests/test_dev.… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
 │ │ b/tests/test_dev.… │                    │       │           │            │ │
-│ │ @@ -865,10 +865,22 │                    │       │           │            │ │
+│ │ @@ -175,6 +175,64  │                    │       │           │            │ │
 │ │ @@ class           │                    │       │           │            │ │
-│ │ TestBetterTraceba… │                    │       │           │            │ │
-│ │          try:      │                    │       │           │            │ │
-│ │              0 / 0 │                    │       │           │            │ │
-│ │          except    │                    │       │           │            │ │
-│ │ ZeroDivisionError: │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ dev.better_traceb… │                    │       │           │            │ │
-│ │ sys.exc_info())    │                    │       │           │            │ │
-│ │ +            with  │                    │       │           │            │ │
-│ │ pytest.warns(Depr… │                    │       │           │            │ │
-│ │ match="better-exc… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ dev.better_traceb… │                    │       │           │            │ │
-│ │ sys.exc_info())    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │          assert    │                    │       │           │            │ │
-│ │ sio.getvalue().st… │                    │       │           │            │ │
+│ │ TestConsoleRender… │                    │       │           │            │ │
+│ │              +     │                    │       │           │            │ │
+│ │ styles.reset       │                    │       │           │            │ │
+│ │          ) == rv   │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ +    def           │                    │       │           │            │ │
-│ │ test_deprecation_… │                    │       │           │            │ │
+│ │ test_returns_colo… │                    │       │           │            │ │
 │ │ +        """       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ better_traceback   │                    │       │           │            │ │
-│ │ emits a            │                    │       │           │            │ │
-│ │ DeprecationWarnin… │                    │       │           │            │ │
+│ │ +        When      │                    │       │           │            │ │
+│ │ colors=True,       │                    │       │           │            │ │
+│ │ returns            │                    │       │           │            │ │
+│ │ _ColorfulStyles    │                    │       │           │            │ │
+│ │ class.             │                    │       │           │            │ │
 │ │ +        """       │                    │       │           │            │ │
-│ │ +        sio =     │                    │       │           │            │ │
-│ │ StringIO()         │                    │       │           │            │ │
-│ │ +        try:      │                    │       │           │            │ │
-│ │ +            0 / 0 │                    │       │           │            │ │
-│ │ +        except    │                    │       │           │            │ │
-│ │ ZeroDivisionError: │                    │       │           │            │ │
-│ │ +            with  │                    │       │           │            │ │
-│ │ pytest.warns(Depr… │                    │       │           │            │ │
-│ │ match="better-exc… │                    │       │           │            │ │
+│ │ +        styles =  │                    │       │           │            │ │
+│ │ dev.ConsoleRender… │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ dev.better_traceb… │                    │       │           │            │ │
-│ │ sys.exc_info())    │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles is          │                    │       │           │            │ │
+│ │ dev._ColorfulStyl… │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "reset")           │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "bright")          │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "level_critical")  │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "kv_key")          │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ hasattr(styles,    │                    │       │           │            │ │
+│ │ "kv_value")        │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  class             │                    │       │           │            │ │
-│ │ TestLogLevelColum… │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_returns_plai… │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        When      │                    │       │           │            │ │
+│ │ colors=False,      │                    │       │           │            │ │
+│ │ returns            │                    │       │           │            │ │
+│ │ _PlainStyles       │                    │       │           │            │ │
+│ │ class.             │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        styles =  │                    │       │           │            │ │
+│ │ dev.ConsoleRender… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles is          │                    │       │           │            │ │
+│ │ dev._PlainStyles   │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.reset == "" │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.bright ==   │                    │       │           │            │ │
+│ │ ""                 │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.level_crit… │                    │       │           │            │ │
+│ │ == ""              │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.kv_key ==   │                    │       │           │            │ │
+│ │ ""                 │                    │       │           │            │ │
+│ │ +        assert    │                    │       │           │            │ │
+│ │ styles.kv_value == │                    │       │           │            │ │
+│ │ ""                 │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ @pytest.mark.skip… │                    │       │           │            │ │
+│ │ +        not       │                    │       │           │            │ │
+│ │ dev._IS_WINDOWS or │                    │       │           │            │ │
+│ │ dev.colorama is    │                    │       │           │            │ │
+│ │ not None,          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ reason="Only       │                    │       │           │            │ │
+│ │ relevant on        │                    │       │           │            │ │
+│ │ Windows without    │                    │       │           │            │ │
+│ │ colorama",         │                    │       │           │            │ │
+│ │ +    )             │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_raises_syste… │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        On        │                    │       │           │            │ │
+│ │ Windows without    │                    │       │           │            │ │
+│ │ colorama, raises   │                    │       │           │            │ │
+│ │ SystemError when   │                    │       │           │            │ │
+│ │ colors=True.       │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        with      │                    │       │           │            │ │
+│ │ pytest.raises(Sys… │                    │       │           │            │ │
+│ │ match="requires    │                    │       │           │            │ │
+│ │ the colorama       │                    │       │           │            │ │
+│ │ package"):         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ dev.ConsoleRender… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ @pytest.mark.skip… │                    │       │           │            │ │
+│ │ +        not       │                    │       │           │            │ │
+│ │ dev._IS_WINDOWS or │                    │       │           │            │ │
+│ │ dev.colorama is    │                    │       │           │            │ │
+│ │ None,              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ reason="Only       │                    │       │           │            │ │
+│ │ relevant on        │                    │       │           │            │ │
+│ │ Windows with       │                    │       │           │            │ │
+│ │ colorama",         │                    │       │           │            │ │
+│ │ +    )             │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_initializes_… │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        On        │                    │       │           │            │ │
+│ │ Windows with       │                    │       │           │            │ │
+│ │ colorama,          │                    │       │           │            │ │
+│ │ force_colors=True  │                    │       │           │            │ │
+│ │ reinitializes      │                    │       │           │            │ │
+│ │ colorama.          │                    │       │           │            │ │
+│ │ +        """       │                    │       │           │            │ │
+│ │ +        with      │                    │       │           │            │ │
+│ │ mock.patch.object( │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ dev.colorama,      │                    │       │           │            │ │
+│ │ "init"             │                    │       │           │            │ │
+│ │ +        ) as      │                    │       │           │            │ │
+│ │ mock_init,         │                    │       │           │            │ │
+│ │ mock.patch.object( │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ dev.colorama,      │                    │       │           │            │ │
+│ │ "deinit"           │                    │       │           │            │ │
+│ │ +        ) as      │                    │       │           │            │ │
+│ │ mock_deinit:       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ styles =           │                    │       │           │            │ │
+│ │ dev.ConsoleRender… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ colors=True,       │                    │       │           │            │ │
+│ │ force_colors=True  │                    │       │           │            │ │
+│ │ +            )     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ assert styles is   │                    │       │           │            │ │
+│ │ dev._ColorfulStyl… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ mock_deinit.asser… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ mock_init.assert_… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
 │ │      def           │                    │       │           │            │ │
-│ │ test_no_style(sel… │                    │       │           │            │ │
+│ │ test_logger_name(… │                    │       │           │            │ │
+│ │ cr, styles,        │                    │       │           │            │ │
+│ │ padded):           │                    │       │           │            │ │
+│ │          """       │                    │       │           │            │ │
+│ │          Logger    │                    │       │           │            │ │
+│ │ names are appended │                    │       │           │            │ │
+│ │ after the event.   │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ ```                │                    │       │           │            │ │
 │ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
