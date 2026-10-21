@@ -1,30 +1,30 @@
-time_utc: 2026-10-21T01:15:17Z
-tag: tick
+time_utc: 2026-10-21T01:18:02Z
+tag: final
 tmux_ft_alive: yes
 gpu: NVIDIA A100-SXM4-80GB, 0 MiB, 81920 MiB, 0 %
 ---- last 25 log lines
-    llm = LLM(model=model, dtype="bfloat16", gpu_memory_utilization=gpu_mem,
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspace/venv/lib/python3.12/site-packages/vllm/entrypoints/llm.py", line 344, in __init__
-    self.llm_engine = LLMEngine.from_engine_args(
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspace/venv/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py", line 177, in from_engine_args
-    vllm_config = engine_args.create_engine_config(usage_context)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspace/venv/lib/python3.12/site-packages/vllm/engine/arg_utils.py", line 2183, in create_engine_config
-    model_config = self.create_model_config()
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspace/venv/lib/python3.12/site-packages/vllm/engine/arg_utils.py", line 1918, in create_model_config
-    return ModelConfig(
-           ^^^^^^^^^^^^
-  File "/workspace/venv/lib/python3.12/site-packages/pydantic/_internal/_dataclasses.py", line 121, in __init__
-    s.__pydantic_validator__.validate_python(ArgsKwargs(args, kwargs), self_instance=s)
-pydantic_core._pydantic_core.ValidationError: 1 validation error for ModelConfig
-  Value error, Invalid repository ID or local directory specified: 'runs/review_grpo_4b/final'.
-Please verify the following requirements:
-1. Provide a valid Hugging Face repository ID.
-2. Specify a local directory that contains a recognized configuration file.
-   - For Hugging Face models: ensure the presence of a 'config.json'.
-   - For Mistral models: ensure the presence of a 'params.json'.
- [type=value_error, input_value=ArgsKwargs((), {'model': ...nderer_num_workers': 1}), input_type=ArgsKwargs]
-    For further information visit https://errors.pydantic.dev/2.14/v/value_error
+label         model                                        n     acc   ±seeds runs        wilson95
+grpo          runs/review_grpo_4b/merged                 118   0.500        —    1   0.411-0.589
+base          Qwen/Qwen3-4B                              118   0.458        —    1   0.370-0.547
+sft           runs/review_sft_4b/final                   118   0.288        —    1   0.214-0.376
+local_base_review_grpo_4b: n=118 bugs_approved=62/70 auto_ship=0.98 escalate=0.00 blk_prec=0.8888888888888888 unparsable=0 -> /workspace/ft-lab/review/agent/results/local_base_review_grpo_4b.json
+local_grpo_review_grpo_4b: n=118 bugs_approved=1/70 auto_ship=0.17 escalate=0.27 blk_prec=0.6493506493506493 unparsable=30 -> /workspace/ft-lab/review/agent/results/local_grpo_review_grpo_4b.json
+local_sft_review_grpo_4b: n=118 bugs_approved=1/70 auto_ship=0.00 escalate=0.50 blk_prec=0.5862068965517241 unparsable=59 -> /workspace/ft-lab/review/agent/results/local_sft_review_grpo_4b.json
+label               cond       runs   bugs appr   auto-ship    escalate    blk prec       local      strong    $/PR
+haiku_pub2_v5       loop          1   0.00        0.12        0.49        0.86        0.92        0.00        0.015
+local_grpo_review_grpo_4bgate          1   0.01        0.17        0.27        0.65        0.36        0.00        0.000
+local_sft_review_grpo_4bgate          1   0.01        0.00        0.50        0.59        0.44        0.00        0.000
+sonnet_pub2_v4b_rescoredloop          1   0.03        0.46        0.23        0.91        0.84        0.00        0.030
+sonnet_pub2_v5      loop          1   0.06        0.35        0.31        0.94        0.93        0.00        0.032
+haiku_pub2_v4b_rescoredloop          1   0.06        0.27        0.34        0.87        0.89        0.00        0.016
+local_base_review_grpo_4bgate          1   0.89        0.98        0.00        0.89        0.62        0.00        0.000
+
+label                    llm bugs appr   llm blocked      op bugs appr    op blocked    real bugs appr  real blocked
+local_base_review_grpo_4b          0.82 n=39          0.18          0.97 n=29          0.03          1.00 n=2           0.00
+local_grpo_review_grpo_4b          0.00 n=39          0.64          0.00 n=29          0.83          0.50 n=2           0.50
+local_sft_review_grpo_4b          0.00 n=39          0.56          0.00 n=29          0.38          0.50 n=2           0.50
+haiku_pub2_v5                 0.00 n=20          0.65          0.00 n=13          0.85          0.00 n=2           0.00
+sonnet_pub2_v5                0.05 n=20          0.80          0.08 n=13          0.92          0.00 n=2           0.50
+haiku_pub2_v4b_rescored          0.00 n=20          0.75          0.08 n=13          0.85          0.50 n=2           0.50
+sonnet_pub2_v4b_rescored          0.05 n=20          0.85          0.00 n=13          0.92          0.00 n=2           1.00
+PHASE-DONE
