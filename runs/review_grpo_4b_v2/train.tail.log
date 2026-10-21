@@ -1,400 +1,400 @@
-│ │ be installed       │                    │       │           │            │ │
-│ │ +    separately,   │                    │       │           │            │ │
-│ │ e.g. `pip install  │                    │       │           │            │ │
-│ │ orjson`.           │                    │       │           │            │ │
-│ │      """           │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ render(self,       │                    │       │           │            │ │
-│ │ content: Any) ->   │                    │       │           │            │ │
-│ │ bytes:             │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/pyproject.toml   │                    │       │           │            │ │
-│ │ b/pyproject.toml   │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ c51eb8ce9..79dfc1… │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/pyproject.toml   │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/pyproject.toml   │                    │       │           │            │ │
-│ │ @@ -105,10 +105,6  │                    │       │           │            │ │
-│ │ @@ all = [         │                    │       │           │            │ │
-│ │      "itsdangerous │                    │       │           │            │ │
-│ │ >=1.1.0",          │                    │       │           │            │ │
-│ │      # For         │                    │       │           │            │ │
-│ │ Starlette's schema │                    │       │           │            │ │
-│ │ generation, would  │                    │       │           │            │ │
-│ │ not be used with   │                    │       │           │            │ │
-│ │ FastAPI            │                    │       │           │            │ │
-│ │      "pyyaml       │                    │       │           │            │ │
-│ │ >=5.3.1",          │                    │       │           │            │ │
-│ │ -    # For         │                    │       │           │            │ │
-│ │ UJSONResponse      │                    │       │           │            │ │
-│ │ -    "ujson        │                    │       │           │            │ │
-│ │ >=5.8.0",          │                    │       │           │            │ │
-│ │ -    # For         │                    │       │           │            │ │
-│ │ ORJSONResponse     │                    │       │           │            │ │
-│ │ -    "orjson       │                    │       │           │            │ │
-│ │ >=3.9.3",          │                    │       │           │            │ │
-│ │      # To validate │                    │       │           │            │ │
-│ │ email fields       │                    │       │           │            │ │
-│ │      "email-valid… │                    │       │           │            │ │
-│ │ >=2.0.0",          │                    │       │           │            │ │
-│ │      # Uvicorn     │                    │       │           │            │ │
-│ │ with uvloop        │                    │       │           │            │ │
-│ │ @@ -151,6 +147,10  │                    │       │           │            │ │
-│ │ @@ docs = [        │                    │       │           │            │ │
-│ │  docs-tests = [    │                    │       │           │            │ │
-│ │      "httpx        │                    │       │           │            │ │
-│ │ >=0.23.0,<1.0.0",  │                    │       │           │            │ │
-│ │      "ruff         │                    │       │           │            │ │
-│ │ >=0.14.14",        │                    │       │           │            │ │
-│ │ +    # For         │                    │       │           │            │ │
-│ │ UJSONResponse      │                    │       │           │            │ │
-│ │ +    "ujson        │                    │       │           │            │ │
-│ │ >=5.8.0",          │                    │       │           │            │ │
-│ │ +    # For         │                    │       │           │            │ │
-│ │ ORJSONResponse     │                    │       │           │            │ │
-│ │ +    "orjson       │                    │       │           │            │ │
-│ │ >=3.9.3",          │                    │       │           │            │ │
-│ │  ]                 │                    │       │           │            │ │
-│ │  github-actions =  │                    │       │           │            │ │
-│ │ [                  │                    │       │           │            │ │
-│ │      "httpx        │                    │       │           │            │ │
-│ │ >=0.27.0,<1.0.0",  │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_depr… │                    │       │           │            │ │
-│ │ b/tests/test_depr… │                    │       │           │            │ │
-│ │ new file mode      │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 000000000..eff579… │                    │       │           │            │ │
-│ │ --- /dev/null      │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_depr… │                    │       │           │            │ │
-│ │ @@ -0,0 +1,73 @@   │                    │       │           │            │ │
-│ │ +import warnings   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +import pytest     │                    │       │           │            │ │
-│ │ +from fastapi      │                    │       │           │            │ │
-│ │ import FastAPI     │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ fastapi.exceptions │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ fastapi.responses  │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ ORJSONResponse,    │                    │       │           │            │ │
-│ │ UJSONResponse      │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ fastapi.testclient │                    │       │           │            │ │
-│ │ import TestClient  │                    │       │           │            │ │
-│ │ +from pydantic     │                    │       │           │            │ │
-│ │ import BaseModel   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +class             │                    │       │           │            │ │
-│ │ Item(BaseModel):   │                    │       │           │            │ │
-│ │ +    name: str     │                    │       │           │            │ │
-│ │ +    price: float  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +# ORJSON          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ _make_orjson_app() │                    │       │           │            │ │
-│ │ -> FastAPI:        │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +        app =     │                    │       │           │            │ │
-│ │ FastAPI(default_r… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ @app.get("/items") │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ get_items() ->     │                    │       │           │            │ │
-│ │ Item:              │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ Item(name="widget… │                    │       │           │            │ │
-│ │ price=9.99)        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return app    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_orjson_respo… │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ _make_orjson_app() │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +        response  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ client.get("/item… │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ response.status_c… │                    │       │           │            │ │
-│ │ == 200             │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ response.json() == │                    │       │           │            │ │
-│ │ {"name": "widget", │                    │       │           │            │ │
-│ │ "price": 9.99}     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_orjson_respo… │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ pytest.warns(Fast… │                    │       │           │            │ │
-│ │ match="ORJSONResp… │                    │       │           │            │ │
-│ │ is deprecated"):   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ ORJSONResponse(co… │                    │       │           │            │ │
-│ │ "world"})          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +# UJSON           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ _make_ujson_app()  │                    │       │           │            │ │
-│ │ -> FastAPI:        │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +        app =     │                    │       │           │            │ │
-│ │ FastAPI(default_r… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ @app.get("/items") │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ get_items() ->     │                    │       │           │            │ │
-│ │ Item:              │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ Item(name="widget… │                    │       │           │            │ │
-│ │ price=9.99)        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return app    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_ujson_respon… │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ _make_ujson_app()  │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +        response  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ client.get("/item… │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ response.status_c… │                    │       │           │            │ │
-│ │ == 200             │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ response.json() == │                    │       │           │            │ │
-│ │ {"name": "widget", │                    │       │           │            │ │
-│ │ "price": 9.99}     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_ujson_respon… │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ pytest.warns(Fast… │                    │       │           │            │ │
-│ │ match="UJSONRespo… │                    │       │           │            │ │
-│ │ is deprecated"):   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ UJSONResponse(con… │                    │       │           │            │ │
-│ │ "world"})          │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_orjs… │                    │       │           │            │ │
-│ │ b/tests/test_orjs… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 6fe62daf9..63ea05… │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_orjs… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_orjs… │                    │       │           │            │ │
-│ │ @@ -1,9 +1,14 @@   │                    │       │           │            │ │
-│ │ +import warnings   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │  from fastapi      │                    │       │           │            │ │
-│ │ import FastAPI     │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ fastapi.exceptions │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ fastapi.responses  │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ ORJSONResponse     │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ fastapi.testclient │                    │       │           │            │ │
-│ │ import TestClient  │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ sqlalchemy.sql.el… │                    │       │           │            │ │
-│ │ import quoted_name │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -app =             │                    │       │           │            │ │
-│ │ FastAPI(default_r… │                    │       │           │            │ │
-│ │ +with              │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ FastAPI(default_r… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  @app.get("/orjso… │                    │       │           │            │ │
-│ │ @@ -16,6 +21,8 @@  │                    │       │           │            │ │
-│ │ client =           │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_orjson_non_s… │                    │       │           │            │ │
-│ │ -    with client:  │                    │       │           │            │ │
-│ │ -        response  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ client.get("/orjs… │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +        with      │                    │       │           │            │ │
-│ │ client:            │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ response =         │                    │       │           │            │ │
-│ │ client.get("/orjs… │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.json() == │                    │       │           │            │ │
-│ │ {"msg": "Hello     │                    │       │           │            │ │
-│ │ World", "1": 1}    │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_tuto… │                    │       │           │            │ │
-│ │ b/tests/test_tuto… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ cec5ebe6c..a691dd… │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_tuto… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_tuto… │                    │       │           │            │ │
-│ │ @@ -17,12 +17,14   │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ get_client(reques… │                    │       │           │            │ │
-│ │ pytest.FixtureReq… │                    │       │           │            │ │
-│ │      return client │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +@pytest.mark.fil… │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_get_custom_r… │                    │       │           │            │ │
-│ │ TestClient):       │                    │       │           │            │ │
-│ │      response =    │                    │       │           │            │ │
-│ │ client.get("/item… │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.status_c… │                    │       │           │            │ │
-│ │ == 200,            │                    │       │           │            │ │
-│ │ response.text      │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.json() == │                    │       │           │            │ │
-│ │ [{"item_id":       │                    │       │           │            │ │
-│ │ "Foo"}]            │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +@pytest.mark.fil… │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_openapi_sche… │                    │       │           │            │ │
-│ │ TestClient):       │                    │       │           │            │ │
-│ │      response =    │                    │       │           │            │ │
-│ │ client.get("/open… │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.status_c… │                    │       │           │            │ │
-│ │ == 200,            │                    │       │           │            │ │
-│ │ response.text      │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_tuto… │                    │       │           │            │ │
-│ │ b/tests/test_tuto… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 32437db86..11ce81… │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_tuto… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_tuto… │                    │       │           │            │ │
-│ │ @@ -1,17 +1,25 @@  │                    │       │           │            │ │
-│ │ +import warnings   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +import pytest     │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ fastapi.exceptions │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ fastapi.testclient │                    │       │           │            │ │
-│ │ import TestClient  │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ inline_snapshot    │                    │       │           │            │ │
-│ │ import snapshot    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -from              │                    │       │           │            │ │
-│ │ docs_src.custom_r… │                    │       │           │            │ │
-│ │ import app         │                    │       │           │            │ │
-│ │ +with              │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +    from          │                    │       │           │            │ │
-│ │ docs_src.custom_r… │                    │       │           │            │ │
-│ │ import app         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  client =          │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +@pytest.mark.fil… │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_get_custom_r… │                    │       │           │            │ │
-│ │      response =    │                    │       │           │            │ │
-│ │ client.get("/item… │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.status_c… │                    │       │           │            │ │
-│ │ == 200,            │                    │       │           │            │ │
-│ │ response.text      │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.json() == │                    │       │           │            │ │
-│ │ [{"item_id":       │                    │       │           │            │ │
-│ │ "Foo"}]            │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +@pytest.mark.fil… │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_openapi_sche… │                    │       │           │            │ │
-│ │      response =    │                    │       │           │            │ │
-│ │ client.get("/open… │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.status_c… │                    │       │           │            │ │
-│ │ == 200,            │                    │       │           │            │ │
-│ │ response.text      │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.headers.get("… │                     │       │           │          │ │
+│ │ == "modified"       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_response_with… │                     │       │           │          │ │
+│ │ +    """Regular     │                     │       │           │          │ │
+│ │ Response injection  │                     │       │           │          │ │
+│ │ should still        │                     │       │           │          │ │
+│ │ work."""            │                     │       │           │          │ │
+│ │ +    app =          │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    @app.get("/")  │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ endpoint(response:  │                     │       │           │          │ │
+│ │ Response):          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ response.headers["… │                     │       │           │          │ │
+│ │ = "set"             │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ TestClient(app)     │                     │       │           │          │ │
+│ │ +    resp =         │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.status_code == │                     │       │           │          │ │
+│ │ 200                 │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.json() ==      │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.headers.get("… │                     │       │           │          │ │
+│ │ == "set"            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_response_depe… │                     │       │           │          │ │
+│ │ +    """Response    │                     │       │           │          │ │
+│ │ dependency should   │                     │       │           │          │ │
+│ │ work in a chain of  │                     │       │           │          │ │
+│ │ dependencies."""    │                     │       │           │          │ │
+│ │ +    app =          │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ first_modifier(res… │                     │       │           │          │ │
+│ │ Response) ->        │                     │       │           │          │ │
+│ │ Response:           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ response.headers["… │                     │       │           │          │ │
+│ │ = "1"               │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ response            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ second_modifier(    │                     │       │           │          │ │
+│ │ +        response:  │                     │       │           │          │ │
+│ │ Annotated[Response, │                     │       │           │          │ │
+│ │ Depends(first_modi… │                     │       │           │          │ │
+│ │ +    ) -> Response: │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ response.headers["… │                     │       │           │          │ │
+│ │ = "2"               │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ response            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    @app.get("/")  │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ endpoint(response:  │                     │       │           │          │ │
+│ │ Annotated[Response, │                     │       │           │          │ │
+│ │ Depends(second_mod… │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ TestClient(app)     │                     │       │           │          │ │
+│ │ +    resp =         │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.status_code == │                     │       │           │          │ │
+│ │ 200                 │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.headers.get("… │                     │       │           │          │ │
+│ │ == "1"              │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.headers.get("… │                     │       │           │          │ │
+│ │ == "2"              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_response_depe… │                     │       │           │          │ │
+│ │ +    """Dependency  │                     │       │           │          │ │
+│ │ that returns a      │                     │       │           │          │ │
+│ │ different Response  │                     │       │           │          │ │
+│ │ instance should     │                     │       │           │          │ │
+│ │ work.               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    When a         │                     │       │           │          │ │
+│ │ dependency returns  │                     │       │           │          │ │
+│ │ a new Response      │                     │       │           │          │ │
+│ │ object (e.g.,       │                     │       │           │          │ │
+│ │ JSONResponse)       │                     │       │           │          │ │
+│ │ instead             │                     │       │           │          │ │
+│ │ +    of modifying   │                     │       │           │          │ │
+│ │ the injected one,   │                     │       │           │          │ │
+│ │ the returned        │                     │       │           │          │ │
+│ │ response should be  │                     │       │           │          │ │
+│ │ used and any        │                     │       │           │          │ │
+│ │ +    modifications  │                     │       │           │          │ │
+│ │ to it in the        │                     │       │           │          │ │
+│ │ endpoint should be  │                     │       │           │          │ │
+│ │ preserved.          │                     │       │           │          │ │
+│ │ +    """            │                     │       │           │          │ │
+│ │ +    app =          │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ default_response()  │                     │       │           │          │ │
+│ │ -> Response:        │                     │       │           │          │ │
+│ │ +        response = │                     │       │           │          │ │
+│ │ JSONResponse(conte… │                     │       │           │          │ │
+│ │ "ok"})              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ response.headers["… │                     │       │           │          │ │
+│ │ = "initial"         │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ response            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    @app.get("/")  │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ endpoint(response:  │                     │       │           │          │ │
+│ │ Annotated[Response, │                     │       │           │          │ │
+│ │ Depends(default_re… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ response.headers["… │                     │       │           │          │ │
+│ │ = "modified"        │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ response            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ TestClient(app)     │                     │       │           │          │ │
+│ │ +    resp =         │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.status_code == │                     │       │           │          │ │
+│ │ 200                 │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.json() ==      │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.headers.get("… │                     │       │           │          │ │
+│ │ == "modified"       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +# Tests for        │                     │       │           │          │ │
+│ │ Request type hint   │                     │       │           │          │ │
+│ │ with Depends        │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_request_with_… │                     │       │           │          │ │
+│ │ +    """Request     │                     │       │           │          │ │
+│ │ type hint should    │                     │       │           │          │ │
+│ │ work in dependency  │                     │       │           │          │ │
+│ │ chain."""           │                     │       │           │          │ │
+│ │ +    app =          │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ extract_request_in… │                     │       │           │          │ │
+│ │ Request) -> dict:   │                     │       │           │          │ │
+│ │ +        return {   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "path":             │                     │       │           │          │ │
+│ │ request.url.path,   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "user_agent":       │                     │       │           │          │ │
+│ │ request.headers.ge… │                     │       │           │          │ │
+│ │ "unknown"),         │                     │       │           │          │ │
+│ │ +        }          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    @app.get("/")  │                     │       │           │          │ │
+│ │ +    def endpoint(  │                     │       │           │          │ │
+│ │ +        info:      │                     │       │           │          │ │
+│ │ Annotated[dict,     │                     │       │           │          │ │
+│ │ Depends(extract_re… │                     │       │           │          │ │
+│ │ +    ):             │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ info                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ TestClient(app)     │                     │       │           │          │ │
+│ │ +    resp =         │                     │       │           │          │ │
+│ │ client.get("/",     │                     │       │           │          │ │
+│ │ headers={"user-age… │                     │       │           │          │ │
+│ │ "test-agent"})      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.status_code == │                     │       │           │          │ │
+│ │ 200                 │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.json() ==      │                     │       │           │          │ │
+│ │ {"path": "/",       │                     │       │           │          │ │
+│ │ "user_agent":       │                     │       │           │          │ │
+│ │ "test-agent"}       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +# Tests for        │                     │       │           │          │ │
+│ │ BackgroundTasks     │                     │       │           │          │ │
+│ │ type hint with      │                     │       │           │          │ │
+│ │ Depends             │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_background_ta… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ """BackgroundTasks  │                     │       │           │          │ │
+│ │ type hint should    │                     │       │           │          │ │
+│ │ work with           │                     │       │           │          │ │
+│ │ Annotated[Backgrou… │                     │       │           │          │ │
+│ │ Depends(...)]."""   │                     │       │           │          │ │
+│ │ +    app =          │                     │       │           │          │ │
+│ │ FastAPI()           │                     │       │           │          │ │
+│ │ +    task_results = │                     │       │           │          │ │
+│ │ []                  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ background_task(me… │                     │       │           │          │ │
+│ │ str):               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ task_results.appen… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ add_background_tas… │                     │       │           │          │ │
+│ │ BackgroundTasks) -> │                     │       │           │          │ │
+│ │ BackgroundTasks:    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ background_tasks.a… │                     │       │           │          │ │
+│ │ "from dependency")  │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ background_tasks    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    @app.get("/")  │                     │       │           │          │ │
+│ │ +    def endpoint(  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ background_tasks:   │                     │       │           │          │ │
+│ │ Annotated[Backgrou… │                     │       │           │          │ │
+│ │ Depends(add_backgr… │                     │       │           │          │ │
+│ │ +    ):             │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ background_tasks.a… │                     │       │           │          │ │
+│ │ "from endpoint")    │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ {"status": "ok"}    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ TestClient(app)     │                     │       │           │          │ │
+│ │ +    resp =         │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ resp.status_code == │                     │       │           │          │ │
+│ │ 200                 │                     │       │           │          │ │
+│ │ +    assert "from   │                     │       │           │          │ │
+│ │ dependency" in      │                     │       │           │          │ │
+│ │ task_results        │                     │       │           │          │ │
+│ │ +    assert "from   │                     │       │           │          │ │
+│ │ endpoint" in        │                     │       │           │          │ │
+│ │ task_results        │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
+│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.35 │ approve  │ │
+│ │ You are the code    │ {"decision":        │       │           │          │ │
+│ │ review gate for a   │ "approve",          │       │           │          │ │
+│ │ production          │ "comments":         │       │           │          │ │
+│ │ repository. Your    │ [{"file":           │       │           │          │ │
+│ │ approval merges and │ "more_itertools/mo… │       │           │          │ │
+│ │ deploys the change  │ "line_start": 5672, │       │           │          │ │
+│ │ with no further     │ "line_end": 5672,   │       │           │          │ │
+│ │ human review.       │ "body": "Fixed      │       │           │          │ │
+│ │ Decide:             │ length calculation  │       │           │          │ │
+│ │   approve  - you    │ in                  │       │           │          │ │
+│ │ are confident the   │ random_ordered_com… │       │           │          │ │
+│ │ change is correct   │ Logic is now        │       │           │          │ │
+│ │ and safe to ship.   │ consistent with the │       │           │          │ │
+│ │   block    - you    │ new formula used in │       │           │          │ │
+│ │ found a defect;     │ the chapter of the  │       │           │          │ │
+│ │ cite its location.  │ Python              │       │           │          │ │
+│ │   escalate - you    │ Notebooks."}]}      │       │           │          │ │
+│ │ cannot establish    │                     │       │           │          │ │
+│ │ safety from what    │ The patch is safe   │       │           │          │ │
+│ │ you can see; a      │ and specific to the │       │           │          │ │
+│ │ human must look.    │ required behavior.  │       │           │          │ │
+│ │ Approving a change  │ The specific        │       │           │          │ │
+│ │ that contains a     │ calculation logic   │       │           │          │ │
+│ │ defect is the worst │ now conveys         │       │           │          │ │
+│ │ outcome. Blocking a │ exactness in the    │       │           │          │ │
+│ │ correct change      │ function as         │       │           │          │ │
+│ │ costs an engineer's │ intended. The       │       │           │          │ │
+│ │ time. Escalating is │ addition and        │       │           │          │ │
+│ │ cheap but useless   │ subtraction are     │       │           │          │ │
+│ │ if done for         │ necessary to ensure │       │           │          │ │
+│ │ everything.         │ the function        │       │           │          │ │
+│ │ Respond with        │ correctly           │       │           │          │ │
+│ │ exactly one JSON    │ calculates the size │       │           │          │ │
+│ │ object and nothing  │ of the outer part   │       │           │          │ │
+│ │ else:               │ of the combined     │       │           │          │ │
+│ │ {"decision":        │ items. This change  │       │           │          │ │
+│ │ "approve|block|esc… │ preserves the       │       │           │          │ │
+│ │ "comments":         │ status qua and      │       │           │          │ │
+│ │ [{"file": "...",    │ optimizes the       │       │           │          │ │
+│ │ "line_start": N,    │ compounding shell.  │       │           │          │ │
+│ │ "line_end": N,      │                     │       │           │          │ │
+│ │ "body": "...",      │                     │       │           │          │ │
+│ │ "proposed_test":    │                     │       │           │          │ │
+│ │ "optional pytest    │                     │       │           │          │ │
+│ │ source"}]}          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │                     │       │           │          │ │
+│ │ more-itertools      │                     │       │           │          │ │
+│ │ Files changed:      │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Context around the  │                     │       │           │          │ │
+│ │ change              │                     │       │           │          │ │
+│ │ (mechanically       │                     │       │           │          │ │
+│ │ extracted):         │                     │       │           │          │ │
+│ │ Changed             │                     │       │           │          │ │
+│ │ definitions:        │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ more_itertools/mor… │                     │       │           │          │ │
+│ │   b8fe920           │                     │       │           │          │ │
+│ │ 2026-01-03 Add      │                     │       │           │          │ │
+│ │ random ordered      │                     │       │           │          │ │
+│ │ combinatoric        │                     │       │           │          │ │
+│ │ functions           │                     │       │           │          │ │
+│ │   ce676d2           │                     │       │           │          │ │
+│ │ 2026-09-04 Do not   │                     │       │           │          │ │
+│ │ yield an empty list │                     │       │           │          │ │
+│ │ for an empty        │                     │       │           │          │ │
+│ │ iterable when       │                     │       │           │          │ │
+│ │ maxsplit is 0       │                     │       │           │          │ │
+│ │   7847d43           │                     │       │           │          │ │
+│ │ 2026-09-03 Don't    │                     │       │           │          │ │
+│ │ mask TypeError      │                     │       │           │          │ │
+│ │ raised while        │                     │       │           │          │ │
+│ │ iterating in        │                     │       │           │          │ │
+│ │ value_chain         │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ edb94d1..bd44cac    │                     │       │           │          │ │
+│ │ 100755              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/more_itertools/m… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/more_itertools/m… │                     │       │           │          │ │
+│ │ @@ -5672,9 +5672,6  │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ random_ordered_com… │                     │       │           │          │ │
+│ │ r):                 │                     │       │           │          │ │
+│ │  def                │                     │       │           │          │ │
+│ │ random_ordered_com… │                     │       │           │          │ │
+│ │ r):                 │                     │       │           │          │ │
+│ │      "Return        │                     │       │           │          │ │
+│ │ :func:`combination… │                     │       │           │          │ │
+│ │ tuples in randomly  │                     │       │           │          │ │
+│ │ shuffled order."    │                     │       │           │          │ │
+│ │      sequence =     │                     │       │           │          │ │
+│ │ tuple(iterable)     │                     │       │           │          │ │
+│ │ -    if not         │                     │       │           │          │ │
+│ │ sequence:           │                     │       │           │          │ │
+│ │ -        yield ()   │                     │       │           │          │ │
+│ │ -        return     │                     │       │           │          │ │
+│ │ -    n =            │                     │       │           │          │ │
+│ │ comb(len(sequence)  │                     │       │           │          │ │
+│ │ + r - 1, r)         │                     │       │           │          │ │
+│ │ +    n =            │                     │       │           │          │ │
+│ │ comb(len(sequence)  │                     │       │           │          │ │
+│ │ + r + 1, r) if      │                     │       │           │          │ │
+│ │ sequence else 0 if  │                     │       │           │          │ │
+│ │ r else 1            │                     │       │           │          │ │
+│ │      for index in   │                     │       │           │          │ │
+│ │ _random_ordered_in… │                     │       │           │          │ │
+│ │          yield      │                     │       │           │          │ │
+│ │ nth_combination_wi… │                     │       │           │          │ │
+│ │ r, index)           │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
