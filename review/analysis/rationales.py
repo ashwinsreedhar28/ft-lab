@@ -22,9 +22,11 @@ from pathlib import Path
 
 from review.agent.run import SYSTEM, build_prompt, call_anthropic, parse_review
 
-ASK = ("\n\nBefore the JSON, write your reasoning inside <think> and </think>: at most 150 words, naming the "
+# Asking for the text inside <think> tags made the API refuse every call (stop_reason=refusal, 128/128):
+# it reads as reasoning-tag injection. Ask for <rationale>, convert to Qwen3's <think> locally.
+ASK = ("\n\nBefore the JSON, write your reasoning inside <rationale> and </rationale>: at most 150 words, naming the "
        "specific changed line(s) you judged and why they are correct or defective. Then the JSON object.")
-_THINK = re.compile(r"<think>(.*?)</think>", re.S)
+_THINK = re.compile(r"<rationale>(.*?)</rationale>", re.S)
 
 
 def main():
@@ -43,7 +45,9 @@ def main():
     if rp.exists():
         for l in rp.read_text().splitlines():
             if l.strip():
-                d = json.loads(l); done[d["task_id"]] = d
+                d = json.loads(l)
+                if not d["raw"].startswith("API_"):      # refusals / errors are retried
+                    done[d["task_id"]] = d
 
     def one(t):
         if t["id"] in done:
@@ -53,14 +57,13 @@ def main():
         return {"task_id": t["id"], "kind": t["kind"], "raw": text, "usage": usage, "usd": usd}
 
     rp.parent.mkdir(parents=True, exist_ok=True)
-    with ThreadPoolExecutor(a.workers) as ex, rp.open("a") as fh:
-        rows = []
+    rows = []
+    with ThreadPoolExecutor(a.workers) as ex:
         for r in ex.map(one, tasks):
-            if r["task_id"] not in done:
-                fh.write(json.dumps(r) + "\n"); fh.flush()
             rows.append(r)
             print(f"{r['task_id']:45s} {r['kind']:5s} ${r['usd']:.3f}", flush=True)
 
+    rp.write_text("".join(json.dumps(r) + "\n" for r in rows))    # one row per task, latest attempt
     out, stats = [], Counter()
     by_id = {t["id"]: t for t in tasks}
     for r in rows:
