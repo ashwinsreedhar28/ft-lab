@@ -7,6 +7,7 @@ export HF_HOME=/workspace/hf
 [ -x /workspace/venv/bin/python ] && source /workspace/venv/bin/activate
 unset PYTHONPATH   # template dist-packages must not shadow the venv
 export TOKENIZERS_PARALLELISM=false
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True   # 7 GiB reserved-but-unallocated at the v3 OOM
 V="${V:-}"                      # run suffix: V=_v2 -> configs/review_{sft,grpo}_4b_v2.yaml, runs/phase3_v2.stages
 SFT=review_sft_4b$V; GRPO=review_grpo_4b$V
 STAGES=runs/phase3$V.stages; touch $STAGES
