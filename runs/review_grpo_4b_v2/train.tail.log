@@ -1,400 +1,400 @@
-│ │ updates (#2632)    │                    │       │           │            │ │
-│ │   6bfe9fe          │                    │       │           │            │ │
-│ │ 2024-01-20 Use     │                    │       │           │            │ │
-│ │ `__future__.annot… │                    │       │           │            │ │
-│ │ (#2433)            │                    │       │           │            │ │
+│ │ take shortcuts for │                    │       │           │            │ │
+│ │ already            │                    │       │           │            │ │
+│ │      correctly     │                    │       │           │            │ │
+│ │ configured         │                    │       │           │            │ │
+│ │ streams.           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -    :meta         │                    │       │           │            │ │
+│ │ private:           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │      :param name:  │                    │       │           │            │ │
+│ │ the name of the    │                    │       │           │            │ │
+│ │ stream to open.    │                    │       │           │            │ │
+│ │ Valid names are    │                    │       │           │            │ │
+│ │ ``'stdin'``,       │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │ and ``'stderr'``   │                    │       │           │            │ │
+│ │      :param        │                    │       │           │            │ │
+│ │ encoding:          │                    │       │           │            │ │
+│ │ overrides the      │                    │       │           │            │ │
+│ │ detected default   │                    │       │           │            │ │
+│ │ encoding.          │                    │       │           │            │ │
+│ │      :param        │                    │       │           │            │ │
+│ │ errors: overrides  │                    │       │           │            │ │
+│ │ the default error  │                    │       │           │            │ │
+│ │ mode.              │                    │       │           │            │ │
+│ │ +    :meta         │                    │       │           │            │ │
+│ │ private:           │                    │       │           │            │ │
+│ │      """           │                    │       │           │            │ │
+│ │      opener =      │                    │       │           │            │ │
+│ │ text_streams.get(… │                    │       │           │            │ │
+│ │      if opener is  │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ @@ -677,10 +675,11 │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ __getattr__(name:  │                    │       │           │            │ │
+│ │ str) -> object:    │                    │       │           │            │ │
+│ │          "make_de… │                    │       │           │            │ │
+│ │          "PacifyF… │                    │       │           │            │ │
+│ │          "safecal… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "get_text_stream", │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "get_binary_strea… │                    │       │           │            │ │
+│ │      }:            │                    │       │           │            │ │
+│ │          warnings… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ f"'click.utils.{n… │                    │       │           │            │ │
+│ │ was never          │                    │       │           │            │ │
+│ │ intentionally      │                    │       │           │            │ │
+│ │ public and will    │                    │       │           │            │ │
+│ │ be"                │                    │       │           │            │ │
+│ │ -            "     │                    │       │           │            │ │
+│ │ renamed in Click   │                    │       │           │            │ │
+│ │ 9.0.",             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ f"'click.utils.{n… │                    │       │           │            │ │
+│ │ is deprecated and  │                    │       │           │            │ │
+│ │ will be removed in │                    │       │           │            │ │
+│ │ Click 9.0.",       │                    │       │           │            │ │
+│ │              Depr… │                    │       │           │            │ │
+│ │              stac… │                    │       │           │            │ │
+│ │          )         │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_depr… │                    │       │           │            │ │
+│ │ b/tests/test_depr… │                    │       │           │            │ │
+│ │ new file mode      │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 0000000..9985faa   │                    │       │           │            │ │
+│ │ --- /dev/null      │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_depr… │                    │       │           │            │ │
+│ │ @@ -0,0 +1,25 @@   │                    │       │           │            │ │
+│ │ +import pytest     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +import click      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +@pytest.mark.par… │                    │       │           │            │ │
+│ │ [click,            │                    │       │           │            │ │
+│ │ click.utils],      │                    │       │           │            │ │
+│ │ ids=["click",      │                    │       │           │            │ │
+│ │ "click.utils"])    │                    │       │           │            │ │
+│ │ +@pytest.mark.par… │                    │       │           │            │ │
+│ │ ["get_binary_stre… │                    │       │           │            │ │
+│ │ "get_text_stream"… │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_stream_helpe… │                    │       │           │            │ │
+│ │ name):             │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ pytest.warns(Depr… │                    │       │           │            │ │
+│ │ match=name):       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ getattr(module,    │                    │       │           │            │ │
+│ │ name)              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +@pytest.mark.par… │                    │       │           │            │ │
+│ │ +    "name",       │                    │       │           │            │ │
+│ │ +    [             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "LazyFile",        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "KeepOpenFile",    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "make_default_sho… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "PacifyFlushWrapp… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "safecall",        │                    │       │           │            │ │
+│ │ +    ],            │                    │       │           │            │ │
+│ │ +)                 │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_utilities_de… │                    │       │           │            │ │
+│ │ +    with          │                    │       │           │            │ │
+│ │ pytest.warns(Depr… │                    │       │           │            │ │
+│ │ match=name):       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ getattr(click.uti… │                    │       │           │            │ │
+│ │ name)              │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_test… │                    │       │           │            │ │
+│ │ b/tests/test_test… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 6fae8cb..eb30d88   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_test… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_test… │                    │       │           │            │ │
+│ │ @@ -10,14 +10,14   │                    │       │           │            │ │
+│ │ @@ import pytest   │                    │       │           │            │ │
+│ │  import click      │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ click.exceptions   │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ ClickException     │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ click.testing      │                    │       │           │            │ │
+│ │ import CliRunner   │                    │       │           │            │ │
+│ │ -from click.utils  │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ get_binary_stream  │                    │       │           │            │ │
+│ │ +from click.utils  │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ _get_binary_stream │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_runner():     │                    │       │           │            │ │
+│ │      @click.comma… │                    │       │           │            │ │
+│ │      def test():   │                    │       │           │            │ │
+│ │ -        i =       │                    │       │           │            │ │
+│ │ get_binary_stream… │                    │       │           │            │ │
+│ │ -        o =       │                    │       │           │            │ │
+│ │ get_binary_stream… │                    │       │           │            │ │
+│ │ +        i =       │                    │       │           │            │ │
+│ │ _get_binary_strea… │                    │       │           │            │ │
+│ │ +        o =       │                    │       │           │            │ │
+│ │ _get_binary_strea… │                    │       │           │            │ │
+│ │          while     │                    │       │           │            │ │
+│ │ True:              │                    │       │           │            │ │
+│ │              chunk │                    │       │           │            │ │
+│ │ = i.read(4096)     │                    │       │           │            │ │
+│ │              if    │                    │       │           │            │ │
+│ │ not chunk:         │                    │       │           │            │ │
+│ │ @@ -34,8 +34,8 @@  │                    │       │           │            │ │
+│ │ def test_runner(): │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_echo_stdin_s… │                    │       │           │            │ │
+│ │      @click.comma… │                    │       │           │            │ │
+│ │      def test():   │                    │       │           │            │ │
+│ │ -        i =       │                    │       │           │            │ │
+│ │ get_binary_stream… │                    │       │           │            │ │
+│ │ -        o =       │                    │       │           │            │ │
+│ │ get_binary_stream… │                    │       │           │            │ │
+│ │ +        i =       │                    │       │           │            │ │
+│ │ _get_binary_strea… │                    │       │           │            │ │
+│ │ +        o =       │                    │       │           │            │ │
+│ │ _get_binary_strea… │                    │       │           │            │ │
+│ │          while     │                    │       │           │            │ │
+│ │ True:              │                    │       │           │            │ │
+│ │              chunk │                    │       │           │            │ │
+│ │ = i.read(4096)     │                    │       │           │            │ │
+│ │              if    │                    │       │           │            │ │
+│ │ not chunk:         │                    │       │           │            │ │
+│ │ @@ -92,8 +92,8 @@  │                    │       │           │            │ │
+│ │ def                │                    │       │           │            │ │
+│ │ test_echo_stdin_p… │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_runner_with_… │                    │       │           │            │ │
+│ │      @click.comma… │                    │       │           │            │ │
+│ │      def test():   │                    │       │           │            │ │
+│ │ -        i =       │                    │       │           │            │ │
+│ │ get_binary_stream… │                    │       │           │            │ │
+│ │ -        o =       │                    │       │           │            │ │
+│ │ get_binary_stream… │                    │       │           │            │ │
+│ │ +        i =       │                    │       │           │            │ │
+│ │ _get_binary_strea… │                    │       │           │            │ │
+│ │ +        o =       │                    │       │           │            │ │
+│ │ _get_binary_strea… │                    │       │           │            │ │
+│ │          while     │                    │       │           │            │ │
+│ │ True:              │                    │       │           │            │ │
+│ │              chunk │                    │       │           │            │ │
+│ │ = i.read(4096)     │                    │       │           │            │ │
+│ │              if    │                    │       │           │            │ │
+│ │ not chunk:         │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │  1.00 │      0.35 │ approve    │ │
+│ │ You are the code   │ {"decision":       │       │           │            │ │
+│ │ review gate for a  │ "approve",         │       │           │            │ │
+│ │ production         │ "comments":        │       │           │            │ │
+│ │ repository. Your   │ [{"file":          │       │           │            │ │
+│ │ approval merges    │ "more_itertools/m… │       │           │            │ │
+│ │ and deploys the    │ "line_start": 231, │       │           │            │ │
+│ │ change with no     │ "line_end": 233,   │       │           │            │ │
+│ │ further human      │ "body": "Check for │       │           │            │ │
+│ │ review. Decide:    │ n ≤ 0 in           │       │           │            │ │
+│ │   approve  - you   │ chunked"}]}        │       │           │            │ │
+│ │ are confident the  │                    │       │           │            │ │
+│ │ change is correct  │                    │       │           │            │ │
+│ │ and safe to ship.  │                    │       │           │            │ │
+│ │   block    - you   │                    │       │           │            │ │
+│ │ found a defect;    │                    │       │           │            │ │
+│ │ cite its location. │                    │       │           │            │ │
+│ │   escalate - you   │                    │       │           │            │ │
+│ │ cannot establish   │                    │       │           │            │ │
+│ │ safety from what   │                    │       │           │            │ │
+│ │ you can see; a     │                    │       │           │            │ │
+│ │ human must look.   │                    │       │           │            │ │
+│ │ Approving a change │                    │       │           │            │ │
+│ │ that contains a    │                    │       │           │            │ │
+│ │ defect is the      │                    │       │           │            │ │
+│ │ worst outcome.     │                    │       │           │            │ │
+│ │ Blocking a correct │                    │       │           │            │ │
+│ │ change costs an    │                    │       │           │            │ │
+│ │ engineer's time.   │                    │       │           │            │ │
+│ │ Escalating is      │                    │       │           │            │ │
+│ │ cheap but useless  │                    │       │           │            │ │
+│ │ if done for        │                    │       │           │            │ │
+│ │ everything.        │                    │       │           │            │ │
+│ │ Respond with       │                    │       │           │            │ │
+│ │ exactly one JSON   │                    │       │           │            │ │
+│ │ object and nothing │                    │       │           │            │ │
+│ │ else:              │                    │       │           │            │ │
+│ │ {"decision":       │                    │       │           │            │ │
+│ │ "approve|block|es… │                    │       │           │            │ │
+│ │ "comments":        │                    │       │           │            │ │
+│ │ [{"file": "...",   │                    │       │           │            │ │
+│ │ "line_start": N,   │                    │       │           │            │ │
+│ │ "line_end": N,     │                    │       │           │            │ │
+│ │ "body": "...",     │                    │       │           │            │ │
+│ │ "proposed_test":   │                    │       │           │            │ │
+│ │ "optional pytest   │                    │       │           │            │ │
+│ │ source"}]}         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ USER               │                    │       │           │            │ │
+│ │ Repository:        │                    │       │           │            │ │
+│ │ more-itertools     │                    │       │           │            │ │
+│ │ Files changed:     │                    │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │ tests/test_more.py │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Context around the │                    │       │           │            │ │
+│ │ change             │                    │       │           │            │ │
+│ │ (mechanically      │                    │       │           │            │ │
+│ │ extracted):        │                    │       │           │            │ │
+│ │ Changed            │                    │       │           │            │ │
+│ │ definitions:       │                    │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
 │ │ Recent history of  │                    │       │           │            │ │
-│ │ tests/test_status… │                    │       │           │            │ │
-│ │   b133ab4          │                    │       │           │            │ │
-│ │ 2024-12-28 Remove  │                    │       │           │            │ │
-│ │ deprecated         │                    │       │           │            │ │
-│ │ `WS_1004_NO_STATU… │                    │       │           │            │ │
-│ │ and                │                    │       │           │            │ │
-│ │ `WS_1005_ABNORMAL… │                    │       │           │            │ │
-│ │ (#2827)            │                    │       │           │            │ │
-│ │   b9db010          │                    │       │           │            │ │
-│ │ 2024-09-01 Set     │                    │       │           │            │ │
-│ │ `line-length` to   │                    │       │           │            │ │
-│ │ 120 on Ruff        │                    │       │           │            │ │
-│ │ (#2679)            │                    │       │           │            │ │
-│ │   9329160          │                    │       │           │            │ │
-│ │ 2022-04-22         │                    │       │           │            │ │
-│ │ Deprecate          │                    │       │           │            │ │
-│ │ `WS_1004_NO_STATU… │                    │       │           │            │ │
-│ │ and                │                    │       │           │            │ │
-│ │ `WS_1005_ABNORMAL… │                    │       │           │            │ │
-│ │ (#1580)            │                    │       │           │            │ │
+│ │ more_itertools/mo… │                    │       │           │            │ │
+│ │   069b300          │                    │       │           │            │ │
+│ │ 2026-07-16 Issue   │                    │       │           │            │ │
+│ │ 1214: Update       │                    │       │           │            │ │
+│ │ __eq__ and         │                    │       │           │            │ │
+│ │ __hash__ for       │                    │       │           │            │ │
+│ │ numeric_range      │                    │       │           │            │ │
+│ │   07eb790          │                    │       │           │            │ │
+│ │ 2026-07-12 Add     │                    │       │           │            │ │
+│ │ threading to       │                    │       │           │            │ │
+│ │ lazy_modules.      │                    │       │           │            │ │
+│ │ Revert c6b640      │                    │       │           │            │ │
+│ │   4a02e36          │                    │       │           │            │ │
+│ │ 2026-07-10 Sort    │                    │       │           │            │ │
+│ │ `__all__`          │                    │       │           │            │ │
+│ │ Recent history of  │                    │       │           │            │ │
+│ │ tests/test_more.p… │                    │       │           │            │ │
+│ │   069b300          │                    │       │           │            │ │
+│ │ 2026-07-16 Issue   │                    │       │           │            │ │
+│ │ 1214: Update       │                    │       │           │            │ │
+│ │ __eq__ and         │                    │       │           │            │ │
+│ │ __hash__ for       │                    │       │           │            │ │
+│ │ numeric_range      │                    │       │           │            │ │
+│ │   d992be0          │                    │       │           │            │ │
+│ │ 2026-07-12 Fix     │                    │       │           │            │ │
+│ │ stability in       │                    │       │           │            │ │
+│ │ running_min and    │                    │       │           │            │ │
+│ │ running_max        │                    │       │           │            │ │
+│ │   958990e          │                    │       │           │            │ │
+│ │ 2026-07-02 Raise   │                    │       │           │            │ │
+│ │ for negative slice │                    │       │           │            │ │
+│ │ sizes in sliced()  │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ Diff:              │                    │       │           │            │ │
 │ │ ```diff            │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/starlette/statu… │                    │       │           │            │ │
-│ │ b/starlette/statu… │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ 54c1fb7..84319d8   │                    │       │           │            │ │
+│ │ 7c3670a..5896d6d   │                    │       │           │            │ │
+│ │ 100755             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ @@ -230,6 +230,9   │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ chunked(iterable,  │                    │       │           │            │ │
+│ │ n, strict=False):  │                    │       │           │            │ │
+│ │      list is       │                    │       │           │            │ │
+│ │ yielded.           │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      """           │                    │       │           │            │ │
+│ │ +    if n is not   │                    │       │           │            │ │
+│ │ None and n < 0:    │                    │       │           │            │ │
+│ │ +        raise     │                    │       │           │            │ │
+│ │ ValueError('n must │                    │       │           │            │ │
+│ │ be at least 0')    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │      iterator =    │                    │       │           │            │ │
+│ │ iter(partial(take, │                    │       │           │            │ │
+│ │ n,                 │                    │       │           │            │ │
+│ │ iter(iterable)),   │                    │       │           │            │ │
+│ │ [])                │                    │       │           │            │ │
+│ │      if strict:    │                    │       │           │            │ │
+│ │          if n is   │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_more… │                    │       │           │            │ │
+│ │ b/tests/test_more… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 1f8d10c..3a562e2   │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/starlette/statu… │                    │       │           │            │ │
+│ │ a/tests/test_more… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/starlette/statu… │                    │       │           │            │ │
-│ │ @@ -3,11 +3,94 @@  │                    │       │           │            │ │
-│ │ HTTP codes         │                    │       │           │            │ │
-│ │  See HTTP Status   │                    │       │           │            │ │
-│ │ Code Registry:     │                    │       │           │            │ │
-│ │  https://www.iana… │                    │       │           │            │ │
+│ │ b/tests/test_more… │                    │       │           │            │ │
+│ │ @@ -70,6 +70,15 @@ │                    │       │           │            │ │
+│ │ class              │                    │       │           │            │ │
+│ │ ChunkedTests(Test… │                    │       │           │            │ │
+│ │              list… │                    │       │           │            │ │
+│ │ None)), [['A',     │                    │       │           │            │ │
+│ │ 'B', 'C', 'D',     │                    │       │           │            │ │
+│ │ 'E']]              │                    │       │           │            │ │
+│ │          )         │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │ -And RFC 2324 -    │                    │       │           │            │ │
-│ │ https://tools.iet… │                    │       │           │            │ │
-│ │ +And RFC 9110 -    │                    │       │           │            │ │
-│ │ https://www.rfc-e… │                    │       │           │            │ │
-│ │  """               │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  from __future__   │                    │       │           │            │ │
-│ │ import annotations │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +import warnings   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +__all__ = [       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_100_CONTINU… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_101_SWITCHI… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_102_PROCESS… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_103_EARLY_H… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_200_OK",     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_201_CREATED… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_202_ACCEPTE… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_203_NON_AUT… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_204_NO_CONT… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_205_RESET_C… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_206_PARTIAL… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_207_MULTI_S… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_208_ALREADY… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_226_IM_USED… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_300_MULTIPL… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_301_MOVED_P… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_302_FOUND",  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_303_SEE_OTH… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_304_NOT_MOD… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_305_USE_PRO… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_306_RESERVE… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_307_TEMPORA… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_308_PERMANE… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_400_BAD_REQ… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_401_UNAUTHO… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_402_PAYMENT… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_403_FORBIDD… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_404_NOT_FOU… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_405_METHOD_… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_406_NOT_ACC… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_407_PROXY_A… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_408_REQUEST… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_409_CONFLIC… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_410_GONE",   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_411_LENGTH_… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_412_PRECOND… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_413_CONTENT… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_414_URI_TOO… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_415_UNSUPPO… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_416_RANGE_N… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_417_EXPECTA… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_418_IM_A_TE… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_421_MISDIRE… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_422_UNPROCE… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_423_LOCKED", │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_424_FAILED_… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_425_TOO_EAR… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_426_UPGRADE… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_428_PRECOND… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_429_TOO_MAN… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_431_REQUEST… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_451_UNAVAIL… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_500_INTERNA… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_501_NOT_IMP… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_502_BAD_GAT… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_503_SERVICE… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_504_GATEWAY… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_505_HTTP_VE… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_506_VARIANT… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_507_INSUFFI… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_508_LOOP_DE… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_510_NOT_EXT… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_511_NETWORK… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1000_NORMAL_C… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1001_GOING_AW… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1002_PROTOCOL… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1003_UNSUPPOR… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1005_NO_STATU… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1006_ABNORMAL… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1007_INVALID_… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1008_POLICY_V… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1009_MESSAGE_… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1010_MANDATOR… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1011_INTERNAL… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1012_SERVICE_… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1013_TRY_AGAI… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1014_BAD_GATE… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "WS_1015_TLS_HAND… │                    │       │           │            │ │
-│ │ +]                 │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │  HTTP_100_CONTINUE │                    │       │           │            │ │
-│ │ = 100              │                    │       │           │            │ │
-│ │  HTTP_101_SWITCHI… │                    │       │           │            │ │
-│ │ = 101              │                    │       │           │            │ │
-│ │  HTTP_102_PROCESS… │                    │       │           │            │ │
-│ │ = 102              │                    │       │           │            │ │
-│ │ @@ -44,14 +127,14  │                    │       │           │            │ │
-│ │ @@                 │                    │       │           │            │ │
-│ │ HTTP_409_CONFLICT  │                    │       │           │            │ │
-│ │ = 409              │                    │       │           │            │ │
-│ │  HTTP_410_GONE =   │                    │       │           │            │ │
-│ │ 410                │                    │       │           │            │ │
-│ │  HTTP_411_LENGTH_… │                    │       │           │            │ │
-│ │ = 411              │                    │       │           │            │ │
-│ │  HTTP_412_PRECOND… │                    │       │           │            │ │
-│ │ = 412              │                    │       │           │            │ │
-│ │ -HTTP_413_REQUEST… │                    │       │           │            │ │
-│ │ = 413              │                    │       │           │            │ │
-│ │ -HTTP_414_REQUEST… │                    │       │           │            │ │
-│ │ = 414              │                    │       │           │            │ │
-│ │ +HTTP_413_CONTENT… │                    │       │           │            │ │
-│ │ = 413              │                    │       │           │            │ │
-│ │ +HTTP_414_URI_TOO… │                    │       │           │            │ │
-│ │ = 414              │                    │       │           │            │ │
-│ │  HTTP_415_UNSUPPO… │                    │       │           │            │ │
-│ │ = 415              │                    │       │           │            │ │
-│ │ -HTTP_416_REQUEST… │                    │       │           │            │ │
-│ │ = 416              │                    │       │           │            │ │
-│ │ +HTTP_416_RANGE_N… │                    │       │           │            │ │
-│ │ = 416              │                    │       │           │            │ │
-│ │  HTTP_417_EXPECTA… │                    │       │           │            │ │
-│ │ = 417              │                    │       │           │            │ │
-│ │  HTTP_418_IM_A_TE… │                    │       │           │            │ │
-│ │ = 418              │                    │       │           │            │ │
-│ │  HTTP_421_MISDIRE… │                    │       │           │            │ │
-│ │ = 421              │                    │       │           │            │ │
-│ │ -HTTP_422_UNPROCE… │                    │       │           │            │ │
-│ │ = 422              │                    │       │           │            │ │
-│ │ +HTTP_422_UNPROCE… │                    │       │           │            │ │
-│ │ = 422              │                    │       │           │            │ │
-│ │  HTTP_423_LOCKED = │                    │       │           │            │ │
-│ │ 423                │                    │       │           │            │ │
-│ │  HTTP_424_FAILED_… │                    │       │           │            │ │
-│ │ = 424              │                    │       │           │            │ │
-│ │  HTTP_425_TOO_EAR… │                    │       │           │            │ │
-│ │ = 425              │                    │       │           │            │ │
-│ │ @@ -93,3 +176,34   │                    │       │           │            │ │
-│ │ @@                 │                    │       │           │            │ │
-│ │ WS_1012_SERVICE_R… │                    │       │           │            │ │
-│ │ = 1012             │                    │       │           │            │ │
-│ │  WS_1013_TRY_AGAI… │                    │       │           │            │ │
-│ │ = 1013             │                    │       │           │            │ │
-│ │  WS_1014_BAD_GATE… │                    │       │           │            │ │
-│ │ = 1014             │                    │       │           │            │ │
-│ │  WS_1015_TLS_HAND… │                    │       │           │            │ │
-│ │ = 1015             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +__deprecated__ =  │                    │       │           │            │ │
-│ │ {                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_413_REQUEST… │                    │       │           │            │ │
-│ │ 413,               │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_414_REQUEST… │                    │       │           │            │ │
-│ │ 414,               │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_416_REQUEST… │                    │       │           │            │ │
-│ │ 415,               │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_422_UNPROCE… │                    │       │           │            │ │
-│ │ 422,               │                    │       │           │            │ │
-│ │ +}                 │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ __getattr__(name:  │                    │       │           │            │ │
-│ │ str) -> int:       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ deprecation_chang… │                    │       │           │            │ │
-│ │ = {                │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_413_REQUEST… │                    │       │           │            │ │
-│ │ "HTTP_413_CONTENT… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_414_REQUEST… │                    │       │           │            │ │
-│ │ "HTTP_414_URI_TOO… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_416_REQUEST… │                    │       │           │            │ │
-│ │ "HTTP_416_RANGE_N… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_422_UNPROCE… │                    │       │           │            │ │
-│ │ "HTTP_422_UNPROCE… │                    │       │           │            │ │
-│ │ +    }             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    deprecated =  │                    │       │           │            │ │
-│ │ __deprecated__.ge… │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ deprecated:        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.warn(     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ f"'{name}' is      │                    │       │           │            │ │
-│ │ deprecated. Use    │                    │       │           │            │ │
-│ │ '{deprecation_cha… │                    │       │           │            │ │
-│ │ instead.",         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ category=Deprecat… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ stacklevel=3,      │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ test_negative(sel… │                    │       │           │            │ │
+│ │ +        """Test   │                    │       │           │            │ │
+│ │ that a negative    │                    │       │           │            │ │
+│ │ ``n`` raises a     │                    │       │           │            │ │
+│ │ clear              │                    │       │           │            │ │
+│ │ ``ValueError``,    │                    │       │           │            │ │
+│ │ matching           │                    │       │           │            │ │
+│ │ +        the       │                    │       │           │            │ │
+│ │ behavior of        │                    │       │           │            │ │
+│ │ :func:`sliced`.""" │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.assertRaises… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ ValueError,        │                    │       │           │            │ │
+│ │ +            "n    │                    │       │           │            │ │
+│ │ must be at least   │                    │       │           │            │ │
+│ │ 0",                │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ lambda:            │                    │       │           │            │ │
+│ │ list(mi.chunked('… │                    │       │           │            │ │
+│ │ -1)),              │                    │       │           │            │ │
 │ │ +        )         │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ deprecated         │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ +    raise         │                    │       │           │            │ │
-│ │ AttributeError(f"… │                    │       │           │            │ │
-│ │ 'starlette.status' │                    │       │           │            │ │
-│ │ has no attribute   │                    │       │           │            │ │
-│ │ '{name}'")         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def __dir__() ->  │                    │       │           │            │ │
-│ │ list[str]:         │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ sorted(list(__all… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ list(__deprecated… │                    │       │           │            │ │
-│ │ # pragma: no cover │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_stat… │                    │       │           │            │ │
-│ │ b/tests/test_stat… │                    │       │           │            │ │
-│ │ new file mode      │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 0000000..52b0a25   │                    │       │           │            │ │
-│ │ --- /dev/null      │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_stat… │                    │       │           │            │ │
-│ │ @@ -0,0 +1,23 @@   │                    │       │           │            │ │
-│ │ +import importlib  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +import pytest     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +@pytest.mark.par… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "constant,msg",    │                    │       │           │            │ │
-│ │ +    (             │                    │       │           │            │ │
-│ │ +        (         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_413_REQUEST… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "'HTTP_413_REQUES… │                    │       │           │            │ │
-│ │ is deprecated. Use │                    │       │           │            │ │
-│ │ 'HTTP_413_CONTENT… │                    │       │           │            │ │
-│ │ instead.",         │                    │       │           │            │ │
-│ │ +        ),        │                    │       │           │            │ │
-│ │ +        (         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "HTTP_414_REQUEST… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "'HTTP_414_REQUES… │                    │       │           │            │ │
-│ │ is deprecated. Use │                    │       │           │            │ │
-│ │ 'HTTP_414_URI_TOO… │                    │       │           │            │ │
-│ │ instead.",         │                    │       │           │            │ │
-│ │ +        ),        │                    │       │           │            │ │
-│ │ +    ),            │                    │       │           │            │ │
-│ │ +)                 │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_deprecated_t… │                    │       │           │            │ │
-│ │ str, msg: str) ->  │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ pytest.warns(Depr… │                    │       │           │            │ │
-│ │ as record:         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ getattr(importlib… │                    │       │           │            │ │
-│ │ constant)          │                    │       │           │            │ │
-│ │ +        assert    │                    │       │           │            │ │
-│ │ len(record) == 1   │                    │       │           │            │ │
-│ │ +        assert    │                    │       │           │            │ │
-│ │ msg in             │                    │       │           │            │ │
-│ │ str(record.list[0… │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ test_strict_false… │                    │       │           │            │ │
+│ │          """Test   │                    │       │           │            │ │
+│ │ when ``n`` does    │                    │       │           │            │ │
+│ │ not divide evenly  │                    │       │           │            │ │
+│ │ into the length of │                    │       │           │            │ │
+│ │ the                │                    │       │           │            │ │
+│ │          iterable  │                    │       │           │            │ │
+│ │ and strict is      │                    │       │           │            │ │
+│ │ false.             │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
 │ │ ```                │                    │       │           │            │ │
 │ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
