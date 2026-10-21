@@ -7,20 +7,22 @@ export HF_HOME=/workspace/hf
 [ -x /workspace/venv/bin/python ] && source /workspace/venv/bin/activate
 unset PYTHONPATH   # template dist-packages must not shadow the venv
 export TOKENIZERS_PARALLELISM=false
-STAGES=runs/phase3.stages; touch $STAGES
+V="${V:-}"                      # run suffix: V=_v2 -> configs/review_{sft,grpo}_4b_v2.yaml, runs/phase3_v2.stages
+SFT=review_sft_4b$V; GRPO=review_grpo_4b$V
+STAGES=runs/phase3$V.stages; touch $STAGES
 done_() { grep -qx "$1" $STAGES; }
 mark() { echo "$1" >> $STAGES; echo "=== stage done: $1 ($(date -u +%T))"; }
-EV="python -m ftlab.eval configs/review_grpo_4b.yaml --max-tokens 500 --max-model-len 16384"
+EV="python -m ftlab.eval configs/$GRPO.yaml --max-tokens 500 --max-model-len 16384"
 
 done_ setup || { bash pod/setup.sh; mark setup; }
 source /workspace/venv/bin/activate
 python -c 'import trl, vllm, peft; print("venv ok:", trl.__version__, vllm.__version__, peft.__version__)'
 test -s data/review_sft.jsonl || { echo "no data/review_sft.jsonl: run review/analysis/traces.py on the Mac and commit"; exit 2; }
-done_ base_eval || { $EV --label base --model Qwen/Qwen3-4B; mark base_eval; }
-done_ sft       || { mkdir -p runs/review_sft_4b; python -m ftlab.sft configs/review_sft_4b.yaml 2>&1 | tee runs/review_sft_4b/train.log; mark sft; }
-done_ sft_eval  || { $EV --label sft --model runs/review_sft_4b/final; mark sft_eval; }
-done_ grpo      || { mkdir -p runs/review_grpo_4b; python -m ftlab.train configs/review_grpo_4b.yaml 2>&1 | tee -a runs/review_grpo_4b/train.log; mark grpo; }
-done_ grpo_eval || { $EV --label grpo --model runs/review_grpo_4b/merged; mark grpo_eval; }   # LoRA run: train.py writes the merged weights to merged/, final/ is the adapter
-python -m ftlab.eval --table runs/review_grpo_4b/eval_*.json | tee runs/review_grpo_4b/table.txt
-python -m review.analysis.gate_table runs/review_grpo_4b/eval_*.json | tee runs/review_grpo_4b/gate_table.txt
+done_ base_eval || { mkdir -p runs/$GRPO; $EV --label base --model Qwen/Qwen3-4B; mark base_eval; }
+done_ sft       || { mkdir -p runs/$SFT; python -m ftlab.sft configs/$SFT.yaml 2>&1 | tee runs/$SFT/train.log; mark sft; }
+done_ sft_eval  || { $EV --label sft --model runs/$SFT/final; mark sft_eval; }
+done_ grpo      || { mkdir -p runs/$GRPO; python -m ftlab.train configs/$GRPO.yaml 2>&1 | tee -a runs/$GRPO/train.log; mark grpo; }
+done_ grpo_eval || { $EV --label grpo --model runs/$GRPO/merged; mark grpo_eval; }   # LoRA run: train.py writes the merged weights to merged/, final/ is the adapter
+python -m ftlab.eval --table runs/$GRPO/eval_*.json | tee runs/$GRPO/table.txt
+python -m review.analysis.gate_table runs/$GRPO/eval_*.json | tee runs/$GRPO/gate_table.txt
 echo PHASE-DONE

@@ -26,6 +26,9 @@ def main():
     ap.add_argument("--tasks", default="review/bench/public_train.jsonl")
     ap.add_argument("--out", default="data/review_sft.jsonl")
     ap.add_argument("--keep-escalate", action="store_true")
+    ap.add_argument("--balance", action="store_true",
+                    help="cap each kind at the smaller class (seeded). 54:25 bug:clean made a block-everything SFT prior "
+                         "that GRPO could not move (identical group rewards -> zero advantage).")
     a = ap.parse_args()
     tasks = {t["id"]: t for t in (json.loads(l) for l in Path(a.tasks).read_text().splitlines() if l.strip())}
     out, stats = [], Counter()
@@ -49,6 +52,14 @@ def main():
                         "completion": [{"role": "assistant", "content": json.dumps(target)}],
                         "task_id": t["id"], "kind": t["kind"], "source": t.get("source", ""), "teacher": r["label"]})
             stats[f"kept:{t['kind']}"] += 1
+    if a.balance:
+        import random
+        rng = random.Random(0)
+        by = {"bug": [x for x in out if x["kind"] == "bug"], "clean": [x for x in out if x["kind"] == "clean"]}
+        n = min(len(v) for v in by.values())
+        out = [x for k in by for x in rng.sample(by[k], n)]
+        rng.shuffle(out)
+        stats["balanced_per_kind"] = n
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text("".join(json.dumps(x) + "\n" for x in out))
     print(f"{len(out)} traces -> {a.out}   " + "  ".join(f"{k}={v}" for k, v in sorted(stats.items())))
