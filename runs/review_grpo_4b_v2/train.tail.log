@@ -1,400 +1,400 @@
-│ │ be installed       │                    │       │           │            │ │
-│ │ +    separately,   │                    │       │           │            │ │
-│ │ e.g. `pip install  │                    │       │           │            │ │
-│ │ orjson`.           │                    │       │           │            │ │
-│ │      """           │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ render(self,       │                    │       │           │            │ │
-│ │ content: Any) ->   │                    │       │           │            │ │
-│ │ bytes:             │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/pyproject.toml   │                    │       │           │            │ │
-│ │ b/pyproject.toml   │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ c51eb8ce9..79dfc1… │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/pyproject.toml   │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/pyproject.toml   │                    │       │           │            │ │
-│ │ @@ -105,10 +105,6  │                    │       │           │            │ │
-│ │ @@ all = [         │                    │       │           │            │ │
-│ │      "itsdangerous │                    │       │           │            │ │
-│ │ >=1.1.0",          │                    │       │           │            │ │
-│ │      # For         │                    │       │           │            │ │
-│ │ Starlette's schema │                    │       │           │            │ │
-│ │ generation, would  │                    │       │           │            │ │
-│ │ not be used with   │                    │       │           │            │ │
-│ │ FastAPI            │                    │       │           │            │ │
-│ │      "pyyaml       │                    │       │           │            │ │
-│ │ >=5.3.1",          │                    │       │           │            │ │
-│ │ -    # For         │                    │       │           │            │ │
-│ │ UJSONResponse      │                    │       │           │            │ │
-│ │ -    "ujson        │                    │       │           │            │ │
-│ │ >=5.8.0",          │                    │       │           │            │ │
-│ │ -    # For         │                    │       │           │            │ │
-│ │ ORJSONResponse     │                    │       │           │            │ │
-│ │ -    "orjson       │                    │       │           │            │ │
-│ │ >=3.9.3",          │                    │       │           │            │ │
-│ │      # To validate │                    │       │           │            │ │
-│ │ email fields       │                    │       │           │            │ │
-│ │      "email-valid… │                    │       │           │            │ │
-│ │ >=2.0.0",          │                    │       │           │            │ │
-│ │      # Uvicorn     │                    │       │           │            │ │
-│ │ with uvloop        │                    │       │           │            │ │
-│ │ @@ -151,6 +147,10  │                    │       │           │            │ │
-│ │ @@ docs = [        │                    │       │           │            │ │
-│ │  docs-tests = [    │                    │       │           │            │ │
-│ │      "httpx        │                    │       │           │            │ │
-│ │ >=0.23.0,<1.0.0",  │                    │       │           │            │ │
-│ │      "ruff         │                    │       │           │            │ │
-│ │ >=0.14.14",        │                    │       │           │            │ │
-│ │ +    # For         │                    │       │           │            │ │
-│ │ UJSONResponse      │                    │       │           │            │ │
-│ │ +    "ujson        │                    │       │           │            │ │
-│ │ >=5.8.0",          │                    │       │           │            │ │
-│ │ +    # For         │                    │       │           │            │ │
-│ │ ORJSONResponse     │                    │       │           │            │ │
-│ │ +    "orjson       │                    │       │           │            │ │
-│ │ >=3.9.3",          │                    │       │           │            │ │
-│ │  ]                 │                    │       │           │            │ │
-│ │  github-actions =  │                    │       │           │            │ │
-│ │ [                  │                    │       │           │            │ │
-│ │      "httpx        │                    │       │           │            │ │
-│ │ >=0.27.0,<1.0.0",  │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_depr… │                    │       │           │            │ │
-│ │ b/tests/test_depr… │                    │       │           │            │ │
-│ │ new file mode      │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 000000000..eff579… │                    │       │           │            │ │
-│ │ --- /dev/null      │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_depr… │                    │       │           │            │ │
-│ │ @@ -0,0 +1,73 @@   │                    │       │           │            │ │
-│ │ +import warnings   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +import pytest     │                    │       │           │            │ │
-│ │ +from fastapi      │                    │       │           │            │ │
-│ │ import FastAPI     │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ fastapi.exceptions │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ fastapi.responses  │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ ORJSONResponse,    │                    │       │           │            │ │
-│ │ UJSONResponse      │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ fastapi.testclient │                    │       │           │            │ │
-│ │ import TestClient  │                    │       │           │            │ │
-│ │ +from pydantic     │                    │       │           │            │ │
-│ │ import BaseModel   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +class             │                    │       │           │            │ │
-│ │ Item(BaseModel):   │                    │       │           │            │ │
-│ │ +    name: str     │                    │       │           │            │ │
-│ │ +    price: float  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +# ORJSON          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ _make_orjson_app() │                    │       │           │            │ │
-│ │ -> FastAPI:        │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +        app =     │                    │       │           │            │ │
-│ │ FastAPI(default_r… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ @app.get("/items") │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ get_items() ->     │                    │       │           │            │ │
-│ │ Item:              │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ Item(name="widget… │                    │       │           │            │ │
-│ │ price=9.99)        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return app    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_orjson_respo… │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ _make_orjson_app() │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +        response  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ client.get("/item… │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ response.status_c… │                    │       │           │            │ │
-│ │ == 200             │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ response.json() == │                    │       │           │            │ │
-│ │ {"name": "widget", │                    │       │           │            │ │
-│ │ "price": 9.99}     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_orjson_respo… │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ pytest.warns(Fast… │                    │       │           │            │ │
-│ │ match="ORJSONResp… │                    │       │           │            │ │
-│ │ is deprecated"):   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ ORJSONResponse(co… │                    │       │           │            │ │
-│ │ "world"})          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +# UJSON           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ _make_ujson_app()  │                    │       │           │            │ │
-│ │ -> FastAPI:        │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +        app =     │                    │       │           │            │ │
-│ │ FastAPI(default_r… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ @app.get("/items") │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ get_items() ->     │                    │       │           │            │ │
-│ │ Item:              │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ Item(name="widget… │                    │       │           │            │ │
-│ │ price=9.99)        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return app    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_ujson_respon… │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ _make_ujson_app()  │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +        response  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ client.get("/item… │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ response.status_c… │                    │       │           │            │ │
-│ │ == 200             │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ response.json() == │                    │       │           │            │ │
-│ │ {"name": "widget", │                    │       │           │            │ │
-│ │ "price": 9.99}     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_ujson_respon… │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ pytest.warns(Fast… │                    │       │           │            │ │
-│ │ match="UJSONRespo… │                    │       │           │            │ │
-│ │ is deprecated"):   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ UJSONResponse(con… │                    │       │           │            │ │
-│ │ "world"})          │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_orjs… │                    │       │           │            │ │
-│ │ b/tests/test_orjs… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 6fe62daf9..63ea05… │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_orjs… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_orjs… │                    │       │           │            │ │
-│ │ @@ -1,9 +1,14 @@   │                    │       │           │            │ │
-│ │ +import warnings   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │  from fastapi      │                    │       │           │            │ │
-│ │ import FastAPI     │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ fastapi.exceptions │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ fastapi.responses  │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ ORJSONResponse     │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ fastapi.testclient │                    │       │           │            │ │
-│ │ import TestClient  │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ sqlalchemy.sql.el… │                    │       │           │            │ │
-│ │ import quoted_name │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -app =             │                    │       │           │            │ │
-│ │ FastAPI(default_r… │                    │       │           │            │ │
-│ │ +with              │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ FastAPI(default_r… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  @app.get("/orjso… │                    │       │           │            │ │
-│ │ @@ -16,6 +21,8 @@  │                    │       │           │            │ │
-│ │ client =           │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_orjson_non_s… │                    │       │           │            │ │
-│ │ -    with client:  │                    │       │           │            │ │
-│ │ -        response  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ client.get("/orjs… │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +        with      │                    │       │           │            │ │
-│ │ client:            │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ response =         │                    │       │           │            │ │
-│ │ client.get("/orjs… │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.json() == │                    │       │           │            │ │
-│ │ {"msg": "Hello     │                    │       │           │            │ │
-│ │ World", "1": 1}    │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_tuto… │                    │       │           │            │ │
-│ │ b/tests/test_tuto… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ cec5ebe6c..a691dd… │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_tuto… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_tuto… │                    │       │           │            │ │
-│ │ @@ -17,12 +17,14   │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ get_client(reques… │                    │       │           │            │ │
-│ │ pytest.FixtureReq… │                    │       │           │            │ │
-│ │      return client │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +@pytest.mark.fil… │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_get_custom_r… │                    │       │           │            │ │
-│ │ TestClient):       │                    │       │           │            │ │
-│ │      response =    │                    │       │           │            │ │
-│ │ client.get("/item… │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.status_c… │                    │       │           │            │ │
-│ │ == 200,            │                    │       │           │            │ │
-│ │ response.text      │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.json() == │                    │       │           │            │ │
-│ │ [{"item_id":       │                    │       │           │            │ │
-│ │ "Foo"}]            │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +@pytest.mark.fil… │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_openapi_sche… │                    │       │           │            │ │
-│ │ TestClient):       │                    │       │           │            │ │
-│ │      response =    │                    │       │           │            │ │
-│ │ client.get("/open… │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.status_c… │                    │       │           │            │ │
-│ │ == 200,            │                    │       │           │            │ │
-│ │ response.text      │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_tuto… │                    │       │           │            │ │
-│ │ b/tests/test_tuto… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 32437db86..11ce81… │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_tuto… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_tuto… │                    │       │           │            │ │
-│ │ @@ -1,17 +1,25 @@  │                    │       │           │            │ │
-│ │ +import warnings   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +import pytest     │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ fastapi.exceptions │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ fastapi.testclient │                    │       │           │            │ │
-│ │ import TestClient  │                    │       │           │            │ │
-│ │  from              │                    │       │           │            │ │
-│ │ inline_snapshot    │                    │       │           │            │ │
-│ │ import snapshot    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -from              │                    │       │           │            │ │
-│ │ docs_src.custom_r… │                    │       │           │            │ │
-│ │ import app         │                    │       │           │            │ │
-│ │ +with              │                    │       │           │            │ │
-│ │ warnings.catch_wa… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.simplefi… │                    │       │           │            │ │
-│ │ FastAPIDeprecatio… │                    │       │           │            │ │
-│ │ +    from          │                    │       │           │            │ │
-│ │ docs_src.custom_r… │                    │       │           │            │ │
-│ │ import app         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  client =          │                    │       │           │            │ │
-│ │ TestClient(app)    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +@pytest.mark.fil… │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_get_custom_r… │                    │       │           │            │ │
-│ │      response =    │                    │       │           │            │ │
-│ │ client.get("/item… │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.status_c… │                    │       │           │            │ │
-│ │ == 200,            │                    │       │           │            │ │
-│ │ response.text      │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.json() == │                    │       │           │            │ │
-│ │ [{"item_id":       │                    │       │           │            │ │
-│ │ "Foo"}]            │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +@pytest.mark.fil… │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_openapi_sche… │                    │       │           │            │ │
-│ │      response =    │                    │       │           │            │ │
-│ │ client.get("/open… │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ response.status_c… │                    │       │           │            │ │
-│ │ == 200,            │                    │       │           │            │ │
-│ │ response.text      │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
+│ │ "approve|block|esc… │ adoption success is │       │           │          │ │
+│ │ "comments":         │ going forward.      │       │           │          │ │
+│ │ [{"file": "...",    │                     │       │           │          │ │
+│ │ "line_start": N,    │   The tests are     │       │           │          │ │
+│ │ "line_end": N,      │ well written to     │       │           │          │ │
+│ │ "body": "...",      │ guard against       │       │           │          │ │
+│ │ "proposed_test":    │ violations of the   │       │           │          │ │
+│ │ "optional pytest    │ same plan layout    │       │           │          │ │
+│ │ source"}]}          │ (as seen in         │       │           │          │ │
+│ │                     │ test_width_minus_o… │       │           │          │ │
+│ │ USER                │                     │       │           │          │ │
+│ │ Repository:         │   Блок m the        │       │           │          │ │
+│ │ structlog           │ deprecation warn    │       │           │          │ │
+│ │ Files changed:      │ for width -1 and    │       │           │          │ │
+│ │ CHANGELOG.md,       │ guards against      │       │           │          │ │
+│ │ src/structlog/dev.… │ usage of unrated    │       │           │          │ │
+│ │ tests/test_dev.py   │ term sizes. So, the │       │           │          │ │
+│ │                     │ merge is correct    │       │           │          │ │
+│ │ Not shown (non-code │ and general.        │       │           │          │ │
+│ │ or over budget;     │                     │       │           │          │ │
+│ │ treat as            │ {"decision":        │       │           │          │ │
+│ │ unreviewed):        │ "approve",          │       │           │          │ │
+│ │ CHANGELOG.md (739   │ "comments":         │       │           │          │ │
+│ │ chars, non-code)    │ [{"file":           │       │           │          │ │
+│ │                     │ "tests/test_dev.py… │       │           │          │ │
+│ │ Context around the  │ "line_start": 672,  │       │           │          │ │
+│ │ change              │ "line_end": 679,    │       │           │          │ │
+│ │ (mechanically       │ "body": " Explicit  │       │           │          │ │
+│ │ extracted):         │ deprecation唿call   │       │           │          │ │
+│ │ Changed             │ is added if width   │       │           │          │ │
+│ │ definitions:        │ is -1, guards       │       │           │          │ │
+│ │ src/structlog/dev.… │ against             │       │           │          │ │
+│ │ src/structlog/dev.… │ compatibility       │       │           │          │ │
+│ │ tests/test_dev.py:… │ problems (e.g.,     │       │           │          │ │
+│ │ tests/test_dev.py:… │ against rich        │       │           │          │ │
+│ │ tests/test_dev.py:… │ <13.8.0). Tested on │       │           │          │ │
+│ │ Recent history of   │ Python3.11. The     │       │           │          │ │
+│ │ src/structlog/dev.… │ extra line allows   │       │           │          │ │
+│ │   4ce82b0           │ bom buffer to       │       │           │          │ │
+│ │ 2025-05-01 docs:    │ have健全.integrati… │       │           │          │ │
+│ │ fix typo            │ Initially,          │       │           │          │ │
+│ │   ea7cac4           │ sys.stderr          │       │           │          │ │
+│ │ 2025-02-19 expose   │ otherwise is not    │       │           │          │ │
+│ │ RichTracebackForma… │ grafted if width    │       │           │          │ │
+│ │ for imports in      │ clobs رぅ У         │       │           │          │ │
+│ │ structlog.dev       │ for👝保障[s on wid… │       │           │          │ │
+│ │ (#699)              │ shells.  To reverse │       │           │          │ │
+│ │   2f7298a           │ use of rich trace   │       │           │          │ │
+│ │ 2025-01-05 Handle   │ back, run the new   │       │           │          │ │
+│ │ Logger.exception()  │ version. Or move to │       │           │          │ │
+│ │ outside "except"    │ the full code_width │       │           │          │ │
+│ │ block (#680)        │ and uw нов for      │       │           │          │ │
+│ │ Recent history of   │ Python3.8           │       │           │          │ │
+│ │ tests/test_dev.py:  │ bottles."},         │       │           │          │ │
+│ │   2f7298a           │ {"file":            │       │           │          │ │
+│ │ 2025-01-05 Handle   │ "src/structlog/dev… │       │           │          │ │
+│ │ Logger.exception()  │ "line_start": 362,  │       │           │          │ │
+│ │ outside "except"    │ "line_end": 447,    │       │           │          │ │
+│ │ block (#680)        │ "body": " Zero      │       │           │          │ │
+│ │   5551c2f           │ waitgün for file    │       │           │          │ │
+│ │ 2024-11-09 Stop     │ updates, and idea   │       │           │          │ │
+│ │ mutating styles in  │ about formatting    │       │           │          │ │
+│ │ ConsoleRenderer     │ shows base          │       │           │          │ │
+│ │ (#669)              │ behavioral          │       │           │          │ │
+│ │   2c77735           │ alignment with      │       │           │          │ │
+│ │ 2024-09-18 quote    │ required            │       │           │          │ │
+│ │ str value with      │ Python3.8/3.11      │       │           │          │ │
+│ │ special char in dev │ beaches, good 모    │       │           │          │ │
+│ │ output (#649)       │ for long-cycle      │       │           │          │ │
+│ │                     │ fancy箕. One        │       │           │          │ │
+│ │ Diff:               │ problem: about 3    │       │           │          │ │
+│ │ ```diff             │ new parameters      │       │           │          │ │
+│ │ diff --git          │ expanded with       │       │           │          │ │
+│ │ a/src/structlog/de… │ defaults (e.g.      │       │           │          │ │
+│ │ b/src/structlog/de… │ code_width=88) -    │       │           │          │ │
+│ │ index               │ but all are fully   │       │           │          │ │
+│ │ fd3f698..976b669    │ covered by real     │       │           │          │ │
+│ │ 100644              │ scenarios           │       │           │          │ │
+│ │ ---                 │ andufficiently well │       │           │          │ │
+│ │ a/src/structlog/de… │ tested. No mistakes │       │           │          │ │
+│ │ +++                 │ evident."}]}        │       │           │          │ │
+│ │ b/src/structlog/de… │                     │       │           │          │ │
+│ │ @@ -11,7 +11,6 @@   │                     │       │           │          │ │
+│ │ See also the        │                     │       │           │          │ │
+│ │ narrative           │                     │       │           │          │ │
+│ │ documentation in    │                     │       │           │          │ │
+│ │ `console-output`.   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  from __future__    │                     │       │           │          │ │
+│ │ import annotations  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -import shutil      │                     │       │           │          │ │
+│ │  import sys         │                     │       │           │          │ │
+│ │  import warnings    │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ @@ -348,10 +347,18  │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ RichTracebackForma… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      See            │                     │       │           │          │ │
+│ │ :class:`rich.trace… │                     │       │           │          │ │
+│ │ for details on the  │                     │       │           │          │ │
+│ │ arguments.          │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -    If a *width*   │                     │       │           │          │ │
+│ │ of -1 is passed,    │                     │       │           │          │ │
+│ │ the terminal width  │                     │       │           │          │ │
+│ │ is used. If the     │                     │       │           │          │ │
+│ │ width               │                     │       │           │          │ │
+│ │ -    can't be       │                     │       │           │          │ │
+│ │ determined, fall    │                     │       │           │          │ │
+│ │ back to 80.         │                     │       │           │          │ │
+│ │ +    If *width* is  │                     │       │           │          │ │
+│ │ `None`, the         │                     │       │           │          │ │
+│ │ terminal width is   │                     │       │           │          │ │
+│ │ used. If the width  │                     │       │           │          │ │
+│ │ can't be            │                     │       │           │          │ │
+│ │ +    determined,    │                     │       │           │          │ │
+│ │ fall back to 80.    │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      ..             │                     │       │           │          │ │
+│ │ versionadded::      │                     │       │           │          │ │
+│ │ 23.2.0              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    ..             │                     │       │           │          │ │
+│ │ versionchanged::    │                     │       │           │          │ │
+│ │ 25.4.0              │                     │       │           │          │ │
+│ │ +        Default    │                     │       │           │          │ │
+│ │ *width* is ``None`` │                     │       │           │          │ │
+│ │ to have full width  │                     │       │           │          │ │
+│ │ and reflow support. │                     │       │           │          │ │
+│ │ +        Passing    │                     │       │           │          │ │
+│ │ ``-1`` as width is  │                     │       │           │          │ │
+│ │ deprecated, use     │                     │       │           │          │ │
+│ │ ``None`` instead.   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ *word_wrap* is now  │                     │       │           │          │ │
+│ │ True by default.    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    ..             │                     │       │           │          │ │
+│ │ versionadded::      │                     │       │           │          │ │
+│ │ 25.4.0              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ *code_width*        │                     │       │           │          │ │
+│ │      """            │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      color_system:  │                     │       │           │          │ │
+│ │ Literal[            │                     │       │           │          │ │
+│ │ @@ -362,7 +369,8 @@ │                     │       │           │          │ │
+│ │ class               │                     │       │           │          │ │
+│ │ RichTracebackForma… │                     │       │           │          │ │
+│ │      theme: str |   │                     │       │           │          │ │
+│ │ None = None         │                     │       │           │          │ │
+│ │      word_wrap:     │                     │       │           │          │ │
+│ │ bool = False        │                     │       │           │          │ │
+│ │      extra_lines:   │                     │       │           │          │ │
+│ │ int = 3             │                     │       │           │          │ │
+│ │ -    width: int =   │                     │       │           │          │ │
+│ │ 100                 │                     │       │           │          │ │
+│ │ +    width: int |   │                     │       │           │          │ │
+│ │ None = None         │                     │       │           │          │ │
+│ │ +    code_width:    │                     │       │           │          │ │
+│ │ int | None = 88     │                     │       │           │          │ │
+│ │      indent_guides: │                     │       │           │          │ │
+│ │ bool = True         │                     │       │           │          │ │
+│ │      locals_max_le… │                     │       │           │          │ │
+│ │ int = 10            │                     │       │           │          │ │
+│ │      locals_max_st… │                     │       │           │          │ │
+│ │ int = 80            │                     │       │           │          │ │
+│ │ @@ -372,29 +380,37  │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ RichTracebackForma… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ __call__(self, sio: │                     │       │           │          │ │
+│ │ TextIO, exc_info:   │                     │       │           │          │ │
+│ │ ExcInfo) -> None:   │                     │       │           │          │ │
+│ │          if         │                     │       │           │          │ │
+│ │ self.width == -1:   │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ self.width, _ =     │                     │       │           │          │ │
+│ │ shutil.get_termina… │                     │       │           │          │ │
+│ │ 0))                 │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ warnings.warn(      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "Use None to use    │                     │       │           │          │ │
+│ │ the terminal width  │                     │       │           │          │ │
+│ │ instead of -1.",    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ DeprecationWarning, │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ stacklevel=2,       │                     │       │           │          │ │
+│ │ +            )      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ self.width = None   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │          sio.write… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -        Console(   │                     │       │           │          │ │
+│ │ +        console =  │                     │       │           │          │ │
+│ │ Console(            │                     │       │           │          │ │
+│ │              file=… │                     │       │           │          │ │
+│ │ color_system=self.… │                     │       │           │          │ │
+│ │ width=self.width    │                     │       │           │          │ │
+│ │ -        ).print(   │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ Traceback.from_exc… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ *exc_info,          │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ show_locals=self.s… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ max_frames=self.ma… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ theme=self.theme,   │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ word_wrap=self.wor… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ extra_lines=self.e… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ width=self.width,   │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ indent_guides=self… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ locals_max_length=… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ locals_max_string=… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ locals_hide_dunder… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ locals_hide_sunder… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ suppress=self.supp… │                     │       │           │          │ │
+│ │ -            )      │                     │       │           │          │ │
+│ │          )          │                     │       │           │          │ │
+│ │ +        tb =       │                     │       │           │          │ │
+│ │ Traceback.from_exc… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ *exc_info,          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ show_locals=self.s… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ max_frames=self.ma… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ theme=self.theme,   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ word_wrap=self.wor… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ extra_lines=self.e… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ width=self.width,   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ indent_guides=self… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ locals_max_length=… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ locals_max_string=… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ locals_hide_dunder… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ locals_hide_sunder… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ suppress=self.supp… │                     │       │           │          │ │
+│ │ +        )          │                     │       │           │          │ │
+│ │ +        if         │                     │       │           │          │ │
+│ │ hasattr(tb,         │                     │       │           │          │ │
+│ │ "code_width"):      │                     │       │           │          │ │
+│ │ +            #      │                     │       │           │          │ │
+│ │ `code_width`        │                     │       │           │          │ │
+│ │ requires            │                     │       │           │          │ │
+│ │ `rich>=13.8.0`      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ tb.code_width =     │                     │       │           │          │ │
+│ │ self.code_width     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ console.print(tb)   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  rich_traceback =   │                     │       │           │          │ │
+│ │ RichTracebackForma… │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_dev.py │                     │       │           │          │ │
+│ │ b/tests/test_dev.py │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 8987130..9af2e5b    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_dev.py │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_dev.py │                     │       │           │          │ │
+│ │ @@ -671,17 +671,46  │                     │       │           │          │ │
+│ │ @@ class            │                     │       │           │          │ │
+│ │ TestRichTracebackF… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │      def            │                     │       │           │          │ │
+│ │ test_width_minus_o… │                     │       │           │          │ │
+│ │ sio):               │                     │       │           │          │ │
+│ │          """        │                     │       │           │          │ │
+│ │ -        If width   │                     │       │           │          │ │
+│ │ is -1, it's         │                     │       │           │          │ │
+│ │ replaced by the     │                     │       │           │          │ │
+│ │ terminal width on   │                     │       │           │          │ │
+│ │ first use.          │                     │       │           │          │ │
+│ │ +        If width   │                     │       │           │          │ │
+│ │ is -1, it raises a  │                     │       │           │          │ │
+│ │ DeprecationWarning  │                     │       │           │          │ │
+│ │ and is replaced by  │                     │       │           │          │ │
+│ │ None to let `rich`  │                     │       │           │          │ │
+│ │ handle it.          │                     │       │           │          │ │
+│ │          """        │                     │       │           │          │ │
+│ │          rtf =      │                     │       │           │          │ │
+│ │ dev.RichTracebackF… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -        with       │                     │       │           │          │ │
+│ │ mock.patch("shutil… │                     │       │           │          │ │
+│ │ return_value=(42,   │                     │       │           │          │ │
+│ │ 0)):                │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ pytest.deprecated_… │                     │       │           │          │ │
+│ │              try:   │                     │       │           │          │ │
+│ │                  0  │                     │       │           │          │ │
+│ │ / 0                 │                     │       │           │          │ │
+│ │              except │                     │       │           │          │ │
+│ │ ZeroDivisionError:  │                     │       │           │          │ │
+│ │                  r… │                     │       │           │          │ │
+│ │ sys.exc_info())     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -        assert 42  │                     │       │           │          │ │
+│ │ == rtf.width        │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ rtf.width is None   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ @pytest.mark.param… │                     │       │           │          │ │
+│ │ [True, False])      │                     │       │           │          │ │
+│ │ +    def            │                     │       │           │          │ │
+│ │ test_code_width_su… │                     │       │           │          │ │
+│ │ sio,                │                     │       │           │          │ │
+│ │ code_width_support… │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        If rich    │                     │       │           │          │ │
+│ │ does not support    │                     │       │           │          │ │
+│ │ code_width, it      │                     │       │           │          │ │
+│ │ should not fail     │                     │       │           │          │ │
+│ │ +        """        │                     │       │           │          │ │
+│ │ +        from       │                     │       │           │          │ │
+│ │ rich.traceback      │                     │       │           │          │ │
+│ │ import Trace        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        tb =       │                     │       │           │          │ │
+│ │ mock.Mock(          │                     │       │           │          │ │
+│ │ +            spec=[ │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ attr                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ for attr in         │                     │       │           │          │ │
+│ │ dir(dev.Traceback(… │                     │       │           │          │ │
+│ │ +                if │                     │       │           │          │ │
+│ │ (code_width_support │                     │       │           │          │ │
+│ │ or attr !=          │                     │       │           │          │ │
+│ │ "code_width")       │                     │       │           │          │ │
+│ │ +            ]      │                     │       │           │          │ │
+│ │ +        )          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ tb.__rich_console_… │                     │       │           │          │ │
+│ │ = "for Python 3.8   │                     │       │           │          │ │
+│ │ compatibility"      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        with       │                     │       │           │          │ │
+│ │ mock.patch.object(  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ dev.Traceback,      │                     │       │           │          │ │
+│ │ "from_exception",   │                     │       │           │          │ │
+│ │ return_value=tb     │                     │       │           │          │ │
+│ │ +        ) as       │                     │       │           │          │ │
+│ │ factory:            │                     │       │           │          │ │
+│ │ +            try:   │                     │       │           │          │ │
+│ │ +                0  │                     │       │           │          │ │
+│ │ / 0                 │                     │       │           │          │ │
+│ │ +            except │                     │       │           │          │ │
+│ │ ZeroDivisionError:  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ dev.rich_traceback… │                     │       │           │          │ │
+│ │ sys.exc_info())     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ "code_width" not in │                     │       │           │          │ │
+│ │ factory.call_args.… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +        if         │                     │       │           │          │ │
+│ │ code_width_support: │                     │       │           │          │ │
+│ │ +            assert │                     │       │           │          │ │
+│ │ tb.code_width == 88 │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  @pytest.mark.skip… │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
