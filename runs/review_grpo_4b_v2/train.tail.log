@@ -1,400 +1,400 @@
-│ │ DefinitionsBuilde… │                    │       │           │            │ │
-│ │  ) ->              │                    │       │           │            │ │
-│ │ PyResult<Arc<Comb… │                    │       │           │            │ │
-│ │ {                  │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ build_validator_i… │                    │       │           │            │ │
-│ │ config,            │                    │       │           │            │ │
-│ │ definitions, true) │                    │       │           │            │ │
-│ │ +    // Read       │                    │       │           │            │ │
-│ │ use_prebuilt from  │                    │       │           │            │ │
-│ │ the definitions    │                    │       │           │            │ │
-│ │ builder - this     │                    │       │           │            │ │
-│ │ ensures all nested │                    │       │           │            │ │
-│ │ +    // validators │                    │       │           │            │ │
-│ │ respect the same   │                    │       │           │            │ │
-│ │ setting as the     │                    │       │           │            │ │
-│ │ top-level build    │                    │       │           │            │ │
-│ │ +    let           │                    │       │           │            │ │
-│ │ use_prebuilt =     │                    │       │           │            │ │
-│ │ definitions.use_p… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ build_validator_i… │                    │       │           │            │ │
-│ │ config,            │                    │       │           │            │ │
-│ │ definitions,       │                    │       │           │            │ │
-│ │ use_prebuilt)      │                    │       │           │            │ │
-│ │  }                 │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  fn                │                    │       │           │            │ │
-│ │ build_validator_i… │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/pydantic-core/t… │                    │       │           │            │ │
-│ │ b/pydantic-core/t… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ cbedcf50..1dd48445 │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/pydantic-core/t… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/pydantic-core/t… │                    │       │           │            │ │
-│ │ @@ -169,3 +169,8   │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ test_float_inf_an… │                    │       │           │            │ │
-│ │ expected_json,     │                    │       │           │            │ │
-│ │ config):           │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      # Serialized  │                    │       │           │            │ │
-│ │ JSON value         │                    │       │           │            │ │
-│ │ respects the       │                    │       │           │            │ │
-│ │ ser_json_inf_nan   │                    │       │           │            │ │
-│ │ setting            │                    │       │           │            │ │
-│ │      assert        │                    │       │           │            │ │
-│ │ s.to_json(value).… │                    │       │           │            │ │
-│ │ == expected_json   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_schema_seria… │                    │       │           │            │ │
-│ │ +    """Test that  │                    │       │           │            │ │
-│ │ SchemaSerializer   │                    │       │           │            │ │
-│ │ can be constructed │                    │       │           │            │ │
-│ │ with               │                    │       │           │            │ │
-│ │ _use_prebuilt=Fal… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ SchemaSerializer(… │                    │       │           │            │ │
-│ │ 'str'}, None,      │                    │       │           │            │ │
-│ │ _use_prebuilt=Fal… │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/pydantic-core/t… │                    │       │           │            │ │
-│ │ b/pydantic-core/t… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 38edc917..107124dc │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/pydantic-core/t… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/pydantic-core/t… │                    │       │           │            │ │
-│ │ @@ -49,7 +49,7 @@  │                    │       │           │            │ │
-│ │ mod tests {        │                    │       │           │            │ │
-│ │              }"    │                    │       │           │            │ │
-│ │              );    │                    │       │           │            │ │
-│ │              let   │                    │       │           │            │ │
-│ │ schema: Bound<'_,  │                    │       │           │            │ │
-│ │ PyDict> =          │                    │       │           │            │ │
-│ │ py.eval(code,      │                    │       │           │            │ │
-│ │ None,              │                    │       │           │            │ │
-│ │ None).unwrap().ex… │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ SchemaSerializer:… │                    │       │           │            │ │
-│ │ None).unwrap();    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ SchemaSerializer:… │                    │       │           │            │ │
-│ │ None,              │                    │       │           │            │ │
-│ │ true).unwrap();    │                    │       │           │            │ │
-│ │          });       │                    │       │           │            │ │
-│ │      }             │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ @@ -76,7 +76,7 @@  │                    │       │           │            │ │
-│ │ json_input =       │                    │       │           │            │ │
-│ │ '{"a":             │                    │       │           │            │ │
-│ │ "something"}'      │                    │       │           │            │ │
-│ │              py.r… │                    │       │           │            │ │
-│ │ None,              │                    │       │           │            │ │
-│ │ Some(&locals)).un… │                    │       │           │            │ │
-│ │              let   │                    │       │           │            │ │
-│ │ schema =           │                    │       │           │            │ │
-│ │ locals.get_item("… │                    │       │           │            │ │
-│ │              let   │                    │       │           │            │ │
-│ │ json_input =       │                    │       │           │            │ │
-│ │ locals.get_item("… │                    │       │           │            │ │
-│ │ -            let   │                    │       │           │            │ │
-│ │ binding =          │                    │       │           │            │ │
-│ │ SchemaValidator::… │                    │       │           │            │ │
-│ │ &schema, None)     │                    │       │           │            │ │
-│ │ +            let   │                    │       │           │            │ │
-│ │ binding =          │                    │       │           │            │ │
-│ │ SchemaValidator::… │                    │       │           │            │ │
-│ │ &schema, None,     │                    │       │           │            │ │
-│ │ true)              │                    │       │           │            │ │
-│ │                  … │                    │       │           │            │ │
-│ │                  … │                    │       │           │            │ │
-│ │ &json_input, None, │                    │       │           │            │ │
-│ │ None, None, None,  │                    │       │           │            │ │
-│ │ false.into(),      │                    │       │           │            │ │
-│ │ None, None)        │                    │       │           │            │ │
-│ │                  … │                    │       │           │            │ │
-│ │ @@ -137,7 +137,7   │                    │       │           │            │ │
-│ │ @@                 │                    │       │           │            │ │
-│ │ dump_json_input_2  │                    │       │           │            │ │
-│ │ = {'a':            │                    │       │           │            │ │
-│ │ 'something'}       │                    │       │           │            │ │
-│ │                  … │                    │       │           │            │ │
-│ │              let   │                    │       │           │            │ │
-│ │ dump_json_input_1  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ locals.get_item("… │                    │       │           │            │ │
-│ │              let   │                    │       │           │            │ │
-│ │ dump_json_input_2  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ locals.get_item("… │                    │       │           │            │ │
-│ │ -            let   │                    │       │           │            │ │
-│ │ serializer =       │                    │       │           │            │ │
-│ │ SchemaSerializer:… │                    │       │           │            │ │
-│ │ None).unwrap();    │                    │       │           │            │ │
-│ │ +            let   │                    │       │           │            │ │
-│ │ serializer =       │                    │       │           │            │ │
-│ │ SchemaSerializer:… │                    │       │           │            │ │
-│ │ None,              │                    │       │           │            │ │
-│ │ true).unwrap();    │                    │       │           │            │ │
-│ │              let   │                    │       │           │            │ │
-│ │ serialization_res… │                    │       │           │            │ │
-│ │ = serializer       │                    │       │           │            │ │
-│ │                  … │                    │       │           │            │ │
-│ │                  … │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/pydantic-core/t… │                    │       │           │            │ │
-│ │ b/pydantic-core/t… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ fbfdabe6..d57f3626 │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/pydantic-core/t… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/pydantic-core/t… │                    │       │           │            │ │
-│ │ @@ -76,3 +76,8 @@  │                    │       │           │            │ │
-│ │ def                │                    │       │           │            │ │
-│ │ test_build_recurs… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │      )             │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      SchemaValida… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ test_schema_valid… │                    │       │           │            │ │
-│ │ +    """Test that  │                    │       │           │            │ │
-│ │ SchemaValidator    │                    │       │           │            │ │
-│ │ can be constructed │                    │       │           │            │ │
-│ │ with               │                    │       │           │            │ │
-│ │ _use_prebuilt=Fal… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ SchemaValidator({… │                    │       │           │            │ │
-│ │ 'str'}, None,      │                    │       │           │            │ │
-│ │ _use_prebuilt=Fal… │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/pydantic/_inter… │                    │       │           │            │ │
-│ │ b/pydantic/_inter… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ de5a3e0d..f9430cc1 │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/pydantic/_inter… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/pydantic/_inter… │                    │       │           │            │ │
-│ │ @@ -599,6 +599,7   │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ complete_model_cl… │                    │       │           │            │ │
-│ │      raise_errors: │                    │       │           │            │ │
-│ │ bool = True,       │                    │       │           │            │ │
-│ │      call_on_comp… │                    │       │           │            │ │
-│ │ bool = True,       │                    │       │           │            │ │
-│ │      create_model… │                    │       │           │            │ │
-│ │ str | None = None, │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ is_force_rebuild:  │                    │       │           │            │ │
-│ │ bool = False,      │                    │       │           │            │ │
-│ │  ) -> bool:        │                    │       │           │            │ │
-│ │      """Finish     │                    │       │           │            │ │
-│ │ building a model   │                    │       │           │            │ │
-│ │ class.             │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ @@ -612,6 +613,8   │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ complete_model_cl… │                    │       │           │            │ │
-│ │          raise_er… │                    │       │           │            │ │
-│ │ Whether to raise   │                    │       │           │            │ │
-│ │ errors.            │                    │       │           │            │ │
-│ │          call_on_… │                    │       │           │            │ │
-│ │ Whether to call    │                    │       │           │            │ │
-│ │ the                │                    │       │           │            │ │
-│ │ `__pydantic_on_co… │                    │       │           │            │ │
-│ │ hook.              │                    │       │           │            │ │
-│ │          create_m… │                    │       │           │            │ │
-│ │ The module of the  │                    │       │           │            │ │
-│ │ class to be        │                    │       │           │            │ │
-│ │ created, if        │                    │       │           │            │ │
-│ │ created by         │                    │       │           │            │ │
-│ │ `create_model`.    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ is_force_rebuild:  │                    │       │           │            │ │
-│ │ Whether the model  │                    │       │           │            │ │
-│ │ is being           │                    │       │           │            │ │
-│ │ force-rebuilt (if  │                    │       │           │            │ │
-│ │ True, pre-built    │                    │       │           │            │ │
-│ │ serializers and    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ validators are not │                    │       │           │            │ │
-│ │ used, to avoid     │                    │       │           │            │ │
-│ │ stale references). │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      Returns:      │                    │       │           │            │ │
-│ │          `True` if │                    │       │           │            │ │
-│ │ the model is       │                    │       │           │            │ │
-│ │ successfully       │                    │       │           │            │ │
-│ │ completed, else    │                    │       │           │            │ │
-│ │ `False`.           │                    │       │           │            │ │
-│ │ @@ -686,8 +689,9   │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ complete_model_cl… │                    │       │           │            │ │
-│ │          'create_… │                    │       │           │            │ │
-│ │ if                 │                    │       │           │            │ │
-│ │ create_model_modu… │                    │       │           │            │ │
-│ │ else 'BaseModel',  │                    │       │           │            │ │
-│ │          core_con… │                    │       │           │            │ │
-│ │          config_w… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ _use_prebuilt=not  │                    │       │           │            │ │
-│ │ is_force_rebuild,  │                    │       │           │            │ │
-│ │      )             │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ cls.__pydantic_se… │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ SchemaSerializer(… │                    │       │           │            │ │
-│ │ core_config)       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ cls.__pydantic_se… │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ SchemaSerializer(… │                    │       │           │            │ │
-│ │ core_config,       │                    │       │           │            │ │
-│ │ _use_prebuilt=not  │                    │       │           │            │ │
-│ │ is_force_rebuild)  │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      # set         │                    │       │           │            │ │
-│ │ __signature__ attr │                    │       │           │            │ │
-│ │ only for model     │                    │       │           │            │ │
-│ │ class, but not for │                    │       │           │            │ │
-│ │ its instances      │                    │       │           │            │ │
-│ │      # (because    │                    │       │           │            │ │
-│ │ instances can      │                    │       │           │            │ │
-│ │ define `__call__`, │                    │       │           │            │ │
-│ │ and                │                    │       │           │            │ │
-│ │ `inspect.signatur… │                    │       │           │            │ │
-│ │ shouldn't          │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/pydantic/main.py │                    │       │           │            │ │
-│ │ b/pydantic/main.py │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ b4cd3f6f..1eb1ebf0 │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/pydantic/main.py │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/pydantic/main.py │                    │       │           │            │ │
-│ │ @@ -679,6 +679,7   │                    │       │           │            │ │
-│ │ @@ class           │                    │       │           │            │ │
-│ │ BaseModel(metacla… │                    │       │           │            │ │
-│ │              rais… │                    │       │           │            │ │
-│ │              # If  │                    │       │           │            │ │
-│ │ the model was      │                    │       │           │            │ │
-│ │ already complete,  │                    │       │           │            │ │
-│ │ we don't need to   │                    │       │           │            │ │
-│ │ call the hook      │                    │       │           │            │ │
-│ │ again.             │                    │       │           │            │ │
-│ │              call… │                    │       │           │            │ │
-│ │ already_complete,  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ is_force_rebuild=… │                    │       │           │            │ │
-│ │          )         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      @classmethod  │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/pydantic/plugin… │                    │       │           │            │ │
-│ │ b/pydantic/plugin… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 83f2562b..0c75c29f │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/pydantic/plugin… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/pydantic/plugin… │                    │       │           │            │ │
-│ │ @@ -27,6 +27,7 @@  │                    │       │           │            │ │
-│ │ def                │                    │       │           │            │ │
-│ │ create_schema_val… │                    │       │           │            │ │
-│ │      schema_kind:  │                    │       │           │            │ │
-│ │ SchemaKind,        │                    │       │           │            │ │
-│ │      config:       │                    │       │           │            │ │
-│ │ CoreConfig | None  │                    │       │           │            │ │
-│ │ = None,            │                    │       │           │            │ │
-│ │      plugin_setti… │                    │       │           │            │ │
-│ │ dict[str, Any] |   │                    │       │           │            │ │
-│ │ None = None,       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ _use_prebuilt:     │                    │       │           │            │ │
-│ │ bool = True,       │                    │       │           │            │ │
-│ │  ) ->              │                    │       │           │            │ │
-│ │ SchemaValidator |  │                    │       │           │            │ │
-│ │ PluggableSchemaVa… │                    │       │           │            │ │
-│ │      """Create a   │                    │       │           │            │ │
-│ │ `SchemaValidator`  │                    │       │           │            │ │
-│ │ or                 │                    │       │           │            │ │
-│ │ `PluggableSchemaV… │                    │       │           │            │ │
-│ │ if plugins are     │                    │       │           │            │ │
-│ │ installed.         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ @@ -46,9 +47,10 @@ │                    │       │           │            │ │
-│ │ def                │                    │       │           │            │ │
-│ │ create_schema_val… │                    │       │           │            │ │
-│ │              conf… │                    │       │           │            │ │
-│ │              plug… │                    │       │           │            │ │
-│ │              plug… │                    │       │           │            │ │
-│ │ or {},             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ _use_prebuilt=_us… │                    │       │           │            │ │
-│ │          )         │                    │       │           │            │ │
-│ │      else:         │                    │       │           │            │ │
-│ │ -        return    │                    │       │           │            │ │
-│ │ SchemaValidator(s… │                    │       │           │            │ │
-│ │ config)            │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ SchemaValidator(s… │                    │       │           │            │ │
-│ │ config,            │                    │       │           │            │ │
-│ │ _use_prebuilt=_us… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  class             │                    │       │           │            │ │
-│ │ PluggableSchemaVa… │                    │       │           │            │ │
-│ │ @@ -65,8 +67,9 @@  │                    │       │           │            │ │
-│ │ class              │                    │       │           │            │ │
-│ │ PluggableSchemaVa… │                    │       │           │            │ │
-│ │          config:   │                    │       │           │            │ │
-│ │ CoreConfig | None, │                    │       │           │            │ │
-│ │          plugins:  │                    │       │           │            │ │
-│ │ Iterable[Pydantic… │                    │       │           │            │ │
-│ │          plugin_s… │                    │       │           │            │ │
-│ │ dict[str, Any],    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ _use_prebuilt:     │                    │       │           │            │ │
-│ │ bool = True,       │                    │       │           │            │ │
-│ │      ) -> None:    │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ self._schema_vali… │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ SchemaValidator(s… │                    │       │           │            │ │
-│ │ config)            │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self._schema_vali… │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ SchemaValidator(s… │                    │       │           │            │ │
-│ │ config,            │                    │       │           │            │ │
-│ │ _use_prebuilt=_us… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │          python_e… │                    │       │           │            │ │
-│ │ list[BaseValidate… │                    │       │           │            │ │
-│ │ = []               │                    │       │           │            │ │
-│ │          json_eve… │                    │       │           │            │ │
-│ │ list[BaseValidate… │                    │       │           │            │ │
-│ │ = []               │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
+│ │ (#2827)             │                     │       │           │          │ │
+│ │   296cab9           │                     │       │           │          │ │
+│ │ 2024-07-27 Bump the │                     │       │           │          │ │
+│ │ python-packages     │                     │       │           │          │ │
+│ │ group with 13       │                     │       │           │          │ │
+│ │ updates (#2632)     │                     │       │           │          │ │
+│ │   6bfe9fe           │                     │       │           │          │ │
+│ │ 2024-01-20 Use      │                     │       │           │          │ │
+│ │ `__future__.annota… │                     │       │           │          │ │
+│ │ (#2433)             │                     │       │           │          │ │
+│ │ Recent history of   │                     │       │           │          │ │
+│ │ tests/test_status.… │                     │       │           │          │ │
+│ │   b133ab4           │                     │       │           │          │ │
+│ │ 2024-12-28 Remove   │                     │       │           │          │ │
+│ │ deprecated          │                     │       │           │          │ │
+│ │ `WS_1004_NO_STATUS… │                     │       │           │          │ │
+│ │ and                 │                     │       │           │          │ │
+│ │ `WS_1005_ABNORMAL_… │                     │       │           │          │ │
+│ │ (#2827)             │                     │       │           │          │ │
+│ │   b9db010           │                     │       │           │          │ │
+│ │ 2024-09-01 Set      │                     │       │           │          │ │
+│ │ `line-length` to    │                     │       │           │          │ │
+│ │ 120 on Ruff (#2679) │                     │       │           │          │ │
+│ │   9329160           │                     │       │           │          │ │
+│ │ 2022-04-22          │                     │       │           │          │ │
+│ │ Deprecate           │                     │       │           │          │ │
+│ │ `WS_1004_NO_STATUS… │                     │       │           │          │ │
+│ │ and                 │                     │       │           │          │ │
+│ │ `WS_1005_ABNORMAL_… │                     │       │           │          │ │
+│ │ (#1580)             │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ Diff:               │                     │       │           │          │ │
+│ │ ```diff             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/starlette/status… │                     │       │           │          │ │
+│ │ b/starlette/status… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 54c1fb7..7cf5ade    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/starlette/status… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/starlette/status… │                     │       │           │          │ │
+│ │ @@ -3,11 +3,94 @@   │                     │       │           │          │ │
+│ │ HTTP codes          │                     │       │           │          │ │
+│ │  See HTTP Status    │                     │       │           │          │ │
+│ │ Code Registry:      │                     │       │           │          │ │
+│ │  https://www.iana.… │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ -And RFC 2324 -     │                     │       │           │          │ │
+│ │ https://tools.ietf… │                     │       │           │          │ │
+│ │ +And RFC 9110 -     │                     │       │           │          │ │
+│ │ https://www.rfc-ed… │                     │       │           │          │ │
+│ │  """                │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  from __future__    │                     │       │           │          │ │
+│ │ import annotations  │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +import warnings    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +__all__ = [        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_100_CONTINUE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_101_SWITCHIN… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_102_PROCESSI… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_103_EARLY_HI… │                     │       │           │          │ │
+│ │ +    "HTTP_200_OK", │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_201_CREATED", │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_202_ACCEPTED… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_203_NON_AUTH… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_204_NO_CONTE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_205_RESET_CO… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_206_PARTIAL_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_207_MULTI_ST… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_208_ALREADY_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_226_IM_USED", │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_300_MULTIPLE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_301_MOVED_PE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_302_FOUND",   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_303_SEE_OTHE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_304_NOT_MODI… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_305_USE_PROX… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_306_RESERVED… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_307_TEMPORAR… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_308_PERMANEN… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_400_BAD_REQU… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_401_UNAUTHOR… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_402_PAYMENT_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_403_FORBIDDE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_404_NOT_FOUN… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_405_METHOD_N… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_406_NOT_ACCE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_407_PROXY_AU… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_408_REQUEST_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_409_CONFLICT… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_410_GONE",    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_411_LENGTH_R… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_412_PRECONDI… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_413_CONTENT_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_414_URI_TOO_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_415_UNSUPPOR… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_416_RANGE_NO… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_417_EXPECTAT… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_418_IM_A_TEA… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_421_MISDIREC… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_422_UNPROCES… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_423_LOCKED",  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_424_FAILED_D… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_425_TOO_EARL… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_426_UPGRADE_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_428_PRECONDI… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_429_TOO_MANY… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_431_REQUEST_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_451_UNAVAILA… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_500_INTERNAL… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_501_NOT_IMPL… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_502_BAD_GATE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_503_SERVICE_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_504_GATEWAY_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_505_HTTP_VER… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_506_VARIANT_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_507_INSUFFIC… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_508_LOOP_DET… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_510_NOT_EXTE… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_511_NETWORK_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1000_NORMAL_CL… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1001_GOING_AWA… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1002_PROTOCOL_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1003_UNSUPPORT… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1005_NO_STATUS… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1006_ABNORMAL_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1007_INVALID_F… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1008_POLICY_VI… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1009_MESSAGE_T… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1010_MANDATORY… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1011_INTERNAL_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1012_SERVICE_R… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1013_TRY_AGAIN… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1014_BAD_GATEW… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "WS_1015_TLS_HANDS… │                     │       │           │          │ │
+│ │ +]                  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │  HTTP_100_CONTINUE  │                     │       │           │          │ │
+│ │ = 100               │                     │       │           │          │ │
+│ │  HTTP_101_SWITCHIN… │                     │       │           │          │ │
+│ │ = 101               │                     │       │           │          │ │
+│ │  HTTP_102_PROCESSI… │                     │       │           │          │ │
+│ │ = 102               │                     │       │           │          │ │
+│ │ @@ -44,14 +127,14   │                     │       │           │          │ │
+│ │ @@                  │                     │       │           │          │ │
+│ │ HTTP_409_CONFLICT = │                     │       │           │          │ │
+│ │ 409                 │                     │       │           │          │ │
+│ │  HTTP_410_GONE =    │                     │       │           │          │ │
+│ │ 410                 │                     │       │           │          │ │
+│ │  HTTP_411_LENGTH_R… │                     │       │           │          │ │
+│ │ = 411               │                     │       │           │          │ │
+│ │  HTTP_412_PRECONDI… │                     │       │           │          │ │
+│ │ = 412               │                     │       │           │          │ │
+│ │ -HTTP_413_REQUEST_… │                     │       │           │          │ │
+│ │ = 413               │                     │       │           │          │ │
+│ │ -HTTP_414_REQUEST_… │                     │       │           │          │ │
+│ │ = 414               │                     │       │           │          │ │
+│ │ +HTTP_413_CONTENT_… │                     │       │           │          │ │
+│ │ = 413               │                     │       │           │          │ │
+│ │ +HTTP_414_URI_TOO_… │                     │       │           │          │ │
+│ │ = 414               │                     │       │           │          │ │
+│ │  HTTP_415_UNSUPPOR… │                     │       │           │          │ │
+│ │ = 415               │                     │       │           │          │ │
+│ │ -HTTP_416_REQUESTE… │                     │       │           │          │ │
+│ │ = 416               │                     │       │           │          │ │
+│ │ +HTTP_416_RANGE_NO… │                     │       │           │          │ │
+│ │ = 416               │                     │       │           │          │ │
+│ │  HTTP_417_EXPECTAT… │                     │       │           │          │ │
+│ │ = 417               │                     │       │           │          │ │
+│ │  HTTP_418_IM_A_TEA… │                     │       │           │          │ │
+│ │ = 418               │                     │       │           │          │ │
+│ │  HTTP_421_MISDIREC… │                     │       │           │          │ │
+│ │ = 421               │                     │       │           │          │ │
+│ │ -HTTP_422_UNPROCES… │                     │       │           │          │ │
+│ │ = 422               │                     │       │           │          │ │
+│ │ +HTTP_422_UNPROCES… │                     │       │           │          │ │
+│ │ = 422               │                     │       │           │          │ │
+│ │  HTTP_423_LOCKED =  │                     │       │           │          │ │
+│ │ 423                 │                     │       │           │          │ │
+│ │  HTTP_424_FAILED_D… │                     │       │           │          │ │
+│ │ = 424               │                     │       │           │          │ │
+│ │  HTTP_425_TOO_EARLY │                     │       │           │          │ │
+│ │ = 425               │                     │       │           │          │ │
+│ │ @@ -93,3 +176,34 @@ │                     │       │           │          │ │
+│ │ WS_1012_SERVICE_RE… │                     │       │           │          │ │
+│ │ = 1012              │                     │       │           │          │ │
+│ │  WS_1013_TRY_AGAIN… │                     │       │           │          │ │
+│ │ = 1013              │                     │       │           │          │ │
+│ │  WS_1014_BAD_GATEW… │                     │       │           │          │ │
+│ │ = 1014              │                     │       │           │          │ │
+│ │  WS_1015_TLS_HANDS… │                     │       │           │          │ │
+│ │ = 1015              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +__deprecated__ = { │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_413_REQUEST_… │                     │       │           │          │ │
+│ │ 413,                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_414_REQUEST_… │                     │       │           │          │ │
+│ │ 414,                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_416_REQUESTE… │                     │       │           │          │ │
+│ │ 416,                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_422_UNPROCES… │                     │       │           │          │ │
+│ │ 422,                │                     │       │           │          │ │
+│ │ +}                  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ __getattr__(name:   │                     │       │           │          │ │
+│ │ str) -> int:        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ deprecation_changes │                     │       │           │          │ │
+│ │ = {                 │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_413_REQUEST_… │                     │       │           │          │ │
+│ │ "HTTP_413_CONTENT_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_414_REQUEST_… │                     │       │           │          │ │
+│ │ "HTTP_414_URI_TOO_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_416_REQUESTE… │                     │       │           │          │ │
+│ │ "HTTP_416_RANGE_NO… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_422_UNPROCES… │                     │       │           │          │ │
+│ │ "HTTP_422_UNPROCES… │                     │       │           │          │ │
+│ │ +    }              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    deprecated =   │                     │       │           │          │ │
+│ │ __deprecated__.get… │                     │       │           │          │ │
+│ │ +    if deprecated: │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ warnings.warn(      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ f"'{name}' is       │                     │       │           │          │ │
+│ │ deprecated. Use     │                     │       │           │          │ │
+│ │ '{deprecation_chan… │                     │       │           │          │ │
+│ │ instead.",          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ category=Deprecati… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ stacklevel=3,       │                     │       │           │          │ │
+│ │ +        )          │                     │       │           │          │ │
+│ │ +        return     │                     │       │           │          │ │
+│ │ None                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    raise          │                     │       │           │          │ │
+│ │ AttributeError(f"m… │                     │       │           │          │ │
+│ │ 'starlette.status'  │                     │       │           │          │ │
+│ │ has no attribute    │                     │       │           │          │ │
+│ │ '{name}'")          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def __dir__() ->   │                     │       │           │          │ │
+│ │ list[str]:          │                     │       │           │          │ │
+│ │ +    return         │                     │       │           │          │ │
+│ │ sorted(list(__all_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ list(__deprecated_… │                     │       │           │          │ │
+│ │ # pragma: no cover  │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_statu… │                     │       │           │          │ │
+│ │ b/tests/test_statu… │                     │       │           │          │ │
+│ │ new file mode       │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 0000000..52b0a25    │                     │       │           │          │ │
+│ │ --- /dev/null       │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_statu… │                     │       │           │          │ │
+│ │ @@ -0,0 +1,23 @@    │                     │       │           │          │ │
+│ │ +import importlib   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +import pytest      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +@pytest.mark.para… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "constant,msg",     │                     │       │           │          │ │
+│ │ +    (              │                     │       │           │          │ │
+│ │ +        (          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_413_REQUEST_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "'HTTP_413_REQUEST… │                     │       │           │          │ │
+│ │ is deprecated. Use  │                     │       │           │          │ │
+│ │ 'HTTP_413_CONTENT_… │                     │       │           │          │ │
+│ │ instead.",          │                     │       │           │          │ │
+│ │ +        ),         │                     │       │           │          │ │
+│ │ +        (          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "HTTP_414_REQUEST_… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "'HTTP_414_REQUEST… │                     │       │           │          │ │
+│ │ is deprecated. Use  │                     │       │           │          │ │
+│ │ 'HTTP_414_URI_TOO_… │                     │       │           │          │ │
+│ │ instead.",          │                     │       │           │          │ │
+│ │ +        ),         │                     │       │           │          │ │
+│ │ +    ),             │                     │       │           │          │ │
+│ │ +)                  │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_deprecated_ty… │                     │       │           │          │ │
+│ │ str, msg: str) ->   │                     │       │           │          │ │
+│ │ None:               │                     │       │           │          │ │
+│ │ +    with           │                     │       │           │          │ │
+│ │ pytest.warns(Depre… │                     │       │           │          │ │
+│ │ as record:          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ getattr(importlib.… │                     │       │           │          │ │
+│ │ constant)           │                     │       │           │          │ │
+│ │ +        assert     │                     │       │           │          │ │
+│ │ len(record) == 1    │                     │       │           │          │ │
+│ │ +        assert msg │                     │       │           │          │ │
+│ │ in                  │                     │       │           │          │ │
+│ │ str(record.list[0]) │                     │       │           │          │ │
+│ │ ```                 │                     │       │           │          │ │
+│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
