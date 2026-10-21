@@ -1,399 +1,399 @@
-│ │ =                  │                    │       │           │            │ │
-│ │ get_type_ref(orig… │                    │       │           │            │ │
-│ │ args_override=arg… │                    │       │           │            │ │
-│ │ +        type_ref  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ _type_refs.model_… │                    │       │           │            │ │
-│ │ args_override=arg… │                    │       │           │            │ │
-│ │          if        │                    │       │           │            │ │
-│ │ type_ref in        │                    │       │           │            │ │
-│ │ previously_seen_t… │                    │       │           │            │ │
-│ │              self… │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ PydanticRecursive… │                    │       │           │            │ │
-│ │              yield │                    │       │           │            │ │
-│ │ self_type          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ __setitem__(self,  │                    │       │           │            │ │
+│ │ key: str, value:   │                    │       │           │            │ │
+│ │ typing.Any) ->     │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.mark_modifie… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ super().__setitem… │                    │       │           │            │ │
+│ │ value)             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ __delitem__(self,  │                    │       │           │            │ │
+│ │ key: str) -> None: │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.mark_modifie… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ super().__delitem… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ clear(self) ->     │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.mark_modifie… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ super().clear()    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    def pop(self, │                    │       │           │            │ │
+│ │ key: str, *args:   │                    │       │           │            │ │
+│ │ typing.Any) ->     │                    │       │           │            │ │
+│ │ typing.Any:        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.modified =    │                    │       │           │            │ │
+│ │ self.modified or   │                    │       │           │            │ │
+│ │ key in self        │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ super().pop(key,   │                    │       │           │            │ │
+│ │ *args)             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ setdefault(self,   │                    │       │           │            │ │
+│ │ key: str, default: │                    │       │           │            │ │
+│ │ typing.Any = None) │                    │       │           │            │ │
+│ │ -> typing.Any:     │                    │       │           │            │ │
+│ │ +        if key    │                    │       │           │            │ │
+│ │ not in self:       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.mark_modifie… │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ super().setdefaul… │                    │       │           │            │ │
+│ │ default)           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    def           │                    │       │           │            │ │
+│ │ update(self,       │                    │       │           │            │ │
+│ │ *args: typing.Any, │                    │       │           │            │ │
+│ │ **kwargs:          │                    │       │           │            │ │
+│ │ typing.Any) ->     │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self.mark_modifie… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ super().update(*a… │                    │       │           │            │ │
+│ │ **kwargs)          │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/pydantic/_inter… │                    │       │           │            │ │
-│ │ b/pydantic/_inter… │                    │       │           │            │ │
-│ │ new file mode      │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
+│ │ a/starlette/reque… │                    │       │           │            │ │
+│ │ b/starlette/reque… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ 00000000..df8b65c5 │                    │       │           │            │ │
-│ │ --- /dev/null      │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/pydantic/_inter… │                    │       │           │            │ │
-│ │ @@ -0,0 +1,128 @@  │                    │       │           │            │ │
-│ │ +"""Logic related  │                    │       │           │            │ │
-│ │ to reference       │                    │       │           │            │ │
-│ │ computation for    │                    │       │           │            │ │
-│ │ types."""          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +from __future__   │                    │       │           │            │ │
-│ │ import annotations │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +import sys        │                    │       │           │            │ │
-│ │ +from enum import  │                    │       │           │            │ │
-│ │ Enum               │                    │       │           │            │ │
-│ │ +from typing       │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ TYPE_CHECKING,     │                    │       │           │            │ │
-│ │ Any, cast,         │                    │       │           │            │ │
-│ │ get_args,          │                    │       │           │            │ │
-│ │ get_origin         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ typing_extensions  │                    │       │           │            │ │
-│ │ import Sentinel,   │                    │       │           │            │ │
-│ │ TypeAliasType      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +from . import     │                    │       │           │            │ │
-│ │ _repr              │                    │       │           │            │ │
-│ │ +from              │                    │       │           │            │ │
-│ │ ._import_utils     │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ import_cached_bas… │                    │       │           │            │ │
-│ │ +from ._utils      │                    │       │           │            │ │
-│ │ import             │                    │       │           │            │ │
-│ │ lenient_issubclass │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +if TYPE_CHECKING: │                    │       │           │            │ │
-│ │ +    from pydantic │                    │       │           │            │ │
-│ │ import BaseModel   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ _args_ref(args:    │                    │       │           │            │ │
-│ │ tuple[Any, ...])   │                    │       │           │            │ │
-│ │ -> str:            │                    │       │           │            │ │
-│ │ +    arg_refs:     │                    │       │           │            │ │
-│ │ list[str] = []     │                    │       │           │            │ │
-│ │ +    for arg in    │                    │       │           │            │ │
-│ │ args:              │                    │       │           │            │ │
-│ │ +        if        │                    │       │           │            │ │
-│ │ isinstance(arg,    │                    │       │           │            │ │
-│ │ str):              │                    │       │           │            │ │
-│ │ +            #     │                    │       │           │            │ │
-│ │ Handle string args │                    │       │           │            │ │
-│ │ as a special case; │                    │       │           │            │ │
-│ │ we may be able to  │                    │       │           │            │ │
-│ │ remove this        │                    │       │           │            │ │
-│ │ special handling   │                    │       │           │            │ │
-│ │ if we              │                    │       │           │            │ │
-│ │ +            #     │                    │       │           │            │ │
-│ │ wrap them in a     │                    │       │           │            │ │
-│ │ ForwardRef at some │                    │       │           │            │ │
-│ │ point.             │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ arg_ref =          │                    │       │           │            │ │
-│ │ f'{arg}:str-{id(a… │                    │       │           │            │ │
-│ │ +        else:     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ arg_ref =          │                    │       │           │            │ │
-│ │ f'{_repr.display_… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ arg_refs.append(a… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    if arg_refs:  │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ f'[{",".join(arg_… │                    │       │           │            │ │
-│ │ +    else:         │                    │       │           │            │ │
-│ │ +        return '' │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ model_type_ref(ty… │                    │       │           │            │ │
-│ │ type[BaseModel],   │                    │       │           │            │ │
-│ │ args_override:     │                    │       │           │            │ │
-│ │ tuple[Any, ...] |  │                    │       │           │            │ │
-│ │ None = None) ->    │                    │       │           │            │ │
-│ │ str:               │                    │       │           │            │ │
-│ │ +    """Produce a  │                    │       │           │            │ │
-│ │ reference for      │                    │       │           │            │ │
-│ │ Pydantic base      │                    │       │           │            │ │
-│ │ models."""         │                    │       │           │            │ │
-│ │ +    try:          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ generic_metadata = │                    │       │           │            │ │
-│ │ type_.__pydantic_… │                    │       │           │            │ │
-│ │ +    except        │                    │       │           │            │ │
-│ │ AttributeError:    │                    │       │           │            │ │
-│ │ +        # `type_` │                    │       │           │            │ │
-│ │ is `BaseModel`:    │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ f'{type_.__module… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    origin =      │                    │       │           │            │ │
-│ │ generic_metadata[… │                    │       │           │            │ │
-│ │ or type_           │                    │       │           │            │ │
-│ │ +    args =        │                    │       │           │            │ │
-│ │ generic_metadata[… │                    │       │           │            │ │
-│ │ +    if not args   │                    │       │           │            │ │
-│ │ and args_override  │                    │       │           │            │ │
-│ │ is not None:       │                    │       │           │            │ │
-│ │ +        args =    │                    │       │           │            │ │
-│ │ args_override      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # While it is │                    │       │           │            │ │
-│ │ typed as `str`,    │                    │       │           │            │ │
-│ │ `__module__` could │                    │       │           │            │ │
-│ │ in theory be       │                    │       │           │            │ │
-│ │ `None`:            │                    │       │           │            │ │
-│ │ +    module_name = │                    │       │           │            │ │
-│ │ cast(str | None,   │                    │       │           │            │ │
-│ │ origin.__module__) │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ module_name is     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ module_name = '<No │                    │       │           │            │ │
-│ │ __module__>'       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ f'{module_name}.{… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ class_type_ref(ty… │                    │       │           │            │ │
-│ │ Any, origin:       │                    │       │           │            │ │
-│ │ type[Any] | None)  │                    │       │           │            │ │
-│ │ -> str:            │                    │       │           │            │ │
-│ │ +    """Produce a  │                    │       │           │            │ │
-│ │ reference for an   │                    │       │           │            │ │
-│ │ arbitrary class    │                    │       │           │            │ │
-│ │ (dataclasses,      │                    │       │           │            │ │
-│ │ typed              │                    │       │           │            │ │
-│ │ dictionaries,      │                    │       │           │            │ │
-│ │ named tuples)."""  │                    │       │           │            │ │
-│ │ +    tp: type[Any] │                    │       │           │            │ │
-│ │ = origin if origin │                    │       │           │            │ │
-│ │ is not None else   │                    │       │           │            │ │
-│ │ type_              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    # While it is │                    │       │           │            │ │
-│ │ typed as `str`,    │                    │       │           │            │ │
-│ │ `__module__` could │                    │       │           │            │ │
-│ │ in theory be       │                    │       │           │            │ │
-│ │ `None`:            │                    │       │           │            │ │
-│ │ +    module_name = │                    │       │           │            │ │
-│ │ cast(str | None,   │                    │       │           │            │ │
-│ │ tp.__module__)     │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ module_name is     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ module_name = '<No │                    │       │           │            │ │
-│ │ __module__>'       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ f'{module_name}.{… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +_NOT_PROVIDED =   │                    │       │           │            │ │
-│ │ Sentinel('_NOT_PR… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ any_class_type_re… │                    │       │           │            │ │
-│ │ Any, origin:       │                    │       │           │            │ │
-│ │ type[Any] | None | │                    │       │           │            │ │
-│ │ _NOT_PROVIDED =    │                    │       │           │            │ │
-│ │ _NOT_PROVIDED) ->  │                    │       │           │            │ │
-│ │ str:               │                    │       │           │            │ │
-│ │ +    """Produce a  │                    │       │           │            │ │
-│ │ reference for any  │                    │       │           │            │ │
-│ │ class kind,        │                    │       │           │            │ │
-│ │ including Pydantic │                    │       │           │            │ │
-│ │ models."""         │                    │       │           │            │ │
-│ │ +    BaseModel_ =  │                    │       │           │            │ │
-│ │ import_cached_bas… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ lenient_issubclas… │                    │       │           │            │ │
-│ │ BaseModel_):       │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ model_type_ref(ty… │                    │       │           │            │ │
-│ │ # pyright:         │                    │       │           │            │ │
-│ │ ignore[reportArgu… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    origin =      │                    │       │           │            │ │
-│ │ get_origin(type_)  │                    │       │           │            │ │
-│ │ if origin is       │                    │       │           │            │ │
-│ │ _NOT_PROVIDED else │                    │       │           │            │ │
-│ │ origin             │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ class_type_ref(ty… │                    │       │           │            │ │
-│ │ origin)  #         │                    │       │           │            │ │
-│ │ pyright:           │                    │       │           │            │ │
-│ │ ignore[reportArgu… │                    │       │           │            │ │
-│ │ (https://github.c… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ any_type_ref(type… │                    │       │           │            │ │
-│ │ Any, origin: Any | │                    │       │           │            │ │
-│ │ _NOT_PROVIDED =    │                    │       │           │            │ │
-│ │ _NOT_PROVIDED) ->  │                    │       │           │            │ │
-│ │ str:               │                    │       │           │            │ │
-│ │ +    """Produce a  │                    │       │           │            │ │
-│ │ reference for any  │                    │       │           │            │ │
-│ │ object, including  │                    │       │           │            │ │
-│ │ non-class          │                    │       │           │            │ │
-│ │ objects."""        │                    │       │           │            │ │
-│ │ +    BaseModel_ =  │                    │       │           │            │ │
-│ │ import_cached_bas… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ lenient_issubclas… │                    │       │           │            │ │
-│ │ BaseModel_):       │                    │       │           │            │ │
-│ │ +        return    │                    │       │           │            │ │
-│ │ model_type_ref(ty… │                    │       │           │            │ │
-│ │ # pyright:         │                    │       │           │            │ │
-│ │ ignore[reportArgu… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    origin =      │                    │       │           │            │ │
-│ │ get_origin(type_)  │                    │       │           │            │ │
-│ │ if origin is       │                    │       │           │            │ │
-│ │ _NOT_PROVIDED else │                    │       │           │            │ │
-│ │ origin             │                    │       │           │            │ │
-│ │ +    tp: Any =     │                    │       │           │            │ │
-│ │ origin if origin   │                    │       │           │            │ │
-│ │ is not None else   │                    │       │           │            │ │
-│ │ type_              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    module_name = │                    │       │           │            │ │
-│ │ getattr(tp,        │                    │       │           │            │ │
-│ │ '__module__',      │                    │       │           │            │ │
-│ │ None)              │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ module_name is     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ module_name = '<No │                    │       │           │            │ │
-│ │ __module__>'       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    try:          │                    │       │           │            │ │
-│ │ +        qualname  │                    │       │           │            │ │
-│ │ = getattr(tp,      │                    │       │           │            │ │
-│ │ '__qualname__',    │                    │       │           │            │ │
-│ │ f'<No              │                    │       │           │            │ │
-│ │ __qualname__:      │                    │       │           │            │ │
-│ │ {tp}>')            │                    │       │           │            │ │
-│ │ +    except        │                    │       │           │            │ │
-│ │ Exception:         │                    │       │           │            │ │
-│ │ +        qualname  │                    │       │           │            │ │
-│ │ = getattr(tp,      │                    │       │           │            │ │
-│ │ '__qualname__',    │                    │       │           │            │ │
-│ │ '<No               │                    │       │           │            │ │
-│ │ __qualname__>')    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ f'{module_name}.{… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ enum_type_ref(typ… │                    │       │           │            │ │
-│ │ type[Enum]) ->     │                    │       │           │            │ │
-│ │ str:               │                    │       │           │            │ │
-│ │ +    """Produce a  │                    │       │           │            │ │
-│ │ reference for an   │                    │       │           │            │ │
-│ │ enum class."""     │                    │       │           │            │ │
-│ │ +    # While it is │                    │       │           │            │ │
-│ │ typed as `str`,    │                    │       │           │            │ │
-│ │ `__module__` could │                    │       │           │            │ │
-│ │ in theory be       │                    │       │           │            │ │
-│ │ `None`:            │                    │       │           │            │ │
-│ │ +    module_name = │                    │       │           │            │ │
-│ │ cast(str | None,   │                    │       │           │            │ │
-│ │ type_.__module__)  │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ module_name is     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ module_name = '<No │                    │       │           │            │ │
-│ │ __module__>'       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ f'{module_name}.{… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ type_alias_type_r… │                    │       │           │            │ │
-│ │ TypeAliasType) ->  │                    │       │           │            │ │
-│ │ str:               │                    │       │           │            │ │
-│ │ +    """Produce a  │                    │       │           │            │ │
-│ │ reference for a    │                    │       │           │            │ │
-│ │ type alias."""     │                    │       │           │            │ │
-│ │ +    origin:       │                    │       │           │            │ │
-│ │ TypeAliasType =    │                    │       │           │            │ │
-│ │ get_origin(type_)  │                    │       │           │            │ │
-│ │ or type_           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    module_name = │                    │       │           │            │ │
-│ │ type_.__module__   │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ module_name is     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ module_name = '<No │                    │       │           │            │ │
-│ │ __module__>'       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    if            │                    │       │           │            │ │
-│ │ sys.version_info   │                    │       │           │            │ │
-│ │ >= (3, 15):        │                    │       │           │            │ │
-│ │ +        type_ref  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ f'{module_name}.{… │                    │       │           │            │ │
-│ │ +    else:         │                    │       │           │            │ │
-│ │ +        type_ref  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ f'{module_name}.{… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ f'{type_ref}{_arg… │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_edge… │                    │       │           │            │ │
-│ │ b/tests/test_edge… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 699a49da..f5e0de1a │                    │       │           │            │ │
+│ │ 716f293..c57b4ae   │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_edge… │                    │       │           │            │ │
+│ │ a/starlette/reque… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_edge… │                    │       │           │            │ │
-│ │ @@ -3209,3         │                    │       │           │            │ │
-│ │ +3209,12 @@ def    │                    │       │           │            │ │
-│ │ test_unhasbable_g… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │      ta =          │                    │       │           │            │ │
-│ │ TypeAdapter(list[… │                    │       │           │            │ │
-│ │ Meta()]])          │                    │       │           │            │ │
+│ │ b/starlette/reque… │                    │       │           │            │ │
+│ │ @@ -18,6 +18,7 @@  │                    │       │           │            │ │
+│ │ if TYPE_CHECKING:  │                    │       │           │            │ │
+│ │      from          │                    │       │           │            │ │
+│ │ python_multipart.… │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ parse_options_hea… │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
+│ │      from          │                    │       │           │            │ │
+│ │ starlette.applica… │                    │       │           │            │ │
+│ │ import Starlette   │                    │       │           │            │ │
+│ │ +    from          │                    │       │           │            │ │
+│ │ starlette.middlew… │                    │       │           │            │ │
+│ │ import Session     │                    │       │           │            │ │
+│ │      from          │                    │       │           │            │ │
+│ │ starlette.routing  │                    │       │           │            │ │
+│ │ import Router      │                    │       │           │            │ │
+│ │  else:             │                    │       │           │            │ │
+│ │      try:          │                    │       │           │            │ │
+│ │ @@ -167,7 +168,11  │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ HTTPConnection(Ma… │                    │       │           │            │ │
+│ │ Any],              │                    │       │           │            │ │
+│ │ Generic[StateT]):  │                    │       │           │            │ │
+│ │      @property     │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ session(self) ->   │                    │       │           │            │ │
+│ │ dict[str, Any]:    │                    │       │           │            │ │
+│ │          assert    │                    │       │           │            │ │
+│ │ "session" in       │                    │       │           │            │ │
+│ │ self.scope,        │                    │       │           │            │ │
+│ │ "SessionMiddleware │                    │       │           │            │ │
+│ │ must be installed  │                    │       │           │            │ │
+│ │ to access          │                    │       │           │            │ │
+│ │ request.session"   │                    │       │           │            │ │
+│ │ -        return    │                    │       │           │            │ │
+│ │ self.scope["sessi… │                    │       │           │            │ │
+│ │ # type:            │                    │       │           │            │ │
+│ │ ignore[no-any-ret… │                    │       │           │            │ │
+│ │ +        session:  │                    │       │           │            │ │
+│ │ Session =          │                    │       │           │            │ │
+│ │ self.scope["sessi… │                    │       │           │            │ │
+│ │ +        # We keep │                    │       │           │            │ │
+│ │ the hasattr in     │                    │       │           │            │ │
+│ │ case people        │                    │       │           │            │ │
+│ │ actually use their │                    │       │           │            │ │
+│ │ own                │                    │       │           │            │ │
+│ │ `SessionMiddlewar… │                    │       │           │            │ │
+│ │ implementation.    │                    │       │           │            │ │
+│ │ +        if        │                    │       │           │            │ │
+│ │ hasattr(session,   │                    │       │           │            │ │
+│ │ "mark_accessed"):  │                    │       │           │            │ │
+│ │ # pragma: no       │                    │       │           │            │ │
+│ │ branch             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ session.mark_acce… │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ session            │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      @property     │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ auth(self) -> Any: │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/middlewar… │                    │       │           │            │ │
+│ │ b/tests/middlewar… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ b4f3c64..0f5db79   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/middlewar… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/middlewar… │                    │       │           │            │ │
+│ │ @@ -2,7 +2,7 @@    │                    │       │           │            │ │
+│ │ import re          │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ starlette.applica… │                    │       │           │            │ │
+│ │ import Starlette   │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ starlette.middlew… │                    │       │           │            │ │
+│ │ import Middleware  │                    │       │           │            │ │
+│ │ -from              │                    │       │           │            │ │
+│ │ starlette.middlew… │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ SessionMiddleware  │                    │       │           │            │ │
+│ │ +from              │                    │       │           │            │ │
+│ │ starlette.middlew… │                    │       │           │            │ │
+│ │ import Session,    │                    │       │           │            │ │
+│ │ SessionMiddleware  │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ starlette.requests │                    │       │           │            │ │
+│ │ import Request     │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ starlette.respons… │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ JSONResponse       │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ starlette.routing  │                    │       │           │            │ │
+│ │ import Mount,      │                    │       │           │            │ │
+│ │ Route              │                    │       │           │            │ │
+│ │ @@ -25,6 +25,10 @@ │                    │       │           │            │ │
+│ │ async def          │                    │       │           │            │ │
+│ │ clear_session(req… │                    │       │           │            │ │
+│ │ Request) ->        │                    │       │           │            │ │
+│ │ JSONResponse:      │                    │       │           │            │ │
+│ │      return        │                    │       │           │            │ │
+│ │ JSONResponse({"se… │                    │       │           │            │ │
+│ │ request.session})  │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ no_session_access… │                    │       │           │            │ │
+│ │ Request) ->        │                    │       │           │            │ │
+│ │ JSONResponse:      │                    │       │           │            │ │
+│ │ +    return        │                    │       │           │            │ │
+│ │ JSONResponse({"st… │                    │       │           │            │ │
+│ │ "ok"})             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_session(test… │                    │       │           │            │ │
+│ │ TestClientFactory) │                    │       │           │            │ │
+│ │ -> None:           │                    │       │           │            │ │
+│ │      app =         │                    │       │           │            │ │
+│ │ Starlette(         │                    │       │           │            │ │
+│ │          routes=[  │                    │       │           │            │ │
+│ │ @@ -198,3 +202,86  │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ test_domain_cooki… │                    │       │           │            │ │
+│ │ TestClientFactory) │                    │       │           │            │ │
+│ │ -> None:           │                    │       │           │            │ │
+│ │      client.cooki… │                    │       │           │            │ │
+│ │      response =    │                    │       │           │            │ │
+│ │ client.get("/view… │                    │       │           │            │ │
 │ │      assert        │                    │       │           │            │ │
-│ │ ta.validate_pytho… │                    │       │           │            │ │
-│ │ == [1]             │                    │       │           │            │ │
+│ │ response.json() == │                    │       │           │            │ │
+│ │ {"session": {}}    │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
 │ │ +def               │                    │       │           │            │ │
-│ │ test_get_pydantic… │                    │       │           │            │ │
+│ │ test_set_cookie_o… │                    │       │           │            │ │
+│ │ TestClientFactory) │                    │       │           │            │ │
 │ │ -> None:           │                    │       │           │            │ │
-│ │ +    class         │                    │       │           │            │ │
-│ │ SchemaProvider:    │                    │       │           │            │ │
-│ │ +        def       │                    │       │           │            │ │
-│ │ __get_pydantic_co… │                    │       │           │            │ │
-│ │ source: Any,       │                    │       │           │            │ │
-│ │ handler:           │                    │       │           │            │ │
-│ │ GetCoreSchemaHand… │                    │       │           │            │ │
-│ │ -> CoreSchema:     │                    │       │           │            │ │
+│ │ +    app =         │                    │       │           │            │ │
+│ │ Starlette(         │                    │       │           │            │ │
+│ │ +        routes=[  │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ return             │                    │       │           │            │ │
-│ │ core_schema.int_s… │                    │       │           │            │ │
+│ │ Route("/view_sess… │                    │       │           │            │ │
+│ │ endpoint=view_ses… │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ +    ta =          │                    │       │           │            │ │
-│ │ TypeAdapter(Schem… │                    │       │           │            │ │
+│ │ Route("/update_se… │                    │       │           │            │ │
+│ │ endpoint=update_s… │                    │       │           │            │ │
+│ │ methods=["POST"]), │                    │       │           │            │ │
+│ │ +        ],        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ middleware=[Middl… │                    │       │           │            │ │
+│ │ secret_key="examp… │                    │       │           │            │ │
+│ │ +    )             │                    │       │           │            │ │
+│ │ +    client =      │                    │       │           │            │ │
+│ │ test_client_facto… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # Write to    │                    │       │           │            │ │
+│ │ session - should   │                    │       │           │            │ │
+│ │ send Set-Cookie    │                    │       │           │            │ │
+│ │ +    response =    │                    │       │           │            │ │
+│ │ client.post("/upd… │                    │       │           │            │ │
+│ │ json={"some":      │                    │       │           │            │ │
+│ │ "data"})           │                    │       │           │            │ │
 │ │ +    assert        │                    │       │           │            │ │
-│ │ ta.validate_pytho… │                    │       │           │            │ │
-│ │ == 1               │                    │       │           │            │ │
+│ │ "set-cookie" in    │                    │       │           │            │ │
+│ │ response.headers   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # Read-only   │                    │       │           │            │ │
+│ │ access - should    │                    │       │           │            │ │
+│ │ NOT send           │                    │       │           │            │ │
+│ │ Set-Cookie         │                    │       │           │            │ │
+│ │ +    response =    │                    │       │           │            │ │
+│ │ client.get("/view… │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ response.json() == │                    │       │           │            │ │
+│ │ {"session":        │                    │       │           │            │ │
+│ │ {"some": "data"}}  │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ "set-cookie" not   │                    │       │           │            │ │
+│ │ in                 │                    │       │           │            │ │
+│ │ response.headers   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_vary_cookie_… │                    │       │           │            │ │
+│ │ TestClientFactory) │                    │       │           │            │ │
+│ │ -> None:           │                    │       │           │            │ │
+│ │ +    app =         │                    │       │           │            │ │
+│ │ Starlette(         │                    │       │           │            │ │
+│ │ +        routes=[  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Route("/view_sess… │                    │       │           │            │ │
+│ │ endpoint=view_ses… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Route("/update_se… │                    │       │           │            │ │
+│ │ endpoint=update_s… │                    │       │           │            │ │
+│ │ methods=["POST"]), │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Route("/no_sessio… │                    │       │           │            │ │
+│ │ endpoint=no_sessi… │                    │       │           │            │ │
+│ │ +        ],        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ middleware=[Middl… │                    │       │           │            │ │
+│ │ secret_key="examp… │                    │       │           │            │ │
+│ │ +    )             │                    │       │           │            │ │
+│ │ +    client =      │                    │       │           │            │ │
+│ │ test_client_facto… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # Modifying   │                    │       │           │            │ │
+│ │ session should add │                    │       │           │            │ │
+│ │ Vary: Cookie       │                    │       │           │            │ │
+│ │ +    response =    │                    │       │           │            │ │
+│ │ client.post("/upd… │                    │       │           │            │ │
+│ │ json={"some":      │                    │       │           │            │ │
+│ │ "data"})           │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ "cookie" in        │                    │       │           │            │ │
+│ │ response.headers.… │                    │       │           │            │ │
+│ │ "").lower()        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # Reading a   │                    │       │           │            │ │
+│ │ non-empty session  │                    │       │           │            │ │
+│ │ should add Vary:   │                    │       │           │            │ │
+│ │ Cookie             │                    │       │           │            │ │
+│ │ +    response =    │                    │       │           │            │ │
+│ │ client.get("/view… │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ "cookie" in        │                    │       │           │            │ │
+│ │ response.headers.… │                    │       │           │            │ │
+│ │ "").lower()        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # Not         │                    │       │           │            │ │
+│ │ accessing session  │                    │       │           │            │ │
+│ │ at all should NOT  │                    │       │           │            │ │
+│ │ add Vary: Cookie   │                    │       │           │            │ │
+│ │ +    response =    │                    │       │           │            │ │
+│ │ client.get("/no_s… │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ "cookie" not in    │                    │       │           │            │ │
+│ │ response.headers.… │                    │       │           │            │ │
+│ │ "").lower()        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_session_trac… │                    │       │           │            │ │
+│ │ -> None:           │                    │       │           │            │ │
+│ │ +    session =     │                    │       │           │            │ │
+│ │ Session({"a": "1", │                    │       │           │            │ │
+│ │ "b": "2"})         │                    │       │           │            │ │
+│ │ +    assert not    │                    │       │           │            │ │
+│ │ session.modified   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # __setitem__ │                    │       │           │            │ │
+│ │ +    session["c"]  │                    │       │           │            │ │
+│ │ = "3"              │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ session.modified   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # __delitem__ │                    │       │           │            │ │
+│ │ +    session =     │                    │       │           │            │ │
+│ │ Session({"a":      │                    │       │           │            │ │
+│ │ "1"})              │                    │       │           │            │ │
+│ │ +    del           │                    │       │           │            │ │
+│ │ session["a"]       │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ session.modified   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # clear       │                    │       │           │            │ │
+│ │ +    session =     │                    │       │           │            │ │
+│ │ Session({"a":      │                    │       │           │            │ │
+│ │ "1"})              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ session.clear()    │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ session.modified   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # pop with    │                    │       │           │            │ │
+│ │ existing key       │                    │       │           │            │ │
+│ │ +    session =     │                    │       │           │            │ │
+│ │ Session({"a":      │                    │       │           │            │ │
+│ │ "1"})              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ session.pop("a")   │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ session.modified   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # pop with    │                    │       │           │            │ │
+│ │ missing key        │                    │       │           │            │ │
+│ │ +    session =     │                    │       │           │            │ │
+│ │ Session({"a":      │                    │       │           │            │ │
+│ │ "1"})              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ session.pop("miss… │                    │       │           │            │ │
+│ │ None)              │                    │       │           │            │ │
+│ │ +    assert not    │                    │       │           │            │ │
+│ │ session.modified   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # setdefault  │                    │       │           │            │ │
+│ │ with missing key   │                    │       │           │            │ │
+│ │ +    session =     │                    │       │           │            │ │
+│ │ Session({"a":      │                    │       │           │            │ │
+│ │ "1"})              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ session.setdefaul… │                    │       │           │            │ │
+│ │ "2")               │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ session.modified   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    # setdefault  │                    │       │           │            │ │
+│ │ with existing key  │                    │       │           │            │ │
+│ │ +    session =     │                    │       │           │            │ │
+│ │ Session({"a":      │                    │       │           │            │ │
+│ │ "1"})              │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ session.setdefaul… │                    │       │           │            │ │
+│ │ "2")               │                    │       │           │            │ │
+│ │ +    assert not    │                    │       │           │            │ │
+│ │ session.modified   │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ ```                │                    │       │           │            │ │
 │ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
