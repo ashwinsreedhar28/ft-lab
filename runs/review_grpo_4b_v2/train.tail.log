@@ -1,42 +1,92 @@
-│ │ review gate for a  │ "approve",         │       │           │            │ │
-│ │ production         │ "comments":        │       │           │            │ │
-│ │ repository. Your   │ [{"file":          │       │           │            │ │
-│ │ approval merges    │ "tenacity/wait.py… │       │           │            │ │
-│ │ and deploys the    │ "line_start": 21,  │       │           │            │ │
-│ │ change with no     │ "line_end": 72,    │       │           │            │ │
-│ │ further human      │ "body": "Deprecate │       │           │            │ │
-│ │ review. Decide:    │ `initial` for      │       │           │            │ │
-│ │   approve  - you   │ `wait_exponential… │       │           │            │ │
-│ │ are confident the  │ in favor of        │       │           │            │ │
-│ │ change is correct  │ `multiplier`.      │       │           │            │ │
-│ │ and safe to ship.  │ Previously, both   │       │           │            │ │
-│ │   block    - you   │ could be set, but  │       │           │            │ │
-│ │ found a defect;    │ after this change, │       │           │            │ │
-│ │ cite its location. │ only one can be    │       │           │            │ │
-│ │   escalate - you   │ used. This         │       │           │            │ │
-│ │ cannot establish   │ maintains          │       │           │            │ │
-│ │ safety from what   │ consistency with   │       │           │            │ │
-│ │ you can see; a     │ `wait_exponential` │       │           │            │ │
-│ │ human must look.   │ and makes sense    │       │           │            │ │
-│ │ Approving a change │ for merging with   │       │           │            │ │
-│ │ that contains a    │ backoff behaviors  │       │           │            │ │
-│ │ defect is the      │ of                 │       │           │            │ │
-│ │ worst outcome.     │ `wait_exponential… │       │           │            │ │
-│ │ Blocking a correct │                    │       │           │            │ │
-│ │ change costs an    │                    │       │           │            │ │
-│ │ engineer's time.   │                    │       │           │            │ │
-│ │ Escalating is      │                    │       │           │            │ │
-│ │ cheap but useless  │                    │       │           │            │ │
-│ │ if done for        │                    │       │           │            │ │
-│ │ everything.        │                    │       │           │            │ │
-│ │ Respond with       │                    │       │           │            │ │
-│ │ exactly one JSON   │                    │       │           │            │ │
-│ │ object and nothing │                    │       │           │            │ │
-│ │ else:              │                    │       │           │            │ │
-│ │ {"decision":       │                    │       │           │            │ │
-│ │ "approve|block|es… │                    │       │           │            │ │
-│ │ "comments":        │                    │       │           │            │ │
-│ │ [{"file": "...",   │                    │       │           │            │ │
+│ │ "numeric_range({}, │                    │       │           │            │ │
+│ │ {})".format(       │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ repr(self._start), │                    │       │           │            │ │
+│ │ repr(self._stop)   │                    │       │           │            │ │
+│ │ -            )     │                    │       │           │            │ │
+│ │ -        else:     │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ return             │                    │       │           │            │ │
+│ │ "numeric_range({}, │                    │       │           │            │ │
+│ │ {}, {})".format(   │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ repr(self._start), │                    │       │           │            │ │
+│ │ repr(self._stop),  │                    │       │           │            │ │
+│ │ repr(self._step)   │                    │       │           │            │ │
+│ │ -            )     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ return             │                    │       │           │            │ │
+│ │ "numeric_range({s… │                    │       │           │            │ │
+│ │ {self._stop!r})"   │                    │       │           │            │ │
+│ │ +        return (  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ f"numeric_range({… │                    │       │           │            │ │
+│ │ {self._stop!r},    │                    │       │           │            │ │
+│ │ {self._step!r})"   │                    │       │           │            │ │
+│ │ +        )         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ __reversed__(self… │                    │       │           │            │ │
+│ │          return    │                    │       │           │            │ │
+│ │ iter(              │                    │       │           │            │ │
+│ │ @@ -2864,7 +2861,7 │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ SequenceView(Sequ… │                    │       │           │            │ │
+│ │          return    │                    │       │           │            │ │
+│ │ len(self._target)  │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      def           │                    │       │           │            │ │
+│ │ __repr__(self):    │                    │       │           │            │ │
+│ │ -        return    │                    │       │           │            │ │
+│ │ f'{self.__class__… │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ f'{self.__class__… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  class seekable:   │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │ -5.00 │     -0.35 │ approve    │ │
+│ │ You are the code   │ ```json            │       │           │            │ │
+│ │ review gate for a  │ {"decision":       │       │           │            │ │
+│ │ production         │ "approve",         │       │           │            │ │
+│ │ repository. Your   │ "comments":        │       │           │            │ │
+│ │ approval merges    │ [{"file":          │       │           │            │ │
+│ │ and deploys the    │ "docs/concepts/js… │       │           │            │ │
+│ │ change with no     │ "line_start": 369, │       │           │            │ │
+│ │ further human      │ "line_end": 527,   │       │           │            │ │
+│ │ review. Decide:    │ "body": "This      │       │           │            │ │
+│ │   approve  - you   │ documentation      │       │           │            │ │
+│ │ are confident the  │ address all        │       │           │            │ │
+│ │ change is correct  │ changes to the     │       │           │            │ │
+│ │ and safe to ship.  │ JSON Schema of     │       │           │            │ │
+│ │   block    - you   │ types that do not  │       │           │            │ │
+│ │ found a defect;    │ inherently define  │       │           │            │ │
+│ │ cite its location. │ it. This covers    │       │           │            │ │
+│ │   escalate - you   │ the expected       │       │           │            │ │
+│ │ cannot establish   │ behavior and       │       │           │            │ │
+│ │ safety from what   │ possible           │       │           │            │ │
+│ │ you can see; a     │ customization of   │       │           │            │ │
+│ │ human must look.   │ schema generation  │       │           │            │ │
+│ │ Approving a change │ for these types.   │       │           │            │ │
+│ │ that contains a    │ The new behavior   │       │           │            │ │
+│ │ defect is the      │ analysis for       │       │           │            │ │
+│ │ worst outcome.     │ `WithJsonSchema`   │       │           │            │ │
+│ │ Blocking a correct │ and                │       │           │            │ │
+│ │ change costs an    │ `GenerateJsonSche… │       │           │            │ │
+│ │ engineer's time.   │ is consistent with │       │           │            │ │
+│ │ Escalating is      │ the documented     │       │           │            │ │
+│ │ cheap but useless  │ behavior for the   │       │           │            │ │
+│ │ if done for        │ new use-cases and  │       │           │            │ │
+│ │ everything.        │ remains consistent │       │           │            │ │
+│ │ Respond with       │ with the           │       │           │            │ │
+│ │ exactly one JSON   │ previously         │       │           │            │ │
+│ │ object and nothing │ restructured       │       │           │            │ │
+│ │ else:              │ behavior for the   │       │           │            │ │
+│ │ {"decision":       │ core schema        │       │           │            │ │
+│ │ "approve|block|es… │ generation         │       │           │            │ │
+│ │ "comments":        │ process."}]}       │       │           │            │ │
+│ │ [{"file": "...",   │ ```                │       │           │            │ │
 │ │ "line_start": N,   │                    │       │           │            │ │
 │ │ "line_end": N,     │                    │       │           │            │ │
 │ │ "body": "...",     │                    │       │           │            │ │
@@ -46,11 +96,18 @@
 │ │                    │                    │       │           │            │ │
 │ │ USER               │                    │       │           │            │ │
 │ │ Repository:        │                    │       │           │            │ │
-│ │ tenacity           │                    │       │           │            │ │
+│ │ pydantic           │                    │       │           │            │ │
 │ │ Files changed:     │                    │       │           │            │ │
-│ │ releasenotes/note… │                    │       │           │            │ │
-│ │ tenacity/wait.py,  │                    │       │           │            │ │
-│ │ tests/test_tenaci… │                    │       │           │            │ │
+│ │ docs/concepts/jso… │                    │       │           │            │ │
+│ │ pydantic/json_sch… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ Not shown          │                    │       │           │            │ │
+│ │ (non-code or over  │                    │       │           │            │ │
+│ │ budget; treat as   │                    │       │           │            │ │
+│ │ unreviewed):       │                    │       │           │            │ │
+│ │ docs/concepts/jso… │                    │       │           │            │ │
+│ │ (1962 chars,       │                    │       │           │            │ │
+│ │ non-code)          │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ Context around the │                    │       │           │            │ │
 │ │ change             │                    │       │           │            │ │
@@ -58,343 +115,286 @@
 │ │ extracted):        │                    │       │           │            │ │
 │ │ Changed            │                    │       │           │            │ │
 │ │ definitions:       │                    │       │           │            │ │
-│ │ tenacity/wait.py:… │                    │       │           │            │ │
-│ │ tenacity/wait.py:… │                    │       │           │            │ │
-│ │ tenacity/wait.py:… │                    │       │           │            │ │
-│ │ tests/test_tenaci… │                    │       │           │            │ │
-│ │ tests/test_tenaci… │                    │       │           │            │ │
-│ │ tests/test_tenaci… │                    │       │           │            │ │
-│ │ tests/test_tenaci… │                    │       │           │            │ │
-│ │ tests/test_tenaci… │                    │       │           │            │ │
-│ │ tests/test_tenaci… │                    │       │           │            │ │
-│ │ tests/test_tenaci… │                    │       │           │            │ │
-│ │ tests/test_tenaci… │                    │       │           │            │ │
+│ │ pydantic/json_sch… │                    │       │           │            │ │
+│ │ pydantic/json_sch… │                    │       │           │            │ │
 │ │ Recent history of  │                    │       │           │            │ │
-│ │ tenacity/wait.py:  │                    │       │           │            │ │
-│ │   3233040          │                    │       │           │            │ │
-│ │ 2026-03-11 feat:   │                    │       │           │            │ │
-│ │ add `min` param    │                    │       │           │            │ │
-│ │ and `timedelta`    │                    │       │           │            │ │
-│ │ support to         │                    │       │           │            │ │
-│ │ `wait_exponential… │                    │       │           │            │ │
-│ │ (#628)             │                    │       │           │            │ │
-│ │   ae2d75e          │                    │       │           │            │ │
-│ │ 2026-02-26         │                    │       │           │            │ │
-│ │ refactor: enable   │                    │       │           │            │ │
-│ │ PGH, PYI ruff      │                    │       │           │            │ │
-│ │ rules and rename   │                    │       │           │            │ │
-│ │ TCH to TC (#619)   │                    │       │           │            │ │
-│ │   ac9c21f          │                    │       │           │            │ │
-│ │ 2026-02-26         │                    │       │           │            │ │
-│ │ refactor: replace  │                    │       │           │            │ │
-│ │ deprecated typing  │                    │       │           │            │ │
-│ │ constructs with    │                    │       │           │            │ │
-│ │ modern syntax      │                    │       │           │            │ │
-│ │ (#616)             │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ tests/test_tenaci… │                    │       │           │            │ │
-│ │   3233040          │                    │       │           │            │ │
-│ │ 2026-03-11 feat:   │                    │       │           │            │ │
-│ │ add `min` param    │                    │       │           │            │ │
-│ │ and `timedelta`    │                    │       │           │            │ │
-│ │ support to         │                    │       │           │            │ │
-│ │ `wait_exponential… │                    │       │           │            │ │
-│ │ (#628)             │                    │       │           │            │ │
-│ │   7a73c93          │                    │       │           │            │ │
-│ │ 2026-02-26         │                    │       │           │            │ │
-│ │ refactor: enable   │                    │       │           │            │ │
-│ │ additional ruff    │                    │       │           │            │ │
-│ │ rule categories    │                    │       │           │            │ │
-│ │ (#620)             │                    │       │           │            │ │
-│ │   b8b4675          │                    │       │           │            │ │
-│ │ 2026-02-26 chore:  │                    │       │           │            │ │
-│ │ remove unused      │                    │       │           │            │ │
-│ │ reports_deprecati… │                    │       │           │            │ │
-│ │ helper (#618)      │                    │       │           │            │ │
+│ │ pydantic/json_sch… │                    │       │           │            │ │
+│ │   94dd544c         │                    │       │           │            │ │
+│ │ 2026-03-26 Push    │                    │       │           │            │ │
+│ │ down constraints   │                    │       │           │            │ │
+│ │ in unions          │                    │       │           │            │ │
+│ │ involving          │                    │       │           │            │ │
+│ │ `MISSING` sentinel │                    │       │           │            │ │
+│ │ (#12908)           │                    │       │           │            │ │
+│ │   a2fcb8ba         │                    │       │           │            │ │
+│ │ 2026-03-02 Respect │                    │       │           │            │ │
+│ │ `extras_schema`    │                    │       │           │            │ │
+│ │ when only          │                    │       │           │            │ │
+│ │ `extra_fields_beh… │                    │       │           │            │ │
+│ │ is set on the      │                    │       │           │            │ │
+│ │ config in JSON     │                    │       │           │            │ │
+│ │ Schema generation  │                    │       │           │            │ │
+│ │ for typed          │                    │       │           │            │ │
+│ │ dictionaries       │                    │       │           │            │ │
+│ │ (#12810)           │                    │       │           │            │ │
+│ │   a6b0bb0a         │                    │       │           │            │ │
+│ │ 2026-02-26 Fix     │                    │       │           │            │ │
+│ │ duplicated words   │                    │       │           │            │ │
+│ │ in internal schema │                    │       │           │            │ │
+│ │ comments (#12864)  │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ Diff:              │                    │       │           │            │ │
 │ │ ```diff            │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/releasenotes/no… │                    │       │           │            │ │
-│ │ b/releasenotes/no… │                    │       │           │            │ │
-│ │ new file mode      │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
+│ │ a/pydantic/json_s… │                    │       │           │            │ │
+│ │ b/pydantic/json_s… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ 0000000..e558854   │                    │       │           │            │ │
-│ │ --- /dev/null      │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/releasenotes/no… │                    │       │           │            │ │
-│ │ @@ -0,0 +1,10 @@   │                    │       │           │            │ │
-│ │ +---               │                    │       │           │            │ │
-│ │ +deprecations:     │                    │       │           │            │ │
-│ │ +  - |             │                    │       │           │            │ │
-│ │ +    The           │                    │       │           │            │ │
-│ │ ``initial``        │                    │       │           │            │ │
-│ │ parameter of       │                    │       │           │            │ │
-│ │ ``wait_exponentia… │                    │       │           │            │ │
-│ │ is deprecated in   │                    │       │           │            │ │
-│ │ +    favor of      │                    │       │           │            │ │
-│ │ ``multiplier``,    │                    │       │           │            │ │
-│ │ for consistency    │                    │       │           │            │ │
-│ │ with               │                    │       │           │            │ │
-│ │ ``wait_exponentia… │                    │       │           │            │ │
-│ │ Passing            │                    │       │           │            │ │
-│ │ +    ``initial``   │                    │       │           │            │ │
-│ │ still works but    │                    │       │           │            │ │
-│ │ emits a            │                    │       │           │            │ │
-│ │ ``DeprecationWarn… │                    │       │           │            │ │
-│ │ +features:         │                    │       │           │            │ │
-│ │ +  - |             │                    │       │           │            │ │
-│ │ +    Add           │                    │       │           │            │ │
-│ │ ``multiplier``     │                    │       │           │            │ │
-│ │ parameter to       │                    │       │           │            │ │
-│ │ ``wait_exponentia… │                    │       │           │            │ │
-│ │ consistent         │                    │       │           │            │ │
-│ │ +    with          │                    │       │           │            │ │
-│ │ ``wait_exponentia… │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tenacity/wait.py │                    │       │           │            │ │
-│ │ b/tenacity/wait.py │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 92fa1f4..c7a430e   │                    │       │           │            │ │
+│ │ b6da482e..70dc986e │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/tenacity/wait.py │                    │       │           │            │ │
+│ │ a/pydantic/json_s… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/tenacity/wait.py │                    │       │           │            │ │
-│ │ @@ -17,6 +17,7 @@  │                    │       │           │            │ │
-│ │  import abc        │                    │       │           │            │ │
-│ │  import random     │                    │       │           │            │ │
-│ │  import typing     │                    │       │           │            │ │
-│ │ +import warnings   │                    │       │           │            │ │
+│ │ b/pydantic/json_s… │                    │       │           │            │ │
+│ │ @@ -2649,15        │                    │       │           │            │ │
+│ │ +2649,58 @@ class  │                    │       │           │            │ │
+│ │ WithJsonSchema:    │                    │       │           │            │ │
+│ │      """!!!        │                    │       │           │            │ │
+│ │ abstract "Usage    │                    │       │           │            │ │
+│ │ Documentation"     │                    │       │           │            │ │
+│ │          [`WithJs… │                    │       │           │            │ │
+│ │ Annotation](../co… │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │  from tenacity     │                    │       │           │            │ │
-│ │ import _utils      │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ @@ -240,12 +241,12 │                    │       │           │            │ │
-│ │ @@ class           │                    │       │           │            │ │
-│ │ wait_random_expon… │                    │       │           │            │ │
-│ │  class             │                    │       │           │            │ │
-│ │ wait_exponential_… │                    │       │           │            │ │
-│ │      """Wait       │                    │       │           │            │ │
-│ │ strategy that      │                    │       │           │            │ │
-│ │ applies            │                    │       │           │            │ │
-│ │ exponential        │                    │       │           │            │ │
-│ │ backoff and        │                    │       │           │            │ │
-│ │ jitter.            │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -    It allows for │                    │       │           │            │ │
-│ │ a customized       │                    │       │           │            │ │
-│ │ initial wait,      │                    │       │           │            │ │
-│ │ maximum wait,      │                    │       │           │            │ │
-│ │ jitter and         │                    │       │           │            │ │
-│ │ minimum.           │                    │       │           │            │ │
-│ │ +    It allows for │                    │       │           │            │ │
-│ │ a customized       │                    │       │           │            │ │
-│ │ multiplier,        │                    │       │           │            │ │
-│ │ maximum wait,      │                    │       │           │            │ │
-│ │ jitter and         │                    │       │           │            │ │
-│ │ minimum.           │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      This          │                    │       │           │            │ │
-│ │ implements the     │                    │       │           │            │ │
-│ │ strategy described │                    │       │           │            │ │
-│ │ here:              │                    │       │           │            │ │
-│ │      https://clou… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -    The wait time │                    │       │           │            │ │
-│ │ is max(min,        │                    │       │           │            │ │
-│ │ min(initial * 2**n │                    │       │           │            │ │
+│ │ -    Add this as   │                    │       │           │            │ │
+│ │ an annotation on a │                    │       │           │            │ │
+│ │ field to override  │                    │       │           │            │ │
+│ │ the (base) JSON    │                    │       │           │            │ │
+│ │ schema that would  │                    │       │           │            │ │
+│ │ be generated for   │                    │       │           │            │ │
+│ │ that field.        │                    │       │           │            │ │
+│ │ -    This provides │                    │       │           │            │ │
+│ │ a way to set a     │                    │       │           │            │ │
+│ │ JSON schema for    │                    │       │           │            │ │
+│ │ types that would   │                    │       │           │            │ │
+│ │ otherwise raise    │                    │       │           │            │ │
+│ │ errors when        │                    │       │           │            │ │
+│ │ producing a JSON   │                    │       │           │            │ │
+│ │ schema,            │                    │       │           │            │ │
+│ │ -    such as       │                    │       │           │            │ │
+│ │ Callable, or types │                    │       │           │            │ │
+│ │ that have an       │                    │       │           │            │ │
+│ │ is-instance core   │                    │       │           │            │ │
+│ │ schema, without    │                    │       │           │            │ │
+│ │ needing to go so   │                    │       │           │            │ │
+│ │ far as creating a  │                    │       │           │            │ │
+│ │ -    custom        │                    │       │           │            │ │
+│ │ subclass of        │                    │       │           │            │ │
+│ │ pydantic.json_sch… │                    │       │           │            │ │
+│ │ -    Note that any │                    │       │           │            │ │
+│ │ _modifications_ to │                    │       │           │            │ │
+│ │ the schema that    │                    │       │           │            │ │
+│ │ would normally be  │                    │       │           │            │ │
+│ │ made (such as      │                    │       │           │            │ │
+│ │ setting the title  │                    │       │           │            │ │
+│ │ for model fields)  │                    │       │           │            │ │
+│ │ -    will still be │                    │       │           │            │ │
+│ │ performed.         │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ -    If `mode` is  │                    │       │           │            │ │
+│ │ set this will only │                    │       │           │            │ │
+│ │ apply to that      │                    │       │           │            │ │
+│ │ schema generation  │                    │       │           │            │ │
+│ │ mode, allowing you │                    │       │           │            │ │
+│ │ -    to set        │                    │       │           │            │ │
+│ │ different json     │                    │       │           │            │ │
+│ │ schemas for        │                    │       │           │            │ │
+│ │ validation and     │                    │       │           │            │ │
+│ │ serialization.     │                    │       │           │            │ │
+│ │ +    An annotation │                    │       │           │            │ │
+│ │ used to override   │                    │       │           │            │ │
+│ │ the JSON Schema    │                    │       │           │            │ │
+│ │ for a type.        │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ random.uniform(0,  │                    │       │           │            │ │
-│ │ jitter), maximum)) │                    │       │           │            │ │
-│ │ +    The wait time │                    │       │           │            │ │
-│ │ is max(min,        │                    │       │           │            │ │
-│ │ min(multiplier *   │                    │       │           │            │ │
-│ │ 2**n +             │                    │       │           │            │ │
-│ │ random.uniform(0,  │                    │       │           │            │ │
-│ │ jitter), maximum)) │                    │       │           │            │ │
-│ │      where n is    │                    │       │           │            │ │
-│ │ the retry count.   │                    │       │           │            │ │
+│ │ +    This is       │                    │       │           │            │ │
+│ │ useful when you    │                    │       │           │            │ │
+│ │ want to set a JSON │                    │       │           │            │ │
+│ │ Schema for a type  │                    │       │           │            │ │
+│ │ that don't produce │                    │       │           │            │ │
+│ │ any JSON Schemas   │                    │       │           │            │ │
+│ │ by default         │                    │       │           │            │ │
+│ │ +    (e.g.         │                    │       │           │            │ │
+│ │ [`Callable`][coll… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    If `mode` is  │                    │       │           │            │ │
+│ │ set this will only │                    │       │           │            │ │
+│ │ apply to that      │                    │       │           │            │ │
+│ │ schema generation  │                    │       │           │            │ │
+│ │ mode, allowing you │                    │       │           │            │ │
+│ │ to set different   │                    │       │           │            │ │
+│ │ JSON Schemas for   │                    │       │           │            │ │
+│ │ validation and     │                    │       │           │            │ │
+│ │ serialization.     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +    !!! note      │                    │       │           │            │ │
+│ │ +        If the    │                    │       │           │            │ │
+│ │ `WithJsonSchema`   │                    │       │           │            │ │
+│ │ annotation is      │                    │       │           │            │ │
+│ │ coupled with the   │                    │       │           │            │ │
+│ │ [`Field()`][pydan… │                    │       │           │            │ │
+│ │ function, the      │                    │       │           │            │ │
+│ │ behavior           │                    │       │           │            │ │
+│ │ overriding will    │                    │       │           │            │ │
+│ │ vary depending on  │                    │       │           │            │ │
+│ │ the location:      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        * If the  │                    │       │           │            │ │
+│ │ [`Annotated`][typ… │                    │       │           │            │ │
+│ │ metadata is        │                    │       │           │            │ │
+│ │ specified at the   │                    │       │           │            │ │
+│ │ "top-level" field, │                    │       │           │            │ │
+│ │ `Field()` metadata │                    │       │           │            │ │
+│ │ arguments          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ (excluding         │                    │       │           │            │ │
+│ │ [constraints](../… │                    │       │           │            │ │
+│ │ such as `title`    │                    │       │           │            │ │
+│ │ and `description`  │                    │       │           │            │ │
+│ │ will be applied on │                    │       │           │            │ │
+│ │ +          top of  │                    │       │           │            │ │
+│ │ the                │                    │       │           │            │ │
+│ │ `WithJsonSchema`,  │                    │       │           │            │ │
+│ │ no matter the      │                    │       │           │            │ │
+│ │ order:             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ ```python          │                    │       │           │            │ │
+│ │ +            from  │                    │       │           │            │ │
+│ │ typing import      │                    │       │           │            │ │
+│ │ Annotated          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +            from  │                    │       │           │            │ │
+│ │ pydantic import    │                    │       │           │            │ │
+│ │ BaseModel, Field,  │                    │       │           │            │ │
+│ │ WithJsonSchema     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +            class │                    │       │           │            │ │
+│ │ Model(BaseModel):  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ field: Annotated[  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ int,               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Field(title='My    │                    │       │           │            │ │
+│ │ Field'),           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ WithJsonSchema({'… │                    │       │           │            │ │
+│ │ 'integer',         │                    │       │           │            │ │
+│ │ 'extra': 'data'}), │                    │       │           │            │ │
+│ │ +                ] │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Model.model_json_… │                    │       │           │            │ │
+│ │ +            #>    │                    │       │           │            │ │
+│ │ {'type':           │                    │       │           │            │ │
+│ │ 'integer',         │                    │       │           │            │ │
+│ │ 'extra': 'data',   │                    │       │           │            │ │
+│ │ 'title': 'My       │                    │       │           │            │ │
+│ │ Field'}            │                    │       │           │            │ │
+│ │ +            ```   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        * If the  │                    │       │           │            │ │
+│ │ [`Annotated`][typ… │                    │       │           │            │ │
+│ │ metadata is        │                    │       │           │            │ │
+│ │ specified on a     │                    │       │           │            │ │
+│ │ specific inner     │                    │       │           │            │ │
+│ │ type,              │                    │       │           │            │ │
+│ │ `WithJsonSchema`   │                    │       │           │            │ │
+│ │ will               │                    │       │           │            │ │
+│ │ unconditionally    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ override the JSON  │                    │       │           │            │ │
+│ │ Schema:            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ ```python          │                    │       │           │            │ │
+│ │ +            from  │                    │       │           │            │ │
+│ │ typing import      │                    │       │           │            │ │
+│ │ Annotated          │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +            from  │                    │       │           │            │ │
+│ │ pydantic import    │                    │       │           │            │ │
+│ │ BaseModel, Field,  │                    │       │           │            │ │
+│ │ WithJsonSchema     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +            class │                    │       │           │            │ │
+│ │ Model(BaseModel):  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ field: list[       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Annotated[         │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ int,               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Field(title='My    │                    │       │           │            │ │
+│ │ Field'),           │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ WithJsonSchema({'… │                    │       │           │            │ │
+│ │ 'integer',         │                    │       │           │            │ │
+│ │ 'extra': 'data'}), │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ ]                  │                    │       │           │            │ │
+│ │ +                ] │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ Model.model_json_… │                    │       │           │            │ │
+│ │ +            #>    │                    │       │           │            │ │
+│ │ {'items':          │                    │       │           │            │ │
+│ │ {'extra': 'data',  │                    │       │           │            │ │
+│ │ 'type':            │                    │       │           │            │ │
+│ │ 'integer'},        │                    │       │           │            │ │
+│ │ 'title': 'Field',  │                    │       │           │            │ │
+│ │ 'type': 'array'}   │                    │       │           │            │ │
+│ │ +            ```   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +        See also  │                    │       │           │            │ │
+│ │ the documentation  │                    │       │           │            │ │
+│ │ about [the         │                    │       │           │            │ │
+│ │ annotated          │                    │       │           │            │ │
+│ │ pattern](../conce… │                    │       │           │            │ │
 │ │      """           │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │ @@ -256,8 +257,22  │                    │       │           │            │ │
+│ │      json_schema:  │                    │       │           │            │ │
+│ │ JsonSchemaValue |  │                    │       │           │            │ │
+│ │ None               │                    │       │           │            │ │
+│ │ @@ -2666,8 +2709,7 │                    │       │           │            │ │
 │ │ @@ class           │                    │       │           │            │ │
-│ │ wait_exponential_… │                    │       │           │            │ │
-│ │          exp_base: │                    │       │           │            │ │
-│ │ float = 2,         │                    │       │           │            │ │
-│ │          jitter:   │                    │       │           │            │ │
-│ │ _utils.time_unit_… │                    │       │           │            │ │
-│ │ = 1,               │                    │       │           │            │ │
-│ │          min:      │                    │       │           │            │ │
-│ │ _utils.time_unit_… │                    │       │           │            │ │
-│ │ = 0,               │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ multiplier: float  │                    │       │           │            │ │
-│ │ = 1,               │                    │       │           │            │ │
-│ │      ) -> None:    │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ self.initial =     │                    │       │           │            │ │
-│ │ initial            │                    │       │           │            │ │
-│ │ +        if        │                    │       │           │            │ │
-│ │ initial != 1 and   │                    │       │           │            │ │
-│ │ multiplier != 1:   │                    │       │           │            │ │
-│ │ +            raise │                    │       │           │            │ │
-│ │ ValueError(        │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "Cannot specify    │                    │       │           │            │ │
-│ │ both 'initial' and │                    │       │           │            │ │
-│ │ 'multiplier' — use │                    │       │           │            │ │
-│ │ 'multiplier' only" │                    │       │           │            │ │
-│ │ +            )     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +        if        │                    │       │           │            │ │
-│ │ initial != 1:      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ warnings.warn(     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ "The 'initial'     │                    │       │           │            │ │
-│ │ parameter is       │                    │       │           │            │ │
-│ │ deprecated, use    │                    │       │           │            │ │
-│ │ 'multiplier'       │                    │       │           │            │ │
-│ │ instead",          │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ DeprecationWarnin… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ stacklevel=2,      │                    │       │           │            │ │
-│ │ +            )     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ multiplier =       │                    │       │           │            │ │
-│ │ initial            │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.multiplier =  │                    │       │           │            │ │
-│ │ multiplier         │                    │       │           │            │ │
-│ │          self.max  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ _utils.to_seconds… │                    │       │           │            │ │
-│ │          self.exp… │                    │       │           │            │ │
-│ │ = exp_base         │                    │       │           │            │ │
-│ │          self.jit… │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ _utils.to_seconds… │                    │       │           │            │ │
-│ │ @@ -267,7 +282,7   │                    │       │           │            │ │
-│ │ @@ class           │                    │       │           │            │ │
-│ │ wait_exponential_… │                    │       │           │            │ │
-│ │          jitter =  │                    │       │           │            │ │
-│ │ random.uniform(0,  │                    │       │           │            │ │
-│ │ self.jitter)       │                    │       │           │            │ │
-│ │          try:      │                    │       │           │            │ │
-│ │              exp = │                    │       │           │            │ │
-│ │ self.exp_base **   │                    │       │           │            │ │
-│ │ (retry_state.atte… │                    │       │           │            │ │
-│ │ - 1)               │                    │       │           │            │ │
-│ │ -                  │                    │       │           │            │ │
-│ │ result =           │                    │       │           │            │ │
-│ │ self.initial * exp │                    │       │           │            │ │
-│ │ + jitter           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ result =           │                    │       │           │            │ │
-│ │ self.multiplier *  │                    │       │           │            │ │
-│ │ exp + jitter       │                    │       │           │            │ │
-│ │          except    │                    │       │           │            │ │
-│ │ OverflowError:     │                    │       │           │            │ │
-│ │              resu… │                    │       │           │            │ │
-│ │ = self.max         │                    │       │           │            │ │
-│ │          return    │                    │       │           │            │ │
-│ │ max(max(0,         │                    │       │           │            │ │
-│ │ self.min),         │                    │       │           │            │ │
-│ │ min(result,        │                    │       │           │            │ │
-│ │ self.max))         │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_tena… │                    │       │           │            │ │
-│ │ b/tests/test_tena… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 7061cd7..6a39739   │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_tena… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_tena… │                    │       │           │            │ │
-│ │ @@ -609,7 +609,8   │                    │       │           │            │ │
-│ │ @@ class           │                    │       │           │            │ │
-│ │ TestWaitCondition… │                    │       │           │            │ │
-│ │              self… │                    │       │           │            │ │
-│ │ 0)), 60)           │                    │       │           │            │ │
-│ │              self… │                    │       │           │            │ │
-│ │ 0)), 60)           │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -        fn =      │                    │       │           │            │ │
-│ │ tenacity.wait_exp… │                    │       │           │            │ │
-│ │ 5)                 │                    │       │           │            │ │
-│ │ +        with      │                    │       │           │            │ │
-│ │ self.assertWarns(… │                    │       │           │            │ │
-│ │ +            fn =  │                    │       │           │            │ │
-│ │ tenacity.wait_exp… │                    │       │           │            │ │
-│ │ 5)                 │                    │       │           │            │ │
-│ │          for _ in  │                    │       │           │            │ │
-│ │ range(1000):       │                    │       │           │            │ │
-│ │              self… │                    │       │           │            │ │
-│ │ 0)), 5)            │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ @@ -640,6 +641,23  │                    │       │           │            │ │
-│ │ @@ class           │                    │       │           │            │ │
-│ │ TestWaitCondition… │                    │       │           │            │ │
-│ │              self… │                    │       │           │            │ │
-│ │ 0)), 16, 17)       │                    │       │           │            │ │
-│ │              self… │                    │       │           │            │ │
-│ │ 0)), 60)           │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ test_wait_exponen… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │ +        fn =      │                    │       │           │            │ │
-│ │ tenacity.wait_exp… │                    │       │           │            │ │
-│ │ max=60, jitter=0)  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.assertEqual(… │                    │       │           │            │ │
-│ │ 0)), 10)           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.assertEqual(… │                    │       │           │            │ │
-│ │ 0)), 20)           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.assertEqual(… │                    │       │           │            │ │
-│ │ 0)), 40)           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.assertEqual(… │                    │       │           │            │ │
-│ │ 0)), 60)           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ test_wait_exponen… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │ +        with      │                    │       │           │            │ │
-│ │ self.assertWarns(… │                    │       │           │            │ │
-│ │ +            fn =  │                    │       │           │            │ │
-│ │ tenacity.wait_exp… │                    │       │           │            │ │
-│ │ max=60, jitter=0)  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.assertEqual(… │                    │       │           │            │ │
-│ │ 0)), 10)           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ self.assertEqual(… │                    │       │           │            │ │
-│ │ 0)), 20)           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ test_wait_exponen… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │ +        with      │                    │       │           │            │ │
-│ │ self.assertRaises… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ tenacity.wait_exp… │                    │       │           │            │ │
-│ │ multiplier=10)     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
+│ │ WithJsonSchema:    │                    │       │           │            │ │
 │ │      def           │                    │       │           │            │ │
-│ │ test_wait_retry_s… │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │          class     │                    │       │           │            │ │
-│ │ ExtractCallState(… │                    │       │           │            │ │
-│ │              pass  │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
+│ │ __get_pydantic_js… │                    │       │           │            │ │
+│ │          self,     │                    │       │           │            │ │
+│ │ core_schema:       │                    │       │           │            │ │
+│ │ core_schema.CoreS… │                    │       │           │            │ │
+│ │ handler:           │                    │       │           │            │ │
+│ │ GetJsonSchemaHand… │                    │       │           │            │ │
+│ │      ) ->          │                    │       │           │            │ │
+│ │ JsonSchemaValue:   │                    │       │           │            │ │
+│ │ -        mode =    │                    │       │           │            │ │
+│ │ self.mode or       │                    │       │           │            │ │
+│ │ handler.mode       │                    │       │           │            │ │
+│ │ -        if mode   │                    │       │           │            │ │
+│ │ != handler.mode:   │                    │       │           │            │ │
+│ │ +        if        │                    │       │           │            │ │
+│ │ self.mode is not   │                    │       │           │            │ │
+│ │ None and self.mode │                    │       │           │            │ │
+│ │ == handler.mode:   │                    │       │           │            │ │
+│ │              retu… │                    │       │           │            │ │
+│ │ handler(core_sche… │                    │       │           │            │ │
+│ │          if        │                    │       │           │            │ │
+│ │ self.json_schema   │                    │       │           │            │ │
+│ │ is None:           │                    │       │           │            │ │
+│ │              #     │                    │       │           │            │ │
+│ │ This exception is  │                    │       │           │            │ │
+│ │ handled in         │                    │       │           │            │ │
+│ │ pydantic.json_sch… │                    │       │           │            │ │
 │ │ ```                │                    │       │           │            │ │
 │ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
