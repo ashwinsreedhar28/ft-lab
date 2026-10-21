@@ -1,399 +1,399 @@
-│ │ match="post-yield  │                    │       │           │            │ │
-│ │ failure"):         │                    │       │           │            │ │
-│ │ +            c.x = │                    │       │           │            │ │
-│ │ "new"              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +        assert    │                    │       │           │            │ │
-│ │ "new" == c.x       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    def           │                    │       │           │            │ │
-│ │ test_generator_yi… │                    │       │           │            │ │
-│ │ +        """       │                    │       │           │            │ │
-│ │ +        Yielding  │                    │       │           │            │ │
-│ │ more than once     │                    │       │           │            │ │
-│ │ raises an error    │                    │       │           │            │ │
-│ │ and closes the     │                    │       │           │            │ │
-│ │ generator.         │                    │       │           │            │ │
-│ │ +        """       │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ cleaned_up = False │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +        def       │                    │       │           │            │ │
-│ │ hook(instance,     │                    │       │           │            │ │
-│ │ attrib, value):    │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ nonlocal           │                    │       │           │            │ │
-│ │ cleaned_up         │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +            try:  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ yield "first"      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ yield "second"     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ finally:           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ cleaned_up = True  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +        @attr.s   │                    │       │           │            │ │
-│ │ +        class C:  │                    │       │           │            │ │
-│ │ +            x =   │                    │       │           │            │ │
-│ │ attr.ib(on_setatt… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +        c =       │                    │       │           │            │ │
-│ │ C("old")           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +        with      │                    │       │           │            │ │
-│ │ pytest.raises(     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ RuntimeError,      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ match="Generator   │                    │       │           │            │ │
-│ │ on_setattr hook    │                    │       │           │            │ │
-│ │ yielded more than  │                    │       │           │            │ │
-│ │ once",             │                    │       │           │            │ │
-│ │ +        ):        │                    │       │           │            │ │
-│ │ +            c.x = │                    │       │           │            │ │
-│ │ "new"              │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +        assert    │                    │       │           │            │ │
-│ │ "first" == c.x     │                    │       │           │            │ │
-│ │ +        assert    │                    │       │           │            │ │
-│ │ cleaned_up is True │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │      def           │                    │       │           │            │ │
-│ │ test_make_class(s… │                    │       │           │            │ │
-│ │          """       │                    │       │           │            │ │
-│ │          on_setat… │                    │       │           │            │ │
-│ │ of make_class gets │                    │       │           │            │ │
-│ │ forwarded.         │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_runner_with_… │                    │       │           │            │ │
+│ │      @click.comma… │                    │       │           │            │ │
+│ │      def test():   │                    │       │           │            │ │
+│ │ -        i =       │                    │       │           │            │ │
+│ │ click.get_binary_… │                    │       │           │            │ │
+│ │ -        o =       │                    │       │           │            │ │
+│ │ click.get_binary_… │                    │       │           │            │ │
+│ │ +        i =       │                    │       │           │            │ │
+│ │ get_binary_stream… │                    │       │           │            │ │
+│ │ +        o =       │                    │       │           │            │ │
+│ │ get_binary_stream… │                    │       │           │            │ │
+│ │          while     │                    │       │           │            │ │
+│ │ True:              │                    │       │           │            │ │
+│ │              chunk │                    │       │           │            │ │
+│ │ = i.read(4096)     │                    │       │           │            │ │
+│ │              if    │                    │       │           │            │ │
+│ │ not chunk:         │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/typing-examples… │                    │       │           │            │ │
-│ │ b/typing-examples… │                    │       │           │            │ │
+│ │ a/tests/test_util… │                    │       │           │            │ │
+│ │ b/tests/test_util… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ 15542ca..ae5207a   │                    │       │           │            │ │
+│ │ 26bfe45..0ba2cab   │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/typing-examples… │                    │       │           │            │ │
+│ │ a/tests/test_util… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/typing-examples… │                    │       │           │            │ │
-│ │ @@ -7,7 +7,7 @@    │                    │       │           │            │ │
-│ │ Baseline features  │                    │       │           │            │ │
-│ │ that should be     │                    │       │           │            │ │
-│ │ supported by all   │                    │       │           │            │ │
-│ │ type checkers.     │                    │       │           │            │ │
+│ │ b/tests/test_util… │                    │       │           │            │ │
+│ │ @@ -6,5 +6,5 @@    │                    │       │           │            │ │
+│ │ def                │                    │       │           │            │ │
+│ │ test_iter_keepope… │                    │       │           │            │ │
+│ │      p =           │                    │       │           │            │ │
+│ │ tmpdir.mkdir("tes… │                    │       │           │            │ │
+│ │      p.write("\n"… │                    │       │           │            │ │
+│ │      with p.open() │                    │       │           │            │ │
+│ │ as f:              │                    │       │           │            │ │
+│ │ -        for       │                    │       │           │            │ │
+│ │ e_line, a_line in  │                    │       │           │            │ │
+│ │ zip(expected,      │                    │       │           │            │ │
+│ │ click.utils.KeepO… │                    │       │           │            │ │
+│ │ strict=False):     │                    │       │           │            │ │
+│ │ +        for       │                    │       │           │            │ │
+│ │ e_line, a_line in  │                    │       │           │            │ │
+│ │ zip(expected,      │                    │       │           │            │ │
+│ │ click.utils._Keep… │                    │       │           │            │ │
+│ │ strict=False):     │                    │       │           │            │ │
+│ │              asse… │                    │       │           │            │ │
+│ │ e_line ==          │                    │       │           │            │ │
+│ │ a_line.strip()     │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_util… │                    │       │           │            │ │
+│ │ b/tests/test_util… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ e3dd09b..8d0775a   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_util… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_util… │                    │       │           │            │ │
+│ │ @@ -6,6 +6,6 @@    │                    │       │           │            │ │
+│ │ def                │                    │       │           │            │ │
+│ │ test_iter_lazyfil… │                    │       │           │            │ │
+│ │      p =           │                    │       │           │            │ │
+│ │ tmpdir.mkdir("tes… │                    │       │           │            │ │
+│ │      p.write("\n"… │                    │       │           │            │ │
+│ │      with p.open() │                    │       │           │            │ │
+│ │ as f:              │                    │       │           │            │ │
+│ │ -        with      │                    │       │           │            │ │
+│ │ click.utils.LazyF… │                    │       │           │            │ │
+│ │ as lf:             │                    │       │           │            │ │
+│ │ +        with      │                    │       │           │            │ │
+│ │ click.utils._Lazy… │                    │       │           │            │ │
+│ │ as lf:             │                    │       │           │            │ │
+│ │              for   │                    │       │           │            │ │
+│ │ e_line, a_line in  │                    │       │           │            │ │
+│ │ zip(expected, lf,  │                    │       │           │            │ │
+│ │ strict=False):     │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │ e_line ==          │                    │       │           │            │ │
+│ │ a_line.strip()     │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/tests/test_util… │                    │       │           │            │ │
+│ │ b/tests/test_util… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ cb9886c..c2a1f8e   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/tests/test_util… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/tests/test_util… │                    │       │           │            │ │
+│ │ @@ -35,5 +35,5 @@  │                    │       │           │            │ │
+│ │ def                │                    │       │           │            │ │
+│ │ test_make_default… │                    │       │           │            │ │
+│ │ max_length, alter, │                    │       │           │            │ │
+│ │ expect):           │                    │       │           │            │ │
+│ │      if alter:     │                    │       │           │            │ │
+│ │          value =   │                    │       │           │            │ │
+│ │ alter(value)       │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │  from __future__   │                    │       │           │            │ │
-│ │ import annotations │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -from typing       │                    │       │           │            │ │
-│ │ import Any         │                    │       │           │            │ │
-│ │ +from typing       │                    │       │           │            │ │
-│ │ import Any,        │                    │       │           │            │ │
-│ │ Generator          │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  import attrs      │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ @@ -130,6 +130,12  │                    │       │           │            │ │
-│ │ @@ class           │                    │       │           │            │ │
-│ │ WithCustomRepr:    │                    │       │           │            │ │
-│ │      d: bool =     │                    │       │           │            │ │
-│ │ attrs.field(repr=… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ +def               │                    │       │           │            │ │
-│ │ gen_on_setattr_ho… │                    │       │           │            │ │
-│ │ +    instance:     │                    │       │           │            │ │
-│ │ Any, attribute:    │                    │       │           │            │ │
-│ │ attrs.Attribute[A… │                    │       │           │            │ │
-│ │ new_value: Any     │                    │       │           │            │ │
-│ │ +) ->              │                    │       │           │            │ │
-│ │ Generator[int]:    │                    │       │           │            │ │
-│ │ +    yield 42      │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │  @attrs.define(on… │                    │       │           │            │ │
-│ │  class             │                    │       │           │            │ │
-│ │ ValidatedSetter2:  │                    │       │           │            │ │
-│ │      a: int        │                    │       │           │            │ │
-│ │ @@ -143,6 +149,7   │                    │       │           │            │ │
-│ │ @@ class           │                    │       │           │            │ │
-│ │ ValidatedSetter2:  │                    │       │           │            │ │
-│ │              attr… │                    │       │           │            │ │
-│ │ attrs.setters.val… │                    │       │           │            │ │
-│ │          )         │                    │       │           │            │ │
-│ │      )             │                    │       │           │            │ │
-│ │ +    f: int =      │                    │       │           │            │ │
-│ │ attrs.field(on_se… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │  @attrs.define(eq… │                    │       │           │            │ │
-│ │ order=True)        │                    │       │           │            │ │
+│ │ -    out =         │                    │       │           │            │ │
+│ │ click.utils.make_… │                    │       │           │            │ │
+│ │ max_length)        │                    │       │           │            │ │
+│ │ +    out =         │                    │       │           │            │ │
+│ │ click.utils._make… │                    │       │           │            │ │
+│ │ max_length)        │                    │       │           │            │ │
+│ │      assert out == │                    │       │           │            │ │
+│ │ expect             │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ ```                │                    │       │           │            │ │
-│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
-╰──────────────────────────────────────────────────────────────────────────────╯
- 41%|████      | 123/300 [3:21:00<4:09:11, 84.47s/it] step 123  reward=-2.667  reward_std=2.184  kl=0.048  mean_length=190.469  clipped_ratio=0.125  step_time=37.952  loss=-0.121  gate=-2.667
-                                                      41%|████      | 123/300 [3:21:00<4:09:11, 84.47s/it]{'loss': '-0.1209', 'grad_norm': '0.1466', 'learning_rate': '5e-05', 'num_tokens': '9.872e+06', 'completions/mean_length': '190.5', 'completions/min_length': '62', 'completions/max_length': '500', 'completions/clipped_ratio': '0.125', 'completions/mean_terminated_length': '146.2', 'completions/min_terminated_length': '62', 'completions/max_terminated_length': '374', 'rewards/gate/mean': '-2.667', 'rewards/gate/std': '2.184', 'reward': '-2.667', 'reward_std': '2.184', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.4375', 'review/escalate_frac': '0', 'review/mean_tokens': '190.5', 'review/unparsable_frac': '0.4688', 'sampling/sampling_logp_difference/mean': '0.01522', 'sampling/sampling_logp_difference/max': '0.7271', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.8121', 'sampling/importance_sampling_ratio/max': '1.497', 'kl': '0.0482', 'entropy': '1.397', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '37.95', 'epoch': '3.968'}
-╭────────────────────────────────── Step 123 ──────────────────────────────────╮
-│ ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┓ │
-│ ┃ Prompt             ┃ Completion         ┃  gate ┃ Advantage ┃ decision   ┃ │
-│ ┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━┩ │
-│ │ SYSTEM             │ ASSISTANT          │  1.00 │      1.21 │ approve    │ │
+│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │  1.00 │      0.35 │ approve    │ │
 │ │ You are the code   │ {"decision":       │       │           │            │ │
 │ │ review gate for a  │ "approve",         │       │           │            │ │
 │ │ production         │ "comments":        │       │           │            │ │
 │ │ repository. Your   │ [{"file":          │       │           │            │ │
-│ │ approval merges    │ "src/click/testin… │       │           │            │ │
-│ │ and deploys the    │ "line_start": 22,  │       │           │            │ │
-│ │ change with no     │ "line_end": 33,    │       │           │            │ │
-│ │ further human      │ "body": "The diff  │       │           │            │ │
-│ │ review. Decide:    │ contains a change  │       │           │            │ │
-│ │   approve  - you   │ that needs to be   │       │           │            │ │
-│ │ are confident the  │ reviewed.\n\nThis  │       │           │            │ │
-│ │ change is correct  │ change adjusts the │       │           │            │ │
-│ │ and safe to ship.  │ `CaptureMode` type │       │           │            │ │
-│ │   block    - you   │ alias to avoid     │       │           │            │ │
-│ │ found a defect;    │ issues on Windows. │       │           │            │ │
-│ │ cite its location. │ The code is now    │       │           │            │ │
-│ │   escalate - you   │ compatible with    │       │           │            │ │
-│ │ cannot establish   │ Windows by using   │       │           │            │ │
-│ │ safety from what   │ `sys` instead of   │       │           │            │ │
-│ │ you can see; a     │ `fd` on unrelated  │       │           │            │ │
-│ │ human must look.   │ platforms. This    │       │           │            │ │
-│ │ Approving a change │ change makes the   │       │           │            │ │
-│ │ that contains a    │ code behave        │       │           │            │ │
-│ │ defect is the      │ consistently       │       │           │            │ │
-│ │ worst outcome.     │ across             │       │           │            │ │
-│ │ Blocking a correct │ platforms."}]}     │       │           │            │ │
-│ │ change costs an    │                    │       │           │            │ │
-│ │ engineer's time.   │                    │       │           │            │ │
-│ │ Escalating is      │                    │       │           │            │ │
-│ │ cheap but useless  │                    │       │           │            │ │
-│ │ if done for        │                    │       │           │            │ │
-│ │ everything.        │                    │       │           │            │ │
-│ │ Respond with       │                    │       │           │            │ │
-│ │ exactly one JSON   │                    │       │           │            │ │
-│ │ object and nothing │                    │       │           │            │ │
-│ │ else:              │                    │       │           │            │ │
-│ │ {"decision":       │                    │       │           │            │ │
-│ │ "approve|block|es… │                    │       │           │            │ │
-│ │ "comments":        │                    │       │           │            │ │
-│ │ [{"file": "...",   │                    │       │           │            │ │
-│ │ "line_start": N,   │                    │       │           │            │ │
-│ │ "line_end": N,     │                    │       │           │            │ │
-│ │ "body": "...",     │                    │       │           │            │ │
-│ │ "proposed_test":   │                    │       │           │            │ │
-│ │ "optional pytest   │                    │       │           │            │ │
-│ │ source"}]}         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ USER               │                    │       │           │            │ │
-│ │ Repository: click  │                    │       │           │            │ │
-│ │ Files changed:     │                    │       │           │            │ │
-│ │ src/click/testing… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Context around the │                    │       │           │            │ │
-│ │ change             │                    │       │           │            │ │
-│ │ (mechanically      │                    │       │           │            │ │
-│ │ extracted):        │                    │       │           │            │ │
-│ │ Changed            │                    │       │           │            │ │
-│ │ definitions:       │                    │       │           │            │ │
-│ │ src/click/testing… │                    │       │           │            │ │
+│ │ approval merges    │ "starlette/datast… │       │           │            │ │
+│ │ and deploys the    │ "line_start": 7,   │       │           │            │ │
+│ │ change with no     │ "line_end": 7,     │       │           │            │ │
+│ │ further human      │ "body":            │       │           │            │ │
+│ │ review. Decide:    │ "The`URL`class     │       │           │            │ │
+│ │   approve  - you   │ considers valid    │       │           │            │ │
+│ │ are confident the  │ host headers to be │       │           │            │ │
+│ │ change is correct  │ those without      │       │           │            │ │
+│ │ and safe to ship.  │ characters like    │       │           │            │ │
+│ │   block    - you   │ '/', '?', or       │       │           │            │ │
+│ │ found a defect;    │ '@'—these are      │       │           │            │ │
+│ │ cite its location. │ typically invalid  │       │           │            │ │
+│ │   escalate - you   │ character in the   │       │           │            │ │
+│ │ cannot establish   │ HTTP host header   │       │           │            │ │
+│ │ safety from what   │ (e.g.,             │       │           │            │ │
+│ │ you can see; a     │ `https://user@hos… │       │           │            │ │
+│ │ human must look.   │ is not valid).     │       │           │            │ │
+│ │ Approving a change │ This resolves the  │       │           │            │ │
+│ │ that contains a    │ issue where host   │       │           │            │ │
+│ │ defect is the      │ headers that are   │       │           │            │ │
+│ │ worst outcome.     │ incorrect would be │       │           │            │ │
+│ │ Blocking a correct │ taken as valid and │       │           │            │ │
+│ │ change costs an    │ result in an       │       │           │            │ │
+│ │ engineer's time.   │ incorrect URL for  │       │           │            │ │
+│ │ Escalating is      │ a request. The     │       │           │            │ │
+│ │ cheap but useless  │ regex now avoids   │       │           │            │ │
+│ │ if done for        │ that, and the code │       │           │            │ │
+│ │ everything.        │ safely ignores the │       │           │            │ │
+│ │ Respond with       │ Host header if it  │       │           │            │ │
+│ │ exactly one JSON   │ contains invalid   │       │           │            │ │
+│ │ object and nothing │ characters. Any    │       │           │            │ │
+│ │ else:              │ regular host that  │       │           │            │ │
+│ │ {"decision":       │ should be handled  │       │           │            │ │
+│ │ "approve|block|es… │ by a backend that  │       │           │            │ │
+│ │ "comments":        │ follows HTTP       │       │           │            │ │
+│ │ [{"file": "...",   │ specification      │       │           │            │ │
+│ │ "line_start": N,   │ should still be    │       │           │            │ │
+│ │ "line_end": N,     │ handled            │       │           │            │ │
+│ │ "body": "...",     │ correctly."},      │       │           │            │ │
+│ │ "proposed_test":   │ {"file":           │       │           │            │ │
+│ │ "optional pytest   │ "tests/test_datas… │       │           │            │ │
+│ │ source"}]}         │ "line_start": 159, │       │           │            │ │
+│ │                    │ "line_end": 207,   │       │           │            │ │
+│ │ USER               │ "body": "The new   │       │           │            │ │
+│ │ Repository:        │ tests ensure that  │       │           │            │ │
+│ │ starlette          │ malformed Host     │       │           │            │ │
+│ │ Files changed:     │ headers are not    │       │           │            │ │
+│ │ starlette/datastr… │ interpreted as     │       │           │            │ │
+│ │ tests/test_datast… │ valid and that URL │       │           │            │ │
+│ │                    │ construction uses  │       │           │            │ │
+│ │ Context around the │ the server-host if │       │           │            │ │
+│ │ change             │ Host headers are   │       │           │            │ │
+│ │ (mechanically      │ invalid. This      │       │           │            │ │
+│ │ extracted):        │ preserves client   │       │           │            │ │
+│ │ Changed            │ and server truth   │       │           │            │ │
+│ │ definitions:       │ even in that case. │       │           │            │ │
+│ │ starlette/datastr… │ Host headers that  │       │           │            │ │
+│ │ starlette/datastr… │ are incorrect      │       │           │            │ │
+│ │ tests/test_datast… │ should be          │       │           │            │ │
+│ │ tests/test_datast… │ ignored."}]}       │       │           │            │ │
+│ │ tests/test_datast… │                    │       │           │            │ │
+│ │ Recent history of  │ metric: 100, uuid: │       │           │            │ │
+│ │ starlette/datastr… │ "30835273-3a61-43… │       │           │            │ │
+│ │   d8c7cf9          │ change_id:         │       │           │            │ │
+│ │ 2026-01-18 Turn    │ 86808625757569339… │       │           │            │ │
+│ │ `State` into a     │                    │       │           │            │ │
+│ │ `Mapping` (#3036)  │                    │       │           │            │ │
+│ │   a0499f6          │                    │       │           │            │ │
+│ │ 2025-11-01 Drop    │                    │       │           │            │ │
+│ │ support for Python │                    │       │           │            │ │
+│ │ 3.9 (#3061)        │                    │       │           │            │ │
+│ │   9f7ec2e          │                    │       │           │            │ │
+│ │ 2025-07-21 Make    │                    │       │           │            │ │
+│ │ UploadFile check   │                    │       │           │            │ │
+│ │ for future         │                    │       │           │            │ │
+│ │ rollover (#2962)   │                    │       │           │            │ │
 │ │ Recent history of  │                    │       │           │            │ │
-│ │ src/click/testing… │                    │       │           │            │ │
-│ │   e39679a          │                    │       │           │            │ │
-│ │ 2026-05-18 Add     │                    │       │           │            │ │
+│ │ tests/test_datast… │                    │       │           │            │ │
+│ │   b9db010          │                    │       │           │            │ │
+│ │ 2024-09-01 Set     │                    │       │           │            │ │
+│ │ `line-length` to   │                    │       │           │            │ │
+│ │ 120 on Ruff        │                    │       │           │            │ │
+│ │ (#2679)            │                    │       │           │            │ │
+│ │   2e504fd          │                    │       │           │            │ │
+│ │ 2024-03-24 Add     │                    │       │           │            │ │
+│ │ tests to           │                    │       │           │            │ │
+│ │ `test_datastructu… │                    │       │           │            │ │
+│ │ (#2505)            │                    │       │           │            │ │
+│ │   b817dc4          │                    │       │           │            │ │
+│ │ 2024-02-04 Added   │                    │       │           │            │ │
 │ │ type annotations   │                    │       │           │            │ │
-│ │ for instance       │                    │       │           │            │ │
-│ │ attributes in      │                    │       │           │            │ │
-│ │ `testing`          │                    │       │           │            │ │
-│ │   ad39d74          │                    │       │           │            │ │
-│ │ 2026-03-05 Add     │                    │       │           │            │ │
-│ │ `capture`          │                    │       │           │            │ │
-│ │ parameter to       │                    │       │           │            │ │
-│ │ `CliRunner` and    │                    │       │           │            │ │
-│ │ revert             │                    │       │           │            │ │
-│ │ default-mode       │                    │       │           │            │ │
-│ │ `fileno` exposure  │                    │       │           │            │ │
-│ │   bb59ba0          │                    │       │           │            │ │
-│ │ 2026-04-14 Apply   │                    │       │           │            │ │
-│ │ format guidelines  │                    │       │           │            │ │
-│ │ to commits since   │                    │       │           │            │ │
-│ │ latest 8.3.2       │                    │       │           │            │ │
-│ │ release            │                    │       │           │            │ │
+│ │ to                 │                    │       │           │            │ │
+│ │ test_datastructur… │                    │       │           │            │ │
+│ │ (#2477)            │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ Diff:              │                    │       │           │            │ │
 │ │ ```diff            │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/src/click/testi… │                    │       │           │            │ │
-│ │ b/src/click/testi… │                    │       │           │            │ │
+│ │ a/starlette/datas… │                    │       │           │            │ │
+│ │ b/starlette/datas… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ d4473ca..19fae4a   │                    │       │           │            │ │
+│ │ 615874c..9e58e9a   │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/src/click/testi… │                    │       │           │            │ │
+│ │ a/starlette/datas… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/src/click/testi… │                    │       │           │            │ │
-│ │ @@ -22,7 +22,10 @@ │                    │       │           │            │ │
-│ │ if                 │                    │       │           │            │ │
-│ │ t.TYPE_CHECKING:   │                    │       │           │            │ │
+│ │ b/starlette/datas… │                    │       │           │            │ │
+│ │ @@ -1,14 +1,9 @@   │                    │       │           │            │ │
+│ │  from __future__   │                    │       │           │            │ │
+│ │ import annotations │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │      from .core    │                    │       │           │            │ │
-│ │ import Command     │                    │       │           │            │ │
+│ │ +import re         │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ collections.abc    │                    │       │           │            │ │
+│ │ import ItemsView,  │                    │       │           │            │ │
+│ │ Iterable,          │                    │       │           │            │ │
+│ │ Iterator,          │                    │       │           │            │ │
+│ │ KeysView, Mapping, │                    │       │           │            │ │
+│ │ MutableMapping,    │                    │       │           │            │ │
+│ │ Sequence,          │                    │       │           │            │ │
+│ │ ValuesView         │                    │       │           │            │ │
+│ │  from shlex import │                    │       │           │            │ │
+│ │ shlex              │                    │       │           │            │ │
+│ │ -from typing       │                    │       │           │            │ │
+│ │ import (           │                    │       │           │            │ │
+│ │ -    Any,          │                    │       │           │            │ │
+│ │ -    BinaryIO,     │                    │       │           │            │ │
+│ │ -    NamedTuple,   │                    │       │           │            │ │
+│ │ -    TypeVar,      │                    │       │           │            │ │
+│ │ -    cast,         │                    │       │           │            │ │
+│ │ -)                 │                    │       │           │            │ │
+│ │ +from typing       │                    │       │           │            │ │
+│ │ import Any,        │                    │       │           │            │ │
+│ │ BinaryIO,          │                    │       │           │            │ │
+│ │ NamedTuple,        │                    │       │           │            │ │
+│ │ TypeVar, cast      │                    │       │           │            │ │
+│ │  from urllib.parse │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ SplitResult,       │                    │       │           │            │ │
+│ │ parse_qsl,         │                    │       │           │            │ │
+│ │ urlencode,         │                    │       │           │            │ │
+│ │ urlsplit           │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │ -CaptureMode:      │                    │       │           │            │ │
-│ │ t.TypeAlias =      │                    │       │           │            │ │
-│ │ t.Literal["sys",   │                    │       │           │            │ │
-│ │ "fd"]              │                    │       │           │            │ │
-│ │ +if sys.platform   │                    │       │           │            │ │
-│ │ == "win32":        │                    │       │           │            │ │
-│ │ +    CaptureMode:  │                    │       │           │            │ │
-│ │ t.TypeAlias =      │                    │       │           │            │ │
-│ │ t.Literal["sys"]   │                    │       │           │            │ │
-│ │ # pyright:         │                    │       │           │            │ │
-│ │ ignore[reportRede… │                    │       │           │            │ │
-│ │ +else:             │                    │       │           │            │ │
-│ │ +    CaptureMode:  │                    │       │           │            │ │
-│ │ t.TypeAlias =      │                    │       │           │            │ │
-│ │ t.Literal["sys",   │                    │       │           │            │ │
-│ │ "fd"]  # pyright:  │                    │       │           │            │ │
-│ │ ignore[reportRede… │                    │       │           │            │ │
-│ │  ExceptionInfo:    │                    │       │           │            │ │
-│ │ t.TypeAlias =      │                    │       │           │            │ │
-│ │ tuple[type[BaseEx… │                    │       │           │            │ │
-│ │ BaseException,     │                    │       │           │            │ │
-│ │ TracebackType]     │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ starlette.concurr… │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ run_in_threadpool  │                    │       │           │            │ │
+│ │ @@ -26,6 +21,9 @@  │                    │       │           │            │ │
+│ │ _KeyType =         │                    │       │           │            │ │
+│ │ TypeVar("_KeyType… │                    │       │           │            │ │
+│ │  # that is, you    │                    │       │           │            │ │
+│ │ can't do           │                    │       │           │            │ │
+│ │ `Mapping[str,      │                    │       │           │            │ │
+│ │ Animal]()["fido"]  │                    │       │           │            │ │
+│ │ = Dog()`           │                    │       │           │            │ │
+│ │  _CovariantValueT… │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ TypeVar("_Covaria… │                    │       │           │            │ │
+│ │ covariant=True)    │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
+│ │ +# Rejects Host    │                    │       │           │            │ │
+│ │ header chars (/,   │                    │       │           │            │ │
+│ │ ?, #, @, ...) that │                    │       │           │            │ │
+│ │ would let urlsplit │                    │       │           │            │ │
+│ │ produce a path     │                    │       │           │            │ │
+│ │ differing from     │                    │       │           │            │ │
+│ │ scope["path"].     │                    │       │           │            │ │
+│ │ +_HOST_RE =        │                    │       │           │            │ │
+│ │ re.compile(r"^([a… │                    │       │           │            │ │
+│ │ re.IGNORECASE)     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
+│ │  class URL:        │                    │       │           │            │ │
+│ │      def __init__( │                    │       │           │            │ │
+│ │ @@ -48,7 +46,7 @@  │                    │       │           │            │ │
+│ │ class URL:         │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ value.decode("lat… │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
-│ │ SYSTEM             │ ASSISTANT          │ -1.20 │     -0.72 │ unparsable │ │
-│ │ You are the code   │ {'decision':       │       │           │            │ │
-│ │ review gate for a  │ 'approve',         │       │           │            │ │
-│ │ production         │ 'comments':        │       │           │            │ │
-│ │ repository. Your   │ [{'file':          │       │           │            │ │
-│ │ approval merges    │ 'src/click/testin… │       │           │            │ │
-│ │ and deploys the    │ 'line_start': 22,  │       │           │            │ │
-│ │ change with no     │ 'line_end': 24,    │       │           │            │ │
-│ │ further human      │ 'body': 'added     │       │           │            │ │
-│ │ review. Decide:    │ conditional type   │       │           │            │ │
-│ │   approve  - you   │ aliases for        │       │           │            │ │
-│ │ are confident the  │ `CaptureMode`,     │       │           │            │ │
-│ │ change is correct  │ matching Windows   │       │           │            │ │
-│ │ and safe to ship.  │ platform to have   │       │           │            │ │
-│ │   block    - you   │ `sys` only,        │       │           │            │ │
-│ │ found a defect;    │ checked for Python │       │           │            │ │
-│ │ cite its location. │ forward            │       │           │            │ │
-│ │   escalate - you   │ compatibility, and │       │           │            │ │
-│ │ cannot establish   │ noted in the       │       │           │            │ │
-│ │ safety from what   │ reasoning'}]}      │       │           │            │ │
-│ │ you can see; a     │                    │       │           │            │ │
-│ │ human must look.   │                    │       │           │            │ │
-│ │ Approving a change │                    │       │           │            │ │
-│ │ that contains a    │                    │       │           │            │ │
-│ │ defect is the      │                    │       │           │            │ │
-│ │ worst outcome.     │                    │       │           │            │ │
-│ │ Blocking a correct │                    │       │           │            │ │
-│ │ change costs an    │                    │       │           │            │ │
-│ │ engineer's time.   │                    │       │           │            │ │
-│ │ Escalating is      │                    │       │           │            │ │
-│ │ cheap but useless  │                    │       │           │            │ │
-│ │ if done for        │                    │       │           │            │ │
-│ │ everything.        │                    │       │           │            │ │
-│ │ Respond with       │                    │       │           │            │ │
-│ │ exactly one JSON   │                    │       │           │            │ │
-│ │ object and nothing │                    │       │           │            │ │
-│ │ else:              │                    │       │           │            │ │
-│ │ {"decision":       │                    │       │           │            │ │
-│ │ "approve|block|es… │                    │       │           │            │ │
-│ │ "comments":        │                    │       │           │            │ │
-│ │ [{"file": "...",   │                    │       │           │            │ │
-│ │ "line_start": N,   │                    │       │           │            │ │
-│ │ "line_end": N,     │                    │       │           │            │ │
-│ │ "body": "...",     │                    │       │           │            │ │
-│ │ "proposed_test":   │                    │       │           │            │ │
-│ │ "optional pytest   │                    │       │           │            │ │
-│ │ source"}]}         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ USER               │                    │       │           │            │ │
-│ │ Repository: click  │                    │       │           │            │ │
-│ │ Files changed:     │                    │       │           │            │ │
-│ │ src/click/testing… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Context around the │                    │       │           │            │ │
-│ │ change             │                    │       │           │            │ │
-│ │ (mechanically      │                    │       │           │            │ │
-│ │ extracted):        │                    │       │           │            │ │
-│ │ Changed            │                    │       │           │            │ │
-│ │ definitions:       │                    │       │           │            │ │
-│ │ src/click/testing… │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ src/click/testing… │                    │       │           │            │ │
-│ │   e39679a          │                    │       │           │            │ │
-│ │ 2026-05-18 Add     │                    │       │           │            │ │
-│ │ type annotations   │                    │       │           │            │ │
-│ │ for instance       │                    │       │           │            │ │
-│ │ attributes in      │                    │       │           │            │ │
-│ │ `testing`          │                    │       │           │            │ │
-│ │   ad39d74          │                    │       │           │            │ │
-│ │ 2026-03-05 Add     │                    │       │           │            │ │
-│ │ `capture`          │                    │       │           │            │ │
-│ │ parameter to       │                    │       │           │            │ │
-│ │ `CliRunner` and    │                    │       │           │            │ │
-│ │ revert             │                    │       │           │            │ │
-│ │ default-mode       │                    │       │           │            │ │
-│ │ `fileno` exposure  │                    │       │           │            │ │
-│ │   bb59ba0          │                    │       │           │            │ │
-│ │ 2026-04-14 Apply   │                    │       │           │            │ │
-│ │ format guidelines  │                    │       │           │            │ │
-│ │ to commits since   │                    │       │           │            │ │
-│ │ latest 8.3.2       │                    │       │           │            │ │
-│ │ release            │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Diff:              │                    │       │           │            │ │
-│ │ ```diff            │                    │       │           │            │ │
+│ │ -            if    │                    │       │           │            │ │
+│ │ host_header is not │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │ +            if    │                    │       │           │            │ │
+│ │ host_header is not │                    │       │           │            │ │
+│ │ None and           │                    │       │           │            │ │
+│ │ _HOST_RE.fullmatc… │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ f"{scheme}://{hos… │                    │       │           │            │ │
+│ │              elif  │                    │       │           │            │ │
+│ │ server is None:    │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │ = path             │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/src/click/testi… │                    │       │           │            │ │
-│ │ b/src/click/testi… │                    │       │           │            │ │
+│ │ a/tests/test_data… │                    │       │           │            │ │
+│ │ b/tests/test_data… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ d4473ca..19fae4a   │                    │       │           │            │ │
+│ │ 0e7d35c..2e435c4   │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/src/click/testi… │                    │       │           │            │ │
+│ │ a/tests/test_data… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/src/click/testi… │                    │       │           │            │ │
-│ │ @@ -22,7 +22,10 @@ │                    │       │           │            │ │
-│ │ if                 │                    │       │           │            │ │
-│ │ t.TYPE_CHECKING:   │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      from .core    │                    │       │           │            │ │
-│ │ import Command     │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ -CaptureMode:      │                    │       │           │            │ │
-│ │ t.TypeAlias =      │                    │       │           │            │ │
-│ │ t.Literal["sys",   │                    │       │           │            │ │
-│ │ "fd"]              │                    │       │           │            │ │
-│ │ +if sys.platform   │                    │       │           │            │ │
-│ │ == "win32":        │                    │       │           │            │ │
-│ │ +    CaptureMode:  │                    │       │           │            │ │
-│ │ t.TypeAlias =      │                    │       │           │            │ │
-│ │ t.Literal["sys"]   │                    │       │           │            │ │
-│ │ # pyright:         │                    │       │           │            │ │
-│ │ ignore[reportRede… │                    │       │           │            │ │
-│ │ +else:             │                    │       │           │            │ │
-│ │ +    CaptureMode:  │                    │       │           │            │ │
-│ │ t.TypeAlias =      │                    │       │           │            │ │
-│ │ t.Literal["sys",   │                    │       │           │            │ │
-│ │ "fd"]  # pyright:  │                    │       │           │            │ │
-│ │ ignore[reportRede… │                    │       │           │            │ │
-│ │  ExceptionInfo:    │                    │       │           │            │ │
-│ │ t.TypeAlias =      │                    │       │           │            │ │
-│ │ tuple[type[BaseEx… │                    │       │           │            │ │
-│ │ BaseException,     │                    │       │           │            │ │
-│ │ TracebackType]     │                    │       │           │            │ │
+│ │ b/tests/test_data… │                    │       │           │            │ │
+│ │ @@ -159,6 +159,32  │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ test_url_from_sco… │                    │       │           │            │ │
+│ │ -> None:           │                    │       │           │            │ │
+│ │      assert        │                    │       │           │            │ │
+│ │ repr(u) ==         │                    │       │           │            │ │
+│ │ "URL('http://exam… │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
+│ │ +@pytest.mark.par… │                    │       │           │            │ │
+│ │ +    "host",       │                    │       │           │            │ │
+│ │ +    [             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ pytest.param(b"fo… │                    │       │           │            │ │
+│ │ id="question-mark… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ pytest.param(b"fo… │                    │       │           │            │ │
+│ │ id="hash"),        │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ pytest.param(b"fo… │                    │       │           │            │ │
+│ │ id="slash"),       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ pytest.param(b"us… │                    │       │           │            │ │
+│ │ id="at-sign"),     │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ pytest.param(b"fo… │                    │       │           │            │ │
+│ │ id="backslash"),   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ pytest.param(b"foo │                    │       │           │            │ │
+│ │ bar", id="space"), │                    │       │           │            │ │
+│ │ +    ],            │                    │       │           │            │ │
+│ │ +)                 │                    │       │           │            │ │
+│ │ +def               │                    │       │           │            │ │
+│ │ test_url_from_sco… │                    │       │           │            │ │
+│ │ bytes) -> None:    │                    │       │           │            │ │
+│ │ +    """An invalid │                    │       │           │            │ │
+│ │ Host header should │                    │       │           │            │ │
+│ │ be ignored,        │                    │       │           │            │ │
+│ │ falling back to    │                    │       │           │            │ │
+│ │ the server         │                    │       │           │            │ │
+│ │ tuple."""          │                    │       │           │            │ │
+│ │ +    u = URL(      │                    │       │           │            │ │
+│ │ +        scope={   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "scheme": "http",  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "server":          │                    │       │           │            │ │
+│ │ ("example.com",    │                    │       │           │            │ │
+│ │ 80),               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "path": "/admin",  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "query_string":    │                    │       │           │            │ │
+│ │ b"",               │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ "headers":         │                    │       │           │            │ │
+│ │ [(b"host", host)], │                    │       │           │            │ │
+│ │ +        }         │                    │       │           │            │ │
+│ │ +    )             │                    │       │           │            │ │
+│ │ +    assert u.path │                    │       │           │            │ │
+│ │ == "/admin"        │                    │       │           │            │ │
+│ │ +    assert        │                    │       │           │            │ │
+│ │ u.netloc ==        │                    │       │           │            │ │
+│ │ "example.com"      │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ test_headers() ->  │                    │       │           │            │ │
+│ │ None:              │                    │       │           │            │ │
+│ │      h =           │                    │       │           │            │ │
+│ │ Headers(raw=[(b"a… │                    │       │           │            │ │
+│ │ b"123"), (b"a",    │                    │       │           │            │ │
+│ │ b"456"), (b"b",    │                    │       │           │            │ │
+│ │ b"789")])          │                    │       │           │            │ │
+│ │      assert "a" in │                    │       │           │            │ │
+│ │ h                  │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ ```                │                    │       │           │            │ │
 │ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
