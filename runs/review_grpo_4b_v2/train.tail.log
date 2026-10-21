@@ -1,400 +1,400 @@
-│ │   7847d43           │                     │       │           │          │ │
-│ │ 2026-09-03 Don't    │                     │       │           │          │ │
-│ │ mask TypeError      │                     │       │           │          │ │
-│ │ raised while        │                     │       │           │          │ │
-│ │ iterating in        │                     │       │           │          │ │
-│ │ value_chain         │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Diff:               │                     │       │           │          │ │
-│ │ ```diff             │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/more_itertools/m… │                     │       │           │          │ │
-│ │ b/more_itertools/m… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ edb94d1..bd44cac    │                     │       │           │          │ │
-│ │ 100755              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/more_itertools/m… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/more_itertools/m… │                     │       │           │          │ │
-│ │ @@ -5672,9 +5672,6  │                     │       │           │          │ │
-│ │ @@ def              │                     │       │           │          │ │
-│ │ random_ordered_com… │                     │       │           │          │ │
-│ │ r):                 │                     │       │           │          │ │
-│ │  def                │                     │       │           │          │ │
-│ │ random_ordered_com… │                     │       │           │          │ │
-│ │ r):                 │                     │       │           │          │ │
-│ │      "Return        │                     │       │           │          │ │
-│ │ :func:`combination… │                     │       │           │          │ │
-│ │ tuples in randomly  │                     │       │           │          │ │
-│ │ shuffled order."    │                     │       │           │          │ │
-│ │      sequence =     │                     │       │           │          │ │
-│ │ tuple(iterable)     │                     │       │           │          │ │
-│ │ -    if not         │                     │       │           │          │ │
-│ │ sequence:           │                     │       │           │          │ │
-│ │ -        yield ()   │                     │       │           │          │ │
-│ │ -        return     │                     │       │           │          │ │
-│ │ -    n =            │                     │       │           │          │ │
-│ │ comb(len(sequence)  │                     │       │           │          │ │
-│ │ + r - 1, r)         │                     │       │           │          │ │
-│ │ +    n =            │                     │       │           │          │ │
-│ │ comb(len(sequence)  │                     │       │           │          │ │
-│ │ + r + 1, r) if      │                     │       │           │          │ │
-│ │ sequence else 0 if  │                     │       │           │          │ │
-│ │ r else 1            │                     │       │           │          │ │
-│ │      for index in   │                     │       │           │          │ │
-│ │ _random_ordered_in… │                     │       │           │          │ │
-│ │          yield      │                     │       │           │          │ │
-│ │ nth_combination_wi… │                     │       │           │          │ │
-│ │ r, index)           │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
-│ │ SYSTEM              │ ASSISTANT           │ -5.00 │     -0.35 │ approve  │ │
-│ │ You are the code    │ { "decision":       │       │           │          │ │
-│ │ review gate for a   │ "approve",          │       │           │          │ │
-│ │ production          │ "comments": [ {     │       │           │          │ │
-│ │ repository. Your    │ "file":             │       │           │          │ │
-│ │ approval merges and │ "src/structlog/dev… │       │           │          │ │
-│ │ deploys the change  │ "line_start": 494,  │       │           │          │ │
-│ │ with no further     │ "line_end": 502,    │       │           │          │ │
-│ │ human review.       │ "body":             │       │           │          │ │
-│ │ Decide:             │ "DeprecationWarnin… │       │           │          │ │
-│ │   approve  - you    │ sent to all where   │       │           │          │ │
-│ │ are confident the   │ better-exceptions   │       │           │          │ │
-│ │ change is correct   │ is detected." }, {  │       │           │          │ │
-│ │ and safe to ship.   │ "file":             │       │           │          │ │
-│ │   block    - you    │ "tests/test_dev.py… │       │           │          │ │
-│ │ found a defect;     │ "line_start": 865,  │       │           │          │ │
-│ │ cite its location.  │ "line_end": 873,    │       │           │          │ │
-│ │   escalate - you    │ "body": "Test warns │       │           │          │ │
-│ │ cannot establish    │ of dep warning when │       │           │          │ │
-│ │ safety from what    │ better-exceptions   │       │           │          │ │
-│ │ you can see; a      │ is used." } ] }     │       │           │          │ │
-│ │ human must look.    │                     │       │           │          │ │
-│ │ Approving a change  │                     │       │           │          │ │
-│ │ that contains a     │                     │       │           │          │ │
-│ │ defect is the worst │                     │       │           │          │ │
-│ │ outcome. Blocking a │                     │       │           │          │ │
-│ │ correct change      │                     │       │           │          │ │
-│ │ costs an engineer's │                     │       │           │          │ │
-│ │ time. Escalating is │                     │       │           │          │ │
-│ │ cheap but useless   │                     │       │           │          │ │
-│ │ if done for         │                     │       │           │          │ │
-│ │ everything.         │                     │       │           │          │ │
-│ │ Respond with        │                     │       │           │          │ │
-│ │ exactly one JSON    │                     │       │           │          │ │
-│ │ object and nothing  │                     │       │           │          │ │
-│ │ else:               │                     │       │           │          │ │
-│ │ {"decision":        │                     │       │           │          │ │
-│ │ "approve|block|esc… │                     │       │           │          │ │
-│ │ "comments":         │                     │       │           │          │ │
-│ │ [{"file": "...",    │                     │       │           │          │ │
-│ │ "line_start": N,    │                     │       │           │          │ │
-│ │ "line_end": N,      │                     │       │           │          │ │
-│ │ "body": "...",      │                     │       │           │          │ │
-│ │ "proposed_test":    │                     │       │           │          │ │
-│ │ "optional pytest    │                     │       │           │          │ │
-│ │ source"}]}          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ USER                │                     │       │           │          │ │
-│ │ Repository:         │                     │       │           │          │ │
-│ │ structlog           │                     │       │           │          │ │
-│ │ Files changed:      │                     │       │           │          │ │
-│ │ CHANGELOG.md,       │                     │       │           │          │ │
-│ │ docs/console-outpu… │                     │       │           │          │ │
-│ │ docs/exceptions.md, │                     │       │           │          │ │
-│ │ docs/getting-start… │                     │       │           │          │ │
-│ │ src/structlog/dev.… │                     │       │           │          │ │
-│ │ tests/test_dev.py   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Not shown (non-code │                     │       │           │          │ │
-│ │ or over budget;     │                     │       │           │          │ │
-│ │ treat as            │                     │       │           │          │ │
-│ │ unreviewed):        │                     │       │           │          │ │
-│ │ CHANGELOG.md (756   │                     │       │           │          │ │
-│ │ chars, non-code),   │                     │       │           │          │ │
-│ │ docs/console-outpu… │                     │       │           │          │ │
-│ │ (2057 chars,        │                     │       │           │          │ │
-│ │ non-code),          │                     │       │           │          │ │
-│ │ docs/exceptions.md  │                     │       │           │          │ │
-│ │ (1169 chars,        │                     │       │           │          │ │
-│ │ non-code),          │                     │       │           │          │ │
-│ │ docs/getting-start… │                     │       │           │          │ │
-│ │ (1791 chars,        │                     │       │           │          │ │
-│ │ non-code)           │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Context around the  │                     │       │           │          │ │
-│ │ change              │                     │       │           │          │ │
-│ │ (mechanically       │                     │       │           │          │ │
-│ │ extracted):         │                     │       │           │          │ │
-│ │ Changed             │                     │       │           │          │ │
-│ │ definitions:        │                     │       │           │          │ │
-│ │ src/structlog/dev.… │                     │       │           │          │ │
-│ │ src/structlog/dev.… │                     │       │           │          │ │
-│ │ tests/test_dev.py:… │                     │       │           │          │ │
-│ │ tests/test_dev.py:… │                     │       │           │          │ │
-│ │ tests/test_dev.py:… │                     │       │           │          │ │
-│ │ tests/test_dev.py:… │                     │       │           │          │ │
-│ │ tests/test_dev.py:… │                     │       │           │          │ │
-│ │ Recent history of   │                     │       │           │          │ │
-│ │ src/structlog/dev.… │                     │       │           │          │ │
-│ │   15a4c48           │                     │       │           │          │ │
-│ │ 2026-03-29 Drop 3.9 │                     │       │           │          │ │
-│ │ (#800)              │                     │       │           │          │ │
-│ │   abd2638           │                     │       │           │          │ │
-│ │ 2026-03-04 dev:     │                     │       │           │          │ │
-│ │ don't raise warning │                     │       │           │          │ │
-│ │ on rendered         │                     │       │           │          │ │
-│ │ exceptions (#790)   │                     │       │           │          │ │
-│ │   65ceffd           │                     │       │           │          │ │
-│ │ 2026-02-21 update   │                     │       │           │          │ │
-│ │ dev                 │                     │       │           │          │ │
-│ │ Recent history of   │                     │       │           │          │ │
-│ │ tests/test_dev.py:  │                     │       │           │          │ │
-│ │   abd2638           │                     │       │           │          │ │
-│ │ 2026-03-04 dev:     │                     │       │           │          │ │
-│ │ don't raise warning │                     │       │           │          │ │
-│ │ on rendered         │                     │       │           │          │ │
-│ │ exceptions (#790)   │                     │       │           │          │ │
-│ │   65ceffd           │                     │       │           │          │ │
-│ │ 2026-02-21 update   │                     │       │           │          │ │
-│ │ dev                 │                     │       │           │          │ │
-│ │   de1a79e           │                     │       │           │          │ │
-│ │ 2025-10-27 Drop     │                     │       │           │          │ │
-│ │ Python 3.8 (#768)   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Diff:               │                     │       │           │          │ │
-│ │ ```diff             │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/src/structlog/de… │                     │       │           │          │ │
-│ │ b/src/structlog/de… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 0f08d7a..255402a    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/src/structlog/de… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/src/structlog/de… │                     │       │           │          │ │
-│ │ @@ -494,7 +494,16   │                     │       │           │          │ │
-│ │ @@ def              │                     │       │           │          │ │
-│ │ better_traceback(s… │                     │       │           │          │ │
-│ │ TextIO, exc_info:   │                     │       │           │          │ │
-│ │ ExcInfo) -> None:   │                     │       │           │          │ │
-│ │      Used by        │                     │       │           │          │ │
-│ │ default if          │                     │       │           │          │ │
-│ │ *better-exceptions* │                     │       │           │          │ │
-│ │ is installed and    │                     │       │           │          │ │
-│ │ Rich is absent.     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      ..             │                     │       │           │          │ │
-│ │ versionadded::      │                     │       │           │          │ │
-│ │ 21.2.0              │                     │       │           │          │ │
-│ │ +    ..             │                     │       │           │          │ │
-│ │ deprecated:: 26.1.0 │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ *better-exceptions* │                     │       │           │          │ │
-│ │ support is          │                     │       │           │          │ │
-│ │ deprecated and will │                     │       │           │          │ │
-│ │ be removed in a     │                     │       │           │          │ │
-│ │ +       future      │                     │       │           │          │ │
-│ │ release. Use Rich   │                     │       │           │          │ │
-│ │ instead.            │                     │       │           │          │ │
-│ │      """            │                     │       │           │          │ │
-│ │ +    warnings.warn( │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ "better-exceptions  │                     │       │           │          │ │
-│ │ support is          │                     │       │           │          │ │
-│ │ deprecated or will  │                     │       │           │          │ │
-│ │ be removed "        │                     │       │           │          │ │
-│ │ +        "in a      │                     │       │           │          │ │
-│ │ future release. Use │                     │       │           │          │ │
-│ │ Rich instead.",     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ DeprecationWarning, │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ stacklevel=2,       │                     │       │           │          │ │
-│ │ +    )              │                     │       │           │          │ │
-│ │      sio.write("\n" │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ "".join(better_exc… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ @@ -502,6 +511,12   │                     │       │           │          │ │
-│ │ @@ if rich is not   │                     │       │           │          │ │
-│ │ None:               │                     │       │           │          │ │
-│ │      default_excep… │                     │       │           │          │ │
-│ │ = rich_traceback    │                     │       │           │          │ │
-│ │  elif               │                     │       │           │          │ │
-│ │ better_exceptions   │                     │       │           │          │ │
-│ │ is not None:        │                     │       │           │          │ │
-│ │      default_excep… │                     │       │           │          │ │
-│ │ = better_traceback  │                     │       │           │          │ │
-│ │ +    warnings.warn( │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ "better-exceptions  │                     │       │           │          │ │
-│ │ support is          │                     │       │           │          │ │
-│ │ deprecated and will │                     │       │           │          │ │
-│ │ be removed "        │                     │       │           │          │ │
-│ │ +        "in a      │                     │       │           │          │ │
-│ │ future release. Use │                     │       │           │          │ │
-│ │ Rich instead.",     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ DeprecationWarning, │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ stacklevel=2,       │                     │       │           │          │ │
-│ │ +    )              │                     │       │           │          │ │
-│ │  else:              │                     │       │           │          │ │
-│ │      default_excep… │                     │       │           │          │ │
-│ │ = plain_traceback   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ @@ -511,8 +526,8 @@ │                     │       │           │          │ │
-│ │ class               │                     │       │           │          │ │
-│ │ ConsoleRenderer:    │                     │       │           │          │ │
-│ │      Render         │                     │       │           │          │ │
-│ │ ``event_dict``      │                     │       │           │          │ │
-│ │ nicely aligned,     │                     │       │           │          │ │
-│ │ possibly in colors, │                     │       │           │          │ │
-│ │ and ordered.        │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      If             │                     │       │           │          │ │
-│ │ ``event_dict``      │                     │       │           │          │ │
-│ │ contains a true-ish │                     │       │           │          │ │
-│ │ ``exc_info`` key,   │                     │       │           │          │ │
-│ │ it will be rendered │                     │       │           │          │ │
-│ │ -    *after* the    │                     │       │           │          │ │
-│ │ log line. If Rich_  │                     │       │           │          │ │
-│ │ or                  │                     │       │           │          │ │
-│ │ better-exceptions_  │                     │       │           │          │ │
-│ │ are present, in     │                     │       │           │          │ │
-│ │ colors              │                     │       │           │          │ │
-│ │ -    and with extra │                     │       │           │          │ │
-│ │ context.            │                     │       │           │          │ │
-│ │ +    *after* the    │                     │       │           │          │ │
-│ │ log line. If Rich_  │                     │       │           │          │ │
-│ │ is present, in      │                     │       │           │          │ │
-│ │ colors and with     │                     │       │           │          │ │
-│ │ extra               │                     │       │           │          │ │
-│ │ +    context.       │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      Tip:           │                     │       │           │          │ │
-│ │          Since      │                     │       │           │          │ │
-│ │ `ConsoleRenderer`   │                     │       │           │          │ │
-│ │ is mainly a         │                     │       │           │          │ │
-│ │ development helper, │                     │       │           │          │ │
-│ │ it is less          │                     │       │           │          │ │
-│ │ @@ -558,12 +573,10  │                     │       │           │          │ │
-│ │ @@ class            │                     │       │           │          │ │
-│ │ ConsoleRenderer:    │                     │       │           │          │ │
-│ │              are    │                     │       │           │          │ │
-│ │ passed.             │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          exception… │                     │       │           │          │ │
-│ │ -            A      │                     │       │           │          │ │
-│ │ callable to render  │                     │       │           │          │ │
-│ │ ``exc_infos``. If   │                     │       │           │          │ │
-│ │ Rich_ or            │                     │       │           │          │ │
-│ │ better-exceptions_  │                     │       │           │          │ │
-│ │ -            are    │                     │       │           │          │ │
-│ │ installed, they are │                     │       │           │          │ │
-│ │ used for            │                     │       │           │          │ │
-│ │ pretty-printing by  │                     │       │           │          │ │
-│ │ default (rich_      │                     │       │           │          │ │
-│ │ -            taking │                     │       │           │          │ │
-│ │ precedence). You    │                     │       │           │          │ │
-│ │ can also manually   │                     │       │           │          │ │
-│ │ set it to           │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ `plain_traceback`,  │                     │       │           │          │ │
-│ │ `better_traceback`, │                     │       │           │          │ │
-│ │ an instance of      │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ `RichTracebackForm… │                     │       │           │          │ │
-│ │ like                │                     │       │           │          │ │
-│ │ `rich_traceback`,   │                     │       │           │          │ │
-│ │ or implement your   │                     │       │           │          │ │
-│ │ -            own.   │                     │       │           │          │ │
-│ │ +            A      │                     │       │           │          │ │
-│ │ callable to render  │                     │       │           │          │ │
-│ │ ``exc_infos``. If   │                     │       │           │          │ │
-│ │ Rich_ is installed, │                     │       │           │          │ │
-│ │ it is               │                     │       │           │          │ │
-│ │ +            used   │                     │       │           │          │ │
-│ │ for pretty-printing │                     │       │           │          │ │
-│ │ by default. You can │                     │       │           │          │ │
-│ │ also manually set   │                     │       │           │          │ │
-│ │ it                  │                     │       │           │          │ │
-│ │ +            to     │                     │       │           │          │ │
-│ │ `plain_traceback`,  │                     │       │           │          │ │
-│ │ an instance of      │                     │       │           │          │ │
-│ │ `RichTracebackForm… │                     │       │           │          │ │
-│ │ like                │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ `rich_traceback`,   │                     │       │           │          │ │
-│ │ or implement your   │                     │       │           │          │ │
-│ │ own.                │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          sort_keys: │                     │       │           │          │ │
-│ │              Wheth… │                     │       │           │          │ │
-│ │ to sort keys when   │                     │       │           │          │ │
-│ │ formatting. `True`  │                     │       │           │          │ │
-│ │ by default. Ignored │                     │       │           │          │ │
-│ │ if                  │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_dev.py │                     │       │           │          │ │
-│ │ b/tests/test_dev.py │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 7c6a20b..45b0756    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/tests/test_dev.py │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_dev.py │                     │       │           │          │ │
-│ │ @@ -865,10 +865,22  │                     │       │           │          │ │
-│ │ @@ class            │                     │       │           │          │ │
-│ │ TestBetterTracebac… │                     │       │           │          │ │
-│ │          try:       │                     │       │           │          │ │
-│ │              0 / 0  │                     │       │           │          │ │
-│ │          except     │                     │       │           │          │ │
-│ │ ZeroDivisionError:  │                     │       │           │          │ │
-│ │ -                   │                     │       │           │          │ │
-│ │ dev.better_traceba… │                     │       │           │          │ │
-│ │ sys.exc_info())     │                     │       │           │          │ │
-│ │ +            with   │                     │       │           │          │ │
-│ │ pytest.warns(Depre… │                     │       │           │          │ │
-│ │ match="better-exce… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ dev.better_traceba… │                     │       │           │          │ │
-│ │ sys.exc_info())     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │          assert     │                     │       │           │          │ │
-│ │ sio.getvalue().sta… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ +    def            │                     │       │           │          │ │
-│ │ test_deprecation_w… │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ better_traceback    │                     │       │           │          │ │
-│ │ emits a             │                     │       │           │          │ │
-│ │ DeprecationWarning. │                     │       │           │          │ │
-│ │ +        """        │                     │       │           │          │ │
-│ │ +        sio =      │                     │       │           │          │ │
-│ │ StringIO()          │                     │       │           │          │ │
-│ │ +        try:       │                     │       │           │          │ │
-│ │ +            0 / 0  │                     │       │           │          │ │
-│ │ +        except     │                     │       │           │          │ │
-│ │ ZeroDivisionError:  │                     │       │           │          │ │
-│ │ +            with   │                     │       │           │          │ │
-│ │ pytest.warns(Depre… │                     │       │           │          │ │
-│ │ match="better-exce… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ dev.better_traceba… │                     │       │           │          │ │
-│ │ sys.exc_info())     │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  class              │                     │       │           │          │ │
-│ │ TestLogLevelColumn… │                     │       │           │          │ │
-│ │      def            │                     │       │           │          │ │
-│ │ test_no_style(self… │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
+│ │ pdm_build_initial… │                    │       │           │            │ │
+│ │ Context):          │                    │       │           │            │ │
+│ │          context.… │                    │       │           │            │ │
+│ │ = value            │                    │       │           │            │ │
+│ │      # Get main    │                    │       │           │            │ │
+│ │ dependencies       │                    │       │           │            │ │
+│ │      dependencies: │                    │       │           │            │ │
+│ │ list[str] =        │                    │       │           │            │ │
+│ │ metadata.get("dep… │                    │       │           │            │ │
+│ │ [])                │                    │       │           │            │ │
+│ │ -    # Add         │                    │       │           │            │ │
+│ │ optional           │                    │       │           │            │ │
+│ │ dependencies to    │                    │       │           │            │ │
+│ │ the default        │                    │       │           │            │ │
+│ │ dependencies for   │                    │       │           │            │ │
+│ │ this (non-slim)    │                    │       │           │            │ │
+│ │ package            │                    │       │           │            │ │
+│ │ -    for           │                    │       │           │            │ │
+│ │ include_optional   │                    │       │           │            │ │
+│ │ in                 │                    │       │           │            │ │
+│ │ include_optional_… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ optional_dependen… │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ optional_dependen… │                    │       │           │            │ │
+│ │ [])                │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ dependencies.exte… │                    │       │           │            │ │
+│ │      # Sync        │                    │       │           │            │ │
+│ │ versions in        │                    │       │           │            │ │
+│ │ dependencies       │                    │       │           │            │ │
+│ │      new_dependen… │                    │       │           │            │ │
+│ │ = []               │                    │       │           │            │ │
+│ │      for dep in    │                    │       │           │            │ │
+│ │ dependencies:      │                    │       │           │            │ │
+│ │          if dep in │                    │       │           │            │ │
+│ │ sync_dependencies: │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ new_dep =          │                    │       │           │            │ │
+│ │ f"{dep}=={version… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ new_dep =          │                    │       │           │            │ │
+│ │ f"{dep}>={version… │                    │       │           │            │ │
+│ │              new_… │                    │       │           │            │ │
+│ │          else:     │                    │       │           │            │ │
+│ │              new_… │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/pyproject.toml   │                    │       │           │            │ │
+│ │ b/pyproject.toml   │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ bf184f8..21a1350   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/pyproject.toml   │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/pyproject.toml   │                    │       │           │            │ │
+│ │ @@ -35,6 +35,8 @@  │                    │       │           │            │ │
+│ │ classifiers = [    │                    │       │           │            │ │
+│ │  ]                 │                    │       │           │            │ │
+│ │  dependencies = [  │                    │       │           │            │ │
+│ │      "click >=     │                    │       │           │            │ │
+│ │ 8.0.0",            │                    │       │           │            │ │
+│ │ +    "shellingham  │                    │       │           │            │ │
+│ │ >=1.3.0",          │                    │       │           │            │ │
+│ │ +    "rich         │                    │       │           │            │ │
+│ │ >=10.11.0",        │                    │       │           │            │ │
+│ │      "annotated-d… │                    │       │           │            │ │
+│ │ >=0.0.2",          │                    │       │           │            │ │
+│ │  ]                 │                    │       │           │            │ │
+│ │  readme =          │                    │       │           │            │ │
+│ │ "README.md"        │                    │       │           │            │ │
+│ │ @@ -46,11 +48,8 @@ │                    │       │           │            │ │
+│ │ Repository =       │                    │       │           │            │ │
+│ │ "https://github.c… │                    │       │           │            │ │
+│ │  Issues =          │                    │       │           │            │ │
+│ │ "https://github.c… │                    │       │           │            │ │
+│ │  Changelog =       │                    │       │           │            │ │
+│ │ "https://typer.ti… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -[project.optiona… │                    │       │           │            │ │
+│ │ -standard = [      │                    │       │           │            │ │
+│ │ -    "shellingham  │                    │       │           │            │ │
+│ │ >=1.3.0",          │                    │       │           │            │ │
+│ │ -    "rich         │                    │       │           │            │ │
+│ │ >=10.11.0",        │                    │       │           │            │ │
+│ │ -]                 │                    │       │           │            │ │
+│ │ +[project.scripts] │                    │       │           │            │ │
+│ │ +typer =           │                    │       │           │            │ │
+│ │ "typer.cli:main"   │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  [dependency-grou… │                    │       │           │            │ │
+│ │  dev = [           │                    │       │           │            │ │
+│ │ @@ -104,22 +103,34 │                    │       │           │            │ │
+│ │ @@ source-includes │                    │       │           │            │ │
+│ │ = [                │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  [tool.tiangolo._… │                    │       │           │            │ │
+│ │  sync-dependencies │                    │       │           │            │ │
+│ │ = [                │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ "typer-slim[stand… │                    │       │           │            │ │
+│ │ -    "typer-cli",  │                    │       │           │            │ │
+│ │      "typer"       │                    │       │           │            │ │
+│ │  ]                 │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  [tool.tiangolo._… │                    │       │           │            │ │
+│ │  name =            │                    │       │           │            │ │
+│ │ "typer-slim"       │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ -[tool.tiangolo._… │                    │       │           │            │ │
+│ │ -include-optional… │                    │       │           │            │ │
+│ │ = ["standard"]     │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ -[tool.tiangolo._… │                    │       │           │            │ │
+│ │ +readme =          │                    │       │           │            │ │
+│ │ "typer-slim/READM… │                    │       │           │            │ │
+│ │ +dependencies = [  │                    │       │           │            │ │
+│ │ +    "typer",      │                    │       │           │            │ │
+│ │ +]                 │                    │       │           │            │ │
+│ │  optional-depende… │                    │       │           │            │ │
+│ │ = {}               │                    │       │           │            │ │
+│ │ +scripts = {}      │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -[tool.tiangolo._… │                    │       │           │            │ │
+│ │ -typer =           │                    │       │           │            │ │
+│ │ "typer.cli:main"   │                    │       │           │            │ │
+│ │ +[tool.tiangolo._… │                    │       │           │            │ │
+│ │ +# excludes needs  │                    │       │           │            │ │
+│ │ to explicitly      │                    │       │           │            │ │
+│ │ exclude the top    │                    │       │           │            │ │
+│ │ level python       │                    │       │           │            │ │
+│ │ packages,          │                    │       │           │            │ │
+│ │ +# otherwise PDM   │                    │       │           │            │ │
+│ │ includes them by   │                    │       │           │            │ │
+│ │ default            │                    │       │           │            │ │
+│ │ +# A "*" glob      │                    │       │           │            │ │
+│ │ pattern can't be   │                    │       │           │            │ │
+│ │ used here because  │                    │       │           │            │ │
+│ │ in PDM internals,  │                    │       │           │            │ │
+│ │ the patterns are   │                    │       │           │            │ │
+│ │ put                │                    │       │           │            │ │
+│ │ +# in a set        │                    │       │           │            │ │
+│ │ (unordered, order  │                    │       │           │            │ │
+│ │ varies) and each   │                    │       │           │            │ │
+│ │ excluded file is   │                    │       │           │            │ │
+│ │ assigned one of    │                    │       │           │            │ │
+│ │ the                │                    │       │           │            │ │
+│ │ +# glob patterns   │                    │       │           │            │ │
+│ │ that matches, as   │                    │       │           │            │ │
+│ │ the set is         │                    │       │           │            │ │
+│ │ unordered, the     │                    │       │           │            │ │
+│ │ matched pattern    │                    │       │           │            │ │
+│ │ could be "*"       │                    │       │           │            │ │
+│ │ +# independent of  │                    │       │           │            │ │
+│ │ the order here.    │                    │       │           │            │ │
+│ │ And then the       │                    │       │           │            │ │
+│ │ internal code      │                    │       │           │            │ │
+│ │ would give it a    │                    │       │           │            │ │
+│ │ lower score        │                    │       │           │            │ │
+│ │ +# than the one    │                    │       │           │            │ │
+│ │ for a default      │                    │       │           │            │ │
+│ │ included file.     │                    │       │           │            │ │
+│ │ +# By not using    │                    │       │           │            │ │
+│ │ "*" and explicitly │                    │       │           │            │ │
+│ │ excluding the top  │                    │       │           │            │ │
+│ │ level packages,    │                    │       │           │            │ │
+│ │ they get a higher  │                    │       │           │            │ │
+│ │ +# score than the  │                    │       │           │            │ │
+│ │ default inclusion  │                    │       │           │            │ │
+│ │ +excludes =        │                    │       │           │            │ │
+│ │ ["typer", "tests", │                    │       │           │            │ │
+│ │ "pdm_build.py"]    │                    │       │           │            │ │
+│ │ +# source-includes │                    │       │           │            │ │
+│ │ needs to           │                    │       │           │            │ │
+│ │ explicitly define  │                    │       │           │            │ │
+│ │ some value because │                    │       │           │            │ │
+│ │ PDM will check the │                    │       │           │            │ │
+│ │ +# truthy value of │                    │       │           │            │ │
+│ │ the list, and if   │                    │       │           │            │ │
+│ │ empty, will        │                    │       │           │            │ │
+│ │ include some       │                    │       │           │            │ │
+│ │ defaults,          │                    │       │           │            │ │
+│ │ including "tests", │                    │       │           │            │ │
+│ │ +# an empty string │                    │       │           │            │ │
+│ │ doesn't match      │                    │       │           │            │ │
+│ │ anything, but      │                    │       │           │            │ │
+│ │ makes the list     │                    │       │           │            │ │
+│ │ truthy, so that    │                    │       │           │            │ │
+│ │ PDM                │                    │       │           │            │ │
+│ │ +# doesn't         │                    │       │           │            │ │
+│ │ override it during │                    │       │           │            │ │
+│ │ the build.         │                    │       │           │            │ │
+│ │ +source-includes = │                    │       │           │            │ │
+│ │ [""]               │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  [tool.tiangolo._… │                    │       │           │            │ │
+│ │  name =            │                    │       │           │            │ │
+│ │ "typer-cli"        │                    │       │           │            │ │
+│ │ @@ -128,6 +139,7   │                    │       │           │            │ │
+│ │ @@ dependencies =  │                    │       │           │            │ │
+│ │ [                  │                    │       │           │            │ │
+│ │      "typer",      │                    │       │           │            │ │
+│ │  ]                 │                    │       │           │            │ │
+│ │  optional-depende… │                    │       │           │            │ │
+│ │ = {}               │                    │       │           │            │ │
+│ │ +scripts = {}      │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  [tool.tiangolo._… │                    │       │           │            │ │
+│ │  # excludes needs  │                    │       │           │            │ │
+│ │ to explicitly      │                    │       │           │            │ │
+│ │ exclude the top    │                    │       │           │            │ │
+│ │ level python       │                    │       │           │            │ │
+│ │ packages,          │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/typer/_completi… │                    │       │           │            │ │
+│ │ b/typer/_completi… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 4c4d79d..2d56c2a   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/typer/_completi… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/typer/_completi… │                    │       │           │            │ │
+│ │ @@ -6,10 +6,7 @@   │                    │       │           │            │ │
+│ │ from pathlib       │                    │       │           │            │ │
+│ │ import Path        │                    │       │           │            │ │
+│ │  from typing       │                    │       │           │            │ │
+│ │ import Optional,   │                    │       │           │            │ │
+│ │ Union              │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  import click      │                    │       │           │            │ │
+│ │ -from typer.core   │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ HAS_SHELLINGHAM    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ -if                │                    │       │           │            │ │
+│ │ HAS_SHELLINGHAM:   │                    │       │           │            │ │
+│ │ -    import        │                    │       │           │            │ │
+│ │ shellingham        │                    │       │           │            │ │
+│ │ +import            │                    │       │           │            │ │
+│ │ shellingham        │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  class Shells(str, │                    │       │           │            │ │
+│ │ Enum):             │                    │       │           │            │ │
+│ │ @@ -246,14 +243,11 │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ _get_shell_name()  │                    │       │           │            │ │
+│ │ -> Union[str,      │                    │       │           │            │ │
+│ │ None]:             │                    │       │           │            │ │
+│ │      returned.     │                    │       │           │            │ │
+│ │      """           │                    │       │           │            │ │
+│ │      name:         │                    │       │           │            │ │
+│ │ Union[str, None]   │                    │       │           │            │ │
+│ │ # N.B. shellingham │                    │       │           │            │ │
+│ │ is untyped         │                    │       │           │            │ │
+│ │ -    if            │                    │       │           │            │ │
+│ │ HAS_SHELLINGHAM:   │                    │       │           │            │ │
+│ │ -        try:      │                    │       │           │            │ │
+│ │ -            #     │                    │       │           │            │ │
+│ │ N.B. detect_shell  │                    │       │           │            │ │
+│ │ returns a tuple of │                    │       │           │            │ │
+│ │ (shell name, shell │                    │       │           │            │ │
+│ │ command).          │                    │       │           │            │ │
+│ │ -            # We  │                    │       │           │            │ │
+│ │ only need the      │                    │       │           │            │ │
+│ │ name.              │                    │       │           │            │ │
+│ │ -            name, │                    │       │           │            │ │
+│ │ _cmd =             │                    │       │           │            │ │
+│ │ shellingham.detec… │                    │       │           │            │ │
+│ │ # noqa: TID251     │                    │       │           │            │ │
+│ │ -        except    │                    │       │           │            │ │
+│ │ shellingham.Shell… │                    │       │           │            │ │
+│ │ # pragma: no cover │                    │       │           │            │ │
+│ │ -            name  │                    │       │           │            │ │
+│ │ = None             │                    │       │           │            │ │
+│ │ -    else:         │                    │       │           │            │ │
+│ │ -        name =    │                    │       │           │            │ │
+│ │ None  # pragma: no │                    │       │           │            │ │
+│ │ cover              │                    │       │           │            │ │
+│ │ +    try:          │                    │       │           │            │ │
+│ │ +        # N.B.    │                    │       │           │            │ │
+│ │ detect_shell       │                    │       │           │            │ │
+│ │ returns a tuple of │                    │       │           │            │ │
+│ │ (shell name, shell │                    │       │           │            │ │
+│ │ command).          │                    │       │           │            │ │
+│ │ +        # We only │                    │       │           │            │ │
+│ │ need the name.     │                    │       │           │            │ │
+│ │ +        name,     │                    │       │           │            │ │
+│ │ _cmd =             │                    │       │           │            │ │
+│ │ shellingham.detec… │                    │       │           │            │ │
+│ │ # noqa: TID251     │                    │       │           │            │ │
+│ │ +    except        │                    │       │           │            │ │
+│ │ shellingham.Shell… │                    │       │           │            │ │
+│ │ # pragma: no cover │                    │       │           │            │ │
+│ │ +        name =    │                    │       │           │            │ │
+│ │ None               │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      return name   │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/typer/completio… │                    │       │           │            │ │
+│ │ b/typer/completio… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ db87f83..0d621e4   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/typer/completio… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/typer/completio… │                    │       │           │            │ │
+│ │ @@ -7,7 +7,6 @@    │                    │       │           │            │ │
+│ │ import click       │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ ._completion_clas… │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ completion_init    │                    │       │           │            │ │
+│ │  from              │                    │       │           │            │ │
+│ │ ._completion_shar… │                    │       │           │            │ │
+│ │ import Shells,     │                    │       │           │            │ │
+│ │ _get_shell_name,   │                    │       │           │            │ │
+│ │ get_completion_sc… │                    │       │           │            │ │
+│ │ install            │                    │       │           │            │ │
+│ │ -from .core import │                    │       │           │            │ │
+│ │ HAS_SHELLINGHAM    │                    │       │           │            │ │
+│ │  from .models      │                    │       │           │            │ │
+│ │ import ParamMeta   │                    │       │           │            │ │
+│ │  from .params      │                    │       │           │            │ │
+│ │ import Option      │                    │       │           │            │ │
+│ │  from .utils       │                    │       │           │            │ │
+│ │ import             │                    │       │           │            │ │
+│ │ get_params_from_f… │                    │       │           │            │ │
+│ │ @@ -18,7 +17,7 @@  │                    │       │           │            │ │
+│ │ _click_patched =   │                    │       │           │            │ │
+│ │ False              │                    │       │           │            │ │
+│ │  def               │                    │       │           │            │ │
+│ │ get_completion_in… │                    │       │           │            │ │
+│ │ ->                 │                    │       │           │            │ │
+│ │ tuple[ParamMeta,   │                    │       │           │            │ │
+│ │ ParamMeta]:        │                    │       │           │            │ │
+│ │      completion_i… │                    │       │           │            │ │
+│ │      test_disable… │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ os.getenv("_TYPER… │                    │       │           │            │ │
+│ │ -    if            │                    │       │           │            │ │
+│ │ HAS_SHELLINGHAM    │                    │       │           │            │ │
+│ │ and not            │                    │       │           │            │ │
+│ │ test_disable_dete… │                    │       │           │            │ │
+│ │ +    if not        │                    │       │           │            │ │
+│ │ test_disable_dete… │                    │       │           │            │ │
+│ │          paramete… │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ get_params_from_f… │                    │       │           │            │ │
+│ │      else:         │                    │       │           │            │ │
+│ │          paramete… │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ get_params_from_f… │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/typer/core.py    │                    │       │           │            │ │
+│ │ b/typer/core.py    │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ d0d888c..3500090   │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/typer/core.py    │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/typer/core.py    │                    │       │           │            │ │
+│ │ @@ -1,5 +1,4 @@    │                    │       │           │            │ │
+│ │  import errno      │                    │       │           │            │ │
+│ │ -import            │                    │       │           │            │ │
+│ │ importlib.util     │                    │       │           │            │ │
+│ │  import inspect    │                    │       │           │            │ │
+│ │  import os         │                    │       │           │            │ │
+│ │  import sys        │                    │       │           │            │ │
+│ │ @@ -28,8 +27,7 @@  │                    │       │           │            │ │
+│ │ from ._typing      │                    │       │           │            │ │
+│ │ import Literal     │                    │       │           │            │ │
+│ │  MarkupMode =      │                    │       │           │            │ │
+│ │ Literal["markdown… │                    │       │           │            │ │
+│ │ "rich", None]      │                    │       │           │            │ │
+│ │  MARKUP_MODE_KEY = │                    │       │           │            │ │
+│ │ "TYPER_RICH_MARKU… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ -HAS_RICH =        │                    │       │           │            │ │
+│ │ importlib.util.fi… │                    │       │           │            │ │
+│ │ is not None        │                    │       │           │            │ │
+│ │ -HAS_SHELLINGHAM = │                    │       │           │            │ │
+│ │ importlib.util.fi… │                    │       │           │            │ │
+│ │ is not None        │                    │       │           │            │ │
+│ │ +HAS_RICH =        │                    │       │           │            │ │
+│ │ os.getenv("TYPER_… │                    │       │           │            │ │
+│ │ True)              │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │  if HAS_RICH:      │                    │       │           │            │ │
+│ │      DEFAULT_MARK… │                    │       │           │            │ │
+│ │ MarkupMode =       │                    │       │           │            │ │
+│ │ "rich"             │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ ```                │                    │       │           │            │ │
+│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
