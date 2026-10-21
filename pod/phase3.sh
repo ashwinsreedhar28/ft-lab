@@ -20,7 +20,7 @@ done_ base_eval || { $EV --label base --model Qwen/Qwen3-4B; mark base_eval; }
 done_ sft       || { mkdir -p runs/review_sft_4b; python -m ftlab.sft configs/review_sft_4b.yaml 2>&1 | tee runs/review_sft_4b/train.log; mark sft; }
 done_ sft_eval  || { $EV --label sft --model runs/review_sft_4b/final; mark sft_eval; }
 done_ grpo      || { mkdir -p runs/review_grpo_4b; python -m ftlab.train configs/review_grpo_4b.yaml 2>&1 | tee -a runs/review_grpo_4b/train.log; mark grpo; }
-done_ grpo_eval || { $EV --label grpo --model runs/review_grpo_4b/final; mark grpo_eval; }
+done_ grpo_eval || { $EV --label grpo --model runs/review_grpo_4b/merged; mark grpo_eval; }   # LoRA run: train.py writes the merged weights to merged/, final/ is the adapter
 python -m ftlab.eval --table runs/review_grpo_4b/eval_*.json | tee runs/review_grpo_4b/table.txt
 python -m review.analysis.gate_table runs/review_grpo_4b/eval_*.json | tee runs/review_grpo_4b/gate_table.txt
 echo PHASE-DONE
