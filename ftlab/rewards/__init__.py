@@ -27,6 +27,7 @@ REWARDS: dict[str, Callable[..., list[float]]] = {
     "lh_runs": _lh.lh_runs,
     "review_gate": _rev.gate,
     "review_gate_v3": _rev.gate_v3,
+    "review_gate_v4": _rev.gate_v4,
 }
 
 

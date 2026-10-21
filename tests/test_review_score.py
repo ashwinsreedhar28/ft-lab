@@ -38,3 +38,12 @@ def test_rule_of_three_bound():
     reviews = {t.id: Review("block") for t in tasks}
     s = score(tasks, reviews)
     assert 0.06 < s["bugs_approved_rate_ub95"] < 0.075
+
+
+def test_parse_review_ignores_think_block():
+    from review.agent.run import parse_review
+
+    rev, ok = parse_review('<think>\nsee {foo: bar} above\n</think>\n\n{"decision": "block", "comments": []}', (0, 0), 0.0)
+    assert ok and rev.decision == "block"
+    rev, ok = parse_review('<think>\ncut off {"decision": "approve"', (0, 0), 0.0)
+    assert not ok

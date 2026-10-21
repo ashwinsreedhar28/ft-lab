@@ -1,0 +1,18 @@
+# Phase 3b v4 SFT: thinking-mode student. Completions are Sonnet's <think>rationale</think> + decision JSON
+# (review/analysis/rationales.py, balanced), so the student imitates reasoning, not just the answer.
+# v1-v3 students (no thinking, decision-only SFT) blocked bugs and clean PRs at nearly the same rate
+# (0.89 vs 0.81): no discrimination for GRPO to sharpen.
+name: review_sft_4b_v4
+model: Qwen/Qwen3-4B
+enable_thinking: true
+lora: {enabled: true, r: 32, alpha: 64, target_modules: all-linear}
+data: {task: review, extra: {sft_file: data/review_sft_v4.jsonl}}
+sft:
+  num_train_epochs: 3
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 8
+  learning_rate: 1.0e-4
+  lr_scheduler_type: cosine
+  warmup_steps: 0.05
+  max_length: 12288
+  gradient_checkpointing: true

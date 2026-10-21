@@ -96,8 +96,16 @@ def build_prompt(task: dict, condition: str, run_result: str | None) -> str:
 _JSON_RE = re.compile(r"\{.*\}", re.S)
 
 
+_THINK_RE = re.compile(r"<think>.*?</think>", re.S)
+
+
 def parse_review(text: str, usage: tuple[int, int], usd: float) -> tuple[Review, bool]:
-    m = _JSON_RE.search(text or "")
+    # thinking-mode students (phase 3b v4) reason inside <think>...</think> first; braces in there must not
+    # be swallowed by the greedy JSON match
+    text = _THINK_RE.sub("", text or "")
+    if "<think>" in text:                      # unterminated think block: the cap cut it off, nothing to parse
+        text = text.split("<think>", 1)[0]
+    m = _JSON_RE.search(text)
     try:
         obj = json.loads(m.group(0)) if m else {}
         dec = obj.get("decision", "").lower()

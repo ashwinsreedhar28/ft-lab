@@ -24,6 +24,8 @@ def main():
     ap.add_argument("--set", action="append", default=[], help="dotted override, e.g. sft.num_train_epochs=2")
     a = ap.parse_args()
     cfg = load_config(a.config, a.set)
+    if isinstance(cfg.data.extra, dict) and cfg.data.extra.get("sft_file"):
+        a.data = cfg.data.extra["sft_file"]        # e.g. data/review_sft_v4.jsonl (rationale traces)
     import torch
     from datasets import load_dataset
     from peft import LoraConfig

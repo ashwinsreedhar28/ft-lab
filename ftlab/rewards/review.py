@@ -19,6 +19,7 @@ W = {"approve_bug": -5.0, "correct": 1.0, "block_clean": -0.5, "escalate": -0.2,
 
 
 W_V3 = {**W, "unparsable": -3.0}   # v2 drifted into single-quoted dicts at -1: format drift must never be a wash
+W_V4 = {**W_V3, "free_tokens": 1200}   # thinking mode: a ~150-word rationale is free, padding past ~1200 tokens is not
 
 
 def gate(completions, kind, gold_hunks, completion_ids=None, log_metric=None, log_extra=None, W=W, **_):
@@ -54,3 +55,7 @@ def gate(completions, kind, gold_hunks, completion_ids=None, log_metric=None, lo
 
 def gate_v3(completions, kind, gold_hunks, **kw):
     return gate(completions, kind, gold_hunks, W=W_V3, **kw)
+
+
+def gate_v4(completions, kind, gold_hunks, **kw):
+    return gate(completions, kind, gold_hunks, W=W_V4, **kw)
