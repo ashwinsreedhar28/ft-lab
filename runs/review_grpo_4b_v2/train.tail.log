@@ -1,399 +1,399 @@
-│ │      except        │                    │       │           │            │ │
-│ │ PydanticSchemaGen… │                    │       │           │            │ │
-│ │          raise     │                    │       │           │            │ │
-│ │ fastapi.exception… │                    │       │           │            │ │
-│ │              _inv… │                    │       │           │            │ │
+│ │ DefinitionsBuilde… │                    │       │           │            │ │
+│ │  ) ->              │                    │       │           │            │ │
+│ │ PyResult<Arc<Comb… │                    │       │           │            │ │
+│ │ {                  │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ build_validator_i… │                    │       │           │            │ │
+│ │ config,            │                    │       │           │            │ │
+│ │ definitions, true) │                    │       │           │            │ │
+│ │ +    // Read       │                    │       │           │            │ │
+│ │ use_prebuilt from  │                    │       │           │            │ │
+│ │ the definitions    │                    │       │           │            │ │
+│ │ builder - this     │                    │       │           │            │ │
+│ │ ensures all nested │                    │       │           │            │ │
+│ │ +    // validators │                    │       │           │            │ │
+│ │ respect the same   │                    │       │           │            │ │
+│ │ setting as the     │                    │       │           │            │ │
+│ │ top-level build    │                    │       │           │            │ │
+│ │ +    let           │                    │       │           │            │ │
+│ │ use_prebuilt =     │                    │       │           │            │ │
+│ │ definitions.use_p… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ build_validator_i… │                    │       │           │            │ │
+│ │ config,            │                    │       │           │            │ │
+│ │ definitions,       │                    │       │           │            │ │
+│ │ use_prebuilt)      │                    │       │           │            │ │
+│ │  }                 │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
-╰──────────────────────────────────────────────────────────────────────────────╯
- 61%|██████    | 183/300 [4:58:15<2:36:51, 80.44s/it]step 183  reward=-3.694  reward_std=1.834  kl=0.103  mean_length=104.906  clipped_ratio=0.000  step_time=140.387  loss=0.267  gate=-3.694
-                                                      61%|██████    | 183/300 [4:58:15<2:36:51, 80.44s/it]{'loss': '0.2674', 'grad_norm': '0.3511', 'learning_rate': '5e-05', 'num_tokens': '1.454e+07', 'completions/mean_length': '104.9', 'completions/min_length': '10', 'completions/max_length': '346', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '104.9', 'completions/min_terminated_length': '10', 'completions/max_terminated_length': '346', 'rewards/gate/mean': '-3.694', 'rewards/gate/std': '1.834', 'reward': '-3.694', 'reward_std': '1.834', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.6562', 'review/escalate_frac': '0', 'review/mean_tokens': '104.9', 'review/unparsable_frac': '0.3438', 'sampling/sampling_logp_difference/mean': '0.01525', 'sampling/sampling_logp_difference/max': '0.3718', 'sampling/importance_sampling_ratio/min': '0.4699', 'sampling/importance_sampling_ratio/mean': '1.112', 'sampling/importance_sampling_ratio/max': '2.812', 'kl': '0.1034', 'entropy': '1.118', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '140.4', 'epoch': '5.903'}
-╭────────────────────────────────── Step 183 ──────────────────────────────────╮
-│ ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┓ │
-│ ┃ Prompt             ┃ Completion         ┃  gate ┃ Advantage ┃ decision   ┃ │
-│ ┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━┩ │
-│ │ SYSTEM             │ ASSISTANT          │ -5.00 │     -0.72 │ approve    │ │
-│ │ You are the code   │ {"decision":       │       │           │            │ │
-│ │ review gate for a  │ "approve",         │       │           │            │ │
-│ │ production         │ "comments":        │       │           │            │ │
-│ │ repository. Your   │ [{"file":          │       │           │            │ │
-│ │ approval merges    │ "starlette/endpoi… │       │           │            │ │
-│ │ and deploys the    │ "line_start": 33,  │       │           │            │ │
-│ │ change with no     │ "line_end": 39,    │       │           │            │ │
-│ │ further human      │ "body": "Moved the │       │           │            │ │
-│ │ review. Decide:    │ HTTP endpoint      │       │           │            │ │
-│ │   approve  - you   │ dispatch logic to  │       │           │            │ │
-│ │ are confident the  │ conditionally      │       │           │            │ │
-│ │ change is correct  │ dispatch on        │       │           │            │ │
-│ │ and safe to ship.  │ endpoint's allowed │       │           │            │ │
-│ │   block    - you   │ methods, checking  │       │           │            │ │
-│ │ found a defect;    │ both supported     │       │           │            │ │
-│ │ cite its location. │ HTTP verbs and     │       │           │            │ │
-│ │   escalate - you   │ HEAD requests.     │       │           │            │ │
-│ │ cannot establish   │ Added new test     │       │           │            │ │
-│ │ safety from what   │ cases for version  │       │           │            │ │
-│ │ you can see; a     │ allows and         │       │           │            │ │
-│ │ human must look.   │ disallows."}]}     │       │           │            │ │
-│ │ Approving a change │                    │       │           │            │ │
-│ │ that contains a    │                    │       │           │            │ │
-│ │ defect is the      │                    │       │           │            │ │
-│ │ worst outcome.     │                    │       │           │            │ │
-│ │ Blocking a correct │                    │       │           │            │ │
-│ │ change costs an    │                    │       │           │            │ │
-│ │ engineer's time.   │                    │       │           │            │ │
-│ │ Escalating is      │                    │       │           │            │ │
-│ │ cheap but useless  │                    │       │           │            │ │
-│ │ if done for        │                    │       │           │            │ │
-│ │ everything.        │                    │       │           │            │ │
-│ │ Respond with       │                    │       │           │            │ │
-│ │ exactly one JSON   │                    │       │           │            │ │
-│ │ object and nothing │                    │       │           │            │ │
-│ │ else:              │                    │       │           │            │ │
-│ │ {"decision":       │                    │       │           │            │ │
-│ │ "approve|block|es… │                    │       │           │            │ │
-│ │ "comments":        │                    │       │           │            │ │
-│ │ [{"file": "...",   │                    │       │           │            │ │
-│ │ "line_start": N,   │                    │       │           │            │ │
-│ │ "line_end": N,     │                    │       │           │            │ │
-│ │ "body": "...",     │                    │       │           │            │ │
-│ │ "proposed_test":   │                    │       │           │            │ │
-│ │ "optional pytest   │                    │       │           │            │ │
-│ │ source"}]}         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ USER               │                    │       │           │            │ │
-│ │ Repository:        │                    │       │           │            │ │
-│ │ starlette          │                    │       │           │            │ │
-│ │ Files changed:     │                    │       │           │            │ │
-│ │ starlette/endpoin… │                    │       │           │            │ │
-│ │ tests/test_endpoi… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Context around the │                    │       │           │            │ │
-│ │ change             │                    │       │           │            │ │
-│ │ (mechanically      │                    │       │           │            │ │
-│ │ extracted):        │                    │       │           │            │ │
-│ │ Changed            │                    │       │           │            │ │
-│ │ definitions:       │                    │       │           │            │ │
-│ │ starlette/endpoin… │                    │       │           │            │ │
-│ │ starlette/endpoin… │                    │       │           │            │ │
-│ │ tests/test_endpoi… │                    │       │           │            │ │
-│ │ tests/test_endpoi… │                    │       │           │            │ │
-│ │ tests/test_endpoi… │                    │       │           │            │ │
-│ │ tests/test_endpoi… │                    │       │           │            │ │
-│ │ tests/test_endpoi… │                    │       │           │            │ │
-│ │ tests/test_endpoi… │                    │       │           │            │ │
-│ │ tests/test_endpoi… │                    │       │           │            │ │
-│ │ tests/test_endpoi… │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ starlette/endpoin… │                    │       │           │            │ │
-│ │   a0499f6          │                    │       │           │            │ │
-│ │ 2025-11-01 Drop    │                    │       │           │            │ │
-│ │ support for Python │                    │       │           │            │ │
-│ │ 3.9 (#3061)        │                    │       │           │            │ │
-│ │   30f18da          │                    │       │           │            │ │
-│ │ 2025-09-20 Use     │                    │       │           │            │ │
-│ │ type literal for   │                    │       │           │            │ │
-│ │ WebSocketEndpoint  │                    │       │           │            │ │
-│ │ encoding values    │                    │       │           │            │ │
-│ │ (#3027)            │                    │       │           │            │ │
-│ │   2ff7653          │                    │       │           │            │ │
-│ │ 2025-05-27 chore:  │                    │       │           │            │ │
-│ │ improve type hints │                    │       │           │            │ │
-│ │ (#2867)            │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ tests/test_endpoi… │                    │       │           │            │ │
-│ │   e7605e1          │                    │       │           │            │ │
-│ │ 2024-12-28 Drop    │                    │       │           │            │ │
-│ │ Python 3.8 (#2823) │                    │       │           │            │ │
-│ │   b9db010          │                    │       │           │            │ │
-│ │ 2024-09-01 Set     │                    │       │           │            │ │
-│ │ `line-length` to   │                    │       │           │            │ │
-│ │ 120 on Ruff        │                    │       │           │            │ │
-│ │ (#2679)            │                    │       │           │            │ │
-│ │   78fcd54          │                    │       │           │            │ │
-│ │ 2024-07-27 Create  │                    │       │           │            │ │
-│ │ types module       │                    │       │           │            │ │
-│ │ inside tests       │                    │       │           │            │ │
-│ │ (#2502)            │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Diff:              │                    │       │           │            │ │
-│ │ ```diff            │                    │       │           │            │ │
+│ │  fn                │                    │       │           │            │ │
+│ │ build_validator_i… │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/starlette/endpo… │                    │       │           │            │ │
-│ │ b/starlette/endpo… │                    │       │           │            │ │
+│ │ a/pydantic-core/t… │                    │       │           │            │ │
+│ │ b/pydantic-core/t… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ aa067fc..ca4ef10   │                    │       │           │            │ │
+│ │ cbedcf50..1dd48445 │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/starlette/endpo… │                    │       │           │            │ │
+│ │ a/pydantic-core/t… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/starlette/endpo… │                    │       │           │            │ │
-│ │ @@ -33,7 +33,11 @@ │                    │       │           │            │ │
-│ │ class              │                    │       │           │            │ │
-│ │ HTTPEndpoint:      │                    │       │           │            │ │
-│ │          request = │                    │       │           │            │ │
-│ │ Request(self.scop… │                    │       │           │            │ │
-│ │ receive=self.rece… │                    │       │           │            │ │
-│ │          handler_… │                    │       │           │            │ │
-│ │ = "get" if         │                    │       │           │            │ │
-│ │ request.method ==  │                    │       │           │            │ │
-│ │ "HEAD" and not     │                    │       │           │            │ │
-│ │ hasattr(self,      │                    │       │           │            │ │
-│ │ "head") else       │                    │       │           │            │ │
-│ │ request.method.lo… │                    │       │           │            │ │
+│ │ b/pydantic-core/t… │                    │       │           │            │ │
+│ │ @@ -169,3 +169,8   │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ test_float_inf_an… │                    │       │           │            │ │
+│ │ expected_json,     │                    │       │           │            │ │
+│ │ config):           │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │ -        handler:  │                    │       │           │            │ │
-│ │ Callable[[Request… │                    │       │           │            │ │
-│ │ Any] =             │                    │       │           │            │ │
-│ │ getattr(self,      │                    │       │           │            │ │
-│ │ handler_name,      │                    │       │           │            │ │
-│ │ self.method_not_a… │                    │       │           │            │ │
-│ │ +        handler:  │                    │       │           │            │ │
-│ │ Callable[[Request… │                    │       │           │            │ │
-│ │ Any]               │                    │       │           │            │ │
-│ │ +        if        │                    │       │           │            │ │
-│ │ request.method in  │                    │       │           │            │ │
-│ │ self._allowed_met… │                    │       │           │            │ │
-│ │ or (request.method │                    │       │           │            │ │
-│ │ == "HEAD" and      │                    │       │           │            │ │
-│ │ "HEAD" in          │                    │       │           │            │ │
-│ │ self._allowed_met… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ handler =          │                    │       │           │            │ │
-│ │ getattr(self,      │                    │       │           │            │ │
-│ │ handler_name)      │                    │       │           │            │ │
-│ │ +        else:     │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ handler =          │                    │       │           │            │ │
-│ │ self.method_not_a… │                    │       │           │            │ │
-│ │          is_async  │                    │       │           │            │ │
-│ │ =                  │                    │       │           │            │ │
-│ │ is_async_callable… │                    │       │           │            │ │
-│ │          if        │                    │       │           │            │ │
-│ │ is_async:          │                    │       │           │            │ │
-│ │              resp… │                    │       │           │            │ │
-│ │ = await            │                    │       │           │            │ │
-│ │ handler(request)   │                    │       │           │            │ │
-│ │ diff --git         │                    │       │           │            │ │
-│ │ a/tests/test_endp… │                    │       │           │            │ │
-│ │ b/tests/test_endp… │                    │       │           │            │ │
-│ │ index              │                    │       │           │            │ │
-│ │ 7616387..dfc2019   │                    │       │           │            │ │
-│ │ 100644             │                    │       │           │            │ │
-│ │ ---                │                    │       │           │            │ │
-│ │ a/tests/test_endp… │                    │       │           │            │ │
-│ │ +++                │                    │       │           │            │ │
-│ │ b/tests/test_endp… │                    │       │           │            │ │
-│ │ @@ -47,6 +47,23 @@ │                    │       │           │            │ │
-│ │ def                │                    │       │           │            │ │
-│ │ test_http_endpoin… │                    │       │           │            │ │
-│ │ TestClient) ->     │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
+│ │      # Serialized  │                    │       │           │            │ │
+│ │ JSON value         │                    │       │           │            │ │
+│ │ respects the       │                    │       │           │            │ │
+│ │ ser_json_inf_nan   │                    │       │           │            │ │
+│ │ setting            │                    │       │           │            │ │
 │ │      assert        │                    │       │           │            │ │
-│ │ response.headers[… │                    │       │           │            │ │
-│ │ == "GET"           │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
+│ │ s.to_json(value).… │                    │       │           │            │ │
+│ │ == expected_json   │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
 │ │ +def               │                    │       │           │            │ │
-│ │ test_http_endpoin… │                    │       │           │            │ │
-│ │ TestClientFactory) │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │ +    class         │                    │       │           │            │ │
-│ │ Endpoint(HTTPEndp… │                    │       │           │            │ │
-│ │ +        async def │                    │       │           │            │ │
-│ │ get(self, request: │                    │       │           │            │ │
-│ │ Request) ->        │                    │       │           │            │ │
-│ │ PlainTextResponse: │                    │       │           │            │ │
+│ │ test_schema_seria… │                    │       │           │            │ │
+│ │ +    """Test that  │                    │       │           │            │ │
+│ │ SchemaSerializer   │                    │       │           │            │ │
+│ │ can be constructed │                    │       │           │            │ │
+│ │ with               │                    │       │           │            │ │
+│ │ _use_prebuilt=Fal… │                    │       │           │            │ │
 │ │ +                  │                    │       │           │            │ │
-│ │ return             │                    │       │           │            │ │
-│ │ PlainTextResponse… │                    │       │           │            │ │
-│ │ world!")  #        │                    │       │           │            │ │
-│ │ pragma: no cover   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +        async def │                    │       │           │            │ │
-│ │ _do_delete(self,   │                    │       │           │            │ │
-│ │ request: Request)  │                    │       │           │            │ │
-│ │ ->                 │                    │       │           │            │ │
-│ │ PlainTextResponse: │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ return             │                    │       │           │            │ │
-│ │ PlainTextResponse… │                    │       │           │            │ │
-│ │ helper")  #        │                    │       │           │            │ │
-│ │ pragma: no cover   │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    app =         │                    │       │           │            │ │
-│ │ Router(routes=[Ro… │                    │       │           │            │ │
-│ │ endpoint=Endpoint… │                    │       │           │            │ │
-│ │ +    client =      │                    │       │           │            │ │
-│ │ test_client_facto… │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +    response =    │                    │       │           │            │ │
-│ │ client.request("_… │                    │       │           │            │ │
-│ │ "/")               │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ response.status_c… │                    │       │           │            │ │
-│ │ == 405             │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ response.text ==   │                    │       │           │            │ │
-│ │ "Method Not        │                    │       │           │            │ │
-│ │ Allowed"           │                    │       │           │            │ │
-│ │ +    assert        │                    │       │           │            │ │
-│ │ response.headers[… │                    │       │           │            │ │
-│ │ == "GET"           │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │ +                  │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ test_websocket_en… │                    │       │           │            │ │
-│ │ TestClientFactory) │                    │       │           │            │ │
-│ │ -> None:           │                    │       │           │            │ │
-│ │      class         │                    │       │           │            │ │
-│ │ WebSocketApp(WebS… │                    │       │           │            │ │
-│ │          async def │                    │       │           │            │ │
-│ │ on_connect(self,   │                    │       │           │            │ │
-│ │ websocket:         │                    │       │           │            │ │
-│ │ WebSocket) ->      │                    │       │           │            │ │
-│ │ None:              │                    │       │           │            │ │
-│ │ ```                │                    │       │           │            │ │
-│ ├────────────────────┼────────────────────┼───────┼───────────┼────────────┤ │
-│ │ SYSTEM             │ ASSISTANT          │ -1.20 │      2.47 │ unparsable │ │
-│ │ You are the code   │ {'decision':       │       │           │            │ │
-│ │ review gate for a  │ 'approve',         │       │           │            │ │
-│ │ production         │ 'comments':        │       │           │            │ │
-│ │ repository. Your   │ [{'file':          │       │           │            │ │
-│ │ approval merges    │ 'more_itertools/r… │       │           │            │ │
-│ │ and deploys the    │ 'line_start':      │       │           │            │ │
-│ │ change with no     │ 1112, 'line_end':  │       │           │            │ │
-│ │ further human      │ 1112, 'body':      │       │           │            │ │
-│ │ review. Decide:    │ 'polynomial_eval:  │       │           │            │ │
-│ │   approve  - you   │ supportuable       │       │           │            │ │
-│ │ are confident the  │ chainable and      │       │           │            │ │
-│ │ change is correct  │ sequences,         │       │           │            │ │
-│ │ and safe to ship.  │ preparing new      │       │           │            │ │
-│ │   block    - you   │ signature for dev  │       │           │            │ │
-│ │ found a defect;    │ versions that take │       │           │            │ │
-│ │ cite its location. │ a function'}]}     │       │           │            │ │
-│ │   escalate - you   │                    │       │           │            │ │
-│ │ cannot establish   │                    │       │           │            │ │
-│ │ safety from what   │                    │       │           │            │ │
-│ │ you can see; a     │                    │       │           │            │ │
-│ │ human must look.   │                    │       │           │            │ │
-│ │ Approving a change │                    │       │           │            │ │
-│ │ that contains a    │                    │       │           │            │ │
-│ │ defect is the      │                    │       │           │            │ │
-│ │ worst outcome.     │                    │       │           │            │ │
-│ │ Blocking a correct │                    │       │           │            │ │
-│ │ change costs an    │                    │       │           │            │ │
-│ │ engineer's time.   │                    │       │           │            │ │
-│ │ Escalating is      │                    │       │           │            │ │
-│ │ cheap but useless  │                    │       │           │            │ │
-│ │ if done for        │                    │       │           │            │ │
-│ │ everything.        │                    │       │           │            │ │
-│ │ Respond with       │                    │       │           │            │ │
-│ │ exactly one JSON   │                    │       │           │            │ │
-│ │ object and nothing │                    │       │           │            │ │
-│ │ else:              │                    │       │           │            │ │
-│ │ {"decision":       │                    │       │           │            │ │
-│ │ "approve|block|es… │                    │       │           │            │ │
-│ │ "comments":        │                    │       │           │            │ │
-│ │ [{"file": "...",   │                    │       │           │            │ │
-│ │ "line_start": N,   │                    │       │           │            │ │
-│ │ "line_end": N,     │                    │       │           │            │ │
-│ │ "body": "...",     │                    │       │           │            │ │
-│ │ "proposed_test":   │                    │       │           │            │ │
-│ │ "optional pytest   │                    │       │           │            │ │
-│ │ source"}]}         │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ USER               │                    │       │           │            │ │
-│ │ Repository:        │                    │       │           │            │ │
-│ │ more-itertools     │                    │       │           │            │ │
-│ │ Files changed:     │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Not shown          │                    │       │           │            │ │
-│ │ (non-code or over  │                    │       │           │            │ │
-│ │ budget; treat as   │                    │       │           │            │ │
-│ │ unreviewed):       │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │ (642 chars,        │                    │       │           │            │ │
-│ │ non-code)          │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Context around the │                    │       │           │            │ │
-│ │ change             │                    │       │           │            │ │
-│ │ (mechanically      │                    │       │           │            │ │
-│ │ extracted):        │                    │       │           │            │ │
-│ │ Changed            │                    │       │           │            │ │
-│ │ definitions:       │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │ Recent history of  │                    │       │           │            │ │
-│ │ more_itertools/re… │                    │       │           │            │ │
-│ │   1f95c41          │                    │       │           │            │ │
-│ │ 2026-03-31         │                    │       │           │            │ │
-│ │ iter_except: func  │                    │       │           │            │ │
-│ │ -> function        │                    │       │           │            │ │
-│ │   d63a26e          │                    │       │           │            │ │
-│ │ 2026-03-31         │                    │       │           │            │ │
-│ │ first_true: pred   │                    │       │           │            │ │
-│ │ -> predicate       │                    │       │           │            │ │
-│ │   d0c20f5          │                    │       │           │            │ │
-│ │ 2026-03-31         │                    │       │           │            │ │
-│ │ quantify: pred ->  │                    │       │           │            │ │
-│ │ predicate          │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │ Diff:              │                    │       │           │            │ │
-│ │ ```diff            │                    │       │           │            │ │
+│ │ SchemaSerializer(… │                    │       │           │            │ │
+│ │ 'str'}, None,      │                    │       │           │            │ │
+│ │ _use_prebuilt=Fal… │                    │       │           │            │ │
 │ │ diff --git         │                    │       │           │            │ │
-│ │ a/more_itertools/… │                    │       │           │            │ │
-│ │ b/more_itertools/… │                    │       │           │            │ │
+│ │ a/pydantic-core/t… │                    │       │           │            │ │
+│ │ b/pydantic-core/t… │                    │       │           │            │ │
 │ │ index              │                    │       │           │            │ │
-│ │ 1f210ea..281de7d   │                    │       │           │            │ │
+│ │ 38edc917..107124dc │                    │       │           │            │ │
 │ │ 100644             │                    │       │           │            │ │
 │ │ ---                │                    │       │           │            │ │
-│ │ a/more_itertools/… │                    │       │           │            │ │
+│ │ a/pydantic-core/t… │                    │       │           │            │ │
 │ │ +++                │                    │       │           │            │ │
-│ │ b/more_itertools/… │                    │       │           │            │ │
-│ │ @@ -1112,7 +1112,7 │                    │       │           │            │ │
-│ │ @@ def             │                    │       │           │            │ │
-│ │ polynomial_eval(c… │                    │       │           │            │ │
-│ │ x):                │                    │       │           │            │ │
-│ │      return        │                    │       │           │            │ │
-│ │ _sumprod(coeffici… │                    │       │           │            │ │
-│ │ powers)            │                    │       │           │            │ │
+│ │ b/pydantic-core/t… │                    │       │           │            │ │
+│ │ @@ -49,7 +49,7 @@  │                    │       │           │            │ │
+│ │ mod tests {        │                    │       │           │            │ │
+│ │              }"    │                    │       │           │            │ │
+│ │              );    │                    │       │           │            │ │
+│ │              let   │                    │       │           │            │ │
+│ │ schema: Bound<'_,  │                    │       │           │            │ │
+│ │ PyDict> =          │                    │       │           │            │ │
+│ │ py.eval(code,      │                    │       │           │            │ │
+│ │ None,              │                    │       │           │            │ │
+│ │ None).unwrap().ex… │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ SchemaSerializer:… │                    │       │           │            │ │
+│ │ None).unwrap();    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ SchemaSerializer:… │                    │       │           │            │ │
+│ │ None,              │                    │       │           │            │ │
+│ │ true).unwrap();    │                    │       │           │            │ │
+│ │          });       │                    │       │           │            │ │
+│ │      }             │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
+│ │ @@ -76,7 +76,7 @@  │                    │       │           │            │ │
+│ │ json_input =       │                    │       │           │            │ │
+│ │ '{"a":             │                    │       │           │            │ │
+│ │ "something"}'      │                    │       │           │            │ │
+│ │              py.r… │                    │       │           │            │ │
+│ │ None,              │                    │       │           │            │ │
+│ │ Some(&locals)).un… │                    │       │           │            │ │
+│ │              let   │                    │       │           │            │ │
+│ │ schema =           │                    │       │           │            │ │
+│ │ locals.get_item("… │                    │       │           │            │ │
+│ │              let   │                    │       │           │            │ │
+│ │ json_input =       │                    │       │           │            │ │
+│ │ locals.get_item("… │                    │       │           │            │ │
+│ │ -            let   │                    │       │           │            │ │
+│ │ binding =          │                    │       │           │            │ │
+│ │ SchemaValidator::… │                    │       │           │            │ │
+│ │ &schema, None)     │                    │       │           │            │ │
+│ │ +            let   │                    │       │           │            │ │
+│ │ binding =          │                    │       │           │            │ │
+│ │ SchemaValidator::… │                    │       │           │            │ │
+│ │ &schema, None,     │                    │       │           │            │ │
+│ │ true)              │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │ &json_input, None, │                    │       │           │            │ │
+│ │ None, None, None,  │                    │       │           │            │ │
+│ │ false.into(),      │                    │       │           │            │ │
+│ │ None, None)        │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │ @@ -137,7 +137,7   │                    │       │           │            │ │
+│ │ @@                 │                    │       │           │            │ │
+│ │ dump_json_input_2  │                    │       │           │            │ │
+│ │ = {'a':            │                    │       │           │            │ │
+│ │ 'something'}       │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │              let   │                    │       │           │            │ │
+│ │ dump_json_input_1  │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ locals.get_item("… │                    │       │           │            │ │
+│ │              let   │                    │       │           │            │ │
+│ │ dump_json_input_2  │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ locals.get_item("… │                    │       │           │            │ │
+│ │ -            let   │                    │       │           │            │ │
+│ │ serializer =       │                    │       │           │            │ │
+│ │ SchemaSerializer:… │                    │       │           │            │ │
+│ │ None).unwrap();    │                    │       │           │            │ │
+│ │ +            let   │                    │       │           │            │ │
+│ │ serializer =       │                    │       │           │            │ │
+│ │ SchemaSerializer:… │                    │       │           │            │ │
+│ │ None,              │                    │       │           │            │ │
+│ │ true).unwrap();    │                    │       │           │            │ │
+│ │              let   │                    │       │           │            │ │
+│ │ serialization_res… │                    │       │           │            │ │
+│ │ = serializer       │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │                  … │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/pydantic-core/t… │                    │       │           │            │ │
+│ │ b/pydantic-core/t… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ fbfdabe6..d57f3626 │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/pydantic-core/t… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/pydantic-core/t… │                    │       │           │            │ │
+│ │ @@ -76,3 +76,8 @@  │                    │       │           │            │ │
+│ │ def                │                    │       │           │            │ │
+│ │ test_build_recurs… │                    │       │           │            │ │
+│ │ -> None:           │                    │       │           │            │ │
+│ │      )             │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │ -def               │                    │       │           │            │ │
-│ │ sum_of_squares(it… │                    │       │           │            │ │
+│ │      SchemaValida… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
 │ │ +def               │                    │       │           │            │ │
-│ │ sum_of_squares(it… │                    │       │           │            │ │
-│ │      """Return the │                    │       │           │            │ │
-│ │ sum of the squares │                    │       │           │            │ │
-│ │ of the input       │                    │       │           │            │ │
-│ │ values.            │                    │       │           │            │ │
-│ │                    │                    │       │           │            │ │
-│ │      >>>           │                    │       │           │            │ │
-│ │ sum_of_squares([1… │                    │       │           │            │ │
-│ │ 20, 30])           │                    │       │           │            │ │
-│ │ @@ -1120,7 +1120,7 │                    │       │           │            │ │
+│ │ test_schema_valid… │                    │       │           │            │ │
+│ │ +    """Test that  │                    │       │           │            │ │
+│ │ SchemaValidator    │                    │       │           │            │ │
+│ │ can be constructed │                    │       │           │            │ │
+│ │ with               │                    │       │           │            │ │
+│ │ _use_prebuilt=Fal… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ SchemaValidator({… │                    │       │           │            │ │
+│ │ 'str'}, None,      │                    │       │           │            │ │
+│ │ _use_prebuilt=Fal… │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/pydantic/_inter… │                    │       │           │            │ │
+│ │ b/pydantic/_inter… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ de5a3e0d..f9430cc1 │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/pydantic/_inter… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/pydantic/_inter… │                    │       │           │            │ │
+│ │ @@ -599,6 +599,7   │                    │       │           │            │ │
 │ │ @@ def             │                    │       │           │            │ │
-│ │ sum_of_squares(it… │                    │       │           │            │ │
+│ │ complete_model_cl… │                    │       │           │            │ │
+│ │      raise_errors: │                    │       │           │            │ │
+│ │ bool = True,       │                    │       │           │            │ │
+│ │      call_on_comp… │                    │       │           │            │ │
+│ │ bool = True,       │                    │       │           │            │ │
+│ │      create_model… │                    │       │           │            │ │
+│ │ str | None = None, │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ is_force_rebuild:  │                    │       │           │            │ │
+│ │ bool = False,      │                    │       │           │            │ │
+│ │  ) -> bool:        │                    │       │           │            │ │
+│ │      """Finish     │                    │       │           │            │ │
+│ │ building a model   │                    │       │           │            │ │
+│ │ class.             │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │      Supports all  │                    │       │           │            │ │
-│ │ numeric types:     │                    │       │           │            │ │
-│ │ int, float,        │                    │       │           │            │ │
-│ │ complex, Decimal,  │                    │       │           │            │ │
-│ │ Fraction.          │                    │       │           │            │ │
-│ │      """           │                    │       │           │            │ │
-│ │ -    return        │                    │       │           │            │ │
-│ │ _sumprod(*tee(it)) │                    │       │           │            │ │
-│ │ +    return        │                    │       │           │            │ │
-│ │ _sumprod(iterable, │                    │       │           │            │ │
-│ │ iterable)          │                    │       │           │            │ │
+│ │ @@ -612,6 +613,8   │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ complete_model_cl… │                    │       │           │            │ │
+│ │          raise_er… │                    │       │           │            │ │
+│ │ Whether to raise   │                    │       │           │            │ │
+│ │ errors.            │                    │       │           │            │ │
+│ │          call_on_… │                    │       │           │            │ │
+│ │ Whether to call    │                    │       │           │            │ │
+│ │ the                │                    │       │           │            │ │
+│ │ `__pydantic_on_co… │                    │       │           │            │ │
+│ │ hook.              │                    │       │           │            │ │
+│ │          create_m… │                    │       │           │            │ │
+│ │ The module of the  │                    │       │           │            │ │
+│ │ class to be        │                    │       │           │            │ │
+│ │ created, if        │                    │       │           │            │ │
+│ │ created by         │                    │       │           │            │ │
+│ │ `create_model`.    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ is_force_rebuild:  │                    │       │           │            │ │
+│ │ Whether the model  │                    │       │           │            │ │
+│ │ is being           │                    │       │           │            │ │
+│ │ force-rebuilt (if  │                    │       │           │            │ │
+│ │ True, pre-built    │                    │       │           │            │ │
+│ │ serializers and    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ validators are not │                    │       │           │            │ │
+│ │ used, to avoid     │                    │       │           │            │ │
+│ │ stale references). │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      Returns:      │                    │       │           │            │ │
+│ │          `True` if │                    │       │           │            │ │
+│ │ the model is       │                    │       │           │            │ │
+│ │ successfully       │                    │       │           │            │ │
+│ │ completed, else    │                    │       │           │            │ │
+│ │ `False`.           │                    │       │           │            │ │
+│ │ @@ -686,8 +689,9   │                    │       │           │            │ │
+│ │ @@ def             │                    │       │           │            │ │
+│ │ complete_model_cl… │                    │       │           │            │ │
+│ │          'create_… │                    │       │           │            │ │
+│ │ if                 │                    │       │           │            │ │
+│ │ create_model_modu… │                    │       │           │            │ │
+│ │ else 'BaseModel',  │                    │       │           │            │ │
+│ │          core_con… │                    │       │           │            │ │
+│ │          config_w… │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ _use_prebuilt=not  │                    │       │           │            │ │
+│ │ is_force_rebuild,  │                    │       │           │            │ │
+│ │      )             │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ cls.__pydantic_se… │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ SchemaSerializer(… │                    │       │           │            │ │
+│ │ core_config)       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ cls.__pydantic_se… │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ SchemaSerializer(… │                    │       │           │            │ │
+│ │ core_config,       │                    │       │           │            │ │
+│ │ _use_prebuilt=not  │                    │       │           │            │ │
+│ │ is_force_rebuild)  │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      # set         │                    │       │           │            │ │
+│ │ __signature__ attr │                    │       │           │            │ │
+│ │ only for model     │                    │       │           │            │ │
+│ │ class, but not for │                    │       │           │            │ │
+│ │ its instances      │                    │       │           │            │ │
+│ │      # (because    │                    │       │           │            │ │
+│ │ instances can      │                    │       │           │            │ │
+│ │ define `__call__`, │                    │       │           │            │ │
+│ │ and                │                    │       │           │            │ │
+│ │ `inspect.signatur… │                    │       │           │            │ │
+│ │ shouldn't          │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/pydantic/main.py │                    │       │           │            │ │
+│ │ b/pydantic/main.py │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ b4cd3f6f..1eb1ebf0 │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/pydantic/main.py │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/pydantic/main.py │                    │       │           │            │ │
+│ │ @@ -679,6 +679,7   │                    │       │           │            │ │
+│ │ @@ class           │                    │       │           │            │ │
+│ │ BaseModel(metacla… │                    │       │           │            │ │
+│ │              rais… │                    │       │           │            │ │
+│ │              # If  │                    │       │           │            │ │
+│ │ the model was      │                    │       │           │            │ │
+│ │ already complete,  │                    │       │           │            │ │
+│ │ we don't need to   │                    │       │           │            │ │
+│ │ call the hook      │                    │       │           │            │ │
+│ │ again.             │                    │       │           │            │ │
+│ │              call… │                    │       │           │            │ │
+│ │ already_complete,  │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ is_force_rebuild=… │                    │       │           │            │ │
+│ │          )         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │      @classmethod  │                    │       │           │            │ │
+│ │ diff --git         │                    │       │           │            │ │
+│ │ a/pydantic/plugin… │                    │       │           │            │ │
+│ │ b/pydantic/plugin… │                    │       │           │            │ │
+│ │ index              │                    │       │           │            │ │
+│ │ 83f2562b..0c75c29f │                    │       │           │            │ │
+│ │ 100644             │                    │       │           │            │ │
+│ │ ---                │                    │       │           │            │ │
+│ │ a/pydantic/plugin… │                    │       │           │            │ │
+│ │ +++                │                    │       │           │            │ │
+│ │ b/pydantic/plugin… │                    │       │           │            │ │
+│ │ @@ -27,6 +27,7 @@  │                    │       │           │            │ │
+│ │ def                │                    │       │           │            │ │
+│ │ create_schema_val… │                    │       │           │            │ │
+│ │      schema_kind:  │                    │       │           │            │ │
+│ │ SchemaKind,        │                    │       │           │            │ │
+│ │      config:       │                    │       │           │            │ │
+│ │ CoreConfig | None  │                    │       │           │            │ │
+│ │ = None,            │                    │       │           │            │ │
+│ │      plugin_setti… │                    │       │           │            │ │
+│ │ dict[str, Any] |   │                    │       │           │            │ │
+│ │ None = None,       │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ _use_prebuilt:     │                    │       │           │            │ │
+│ │ bool = True,       │                    │       │           │            │ │
+│ │  ) ->              │                    │       │           │            │ │
+│ │ SchemaValidator |  │                    │       │           │            │ │
+│ │ PluggableSchemaVa… │                    │       │           │            │ │
+│ │      """Create a   │                    │       │           │            │ │
+│ │ `SchemaValidator`  │                    │       │           │            │ │
+│ │ or                 │                    │       │           │            │ │
+│ │ `PluggableSchemaV… │                    │       │           │            │ │
+│ │ if plugins are     │                    │       │           │            │ │
+│ │ installed.         │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │ @@ -46,9 +47,10 @@ │                    │       │           │            │ │
+│ │ def                │                    │       │           │            │ │
+│ │ create_schema_val… │                    │       │           │            │ │
+│ │              conf… │                    │       │           │            │ │
+│ │              plug… │                    │       │           │            │ │
+│ │              plug… │                    │       │           │            │ │
+│ │ or {},             │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ _use_prebuilt=_us… │                    │       │           │            │ │
+│ │          )         │                    │       │           │            │ │
+│ │      else:         │                    │       │           │            │ │
+│ │ -        return    │                    │       │           │            │ │
+│ │ SchemaValidator(s… │                    │       │           │            │ │
+│ │ config)            │                    │       │           │            │ │
+│ │ +        return    │                    │       │           │            │ │
+│ │ SchemaValidator(s… │                    │       │           │            │ │
+│ │ config,            │                    │       │           │            │ │
+│ │ _use_prebuilt=_us… │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
-│ │  def               │                    │       │           │            │ │
-│ │ polynomial_deriva… │                    │       │           │            │ │
+│ │  class             │                    │       │           │            │ │
+│ │ PluggableSchemaVa… │                    │       │           │            │ │
+│ │ @@ -65,8 +67,9 @@  │                    │       │           │            │ │
+│ │ class              │                    │       │           │            │ │
+│ │ PluggableSchemaVa… │                    │       │           │            │ │
+│ │          config:   │                    │       │           │            │ │
+│ │ CoreConfig | None, │                    │       │           │            │ │
+│ │          plugins:  │                    │       │           │            │ │
+│ │ Iterable[Pydantic… │                    │       │           │            │ │
+│ │          plugin_s… │                    │       │           │            │ │
+│ │ dict[str, Any],    │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ _use_prebuilt:     │                    │       │           │            │ │
+│ │ bool = True,       │                    │       │           │            │ │
+│ │      ) -> None:    │                    │       │           │            │ │
+│ │ -                  │                    │       │           │            │ │
+│ │ self._schema_vali… │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ SchemaValidator(s… │                    │       │           │            │ │
+│ │ config)            │                    │       │           │            │ │
+│ │ +                  │                    │       │           │            │ │
+│ │ self._schema_vali… │                    │       │           │            │ │
+│ │ =                  │                    │       │           │            │ │
+│ │ SchemaValidator(s… │                    │       │           │            │ │
+│ │ config,            │                    │       │           │            │ │
+│ │ _use_prebuilt=_us… │                    │       │           │            │ │
+│ │                    │                    │       │           │            │ │
+│ │          python_e… │                    │       │           │            │ │
+│ │ list[BaseValidate… │                    │       │           │            │ │
+│ │ = []               │                    │       │           │            │ │
+│ │          json_eve… │                    │       │           │            │ │
+│ │ list[BaseValidate… │                    │       │           │            │ │
+│ │ = []               │                    │       │           │            │ │
 │ │                    │                    │       │           │            │ │
 │ │ ```                │                    │       │           │            │ │
 │ └────────────────────┴────────────────────┴───────┴───────────┴────────────┘ │
