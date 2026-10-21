@@ -1,0 +1,28 @@
+# Phase 3b v3 GRPO. v2 (lr 5e-5, beta 0.01, G=8, 300 steps) slid to approve-everything while the reward was
+# penalizing it: block samples became too rare within a group of 8 to be reinforced, and the KL leash was
+# loose. v3: 16 generations per prompt, lr 2e-5, beta 0.02, unparsable -3 (review_gate_v3), and a greedy
+# eval on the 61 held-out tasks every 25 steps (data.extra.eval_every) so the curve is visible.
+extends: base.yaml
+name: review_grpo_4b_v3
+model: runs/review_sft_4b_v3/final
+lora: {enabled: true, r: 32, alpha: 64, target_modules: all-linear}
+data:
+  task: review
+  extra:
+    tasks: [review/bench/public_tasks.jsonl]
+    condition: diff+graph
+    eval_every: 25
+rewards: [review_gate_v3]
+grpo:
+  learning_rate: 2.0e-5
+  num_generations: 16
+  per_device_train_batch_size: 16
+  gradient_accumulation_steps: 2
+  vllm_max_model_length: 16384
+  max_completion_length: 500
+  vllm_gpu_memory_utilization: 0.30
+  max_steps: 200           # v2 took 8 h for 300 on the A100; the eval curve shows by 150 whether it is working
+  temperature: 1.0
+  beta: 0.02
+  save_steps: 50
+  save_total_limit: 2

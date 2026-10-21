@@ -1,0 +1,16 @@
+# Phase 3b v3 SFT: same as review_sft_4b but on the same balanced 25:25 trace set as v2 (data/review_sft.jsonl); identical to v2 so the GRPO change is isolated.
+# v1's 54:25 bug:clean traces produced a block-everything prior; GRPO then saw identical rewards within every
+# group (std 0 -> zero advantage) and never moved it. 3 epochs because the set is half the size.
+name: review_sft_4b_v3
+model: Qwen/Qwen3-4B
+lora: {enabled: true, r: 32, alpha: 64, target_modules: all-linear}
+data: {task: review}
+sft:
+  num_train_epochs: 3
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 8
+  learning_rate: 1.0e-4
+  lr_scheduler_type: cosine
+  warmup_steps: 0.05
+  max_length: 12288
+  gradient_checkpointing: true

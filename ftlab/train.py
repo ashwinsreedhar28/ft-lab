@@ -120,14 +120,24 @@ def main(argv=None):
 
     from trl import GRPOTrainer
 
+    callbacks = [_LineLog().cb]
+    every = int(cfg.data.extra.get("eval_every") or 0) if isinstance(cfg.data.extra, dict) else 0
+    pe = None
+    if every and cfg.grpo.get("use_vllm", True) and cfg.grpo.get("vllm_mode", "colocate") == "colocate":
+        from ftlab.periodic_eval import PeriodicEval
+        pe = PeriodicEval(cfg, task, every, int(cfg.data.extra.get("eval_limit") or 0))
+        callbacks.append(pe)
+
     trainer = GRPOTrainer(
         model=cfg.model,
         reward_funcs=get_rewards(cfg.rewards),
         args=build_grpo_config(cfg, out_dir),
         train_dataset=train_ds,
         peft_config=build_peft_config(cfg),
-        callbacks=[_LineLog().cb],
+        callbacks=callbacks,
     )
+    if pe is not None:
+        pe.trainer = trainer
 
     t0 = time.time()
     trainer.train(resume_from_checkpoint=os.environ.get("RESUME") or None)

@@ -18,7 +18,10 @@ W = {"approve_bug": -5.0, "correct": 1.0, "block_clean": -0.5, "escalate": -0.2,
      "token_unit": -0.1, "free_tokens": 300, "token_unit_size": 256}
 
 
-def gate(completions, kind, gold_hunks, completion_ids=None, log_metric=None, log_extra=None, **_):
+W_V3 = {**W, "unparsable": -3.0}   # v2 drifted into single-quoted dicts at -1: format drift must never be a wash
+
+
+def gate(completions, kind, gold_hunks, completion_ids=None, log_metric=None, log_extra=None, W=W, **_):
     rewards, decisions, approve_bug = [], [], 0
     lens = [len(ids) for ids in completion_ids] if completion_ids is not None else [0] * len(completions)
     for c, k, gh, n_tok in zip(completions, kind, gold_hunks, lens):
@@ -47,3 +50,7 @@ def gate(completions, kind, gold_hunks, completion_ids=None, log_metric=None, lo
         log_metric("review/unparsable_frac", sum(d == "unparsable" for d in decisions) / n)
         log_metric("review/mean_tokens", sum(lens) / n)
     return rewards
+
+
+def gate_v3(completions, kind, gold_hunks, **kw):
+    return gate(completions, kind, gold_hunks, W=W_V3, **kw)
