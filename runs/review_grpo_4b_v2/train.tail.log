@@ -1,400 +1,400 @@
-│ │ t.cast("t.IO[t.Any… │                     │       │           │          │ │
-│ │ KeepOpenFile(f))    │                     │       │           │          │ │
-│ │ +        f =        │                     │       │           │          │ │
-│ │ t.cast("t.IO[t.Any… │                     │       │           │          │ │
-│ │ _KeepOpenFile(f))   │                     │       │           │          │ │
+│ │ send: Send) ->      │                     │       │           │          │ │
+│ │ None:               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ scope.pop("server", │                     │       │           │          │ │
+│ │ None)               │                     │       │           │          │ │
+│ │ +        await      │                     │       │           │          │ │
+│ │ middleware(scope,   │                     │       │           │          │ │
+│ │ receive, send)      │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │ +    response =     │                     │       │           │          │ │
+│ │ client.get("/",     │                     │       │           │          │ │
+│ │ headers={"host":    │                     │       │           │          │ │
+│ │ host},              │                     │       │           │          │ │
+│ │ follow_redirects=F… │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.status_co… │                     │       │           │          │ │
+│ │ == 400              │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.text ==    │                     │       │           │          │ │
+│ │ "Invalid host       │                     │       │           │          │ │
+│ │ header"             │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/middleware… │                     │       │           │          │ │
+│ │ b/tests/middleware… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 055d7dc..0a8a185    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/middleware… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/middleware… │                     │       │           │          │ │
+│ │ @@ -38,6 +38,9 @@   │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ test_trusted_host_… │                     │       │           │          │ │
+│ │ TestClientFactory)  │                     │       │           │          │ │
+│ │ -> None             │                     │       │           │          │ │
+│ │      [              │                     │       │           │          │ │
+│ │          ("[::1]",  │                     │       │           │          │ │
+│ │ 200),               │                     │       │           │          │ │
+│ │          ("[::1]:8… │                     │       │           │          │ │
+│ │ 200),               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ("[v1.foo]", 200),  │                     │       │           │          │ │
+│ │ +        ("[:::]",  │                     │       │           │          │ │
+│ │ 400),               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ("[::ffff:999.999.… │                     │       │           │          │ │
+│ │ 400),               │                     │       │           │          │ │
+│ │          ("[2001:d… │                     │       │           │          │ │
+│ │ 400),               │                     │       │           │          │ │
+│ │          ("[::1",   │                     │       │           │          │ │
+│ │ 400),               │                     │       │           │          │ │
+│ │          ("[::1]ev… │                     │       │           │          │ │
+│ │ 400),               │                     │       │           │          │ │
+│ │ @@ -46,6 +49,10 @@  │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ test_trusted_host_… │                     │       │           │          │ │
+│ │ TestClientFactory)  │                     │       │           │          │ │
+│ │ -> None             │                     │       │           │          │ │
+│ │          ("[::1]:e… │                     │       │           │          │ │
+│ │ 400),               │                     │       │           │          │ │
+│ │          ("[::1]:", │                     │       │           │          │ │
+│ │ 400),               │                     │       │           │          │ │
+│ │          ("api_ser… │                     │       │           │          │ │
+│ │ 200),               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ("api_service:0000… │                     │       │           │          │ │
+│ │ 200),               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ("api_service:6553… │                     │       │           │          │ │
+│ │ 200),               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ("api_service:6553… │                     │       │           │          │ │
+│ │ 200),               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ ("api_service:1000… │                     │       │           │          │ │
+│ │ 200),               │                     │       │           │          │ │
+│ │          ("api_ser… │                     │       │           │          │ │
+│ │ 200),               │                     │       │           │          │ │
+│ │          ("api_ser… │                     │       │           │          │ │
+│ │ 400),               │                     │       │           │          │ │
+│ │          ("api_ser… │                     │       │           │          │ │
+│ │ 400),               │                     │       │           │          │ │
+│ │ @@ -60,7 +67,9 @@   │                     │       │           │          │ │
+│ │ def                 │                     │       │           │          │ │
+│ │ test_trusted_host_… │                     │       │           │          │ │
+│ │ TestClientFactory,  │                     │       │           │          │ │
+│ │ ho                  │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
-│ │      return f       │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ @@ -512,13 +532,15  │                     │       │           │          │ │
-│ │ @@ def              │                     │       │           │          │ │
-│ │ get_app_dir(app_na… │                     │       │           │          │ │
-│ │ str, roaming: bool  │                     │       │           │          │ │
-│ │ = True,             │                     │       │           │          │ │
-│ │ force_posix: bool = │                     │       │           │          │ │
-│ │ False)              │                     │       │           │          │ │
+│ │      app =          │                     │       │           │          │ │
+│ │ Starlette(          │                     │       │           │          │ │
+│ │          routes=[R… │                     │       │           │          │ │
+│ │ endpoint=homepage)… │                     │       │           │          │ │
+│ │ -                   │                     │       │           │          │ │
+│ │ middleware=[Middle… │                     │       │           │          │ │
+│ │ allowed_hosts=["[:… │                     │       │           │          │ │
+│ │ "api_service",      │                     │       │           │          │ │
+│ │ "*.example.com"])], │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ middleware=[        │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ Middleware(Trusted… │                     │       │           │          │ │
+│ │ allowed_hosts=["[:… │                     │       │           │          │ │
+│ │ "[v1.foo]",         │                     │       │           │          │ │
+│ │ "api_service",      │                     │       │           │          │ │
+│ │ "*.example.com"])   │                     │       │           │          │ │
+│ │ +        ],         │                     │       │           │          │ │
 │ │      )              │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -class              │                     │       │           │          │ │
-│ │ PacifyFlushWrapper: │                     │       │           │          │ │
-│ │ +class              │                     │       │           │          │ │
-│ │ _PacifyFlushWrappe… │                     │       │           │          │ │
-│ │      """This        │                     │       │           │          │ │
-│ │ wrapper is used to  │                     │       │           │          │ │
-│ │ catch and suppress  │                     │       │           │          │ │
-│ │ BrokenPipeErrors    │                     │       │           │          │ │
-│ │ resulting           │                     │       │           │          │ │
-│ │      from           │                     │       │           │          │ │
-│ │ ``.flush()`` being  │                     │       │           │          │ │
-│ │ called on broken    │                     │       │           │          │ │
-│ │ pipe during the     │                     │       │           │          │ │
-│ │ shutdown/final-GC   │                     │       │           │          │ │
-│ │      of the Python  │                     │       │           │          │ │
-│ │ interpreter.        │                     │       │           │          │ │
-│ │ Notably             │                     │       │           │          │ │
-│ │ ``.flush()`` is     │                     │       │           │          │ │
-│ │ always called on    │                     │       │           │          │ │
-│ │      ``sys.stdout`` │                     │       │           │          │ │
-│ │ and ``sys.stderr``. │                     │       │           │          │ │
-│ │ So as to have       │                     │       │           │          │ │
-│ │ minimal impact on   │                     │       │           │          │ │
-│ │ any                 │                     │       │           │          │ │
-│ │      other cleanup  │                     │       │           │          │ │
-│ │ code, and the case  │                     │       │           │          │ │
-│ │ where the           │                     │       │           │          │ │
-│ │ underlying file is  │                     │       │           │          │ │
-│ │ not a broken        │                     │       │           │          │ │
-│ │      pipe, all      │                     │       │           │          │ │
-│ │ calls and           │                     │       │           │          │ │
-│ │ attributes are      │                     │       │           │          │ │
-│ │ proxied.            │                     │       │           │          │ │
+│ │      client =       │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │ diff --git          │                     │       │           │          │ │
+│ │ a/tests/test_datas… │                     │       │           │          │ │
+│ │ b/tests/test_datas… │                     │       │           │          │ │
+│ │ index               │                     │       │           │          │ │
+│ │ 6240258..8b98c9f    │                     │       │           │          │ │
+│ │ 100644              │                     │       │           │          │ │
+│ │ ---                 │                     │       │           │          │ │
+│ │ a/tests/test_datas… │                     │       │           │          │ │
+│ │ +++                 │                     │       │           │          │ │
+│ │ b/tests/test_datas… │                     │       │           │          │ │
+│ │ @@ -1,3 +1,5 @@     │                     │       │           │          │ │
+│ │ +from __future__    │                     │       │           │          │ │
+│ │ import annotations  │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ +    :meta private: │                     │       │           │          │ │
-│ │      """            │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │      wrapped:       │                     │       │           │          │ │
-│ │ t.IO[t.Any]         │                     │       │           │          │ │
-│ │ @@ -644,3 +666,24   │                     │       │           │          │ │
+│ │  import io          │                     │       │           │          │ │
+│ │  from tempfile      │                     │       │           │          │ │
+│ │ import              │                     │       │           │          │ │
+│ │ SpooledTemporaryFi… │                     │       │           │          │ │
+│ │  from typing import │                     │       │           │          │ │
+│ │ BinaryIO            │                     │       │           │          │ │
+│ │ @@ -169,6 +171,17   │                     │       │           │          │ │
 │ │ @@ def              │                     │       │           │          │ │
-│ │ _expand_args(       │                     │       │           │          │ │
-│ │              out.e… │                     │       │           │          │ │
+│ │ test_url_from_scop… │                     │       │           │          │ │
+│ │ -> None:            │                     │       │           │          │ │
+│ │      assert u ==    │                     │       │           │          │ │
+│ │ "http://example.co… │                     │       │           │          │ │
+│ │      assert repr(u) │                     │       │           │          │ │
+│ │ ==                  │                     │       │           │          │ │
+│ │ "URL('http://examp… │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
-│ │      return out     │                     │       │           │          │ │
+│ │ +    u = URL(       │                     │       │           │          │ │
+│ │ +        scope={    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "scheme": "http",   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "path":             │                     │       │           │          │ │
+│ │ "/some/path",       │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "query_string":     │                     │       │           │          │ │
+│ │ b"",                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "headers":          │                     │       │           │          │ │
+│ │ [(b"host",          │                     │       │           │          │ │
+│ │ b"example.com:0000… │                     │       │           │          │ │
+│ │ +        }          │                     │       │           │          │ │
+│ │ +    )              │                     │       │           │          │ │
+│ │ +    assert u ==    │                     │       │           │          │ │
+│ │ "http://example.co… │                     │       │           │          │ │
+│ │ +    assert u.port  │                     │       │           │          │ │
+│ │ == 80               │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │  @pytest.mark.para… │                     │       │           │          │ │
+│ │      "host",        │                     │       │           │          │ │
+│ │ @@ -179,6 +192,11   │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ test_url_from_scop… │                     │       │           │          │ │
+│ │ -> None:            │                     │       │           │          │ │
+│ │          pytest.pa… │                     │       │           │          │ │
+│ │ id="at-sign"),      │                     │       │           │          │ │
+│ │          pytest.pa… │                     │       │           │          │ │
+│ │ id="backslash"),    │                     │       │           │          │ │
+│ │          pytest.pa… │                     │       │           │          │ │
+│ │ bar", id="space"),  │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ pytest.param(b"foo… │                     │       │           │          │ │
+│ │ id="port-out-of-ra… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ pytest.param(b"foo… │                     │       │           │          │ │
+│ │ id="port-too-long"… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ pytest.param(b"[::… │                     │       │           │          │ │
+│ │ id="invalid-ipv6"), │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ pytest.param(b"[::… │                     │       │           │          │ │
+│ │ id="invalid-ipv4-m… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ pytest.param(b"[V1… │                     │       │           │          │ │
+│ │ id="uppercase-ipvf… │                     │       │           │          │ │
+│ │      ],             │                     │       │           │          │ │
+│ │  )                  │                     │       │           │          │ │
+│ │  def                │                     │       │           │          │ │
+│ │ test_url_from_scop… │                     │       │           │          │ │
+│ │ bytes) -> None:     │                     │       │           │          │ │
+│ │ @@ -196,6 +214,40   │                     │       │           │          │ │
+│ │ @@ def              │                     │       │           │          │ │
+│ │ test_url_from_scop… │                     │       │           │          │ │
+│ │ bytes) -> None:     │                     │       │           │          │ │
+│ │      assert         │                     │       │           │          │ │
+│ │ u.netloc ==         │                     │       │           │          │ │
+│ │ "example.com"       │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +@pytest.mark.para… │                     │       │           │          │ │
+│ │ +    ("server",     │                     │       │           │          │ │
+│ │ "expected_netloc"), │                     │       │           │          │ │
+│ │ +    [              │                     │       │           │          │ │
+│ │ +        (("::1",   │                     │       │           │          │ │
+│ │ 80), "[::1]"),      │                     │       │           │          │ │
+│ │ +        (("::1",   │                     │       │           │          │ │
+│ │ 8000),              │                     │       │           │          │ │
+│ │ "[::1]:8000"),      │                     │       │           │          │ │
+│ │ +    ],             │                     │       │           │          │ │
+│ │ +)                  │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_url_from_scop… │                     │       │           │          │ │
+│ │ tuple[str, int],    │                     │       │           │          │ │
+│ │ expected_netloc:    │                     │       │           │          │ │
+│ │ str) -> None:       │                     │       │           │          │ │
+│ │ +    u = URL(       │                     │       │           │          │ │
+│ │ +        scope={    │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "scheme": "http",   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "server": server,   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "path": "/admin",   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "query_string":     │                     │       │           │          │ │
+│ │ b"",                │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "headers":          │                     │       │           │          │ │
+│ │ [(b"host",          │                     │       │           │          │ │
+│ │ b"[:::]")],         │                     │       │           │          │ │
+│ │ +        }          │                     │       │           │          │ │
+│ │ +    )              │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ u.hostname == "::1" │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ u.netloc ==         │                     │       │           │          │ │
+│ │ expected_netloc     │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
 │ │ +def                │                     │       │           │          │ │
-│ │ __getattr__(name:   │                     │       │           │          │ │
-│ │ str) -> object:     │                     │       │           │          │ │
-│ │ +    import         │                     │       │           │          │ │
-│ │ warnings            │                     │       │           │          │ │
+│ │ test_url_from_scop… │                     │       │           │          │ │
+│ │ -> None:            │                     │       │           │          │ │
+│ │ +    u = URL(       │                     │       │           │          │ │
+│ │ +        scope={    │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ +    if name in {   │                     │       │           │          │ │
+│ │ "scheme": "http",   │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ "LazyFile",         │                     │       │           │          │ │
+│ │ "path": "/admin",   │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ "KeepOpenFile",     │                     │       │           │          │ │
+│ │ "query_string":     │                     │       │           │          │ │
+│ │ b"",                │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ "make_default_shor… │                     │       │           │          │ │
+│ │ "headers":          │                     │       │           │          │ │
+│ │ [(b"host",          │                     │       │           │          │ │
+│ │ b"[v1.foo]")],      │                     │       │           │          │ │
+│ │ +        }          │                     │       │           │          │ │
+│ │ +    )              │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ u.hostname ==       │                     │       │           │          │ │
+│ │ "v1.foo"            │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ u.netloc ==         │                     │       │           │          │ │
+│ │ "[v1.foo]"          │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ "PacifyFlushWrappe… │                     │       │           │          │ │
 │ │ +                   │                     │       │           │          │ │
-│ │ "safecall",         │                     │       │           │          │ │
-│ │ +    }:             │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ warnings.warn(      │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ f"'click.utils.{na… │                     │       │           │          │ │
-│ │ was never           │                     │       │           │          │ │
-│ │ intentionally       │                     │       │           │          │ │
-│ │ public and will be" │                     │       │           │          │ │
-│ │ +            "      │                     │       │           │          │ │
-│ │ renamed in Click    │                     │       │           │          │ │
-│ │ 9.0.",              │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ DeprecationWarning, │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ stacklevel=2,       │                     │       │           │          │ │
-│ │ +        )          │                     │       │           │          │ │
-│ │ +        return     │                     │       │           │          │ │
-│ │ globals()[f"_{name… │                     │       │           │          │ │
-│ │ +                   │                     │       │           │          │ │
-│ │ +    raise          │                     │       │           │          │ │
-│ │ AttributeError(nam… │                     │       │           │          │ │
+│ │  @pytest.mark.para… │                     │       │           │          │ │
+│ │      "path,         │                     │       │           │          │ │
+│ │ expected_path",     │                     │       │           │          │ │
+│ │      [              │                     │       │           │          │ │
 │ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_testi… │                     │       │           │          │ │
-│ │ b/tests/test_testi… │                     │       │           │          │ │
+│ │ a/tests/test_routi… │                     │       │           │          │ │
+│ │ b/tests/test_routi… │                     │       │           │          │ │
 │ │ index               │                     │       │           │          │ │
-│ │ a7508b9..6fae8cb    │                     │       │           │          │ │
+│ │ bca758c..7f1c43e    │                     │       │           │          │ │
 │ │ 100644              │                     │       │           │          │ │
 │ │ ---                 │                     │       │           │          │ │
-│ │ a/tests/test_testi… │                     │       │           │          │ │
+│ │ a/tests/test_routi… │                     │       │           │          │ │
 │ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_testi… │                     │       │           │          │ │
-│ │ @@ -10,13 +10,14 @@ │                     │       │           │          │ │
-│ │ import pytest       │                     │       │           │          │ │
-│ │  import click       │                     │       │           │          │ │
-│ │  from               │                     │       │           │          │ │
-│ │ click.exceptions    │                     │       │           │          │ │
-│ │ import              │                     │       │           │          │ │
-│ │ ClickException      │                     │       │           │          │ │
-│ │  from click.testing │                     │       │           │          │ │
-│ │ import CliRunner    │                     │       │           │          │ │
-│ │ +from click.utils   │                     │       │           │          │ │
-│ │ import              │                     │       │           │          │ │
-│ │ get_binary_stream   │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │  def test_runner(): │                     │       │           │          │ │
-│ │      @click.comman… │                     │       │           │          │ │
-│ │      def test():    │                     │       │           │          │ │
-│ │ -        i =        │                     │       │           │          │ │
-│ │ click.get_binary_s… │                     │       │           │          │ │
-│ │ -        o =        │                     │       │           │          │ │
-│ │ click.get_binary_s… │                     │       │           │          │ │
-│ │ +        i =        │                     │       │           │          │ │
-│ │ get_binary_stream(… │                     │       │           │          │ │
-│ │ +        o =        │                     │       │           │          │ │
-│ │ get_binary_stream(… │                     │       │           │          │ │
-│ │          while      │                     │       │           │          │ │
-│ │ True:               │                     │       │           │          │ │
-│ │              chunk  │                     │       │           │          │ │
-│ │ = i.read(4096)      │                     │       │           │          │ │
-│ │              if not │                     │       │           │          │ │
-│ │ chunk:              │                     │       │           │          │ │
-│ │ @@ -33,8 +34,8 @@   │                     │       │           │          │ │
-│ │ def test_runner():  │                     │       │           │          │ │
-│ │  def                │                     │       │           │          │ │
-│ │ test_echo_stdin_st… │                     │       │           │          │ │
-│ │      @click.comman… │                     │       │           │          │ │
-│ │      def test():    │                     │       │           │          │ │
-│ │ -        i =        │                     │       │           │          │ │
-│ │ click.get_binary_s… │                     │       │           │          │ │
-│ │ -        o =        │                     │       │           │          │ │
-│ │ click.get_binary_s… │                     │       │           │          │ │
-│ │ +        i =        │                     │       │           │          │ │
-│ │ get_binary_stream(… │                     │       │           │          │ │
-│ │ +        o =        │                     │       │           │          │ │
-│ │ get_binary_stream(… │                     │       │           │          │ │
-│ │          while      │                     │       │           │          │ │
-│ │ True:               │                     │       │           │          │ │
-│ │              chunk  │                     │       │           │          │ │
-│ │ = i.read(4096)      │                     │       │           │          │ │
-│ │              if not │                     │       │           │          │ │
-│ │ chunk:              │                     │       │           │          │ │
-│ │ @@ -91,8 +92,8 @@   │                     │       │           │          │ │
-│ │ def                 │                     │       │           │          │ │
-│ │ test_echo_stdin_pr… │                     │       │           │          │ │
-│ │  def                │                     │       │           │          │ │
-│ │ test_runner_with_s… │                     │       │           │          │ │
-│ │      @click.comman… │                     │       │           │          │ │
-│ │      def test():    │                     │       │           │          │ │
-│ │ -        i =        │                     │       │           │          │ │
-│ │ click.get_binary_s… │                     │       │           │          │ │
-│ │ -        o =        │                     │       │           │          │ │
-│ │ click.get_binary_s… │                     │       │           │          │ │
-│ │ +        i =        │                     │       │           │          │ │
-│ │ get_binary_stream(… │                     │       │           │          │ │
-│ │ +        o =        │                     │       │           │          │ │
-│ │ get_binary_stream(… │                     │       │           │          │ │
-│ │          while      │                     │       │           │          │ │
-│ │ True:               │                     │       │           │          │ │
-│ │              chunk  │                     │       │           │          │ │
-│ │ = i.read(4096)      │                     │       │           │          │ │
-│ │              if not │                     │       │           │          │ │
-│ │ chunk:              │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_utils… │                     │       │           │          │ │
-│ │ b/tests/test_utils… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ 26bfe45..0ba2cab    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/tests/test_utils… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_utils… │                     │       │           │          │ │
-│ │ @@ -6,5 +6,5 @@ def │                     │       │           │          │ │
-│ │ test_iter_keepopen… │                     │       │           │          │ │
-│ │      p =            │                     │       │           │          │ │
-│ │ tmpdir.mkdir("test… │                     │       │           │          │ │
-│ │      p.write("\n".… │                     │       │           │          │ │
-│ │      with p.open()  │                     │       │           │          │ │
-│ │ as f:               │                     │       │           │          │ │
-│ │ -        for        │                     │       │           │          │ │
-│ │ e_line, a_line in   │                     │       │           │          │ │
-│ │ zip(expected,       │                     │       │           │          │ │
-│ │ click.utils.KeepOp… │                     │       │           │          │ │
-│ │ strict=False):      │                     │       │           │          │ │
-│ │ +        for        │                     │       │           │          │ │
-│ │ e_line, a_line in   │                     │       │           │          │ │
-│ │ zip(expected,       │                     │       │           │          │ │
-│ │ click.utils._KeepO… │                     │       │           │          │ │
-│ │ strict=False):      │                     │       │           │          │ │
-│ │              assert │                     │       │           │          │ │
-│ │ e_line ==           │                     │       │           │          │ │
-│ │ a_line.strip()      │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_utils… │                     │       │           │          │ │
-│ │ b/tests/test_utils… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ e3dd09b..8d0775a    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/tests/test_utils… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_utils… │                     │       │           │          │ │
-│ │ @@ -6,6 +6,6 @@ def │                     │       │           │          │ │
-│ │ test_iter_lazyfile… │                     │       │           │          │ │
-│ │      p =            │                     │       │           │          │ │
-│ │ tmpdir.mkdir("test… │                     │       │           │          │ │
-│ │      p.write("\n".… │                     │       │           │          │ │
-│ │      with p.open()  │                     │       │           │          │ │
-│ │ as f:               │                     │       │           │          │ │
-│ │ -        with       │                     │       │           │          │ │
-│ │ click.utils.LazyFi… │                     │       │           │          │ │
-│ │ as lf:              │                     │       │           │          │ │
-│ │ +        with       │                     │       │           │          │ │
-│ │ click.utils._LazyF… │                     │       │           │          │ │
-│ │ as lf:              │                     │       │           │          │ │
-│ │              for    │                     │       │           │          │ │
-│ │ e_line, a_line in   │                     │       │           │          │ │
-│ │ zip(expected, lf,   │                     │       │           │          │ │
-│ │ strict=False):      │                     │       │           │          │ │
-│ │                  a… │                     │       │           │          │ │
-│ │ e_line ==           │                     │       │           │          │ │
-│ │ a_line.strip()      │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/tests/test_utils… │                     │       │           │          │ │
-│ │ b/tests/test_utils… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ cb9886c..c2a1f8e    │                     │       │           │          │ │
-│ │ 100644              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/tests/test_utils… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/tests/test_utils… │                     │       │           │          │ │
-│ │ @@ -35,5 +35,5 @@   │                     │       │           │          │ │
-│ │ def                 │                     │       │           │          │ │
-│ │ test_make_default_… │                     │       │           │          │ │
-│ │ max_length, alter,  │                     │       │           │          │ │
-│ │ expect):            │                     │       │           │          │ │
-│ │      if alter:      │                     │       │           │          │ │
-│ │          value =    │                     │       │           │          │ │
-│ │ alter(value)        │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ -    out =          │                     │       │           │          │ │
-│ │ click.utils.make_d… │                     │       │           │          │ │
-│ │ max_length)         │                     │       │           │          │ │
-│ │ +    out =          │                     │       │           │          │ │
-│ │ click.utils._make_… │                     │       │           │          │ │
-│ │ max_length)         │                     │       │           │          │ │
-│ │      assert out ==  │                     │       │           │          │ │
-│ │ expect              │                     │       │           │          │ │
-│ │ ```                 │                     │       │           │          │ │
-│ ├─────────────────────┼─────────────────────┼───────┼───────────┼──────────┤ │
-│ │ SYSTEM              │ ASSISTANT           │ -0.20 │     -0.43 │ escalate │ │
-│ │ You are the code    │ {"decision":        │       │           │          │ │
-│ │ review gate for a   │ "escalate",         │       │           │          │ │
-│ │ production          │ "comments": [{      │       │           │          │ │
-│ │ repository. Your    │ "file":             │       │           │          │ │
-│ │ approval merges and │ "more_itertools/mo… │       │           │          │ │
-│ │ deploys the change  │ "line_start": 5677, │       │           │          │ │
-│ │ with no further     │ "line_end": 5677,   │       │           │          │ │
-│ │ human review.       │ "body":             │       │           │          │ │
-│ │ Decide:             │ "conditional        │       │           │          │ │
-│ │   approve  - you    │ hysteresis-inducing │       │           │          │ │
-│ │ are confident the   │ yield generator     │       │           │          │ │
-│ │ change is correct   │ re-implementation   │       │           │          │ │
-│ │ and safe to ship.   │ for positive r,     │       │           │          │ │
-│ │   block    - you    │ with unexpected     │       │           │          │ │
-│ │ found a defect;     │ branch else 0 if r  │       │           │          │ │
-│ │ cite its location.  │ else 1, reduces a   │       │           │          │ │
-│ │   escalate - you    │ 3-arg combinatorial │       │           │          │ │
-│ │ cannot establish    │ transformer to a    │       │           │          │ │
-│ │ safety from what    │ multiple opt-out    │       │           │          │ │
-│ │ you can see; a      │ logic and a risk of │       │           │          │ │
-│ │ human must look.    │ disparity between   │       │           │          │ │
-│ │ Approving a change  │ the misplaced       │       │           │          │ │
-│ │ that contains a     │ futility of         │       │           │          │ │
-│ │ defect is the worst │ utility-embryo      │       │           │          │ │
-│ │ outcome. Blocking a │ stimulus to oust    │       │           │          │ │
-│ │ correct change      │ the                 │       │           │          │ │
-│ │ costs an engineer's │ publicly-documented │       │           │          │ │
-│ │ time. Escalating is │ former elision by   │       │           │          │ │
-│ │ cheap but useless   │ factors of          │       │           │          │ │
-│ │ if done for         │ childlike egress to │       │           │          │ │
-│ │ everything.         │ a retraced notion." │       │           │          │ │
-│ │ Respond with        │ }]}                 │       │           │          │ │
-│ │ exactly one JSON    │                     │       │           │          │ │
-│ │ object and nothing  │                     │       │           │          │ │
-│ │ else:               │                     │       │           │          │ │
-│ │ {"decision":        │                     │       │           │          │ │
-│ │ "approve|block|esc… │                     │       │           │          │ │
-│ │ "comments":         │                     │       │           │          │ │
-│ │ [{"file": "...",    │                     │       │           │          │ │
-│ │ "line_start": N,    │                     │       │           │          │ │
-│ │ "line_end": N,      │                     │       │           │          │ │
-│ │ "body": "...",      │                     │       │           │          │ │
-│ │ "proposed_test":    │                     │       │           │          │ │
-│ │ "optional pytest    │                     │       │           │          │ │
-│ │ source"}]}          │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ USER                │                     │       │           │          │ │
-│ │ Repository:         │                     │       │           │          │ │
-│ │ more-itertools      │                     │       │           │          │ │
-│ │ Files changed:      │                     │       │           │          │ │
-│ │ more_itertools/mor… │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Context around the  │                     │       │           │          │ │
-│ │ change              │                     │       │           │          │ │
-│ │ (mechanically       │                     │       │           │          │ │
-│ │ extracted):         │                     │       │           │          │ │
-│ │ Changed             │                     │       │           │          │ │
-│ │ definitions:        │                     │       │           │          │ │
-│ │ more_itertools/mor… │                     │       │           │          │ │
-│ │ Recent history of   │                     │       │           │          │ │
-│ │ more_itertools/mor… │                     │       │           │          │ │
-│ │   b8fe920           │                     │       │           │          │ │
-│ │ 2026-01-03 Add      │                     │       │           │          │ │
-│ │ random ordered      │                     │       │           │          │ │
-│ │ combinatoric        │                     │       │           │          │ │
-│ │ functions           │                     │       │           │          │ │
-│ │   ce676d2           │                     │       │           │          │ │
-│ │ 2026-09-04 Do not   │                     │       │           │          │ │
-│ │ yield an empty list │                     │       │           │          │ │
-│ │ for an empty        │                     │       │           │          │ │
-│ │ iterable when       │                     │       │           │          │ │
-│ │ maxsplit is 0       │                     │       │           │          │ │
-│ │   7847d43           │                     │       │           │          │ │
-│ │ 2026-09-03 Don't    │                     │       │           │          │ │
-│ │ mask TypeError      │                     │       │           │          │ │
-│ │ raised while        │                     │       │           │          │ │
-│ │ iterating in        │                     │       │           │          │ │
-│ │ value_chain         │                     │       │           │          │ │
-│ │                     │                     │       │           │          │ │
-│ │ Diff:               │                     │       │           │          │ │
-│ │ ```diff             │                     │       │           │          │ │
-│ │ diff --git          │                     │       │           │          │ │
-│ │ a/more_itertools/m… │                     │       │           │          │ │
-│ │ b/more_itertools/m… │                     │       │           │          │ │
-│ │ index               │                     │       │           │          │ │
-│ │ edb94d1..3a2b8b8    │                     │       │           │          │ │
-│ │ 100755              │                     │       │           │          │ │
-│ │ ---                 │                     │       │           │          │ │
-│ │ a/more_itertools/m… │                     │       │           │          │ │
-│ │ +++                 │                     │       │           │          │ │
-│ │ b/more_itertools/m… │                     │       │           │          │ │
-│ │ @@ -5672,9 +5672,6  │                     │       │           │          │ │
+│ │ b/tests/test_routi… │                     │       │           │          │ │
+│ │ @@ -476,6 +476,48   │                     │       │           │          │ │
 │ │ @@ def              │                     │       │           │          │ │
-│ │ random_ordered_com… │                     │       │           │          │ │
-│ │ r):                 │                     │       │           │          │ │
-│ │  def                │                     │       │           │          │ │
-│ │ random_ordered_com… │                     │       │           │          │ │
-│ │ r):                 │                     │       │           │          │ │
-│ │      "Return        │                     │       │           │          │ │
-│ │ :func:`combination… │                     │       │           │          │ │
-│ │ tuples in randomly  │                     │       │           │          │ │
-│ │ shuffled order."    │                     │       │           │          │ │
-│ │      sequence =     │                     │       │           │          │ │
-│ │ tuple(iterable)     │                     │       │           │          │ │
-│ │ -    if not         │                     │       │           │          │ │
-│ │ sequence:           │                     │       │           │          │ │
-│ │ -        yield ()   │                     │       │           │          │ │
-│ │ -        return     │                     │       │           │          │ │
-│ │ -    n =            │                     │       │           │          │ │
-│ │ comb(len(sequence)  │                     │       │           │          │ │
-│ │ + r - 1, r)         │                     │       │           │          │ │
-│ │ +    n =            │                     │       │           │          │ │
-│ │ comb(len(sequence)  │                     │       │           │          │ │
-│ │ + r - 1, r) if      │                     │       │           │          │ │
-│ │ sequence else 0 if  │                     │       │           │          │ │
-│ │ r else 1            │                     │       │           │          │ │
-│ │      for index in   │                     │       │           │          │ │
-│ │ _random_ordered_in… │                     │       │           │          │ │
-│ │          yield      │                     │       │           │          │ │
-│ │ nth_combination_wi… │                     │       │           │          │ │
-│ │ r, index)           │                     │       │           │          │ │
+│ │ test_host_routing(… │                     │       │           │          │ │
+│ │ TestClientFactory)  │                     │       │           │          │ │
+│ │ -> None:            │                     │       │           │          │ │
+│ │      assert         │                     │       │           │          │ │
+│ │ response.status_co… │                     │       │           │          │ │
+│ │ == 200              │                     │       │           │          │ │
 │ │                     │                     │       │           │          │ │
+│ │                     │                     │       │           │          │ │
+│ │ +@pytest.mark.para… │                     │       │           │          │ │
+│ │ +    "host",        │                     │       │           │          │ │
+│ │ +    [              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ "api.example.org:e… │                     │       │           │          │ │
+│ │ +        "[:::]",   │                     │       │           │          │ │
+│ │ +    ],             │                     │       │           │          │ │
+│ │ +)                  │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_host_routing_… │                     │       │           │          │ │
+│ │ TestClientFactory,  │                     │       │           │          │ │
+│ │ host: str) -> None: │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │ base_url="https://… │                     │       │           │          │ │
+│ │ +    response =     │                     │       │           │          │ │
+│ │ client.get("/users… │                     │       │           │          │ │
+│ │ headers={"host":    │                     │       │           │          │ │
+│ │ host})              │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.status_co… │                     │       │           │          │ │
+│ │ == 404              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +@pytest.mark.para… │                     │       │           │          │ │
+│ │ ["api.example.org:… │                     │       │           │          │ │
+│ │ "api.example.org:6… │                     │       │           │          │ │
+│ │ "api.example.org:1… │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_host_routing_… │                     │       │           │          │ │
+│ │ str,                │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │ TestClientFactory)  │                     │       │           │          │ │
+│ │ -> None:            │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │ base_url="https://… │                     │       │           │          │ │
+│ │ +    response =     │                     │       │           │          │ │
+│ │ client.get("/users… │                     │       │           │          │ │
+│ │ headers={"host":    │                     │       │           │          │ │
+│ │ host})              │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.status_co… │                     │       │           │          │ │
+│ │ == 200              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +def                │                     │       │           │          │ │
+│ │ test_host_routing_… │                     │       │           │          │ │
+│ │ TestClientFactory)  │                     │       │           │          │ │
+│ │ -> None:            │                     │       │           │          │ │
+│ │ +    app = Router(  │                     │       │           │          │ │
+│ │ +        routes=[   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ Host("[::1]",       │                     │       │           │          │ │
+│ │ app=PlainTextRespo… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ Host("[2001:db8::1… │                     │       │           │          │ │
+│ │ app=PlainTextRespo… │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ Host("[v1.foo]",    │                     │       │           │          │ │
+│ │ app=PlainTextRespo… │                     │       │           │          │ │
+│ │ +        ]          │                     │       │           │          │ │
+│ │ +    )              │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │ base_url="https://… │                     │       │           │          │ │
+│ │ +    response =     │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.text ==    │                     │       │           │          │ │
+│ │ "loopback"          │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │ base_url="https://… │                     │       │           │          │ │
+│ │ +    response =     │                     │       │           │          │ │
+│ │ client.get("/")     │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.text ==    │                     │       │           │          │ │
+│ │ "documentation"     │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +    client =       │                     │       │           │          │ │
+│ │ test_client_factor… │                     │       │           │          │ │
+│ │ +    response =     │                     │       │           │          │ │
+│ │ client.get("/",     │                     │       │           │          │ │
+│ │ headers={"host":    │                     │       │           │          │ │
+│ │ "[v1.foo]"})        │                     │       │           │          │ │
+│ │ +    assert         │                     │       │           │          │ │
+│ │ response.text ==    │                     │       │           │          │ │
+│ │ "future"            │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │ +                   │                     │       │           │          │ │
+│ │  def                │                     │       │           │          │ │
+│ │ test_host_reverse_… │                     │       │           │          │ │
+│ │ -> None:            │                     │       │           │          │ │
+│ │      assert         │                     │       │           │          │ │
+│ │ mixed_hosts_app.ur… │                     │       │           │          │ │
+│ │ ==                  │                     │       │           │          │ │
+│ │ "https://www.examp… │                     │       │           │          │ │
+│ │      assert (       │                     │       │           │          │ │
 │ │ ```                 │                     │       │           │          │ │
 │ └─────────────────────┴─────────────────────┴───────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
