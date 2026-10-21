@@ -1,400 +1,400 @@
-│ │ -CaptureMode:      │                    │         │           │          │ │
-│ │ t.TypeAlias =      │                    │         │           │          │ │
-│ │ t.Literal["sys",   │                    │         │           │          │ │
-│ │ "fd"]              │                    │         │           │          │ │
-│ │ +if sys.platform   │                    │         │           │          │ │
-│ │ != "win32":        │                    │         │           │          │ │
-│ │ +    CaptureMode:  │                    │         │           │          │ │
-│ │ t.TypeAlias =      │                    │         │           │          │ │
-│ │ t.Literal["sys"]   │                    │         │           │          │ │
-│ │ # pyright:         │                    │         │           │          │ │
-│ │ ignore[reportRede… │                    │         │           │          │ │
-│ │ +else:             │                    │         │           │          │ │
-│ │ +    CaptureMode:  │                    │         │           │          │ │
-│ │ t.TypeAlias =      │                    │         │           │          │ │
-│ │ t.Literal["sys",   │                    │         │           │          │ │
-│ │ "fd"]  # pyright:  │                    │         │           │          │ │
-│ │ ignore[reportRede… │                    │         │           │          │ │
-│ │  ExceptionInfo:    │                    │         │           │          │ │
-│ │ t.TypeAlias =      │                    │         │           │          │ │
-│ │ tuple[type[BaseEx… │                    │         │           │          │ │
-│ │ BaseException,     │                    │         │           │          │ │
-│ │ TracebackType]     │                    │         │           │          │ │
-│ │ ```                │                    │         │           │          │ │
-│ ├────────────────────┼────────────────────┼─────────┼───────────┼──────────┤ │
-│ │ SYSTEM             │ ASSISTANT          │    1.00 │     -0.03 │ block    │ │
-│ │ You are the code   │ {"decision":       │         │           │          │ │
-│ │ review gate for a  │ "block",           │         │           │          │ │
-│ │ production         │ "comments":        │         │           │          │ │
-│ │ repository. Your   │ [{"file":          │         │           │          │ │
-│ │ approval merges    │ "src/click/core.p… │         │           │          │ │
-│ │ and deploys the    │ "line_start": 142, │         │           │          │ │
-│ │ change with no     │ "line_end": 144,   │         │           │          │ │
-│ │ further human      │ "body": "This      │         │           │          │ │
-│ │ review. Decide:    │ change introduces  │         │           │          │ │
-│ │   approve  - you   │ a malformed enum   │         │           │          │ │
-│ │ are confident the  │ class in PyPy      │         │           │          │ │
-│ │ change is correct  │ which breaks the   │         │           │          │ │
-│ │ and safe to ship.  │ usage of           │         │           │          │ │
-│ │   block    - you   │ ParameterSource."… │         │           │          │ │
-│ │ found a defect;    │                    │         │           │          │ │
-│ │ cite its location. │                    │         │           │          │ │
-│ │   escalate - you   │                    │         │           │          │ │
-│ │ cannot establish   │                    │         │           │          │ │
-│ │ safety from what   │                    │         │           │          │ │
-│ │ you can see; a     │                    │         │           │          │ │
-│ │ human must look.   │                    │         │           │          │ │
-│ │ Approving a change │                    │         │           │          │ │
-│ │ that contains a    │                    │         │           │          │ │
-│ │ defect is the      │                    │         │           │          │ │
-│ │ worst outcome.     │                    │         │           │          │ │
-│ │ Blocking a correct │                    │         │           │          │ │
-│ │ change costs an    │                    │         │           │          │ │
-│ │ engineer's time.   │                    │         │           │          │ │
-│ │ Escalating is      │                    │         │           │          │ │
-│ │ cheap but useless  │                    │         │           │          │ │
-│ │ if done for        │                    │         │           │          │ │
-│ │ everything.        │                    │         │           │          │ │
-│ │ Respond with       │                    │         │           │          │ │
-│ │ exactly one JSON   │                    │         │           │          │ │
-│ │ object and nothing │                    │         │           │          │ │
-│ │ else:              │                    │         │           │          │ │
-│ │ {"decision":       │                    │         │           │          │ │
-│ │ "approve|block|es… │                    │         │           │          │ │
-│ │ "comments":        │                    │         │           │          │ │
-│ │ [{"file": "...",   │                    │         │           │          │ │
-│ │ "line_start": N,   │                    │         │           │          │ │
-│ │ "line_end": N,     │                    │         │           │          │ │
-│ │ "body": "...",     │                    │         │           │          │ │
-│ │ "proposed_test":   │                    │         │           │          │ │
-│ │ "optional pytest   │                    │         │           │          │ │
-│ │ source"}]}         │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ USER               │                    │         │           │          │ │
-│ │ Repository: click  │                    │         │           │          │ │
-│ │ Files changed:     │                    │         │           │          │ │
-│ │ CHANGES.rst,       │                    │         │           │          │ │
-│ │ docs/commands-and… │                    │         │           │          │ │
-│ │ src/click/__init_… │                    │         │           │          │ │
-│ │ src/click/core.py  │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ Not shown          │                    │         │           │          │ │
-│ │ (non-code or over  │                    │         │           │          │ │
-│ │ budget; treat as   │                    │         │           │          │ │
-│ │ unreviewed):       │                    │         │           │          │ │
-│ │ CHANGES.rst (567   │                    │         │           │          │ │
-│ │ chars, non-code),  │                    │         │           │          │ │
-│ │ docs/commands-and… │                    │         │           │          │ │
-│ │ (1454 chars,       │                    │         │           │          │ │
-│ │ non-code)          │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ Context around the │                    │         │           │          │ │
-│ │ change             │                    │         │           │          │ │
-│ │ (mechanically      │                    │         │           │          │ │
-│ │ extracted):        │                    │         │           │          │ │
-│ │ Changed            │                    │         │           │          │ │
-│ │ definitions:       │                    │         │           │          │ │
-│ │ src/click/core.py… │                    │         │           │          │ │
-│ │ src/click/core.py… │                    │         │           │          │ │
-│ │ src/click/core.py… │                    │         │           │          │ │
-│ │ src/click/core.py… │                    │         │           │          │ │
-│ │ src/click/core.py… │                    │         │           │          │ │
-│ │ src/click/core.py… │                    │         │           │          │ │
-│ │ src/click/core.py… │                    │         │           │          │ │
-│ │ Recent history of  │                    │         │           │          │ │
-│ │ src/click/core.py: │                    │         │           │          │ │
-│ │   d340b0c          │                    │         │           │          │ │
-│ │ 2026-04-01 Fix     │                    │         │           │          │ │
-│ │ speculative        │                    │         │           │          │ │
-│ │ speculative empty  │                    │         │           │          │ │
-│ │ string check       │                    │         │           │          │ │
-│ │   bb7be1f          │                    │         │           │          │ │
-│ │ 2026-03-02 Revert  │                    │         │           │          │ │
-│ │ "Use               │                    │         │           │          │ │
-│ │ `default=True` as  │                    │         │           │          │ │
-│ │ a sentinel for     │                    │         │           │          │ │
-│ │ non-boolean flags" │                    │         │           │          │ │
-│ │   6c4a77b          │                    │         │           │          │ │
-│ │ 2026-03-02 Use     │                    │         │           │          │ │
-│ │ `default=True` as  │                    │         │           │          │ │
-│ │ a sentinel for     │                    │         │           │          │ │
-│ │ non-boolean flags  │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ Diff:              │                    │         │           │          │ │
-│ │ ```diff            │                    │         │           │          │ │
-│ │ diff --git         │                    │         │           │          │ │
-│ │ a/src/click/__ini… │                    │         │           │          │ │
-│ │ b/src/click/__ini… │                    │         │           │          │ │
-│ │ index              │                    │         │           │          │ │
-│ │ 1aa547c..fa485a0   │                    │         │           │          │ │
-│ │ 100644             │                    │         │           │          │ │
-│ │ ---                │                    │         │           │          │ │
-│ │ a/src/click/__ini… │                    │         │           │          │ │
-│ │ +++                │                    │         │           │          │ │
-│ │ b/src/click/__ini… │                    │         │           │          │ │
-│ │ @@ -14,6 +14,7 @@  │                    │         │           │          │ │
-│ │ from .core import  │                    │         │           │          │ │
-│ │ Context as Context │                    │         │           │          │ │
-│ │  from .core import │                    │         │           │          │ │
-│ │ Group as Group     │                    │         │           │          │ │
-│ │  from .core import │                    │         │           │          │ │
-│ │ Option as Option   │                    │         │           │          │ │
-│ │  from .core import │                    │         │           │          │ │
-│ │ Parameter as       │                    │         │           │          │ │
-│ │ Parameter          │                    │         │           │          │ │
-│ │ +from .core import │                    │         │           │          │ │
-│ │ ParameterSource as │                    │         │           │          │ │
-│ │ ParameterSource    │                    │         │           │          │ │
-│ │  from .decorators  │                    │         │           │          │ │
-│ │ import argument as │                    │         │           │          │ │
-│ │ argument           │                    │         │           │          │ │
-│ │  from .decorators  │                    │         │           │          │ │
-│ │ import command as  │                    │         │           │          │ │
-│ │ command            │                    │         │           │          │ │
-│ │  from .decorators  │                    │         │           │          │ │
+│ │ special types      │                    │         │           │          │ │
+│ │ (Response,         │                    │         │           │          │ │
+│ │ Request,           │                    │         │           │          │ │
+│ │ BackgroundTasks)   │                    │         │           │          │ │
+│ │ as dependency      │                    │         │           │          │ │
+│ │ annotations.       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +These tests       │                    │         │           │          │ │
+│ │ verify that        │                    │         │           │          │ │
+│ │ special FastAPI    │                    │         │           │          │ │
+│ │ types can be used  │                    │         │           │          │ │
+│ │ with Depends()     │                    │         │           │          │ │
+│ │ annotations        │                    │         │           │          │ │
+│ │ +and that the      │                    │         │           │          │ │
+│ │ dependency         │                    │         │           │          │ │
+│ │ injection system   │                    │         │           │          │ │
+│ │ properly handles   │                    │         │           │          │ │
+│ │ them.              │                    │         │           │          │ │
+│ │ +"""               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +from typing       │                    │         │           │          │ │
+│ │ import Annotated   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +from fastapi      │                    │         │           │          │ │
 │ │ import             │                    │         │           │          │ │
-│ │ confirmation_opti… │                    │         │           │          │ │
-│ │ as                 │                    │         │           │          │ │
-│ │ confirmation_opti… │                    │         │           │          │ │
-│ │ diff --git         │                    │         │           │          │ │
-│ │ a/src/click/core.… │                    │         │           │          │ │
-│ │ b/src/click/core.… │                    │         │           │          │ │
-│ │ index              │                    │         │           │          │ │
-│ │ 6dc44f3..94796ab   │                    │         │           │          │ │
-│ │ 100644             │                    │         │           │          │ │
-│ │ ---                │                    │         │           │          │ │
-│ │ a/src/click/core.… │                    │         │           │          │ │
-│ │ +++                │                    │         │           │          │ │
-│ │ b/src/click/core.… │                    │         │           │          │ │
-│ │ @@ -140,13 +140,26 │                    │         │           │          │ │
-│ │ @@ def             │                    │         │           │          │ │
-│ │ iter_params_for_p… │                    │         │           │          │ │
-│ │      return        │                    │         │           │          │ │
-│ │ sorted(declaratio… │                    │         │           │          │ │
-│ │ key=sort_key)      │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ -class             │                    │         │           │          │ │
-│ │ ParameterSource(e… │                    │         │           │          │ │
-│ │ -    """This is an │                    │         │           │          │ │
-│ │ :class:`~enum.Enu… │                    │         │           │          │ │
-│ │ that indicates the │                    │         │           │          │ │
-│ │ source of a        │                    │         │           │          │ │
-│ │ +class             │                    │         │           │          │ │
-│ │ ParameterSource(e… │                    │         │           │          │ │
-│ │ +    """This is an │                    │         │           │          │ │
-│ │ :class:`~enum.Int… │                    │         │           │          │ │
-│ │ that indicates the │                    │         │           │          │ │
-│ │ source of a        │                    │         │           │          │ │
-│ │      parameter's   │                    │         │           │          │ │
-│ │ value.             │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │      Use           │                    │         │           │          │ │
-│ │ :meth:`click.Cont… │                    │         │           │          │ │
-│ │ to get the         │                    │         │           │          │ │
-│ │      source for a  │                    │         │           │          │ │
-│ │ parameter by name. │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ +    Members are   │                    │         │           │          │ │
-│ │ ordered from most  │                    │         │           │          │ │
-│ │ explicit to least  │                    │         │           │          │ │
-│ │ explicit source.   │                    │         │           │          │ │
-│ │ +    This allows   │                    │         │           │          │ │
-│ │ comparison to      │                    │         │           │          │ │
-│ │ check if a value   │                    │         │           │          │ │
-│ │ was explicitly     │                    │         │           │          │ │
-│ │ provided:          │                    │         │           │          │ │
+│ │ BackgroundTasks,   │                    │         │           │          │ │
+│ │ Depends, FastAPI,  │                    │         │           │          │ │
+│ │ Request, Response  │                    │         │           │          │ │
+│ │ +from              │                    │         │           │          │ │
+│ │ fastapi.responses  │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ JSONResponse       │                    │         │           │          │ │
+│ │ +from              │                    │         │           │          │ │
+│ │ fastapi.testclient │                    │         │           │          │ │
+│ │ import TestClient  │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    ..            │                    │         │           │          │ │
-│ │ code-block::       │                    │         │           │          │ │
-│ │ python             │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +        source =  │                    │         │           │          │ │
-│ │ ctx.get_parameter… │                    │         │           │          │ │
-│ │ +        if source │                    │         │           │          │ │
-│ │ <                  │                    │         │           │          │ │
-│ │ click.ParameterSo… │                    │         │           │          │ │
-│ │ +            ...   │                    │         │           │          │ │
-│ │ # value was        │                    │         │           │          │ │
-│ │ explicitly set     │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_response_wit… │                    │         │           │          │ │
+│ │ +    """Response   │                    │         │           │          │ │
+│ │ type hint should   │                    │         │           │          │ │
+│ │ work with          │                    │         │           │          │ │
+│ │ Annotated[Respons… │                    │         │           │          │ │
+│ │ Depends(...)]."""  │                    │         │           │          │ │
+│ │ +    app =         │                    │         │           │          │ │
+│ │ FastAPI()          │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    ..            │                    │         │           │          │ │
-│ │ versionchanged::   │                    │         │           │          │ │
-│ │ 8.3.3              │                    │         │           │          │ │
-│ │ +        Use       │                    │         │           │          │ │
-│ │ :class:`~enum.Int… │                    │         │           │          │ │
-│ │ and reorder        │                    │         │           │          │ │
-│ │ members from most  │                    │         │           │          │ │
-│ │ to                 │                    │         │           │          │ │
-│ │ +        least     │                    │         │           │          │ │
-│ │ explicit. Supports │                    │         │           │          │ │
-│ │ comparison         │                    │         │           │          │ │
-│ │ operators.         │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ modify_response(r… │                    │         │           │          │ │
+│ │ Response) ->       │                    │         │           │          │ │
+│ │ Response:          │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │      ..            │                    │         │           │          │ │
-│ │ versionchanged::   │                    │         │           │          │ │
-│ │ 8.0                │                    │         │           │          │ │
-│ │          Use       │                    │         │           │          │ │
-│ │ :class:`~enum.Enu… │                    │         │           │          │ │
-│ │ and drop the       │                    │         │           │          │ │
-│ │ ``validate``       │                    │         │           │          │ │
-│ │ method.            │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ @@ -154,16 +167,16 │                    │         │           │          │ │
-│ │ @@ class           │                    │         │           │          │ │
-│ │ ParameterSource(e… │                    │         │           │          │ │
-│ │          Added the │                    │         │           │          │ │
-│ │ ``PROMPT`` value.  │                    │         │           │          │ │
-│ │      """           │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ +    PROMPT =      │                    │         │           │          │ │
-│ │ enum.auto()        │                    │         │           │          │ │
-│ │ +    """Used a     │                    │         │           │          │ │
-│ │ prompt to confirm  │                    │         │           │          │ │
-│ │ a default or       │                    │         │           │          │ │
-│ │ provide a          │                    │         │           │          │ │
-│ │ value."""          │                    │         │           │          │ │
-│ │      COMMANDLINE = │                    │         │           │          │ │
-│ │ enum.auto()        │                    │         │           │          │ │
-│ │      """The value  │                    │         │           │          │ │
-│ │ was provided by    │                    │         │           │          │ │
-│ │ the command line   │                    │         │           │          │ │
-│ │ args."""           │                    │         │           │          │ │
-│ │      ENVIRONMENT = │                    │         │           │          │ │
-│ │ enum.auto()        │                    │         │           │          │ │
-│ │      """The value  │                    │         │           │          │ │
-│ │ was provided with  │                    │         │           │          │ │
-│ │ an environment     │                    │         │           │          │ │
-│ │ variable."""       │                    │         │           │          │ │
-│ │ -    DEFAULT =     │                    │         │           │          │ │
-│ │ enum.auto()        │                    │         │           │          │ │
-│ │ -    """Used the   │                    │         │           │          │ │
-│ │ default specified  │                    │         │           │          │ │
-│ │ by the             │                    │         │           │          │ │
-│ │ parameter."""      │                    │         │           │          │ │
-│ │      DEFAULT_MAP = │                    │         │           │          │ │
-│ │ enum.auto()        │                    │         │           │          │ │
-│ │      """Used a     │                    │         │           │          │ │
-│ │ default provided   │                    │         │           │          │ │
-│ │ by                 │                    │         │           │          │ │
-│ │ :attr:`Context.de… │                    │         │           │          │ │
-│ │ -    PROMPT =      │                    │         │           │          │ │
-│ │ enum.auto()        │                    │         │           │          │ │
-│ │ -    """Used a     │                    │         │           │          │ │
-│ │ prompt to confirm  │                    │         │           │          │ │
-│ │ a default or       │                    │         │           │          │ │
-│ │ provide a          │                    │         │           │          │ │
-│ │ value."""          │                    │         │           │          │ │
-│ │ +    DEFAULT =     │                    │         │           │          │ │
-│ │ enum.auto()        │                    │         │           │          │ │
-│ │ +    """Used the   │                    │         │           │          │ │
-│ │ default specified  │                    │         │           │          │ │
-│ │ by the             │                    │         │           │          │ │
-│ │ parameter."""      │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │  class Context:    │                    │         │           │          │ │
-│ │ @@ -2563,7 +2576,7 │                    │         │           │          │ │
-│ │ @@ class           │                    │         │           │          │ │
-│ │ Parameter:         │                    │         │           │          │ │
-│ │              if (  │                    │         │           │          │ │
-│ │                  … │                    │         │           │          │ │
-│ │                  … │                    │         │           │          │ │
-│ │ value is not UNSET │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ and source not in  │                    │         │           │          │ │
-│ │ (ParameterSource.… │                    │         │           │          │ │
-│ │ ParameterSource.D… │                    │         │           │          │ │
+│ │ response.headers[… │                    │         │           │          │ │
+│ │ = "modified"       │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ response           │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ and source <       │                    │         │           │          │ │
-│ │ ParameterSource.D… │                    │         │           │          │ │
-│ │              ):    │                    │         │           │          │ │
-│ │                  … │                    │         │           │          │ │
-│ │ = (                │                    │         │           │          │ │
-│ │                  … │                    │         │           │          │ │
-│ │ {self.deprecated}" │                    │         │           │          │ │
-│ │ if                 │                    │         │           │          │ │
-│ │ isinstance(self.d… │                    │         │           │          │ │
-│ │ str) else ""       │                    │         │           │          │ │
-│ │ @@ -3285,7 +3298,7 │                    │         │           │          │ │
-│ │ @@ class           │                    │         │           │          │ │
-│ │ Option(Parameter): │                    │         │           │          │ │
-│ │              self… │                    │         │           │          │ │
-│ │              and   │                    │         │           │          │ │
-│ │ value is True      │                    │         │           │          │ │
-│ │              and   │                    │         │           │          │ │
-│ │ not                │                    │         │           │          │ │
-│ │ self.is_bool_flag  │                    │         │           │          │ │
-│ │ -            and   │                    │         │           │          │ │
-│ │ source not in      │                    │         │           │          │ │
-│ │ (ParameterSource.… │                    │         │           │          │ │
-│ │ ParameterSource.D… │                    │         │           │          │ │
-│ │ +            and   │                    │         │           │          │ │
-│ │ source <           │                    │         │           │          │ │
-│ │ ParameterSource.D… │                    │         │           │          │ │
-│ │          ):        │                    │         │           │          │ │
-│ │              value │                    │         │           │          │ │
-│ │ = self.flag_value  │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ @@ -3295,7 +3308,7 │                    │         │           │          │ │
-│ │ @@ class           │                    │         │           │          │ │
-│ │ Option(Parameter): │                    │         │           │          │ │
-│ │          elif (    │                    │         │           │          │ │
-│ │              self… │                    │         │           │          │ │
-│ │              and   │                    │         │           │          │ │
-│ │ value is not UNSET │                    │         │           │          │ │
-│ │ -            and   │                    │         │           │          │ │
-│ │ source not in      │                    │         │           │          │ │
-│ │ (ParameterSource.… │                    │         │           │          │ │
-│ │ ParameterSource.D… │                    │         │           │          │ │
-│ │ +            and   │                    │         │           │          │ │
-│ │ source <           │                    │         │           │          │ │
-│ │ ParameterSource.D… │                    │         │           │          │ │
-│ │              and   │                    │         │           │          │ │
-│ │ any(v is           │                    │         │           │          │ │
-│ │ FLAG_NEEDS_VALUE   │                    │         │           │          │ │
-│ │ for v in value)    │                    │         │           │          │ │
-│ │          ):        │                    │         │           │          │ │
-│ │              value │                    │         │           │          │ │
-│ │ = [self.flag_value │                    │         │           │          │ │
-│ │ if v is            │                    │         │           │          │ │
-│ │ FLAG_NEEDS_VALUE   │                    │         │           │          │ │
-│ │ else v for v in    │                    │         │           │          │ │
-│ │ value]             │                    │         │           │          │ │
-│ │ @@ -3304,10        │                    │         │           │          │ │
-│ │ +3317,7 @@ class   │                    │         │           │          │ │
-│ │ Option(Parameter): │                    │         │           │          │ │
-│ │          # The     │                    │         │           │          │ │
-│ │ value wasn't set,  │                    │         │           │          │ │
-│ │ or used the        │                    │         │           │          │ │
-│ │ param's default,   │                    │         │           │          │ │
-│ │ prompt for one to  │                    │         │           │          │ │
-│ │ the user           │                    │         │           │          │ │
-│ │          # if      │                    │         │           │          │ │
-│ │ prompting is       │                    │         │           │          │ │
-│ │ enabled.           │                    │         │           │          │ │
-│ │          elif (    │                    │         │           │          │ │
-│ │ -            (     │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ value is UNSET     │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ or source in       │                    │         │           │          │ │
-│ │ (ParameterSource.… │                    │         │           │          │ │
-│ │ ParameterSource.D… │                    │         │           │          │ │
-│ │ -            )     │                    │         │           │          │ │
+│ │ +    @app.get("/") │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ endpoint(response: │                    │         │           │          │ │
+│ │ Annotated[Respons… │                    │         │           │          │ │
+│ │ Depends(modify_re… │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ {"status": "ok"}   │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ (value is UNSET or │                    │         │           │          │ │
-│ │ source >           │                    │         │           │          │ │
-│ │ ParameterSource.D… │                    │         │           │          │ │
-│ │              and   │                    │         │           │          │ │
-│ │ self.prompt is not │                    │         │           │          │ │
-│ │ None               │                    │         │           │          │ │
-│ │              and   │                    │         │           │          │ │
-│ │ (self.required or  │                    │         │           │          │ │
-│ │ self.prompt_requi… │                    │         │           │          │ │
-│ │              and   │                    │         │           │          │ │
-│ │ not                │                    │         │           │          │ │
-│ │ ctx.resilient_par… │                    │         │           │          │ │
+│ │ +    client =      │                    │         │           │          │ │
+│ │ TestClient(app)    │                    │         │           │          │ │
+│ │ +    resp =        │                    │         │           │          │ │
+│ │ client.get("/")    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.status_code   │                    │         │           │          │ │
+│ │ == 200             │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.json() ==     │                    │         │           │          │ │
+│ │ {"status": "ok"}   │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.headers.get(… │                    │         │           │          │ │
+│ │ == "modified"      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_response_wit… │                    │         │           │          │ │
+│ │ +    """Response   │                    │         │           │          │ │
+│ │ type hint should   │                    │         │           │          │ │
+│ │ work with Response │                    │         │           │          │ │
+│ │ = Depends(...).""" │                    │         │           │          │ │
+│ │ +    app =         │                    │         │           │          │ │
+│ │ FastAPI()          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ modify_response(r… │                    │         │           │          │ │
+│ │ Response) ->       │                    │         │           │          │ │
+│ │ Response:          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ response.headers[… │                    │         │           │          │ │
+│ │ = "modified"       │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ response           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    @app.get("/") │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ endpoint(response: │                    │         │           │          │ │
+│ │ Response =         │                    │         │           │          │ │
+│ │ Depends(modify_re… │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ {"status": "ok"}   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    client =      │                    │         │           │          │ │
+│ │ TestClient(app)    │                    │         │           │          │ │
+│ │ +    resp =        │                    │         │           │          │ │
+│ │ client.get("/")    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.status_code   │                    │         │           │          │ │
+│ │ == 200             │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.json() ==     │                    │         │           │          │ │
+│ │ {"status": "ok"}   │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.headers.get(… │                    │         │           │          │ │
+│ │ == "modified"      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_response_wit… │                    │         │           │          │ │
+│ │ +    """Regular    │                    │         │           │          │ │
+│ │ Response injection │                    │         │           │          │ │
+│ │ should still       │                    │         │           │          │ │
+│ │ work."""           │                    │         │           │          │ │
+│ │ +    app =         │                    │         │           │          │ │
+│ │ FastAPI()          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    @app.get("/") │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ endpoint(response: │                    │         │           │          │ │
+│ │ Response):         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ response.headers[… │                    │         │           │          │ │
+│ │ = "set"            │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ {"status": "ok"}   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    client =      │                    │         │           │          │ │
+│ │ TestClient(app)    │                    │         │           │          │ │
+│ │ +    resp =        │                    │         │           │          │ │
+│ │ client.get("/")    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.status_code   │                    │         │           │          │ │
+│ │ == 200             │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.json() ==     │                    │         │           │          │ │
+│ │ {"status": "ok"}   │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.headers.get(… │                    │         │           │          │ │
+│ │ == "set"           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_response_dep… │                    │         │           │          │ │
+│ │ +    """Response   │                    │         │           │          │ │
+│ │ dependency should  │                    │         │           │          │ │
+│ │ work in a chain of │                    │         │           │          │ │
+│ │ dependencies."""   │                    │         │           │          │ │
+│ │ +    app =         │                    │         │           │          │ │
+│ │ FastAPI()          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ first_modifier(re… │                    │         │           │          │ │
+│ │ Response) ->       │                    │         │           │          │ │
+│ │ Response:          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ response.headers[… │                    │         │           │          │ │
+│ │ = "1"              │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ response           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ second_modifier(   │                    │         │           │          │ │
+│ │ +        response: │                    │         │           │          │ │
+│ │ Annotated[Respons… │                    │         │           │          │ │
+│ │ Depends(first_mod… │                    │         │           │          │ │
+│ │ +    ) ->          │                    │         │           │          │ │
+│ │ Response:          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ response.headers[… │                    │         │           │          │ │
+│ │ = "2"              │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ response           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    @app.get("/") │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ endpoint(response: │                    │         │           │          │ │
+│ │ Annotated[Respons… │                    │         │           │          │ │
+│ │ Depends(second_mo… │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ {"status": "ok"}   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    client =      │                    │         │           │          │ │
+│ │ TestClient(app)    │                    │         │           │          │ │
+│ │ +    resp =        │                    │         │           │          │ │
+│ │ client.get("/")    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.status_code   │                    │         │           │          │ │
+│ │ == 200             │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.headers.get(… │                    │         │           │          │ │
+│ │ == "1"             │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.headers.get(… │                    │         │           │          │ │
+│ │ == "2"             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_response_dep… │                    │         │           │          │ │
+│ │ +    """Dependency │                    │         │           │          │ │
+│ │ that returns a     │                    │         │           │          │ │
+│ │ different Response │                    │         │           │          │ │
+│ │ instance should    │                    │         │           │          │ │
+│ │ work.              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    When a        │                    │         │           │          │ │
+│ │ dependency returns │                    │         │           │          │ │
+│ │ a new Response     │                    │         │           │          │ │
+│ │ object (e.g.,      │                    │         │           │          │ │
+│ │ JSONResponse)      │                    │         │           │          │ │
+│ │ instead            │                    │         │           │          │ │
+│ │ +    of modifying  │                    │         │           │          │ │
+│ │ the injected one,  │                    │         │           │          │ │
+│ │ the returned       │                    │         │           │          │ │
+│ │ response should be │                    │         │           │          │ │
+│ │ used and any       │                    │         │           │          │ │
+│ │ +    modifications │                    │         │           │          │ │
+│ │ to it in the       │                    │         │           │          │ │
+│ │ endpoint should be │                    │         │           │          │ │
+│ │ preserved.         │                    │         │           │          │ │
+│ │ +    """           │                    │         │           │          │ │
+│ │ +    app =         │                    │         │           │          │ │
+│ │ FastAPI()          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ default_response() │                    │         │           │          │ │
+│ │ -> Response:       │                    │         │           │          │ │
+│ │ +        response  │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ JSONResponse(cont… │                    │         │           │          │ │
+│ │ "ok"})             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ response.headers[… │                    │         │           │          │ │
+│ │ = "initial"        │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ response           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    @app.get("/") │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ endpoint(response: │                    │         │           │          │ │
+│ │ Annotated[Respons… │                    │         │           │          │ │
+│ │ Depends(default_r… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ response.headers[… │                    │         │           │          │ │
+│ │ = "modified"       │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ response           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    client =      │                    │         │           │          │ │
+│ │ TestClient(app)    │                    │         │           │          │ │
+│ │ +    resp =        │                    │         │           │          │ │
+│ │ client.get("/")    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.status_code   │                    │         │           │          │ │
+│ │ == 200             │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.json() ==     │                    │         │           │          │ │
+│ │ {"status": "ok"}   │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.headers.get(… │                    │         │           │          │ │
+│ │ == "modified"      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +# Tests for       │                    │         │           │          │ │
+│ │ Request type hint  │                    │         │           │          │ │
+│ │ with Depends       │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_request_with… │                    │         │           │          │ │
+│ │ +    """Request    │                    │         │           │          │ │
+│ │ type hint should   │                    │         │           │          │ │
+│ │ work in dependency │                    │         │           │          │ │
+│ │ chain."""          │                    │         │           │          │ │
+│ │ +    app =         │                    │         │           │          │ │
+│ │ FastAPI()          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ extract_request_i… │                    │         │           │          │ │
+│ │ Request) -> dict:  │                    │         │           │          │ │
+│ │ +        return {  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "path":            │                    │         │           │          │ │
+│ │ request.url.path,  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "user_agent":      │                    │         │           │          │ │
+│ │ request.headers.g… │                    │         │           │          │ │
+│ │ "unknown"),        │                    │         │           │          │ │
+│ │ +        }         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    @app.get("/") │                    │         │           │          │ │
+│ │ +    def endpoint( │                    │         │           │          │ │
+│ │ +        info:     │                    │         │           │          │ │
+│ │ Annotated[dict,    │                    │         │           │          │ │
+│ │ Depends(extract_r… │                    │         │           │          │ │
+│ │ +    ):            │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ info               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    client =      │                    │         │           │          │ │
+│ │ TestClient(app)    │                    │         │           │          │ │
+│ │ +    resp =        │                    │         │           │          │ │
+│ │ client.get("/",    │                    │         │           │          │ │
+│ │ headers={"user-ag… │                    │         │           │          │ │
+│ │ "test-agent"})     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.status_code   │                    │         │           │          │ │
+│ │ == 200             │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.json() ==     │                    │         │           │          │ │
+│ │ {"path": "/",      │                    │         │           │          │ │
+│ │ "user_agent":      │                    │         │           │          │ │
+│ │ "test-agent"}      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +# Tests for       │                    │         │           │          │ │
+│ │ BackgroundTasks    │                    │         │           │          │ │
+│ │ type hint with     │                    │         │           │          │ │
+│ │ Depends            │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_background_t… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ """BackgroundTasks │                    │         │           │          │ │
+│ │ type hint should   │                    │         │           │          │ │
+│ │ work with          │                    │         │           │          │ │
+│ │ Annotated[Backgro… │                    │         │           │          │ │
+│ │ Depends(...)]."""  │                    │         │           │          │ │
+│ │ +    app =         │                    │         │           │          │ │
+│ │ FastAPI()          │                    │         │           │          │ │
+│ │ +    task_results  │                    │         │           │          │ │
+│ │ = []               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ background_task(m… │                    │         │           │          │ │
+│ │ str):              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ task_results.appe… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ add_background_ta… │                    │         │           │          │ │
+│ │ BackgroundTasks)   │                    │         │           │          │ │
+│ │ ->                 │                    │         │           │          │ │
+│ │ BackgroundTasks:   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ background_tasks.… │                    │         │           │          │ │
+│ │ "from dependency") │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ background_tasks   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    @app.get("/") │                    │         │           │          │ │
+│ │ +    def endpoint( │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ background_tasks:  │                    │         │           │          │ │
+│ │ Annotated[Backgro… │                    │         │           │          │ │
+│ │ Depends(add_backg… │                    │         │           │          │ │
+│ │ +    ):            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ background_tasks.… │                    │         │           │          │ │
+│ │ "from endpoint")   │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ {"status": "ok"}   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    client =      │                    │         │           │          │ │
+│ │ TestClient(app)    │                    │         │           │          │ │
+│ │ +    resp =        │                    │         │           │          │ │
+│ │ client.get("/")    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ resp.status_code   │                    │         │           │          │ │
+│ │ == 200             │                    │         │           │          │ │
+│ │ +    assert "from  │                    │         │           │          │ │
+│ │ dependency" in     │                    │         │           │          │ │
+│ │ task_results       │                    │         │           │          │ │
+│ │ +    assert "from  │                    │         │           │          │ │
+│ │ endpoint" in       │                    │         │           │          │ │
+│ │ task_results       │                    │         │           │          │ │
 │ │ ```                │                    │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
+100%|██████████| 200/200 [1:57:07<00:00, 35.14s/it]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:06<00:00,  6.38s/it]Writing model shards: 100%|██████████| 1/1 [00:06<00:00,  6.38s/it]
+{"name": "review_grpo_4b_v3", "model": "runs/review_sft_4b_v3/final", "task": "review", "lora": true, "steps": 200, "wall_s": 7027.5, "num_gpus": 1, "final_reward": 0.421875}
