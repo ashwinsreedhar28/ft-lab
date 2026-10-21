@@ -2,6 +2,7 @@
 # penalizing it: block samples became too rare within a group of 8 to be reinforced, and the KL leash was
 # loose. v3: 16 generations per prompt, lr 2e-5, beta 0.02, unparsable -3 (review_gate_v3), and a greedy
 # eval on the 61 held-out tasks every 25 steps (data.extra.eval_every) so the curve is visible.
+# v3a (scale_rewards: group, lr 2e-5) collapsed to an 11-token approve-everything by step 18; see scale_rewards below.
 extends: base.yaml
 name: review_grpo_4b_v3
 model: runs/review_sft_4b_v3/final
@@ -14,7 +15,7 @@ data:
     eval_every: 25
 rewards: [review_gate_v3]
 grpo:
-  learning_rate: 2.0e-5
+  learning_rate: 1.0e-5          # advantages are raw now (up to ~5), so back off from 2e-5
   num_generations: 16
   per_device_train_batch_size: 8    # 16 OOMed the H100 at step 15 (16 x ~15k-token prompts per micro-batch)
   gradient_accumulation_steps: 4    # 8 x 4 = 32 completions per step, divisible by G=16
@@ -24,5 +25,7 @@ grpo:
   max_steps: 200           # v2 took 8 h for 300 on the A100; the eval curve shows by 150 whether it is working
   temperature: 1.0
   beta: 0.02
+  scale_rewards: none             # group std-scaling erased the -5/+1 asymmetry: bug and clean groups both
+                                  # pushed with |adv|~1, and the policy collapsed to the shortest approve (v2, v3a)
   save_steps: 50
   save_total_limit: 2
