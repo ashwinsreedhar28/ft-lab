@@ -1,400 +1,400 @@
-│ │ be installed       │                    │         │           │          │ │
-│ │ +    separately,   │                    │         │           │          │ │
-│ │ e.g. `pip install  │                    │         │           │          │ │
-│ │ orjson`.           │                    │         │           │          │ │
-│ │      """           │                    │         │           │          │ │
+│ │                    │ is NO_OP even if   │         │           │          │ │
+│ │                    │ frozen is True.    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │      def           │                    │         │           │          │ │
-│ │ render(self,       │                    │         │           │          │ │
-│ │ content: Any) ->   │                    │         │           │          │ │
-│ │ bytes:             │                    │         │           │          │ │
-│ │ diff --git         │                    │         │           │          │ │
-│ │ a/pyproject.toml   │                    │         │           │          │ │
-│ │ b/pyproject.toml   │                    │         │           │          │ │
-│ │ index              │                    │         │           │          │ │
-│ │ c51eb8ce9..79dfc1… │                    │         │           │          │ │
-│ │ 100644             │                    │         │           │          │ │
-│ │ ---                │                    │         │           │          │ │
-│ │ a/pyproject.toml   │                    │         │           │          │ │
-│ │ +++                │                    │         │           │          │ │
-│ │ b/pyproject.toml   │                    │         │           │          │ │
-│ │ @@ -105,10 +105,6  │                    │         │           │          │ │
-│ │ @@ all = [         │                    │         │           │          │ │
-│ │      "itsdangerous │                    │         │           │          │ │
-│ │ >=1.1.0",          │                    │         │           │          │ │
-│ │      # For         │                    │         │           │          │ │
-│ │ Starlette's schema │                    │         │           │          │ │
-│ │ generation, would  │                    │         │           │          │ │
-│ │ not be used with   │                    │         │           │          │ │
-│ │ FastAPI            │                    │         │           │          │ │
-│ │      "pyyaml       │                    │         │           │          │ │
-│ │ >=5.3.1",          │                    │         │           │          │ │
-│ │ -    # For         │                    │         │           │          │ │
-│ │ UJSONResponse      │                    │         │           │          │ │
-│ │ -    "ujson        │                    │         │           │          │ │
-│ │ >=5.8.0",          │                    │         │           │          │ │
-│ │ -    # For         │                    │         │           │          │ │
-│ │ ORJSONResponse     │                    │         │           │          │ │
-│ │ -    "orjson       │                    │         │           │          │ │
-│ │ >=3.9.3",          │                    │         │           │          │ │
-│ │      # To validate │                    │         │           │          │ │
-│ │ email fields       │                    │         │           │          │ │
-│ │      "email-valid… │                    │         │           │          │ │
-│ │ >=2.0.0",          │                    │         │           │          │ │
-│ │      # Uvicorn     │                    │         │           │          │ │
-│ │ with uvloop        │                    │         │           │          │ │
-│ │ @@ -151,6 +147,10  │                    │         │           │          │ │
-│ │ @@ docs = [        │                    │         │           │          │ │
-│ │  docs-tests = [    │                    │         │           │          │ │
-│ │      "httpx        │                    │         │           │          │ │
-│ │ >=0.23.0,<1.0.0",  │                    │         │           │          │ │
-│ │      "ruff         │                    │         │           │          │ │
-│ │ >=0.14.14",        │                    │         │           │          │ │
-│ │ +    # For         │                    │         │           │          │ │
-│ │ UJSONResponse      │                    │         │           │          │ │
-│ │ +    "ujson        │                    │         │           │          │ │
-│ │ >=5.8.0",          │                    │         │           │          │ │
-│ │ +    # For         │                    │         │           │          │ │
-│ │ ORJSONResponse     │                    │         │           │          │ │
-│ │ +    "orjson       │                    │         │           │          │ │
-│ │ >=3.9.3",          │                    │         │           │          │ │
-│ │  ]                 │                    │         │           │          │ │
-│ │  github-actions =  │                    │         │           │          │ │
-│ │ [                  │                    │         │           │          │ │
-│ │      "httpx        │                    │         │           │          │ │
-│ │ >=0.27.0,<1.0.0",  │                    │         │           │          │ │
-│ │ diff --git         │                    │         │           │          │ │
-│ │ a/tests/test_depr… │                    │         │           │          │ │
-│ │ b/tests/test_depr… │                    │         │           │          │ │
-│ │ new file mode      │                    │         │           │          │ │
-│ │ 100644             │                    │         │           │          │ │
-│ │ index              │                    │         │           │          │ │
-│ │ 000000000..eff579… │                    │         │           │          │ │
-│ │ --- /dev/null      │                    │         │           │          │ │
-│ │ +++                │                    │         │           │          │ │
-│ │ b/tests/test_depr… │                    │         │           │          │ │
-│ │ @@ -0,0 +1,73 @@   │                    │         │           │          │ │
-│ │ +import warnings   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +import pytest     │                    │         │           │          │ │
-│ │ +from fastapi      │                    │         │           │          │ │
-│ │ import FastAPI     │                    │         │           │          │ │
-│ │ +from              │                    │         │           │          │ │
-│ │ fastapi.exceptions │                    │         │           │          │ │
-│ │ import             │                    │         │           │          │ │
-│ │ FastAPIDeprecatio… │                    │         │           │          │ │
-│ │ +from              │                    │         │           │          │ │
-│ │ fastapi.responses  │                    │         │           │          │ │
-│ │ import             │                    │         │           │          │ │
-│ │ ORJSONResponse,    │                    │         │           │          │ │
-│ │ UJSONResponse      │                    │         │           │          │ │
-│ │ +from              │                    │         │           │          │ │
-│ │ fastapi.testclient │                    │         │           │          │ │
-│ │ import TestClient  │                    │         │           │          │ │
-│ │ +from pydantic     │                    │         │           │          │ │
-│ │ import BaseModel   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +class             │                    │         │           │          │ │
-│ │ Item(BaseModel):   │                    │         │           │          │ │
-│ │ +    name: str     │                    │         │           │          │ │
-│ │ +    price: float  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +# ORJSON          │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ _make_orjson_app() │                    │         │           │          │ │
-│ │ -> FastAPI:        │                    │         │           │          │ │
-│ │ +    with          │                    │         │           │          │ │
-│ │ warnings.catch_wa… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ warnings.simplefi… │                    │         │           │          │ │
-│ │ FastAPIDeprecatio… │                    │         │           │          │ │
-│ │ +        app =     │                    │         │           │          │ │
-│ │ FastAPI(default_r… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ @app.get("/items") │                    │         │           │          │ │
-│ │ +    def           │                    │         │           │          │ │
-│ │ get_items() ->     │                    │         │           │          │ │
-│ │ Item:              │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ Item(name="widget… │                    │         │           │          │ │
-│ │ price=9.99)        │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    return app    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_orjson_respo… │                    │         │           │          │ │
-│ │ +    app =         │                    │         │           │          │ │
-│ │ _make_orjson_app() │                    │         │           │          │ │
-│ │ +    client =      │                    │         │           │          │ │
-│ │ TestClient(app)    │                    │         │           │          │ │
-│ │ +    with          │                    │         │           │          │ │
-│ │ warnings.catch_wa… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ warnings.simplefi… │                    │         │           │          │ │
-│ │ FastAPIDeprecatio… │                    │         │           │          │ │
-│ │ +        response  │                    │         │           │          │ │
-│ │ =                  │                    │         │           │          │ │
-│ │ client.get("/item… │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ response.status_c… │                    │         │           │          │ │
-│ │ == 200             │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ response.json() == │                    │         │           │          │ │
-│ │ {"name": "widget", │                    │         │           │          │ │
-│ │ "price": 9.99}     │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_orjson_respo… │                    │         │           │          │ │
-│ │ +    with          │                    │         │           │          │ │
-│ │ pytest.warns(Fast… │                    │         │           │          │ │
-│ │ match="ORJSONResp… │                    │         │           │          │ │
-│ │ is deprecated"):   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ ORJSONResponse(co… │                    │         │           │          │ │
-│ │ "world"})          │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +# UJSON           │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ _make_ujson_app()  │                    │         │           │          │ │
-│ │ -> FastAPI:        │                    │         │           │          │ │
-│ │ +    with          │                    │         │           │          │ │
-│ │ warnings.catch_wa… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ warnings.simplefi… │                    │         │           │          │ │
-│ │ FastAPIDeprecatio… │                    │         │           │          │ │
-│ │ +        app =     │                    │         │           │          │ │
-│ │ FastAPI(default_r… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ @app.get("/items") │                    │         │           │          │ │
-│ │ +    def           │                    │         │           │          │ │
-│ │ get_items() ->     │                    │         │           │          │ │
-│ │ Item:              │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ Item(name="widget… │                    │         │           │          │ │
-│ │ price=9.99)        │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    return app    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_ujson_respon… │                    │         │           │          │ │
-│ │ +    app =         │                    │         │           │          │ │
-│ │ _make_ujson_app()  │                    │         │           │          │ │
-│ │ +    client =      │                    │         │           │          │ │
-│ │ TestClient(app)    │                    │         │           │          │ │
-│ │ +    with          │                    │         │           │          │ │
-│ │ warnings.catch_wa… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ warnings.simplefi… │                    │         │           │          │ │
-│ │ FastAPIDeprecatio… │                    │         │           │          │ │
-│ │ +        response  │                    │         │           │          │ │
-│ │ =                  │                    │         │           │          │ │
-│ │ client.get("/item… │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ response.status_c… │                    │         │           │          │ │
-│ │ == 200             │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ response.json() == │                    │         │           │          │ │
-│ │ {"name": "widget", │                    │         │           │          │ │
-│ │ "price": 9.99}     │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_ujson_respon… │                    │         │           │          │ │
-│ │ +    with          │                    │         │           │          │ │
-│ │ pytest.warns(Fast… │                    │         │           │          │ │
-│ │ match="UJSONRespo… │                    │         │           │          │ │
-│ │ is deprecated"):   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ UJSONResponse(con… │                    │         │           │          │ │
-│ │ "world"})          │                    │         │           │          │ │
-│ │ diff --git         │                    │         │           │          │ │
-│ │ a/tests/test_orjs… │                    │         │           │          │ │
-│ │ b/tests/test_orjs… │                    │         │           │          │ │
-│ │ index              │                    │         │           │          │ │
-│ │ 6fe62daf9..63ea05… │                    │         │           │          │ │
-│ │ 100644             │                    │         │           │          │ │
-│ │ ---                │                    │         │           │          │ │
-│ │ a/tests/test_orjs… │                    │         │           │          │ │
-│ │ +++                │                    │         │           │          │ │
-│ │ b/tests/test_orjs… │                    │         │           │          │ │
-│ │ @@ -1,9 +1,14 @@   │                    │         │           │          │ │
-│ │ +import warnings   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │  from fastapi      │                    │         │           │          │ │
-│ │ import FastAPI     │                    │         │           │          │ │
-│ │ +from              │                    │         │           │          │ │
-│ │ fastapi.exceptions │                    │         │           │          │ │
-│ │ import             │                    │         │           │          │ │
-│ │ FastAPIDeprecatio… │                    │         │           │          │ │
-│ │  from              │                    │         │           │          │ │
-│ │ fastapi.responses  │                    │         │           │          │ │
-│ │ import             │                    │         │           │          │ │
-│ │ ORJSONResponse     │                    │         │           │          │ │
-│ │  from              │                    │         │           │          │ │
-│ │ fastapi.testclient │                    │         │           │          │ │
-│ │ import TestClient  │                    │         │           │          │ │
-│ │  from              │                    │         │           │          │ │
-│ │ sqlalchemy.sql.el… │                    │         │           │          │ │
-│ │ import quoted_name │                    │         │           │          │ │
+│ │                    │ But according to   │         │           │          │ │
+│ │                    │ the diff, the code │         │           │          │ │
+│ │                    │ is:                │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ -app =             │                    │         │           │          │ │
-│ │ FastAPI(default_r… │                    │         │           │          │ │
-│ │ +with              │                    │         │           │          │ │
-│ │ warnings.catch_wa… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ warnings.simplefi… │                    │         │           │          │ │
-│ │ FastAPIDeprecatio… │                    │         │           │          │ │
-│ │ +    app =         │                    │         │           │          │ │
-│ │ FastAPI(default_r… │                    │         │           │          │ │
+│ │                    │ Original line:     │         │           │          │ │
+│ │                    │ if frozen is True: │         │           │          │ │
 │ │                    │                    │         │           │          │ │
+│ │                    │ New line:          │         │           │          │ │
+│ │                    │ if frozen is True  │         │           │          │ │
+│ │                    │ or a.on_setattr is │         │           │          │ │
+│ │                    │ not setters.NO_OP: │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │  @app.get("/orjso… │                    │         │           │          │ │
-│ │ @@ -16,6 +21,8 @@  │                    │         │           │          │ │
-│ │ client =           │                    │         │           │          │ │
-│ │ TestClient(app)    │                    │         │           │          │ │
+│ │                    │ So the code now    │         │           │          │ │
+│ │                    │ would raise an     │         │           │          │ │
+│ │                    │ error if either    │         │           │          │ │
+│ │                    │ frozen is True OR  │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ not NO_OP. Wait,   │         │           │          │ │
+│ │                    │ but that's not     │         │           │          │ │
+│ │                    │ correct. Because   │         │           │          │ │
+│ │                    │ if a.on_setattr is │         │           │          │ │
+│ │                    │ NO_OP, then the    │         │           │          │ │
+│ │                    │ condition becomes  │         │           │          │ │
+│ │                    │ frozen is True OR  │         │           │          │ │
+│ │                    │ False → frozen is  │         │           │          │ │
+│ │                    │ True. So the       │         │           │          │ │
+│ │                    │ condition is the   │         │           │          │ │
+│ │                    │ same as before.    │         │           │          │ │
+│ │                    │ But that's not     │         │           │          │ │
+│ │                    │ possible. Unless   │         │           │          │ │
+│ │                    │ there's a mistake  │         │           │          │ │
+│ │                    │ in the code.       │         │           │          │ │
 │ │                    │                    │         │           │          │ │
+│ │                    │ Wait, maybe the    │         │           │          │ │
+│ │                    │ original code was  │         │           │          │ │
+│ │                    │ checking if        │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ not None and not   │         │           │          │ │
+│ │                    │ NO_OP, and then    │         │           │          │ │
+│ │                    │ checking frozen.   │         │           │          │ │
+│ │                    │ But the current    │         │           │          │ │
+│ │                    │ code is checking   │         │           │          │ │
+│ │                    │ if frozen or       │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ not NO_OP. So the  │         │           │          │ │
+│ │                    │ logic is           │         │           │          │ │
+│ │                    │ different.         │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │  def               │                    │         │           │          │ │
-│ │ test_orjson_non_s… │                    │         │           │          │ │
-│ │ -    with client:  │                    │         │           │          │ │
-│ │ -        response  │                    │         │           │          │ │
-│ │ =                  │                    │         │           │          │ │
-│ │ client.get("/orjs… │                    │         │           │          │ │
-│ │ +    with          │                    │         │           │          │ │
-│ │ warnings.catch_wa… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ warnings.simplefi… │                    │         │           │          │ │
-│ │ FastAPIDeprecatio… │                    │         │           │          │ │
-│ │ +        with      │                    │         │           │          │ │
-│ │ client:            │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ response =         │                    │         │           │          │ │
-│ │ client.get("/orjs… │                    │         │           │          │ │
-│ │      assert        │                    │         │           │          │ │
-│ │ response.json() == │                    │         │           │          │ │
-│ │ {"msg": "Hello     │                    │         │           │          │ │
-│ │ World", "1": 1}    │                    │         │           │          │ │
-│ │ diff --git         │                    │         │           │          │ │
-│ │ a/tests/test_tuto… │                    │         │           │          │ │
-│ │ b/tests/test_tuto… │                    │         │           │          │ │
-│ │ index              │                    │         │           │          │ │
-│ │ cec5ebe6c..a691dd… │                    │         │           │          │ │
-│ │ 100644             │                    │         │           │          │ │
-│ │ ---                │                    │         │           │          │ │
-│ │ a/tests/test_tuto… │                    │         │           │          │ │
-│ │ +++                │                    │         │           │          │ │
-│ │ b/tests/test_tuto… │                    │         │           │          │ │
-│ │ @@ -17,12 +17,14   │                    │         │           │          │ │
-│ │ @@ def             │                    │         │           │          │ │
-│ │ get_client(reques… │                    │         │           │          │ │
-│ │ pytest.FixtureReq… │                    │         │           │          │ │
-│ │      return client │                    │         │           │          │ │
+│ │                    │ Wait, let's think  │         │           │          │ │
+│ │                    │ of different       │         │           │          │ │
+│ │                    │ scenarios:         │         │           │          │ │
 │ │                    │                    │         │           │          │ │
+│ │                    │ Original code: if  │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ not None and       │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ not NO_OP: then    │         │           │          │ │
+│ │                    │ check if frozen.   │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ +@pytest.mark.fil… │                    │         │           │          │ │
-│ │  def               │                    │         │           │          │ │
-│ │ test_get_custom_r… │                    │         │           │          │ │
-│ │ TestClient):       │                    │         │           │          │ │
-│ │      response =    │                    │         │           │          │ │
-│ │ client.get("/item… │                    │         │           │          │ │
-│ │      assert        │                    │         │           │          │ │
-│ │ response.status_c… │                    │         │           │          │ │
-│ │ == 200,            │                    │         │           │          │ │
-│ │ response.text      │                    │         │           │          │ │
-│ │      assert        │                    │         │           │          │ │
-│ │ response.json() == │                    │         │           │          │ │
-│ │ [{"item_id":       │                    │         │           │          │ │
-│ │ "Foo"}]            │                    │         │           │          │ │
+│ │                    │ Now, the code is:  │         │           │          │ │
+│ │                    │ if a.on_setattr is │         │           │          │ │
+│ │                    │ not None: then     │         │           │          │ │
+│ │                    │ check if frozen OR │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ not NO_OP.         │         │           │          │ │
 │ │                    │                    │         │           │          │ │
+│ │                    │ So in the new      │         │           │          │ │
+│ │                    │ code, even if      │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ NO_OP, but frozen  │         │           │          │ │
+│ │                    │ is True, then the  │         │           │          │ │
+│ │                    │ condition is True, │         │           │          │ │
+│ │                    │ so error is        │         │           │          │ │
+│ │                    │ raised. Wait, but  │         │           │          │ │
+│ │                    │ in the original    │         │           │          │ │
+│ │                    │ code, if           │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ NO_OP, then        │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ not None and not   │         │           │          │ │
+│ │                    │ NO_OP would be     │         │           │          │ │
+│ │                    │ False, so the      │         │           │          │ │
+│ │                    │ check for frozen   │         │           │          │ │
+│ │                    │ would not be done. │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ +@pytest.mark.fil… │                    │         │           │          │ │
-│ │  def               │                    │         │           │          │ │
-│ │ test_openapi_sche… │                    │         │           │          │ │
-│ │ TestClient):       │                    │         │           │          │ │
-│ │      response =    │                    │         │           │          │ │
-│ │ client.get("/open… │                    │         │           │          │ │
-│ │      assert        │                    │         │           │          │ │
-│ │ response.status_c… │                    │         │           │          │ │
-│ │ == 200,            │                    │         │           │          │ │
-│ │ response.text      │                    │         │           │          │ │
-│ │ diff --git         │                    │         │           │          │ │
-│ │ a/tests/test_tuto… │                    │         │           │          │ │
-│ │ b/tests/test_tuto… │                    │         │           │          │ │
-│ │ index              │                    │         │           │          │ │
-│ │ 32437db86..11ce81… │                    │         │           │          │ │
-│ │ 100644             │                    │         │           │          │ │
-│ │ ---                │                    │         │           │          │ │
-│ │ a/tests/test_tuto… │                    │         │           │          │ │
-│ │ +++                │                    │         │           │          │ │
-│ │ b/tests/test_tuto… │                    │         │           │          │ │
-│ │ @@ -1,17 +1,25 @@  │                    │         │           │          │ │
-│ │ +import warnings   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +import pytest     │                    │         │           │          │ │
-│ │ +from              │                    │         │           │          │ │
-│ │ fastapi.exceptions │                    │         │           │          │ │
-│ │ import             │                    │         │           │          │ │
-│ │ FastAPIDeprecatio… │                    │         │           │          │ │
-│ │  from              │                    │         │           │          │ │
-│ │ fastapi.testclient │                    │         │           │          │ │
-│ │ import TestClient  │                    │         │           │          │ │
-│ │  from              │                    │         │           │          │ │
-│ │ inline_snapshot    │                    │         │           │          │ │
-│ │ import snapshot    │                    │         │           │          │ │
+│ │                    │ So the original    │         │           │          │ │
+│ │                    │ code allowed NO_OP │         │           │          │ │
+│ │                    │ on frozen classes. │         │           │          │ │
+│ │                    │ Because if         │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ NO_OP, then the    │         │           │          │ │
+│ │                    │ condition to check │         │           │          │ │
+│ │                    │ frozen is not      │         │           │          │ │
+│ │                    │ triggered.         │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ -from              │                    │         │           │          │ │
-│ │ docs_src.custom_r… │                    │         │           │          │ │
-│ │ import app         │                    │         │           │          │ │
-│ │ +with              │                    │         │           │          │ │
-│ │ warnings.catch_wa… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ warnings.simplefi… │                    │         │           │          │ │
-│ │ FastAPIDeprecatio… │                    │         │           │          │ │
-│ │ +    from          │                    │         │           │          │ │
-│ │ docs_src.custom_r… │                    │         │           │          │ │
-│ │ import app         │                    │         │           │          │ │
+│ │                    │ But the new code,  │         │           │          │ │
+│ │                    │ if a.on_setattr is │         │           │          │ │
+│ │                    │ NO_OP, then        │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ not NO_OP is       │         │           │          │ │
+│ │                    │ False. So the      │         │           │          │ │
+│ │                    │ condition is       │         │           │          │ │
+│ │                    │ frozen is True OR  │         │           │          │ │
+│ │                    │ False → frozen is  │         │           │          │ │
+│ │                    │ True. So if the    │         │           │          │ │
+│ │                    │ class is frozen,   │         │           │          │ │
+│ │                    │ then the error is  │         │           │          │ │
+│ │                    │ raised.            │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │  client =          │                    │         │           │          │ │
-│ │ TestClient(app)    │                    │         │           │          │ │
+│ │                    │ Wait, this is the  │         │           │          │ │
+│ │                    │ opposite of what   │         │           │          │ │
+│ │                    │ the test case is   │         │           │          │ │
+│ │                    │ trying to do. The  │         │           │          │ │
+│ │                    │ test case added in │         │           │          │ │
+│ │                    │ test_setattr.py is │         │           │          │ │
+│ │                    │ for allowing NO_OP │         │           │          │ │
+│ │                    │ on frozen classes. │         │           │          │ │
+│ │                    │ So the new code    │         │           │          │ │
+│ │                    │ would not allow    │         │           │          │ │
+│ │                    │ that.              │         │           │          │ │
 │ │                    │                    │         │           │          │ │
+│ │                    │ But wait,          │         │           │          │ │
+│ │                    │ according to the   │         │           │          │ │
+│ │                    │ diff, the new code │         │           │          │ │
+│ │                    │ is changing the    │         │           │          │ │
+│ │                    │ condition to check │         │           │          │ │
+│ │                    │ if frozen is True  │         │           │          │ │
+│ │                    │ OR a.on_setattr is │         │           │          │ │
+│ │                    │ not NO_OP. So, if  │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ NO_OP, then the    │         │           │          │ │
+│ │                    │ condition becomes  │         │           │          │ │
+│ │                    │ frozen is True.    │         │           │          │ │
+│ │                    │ So, if the class   │         │           │          │ │
+│ │                    │ is frozen, then    │         │           │          │ │
+│ │                    │ the error is       │         │           │          │ │
+│ │                    │ raised. Which is   │         │           │          │ │
+│ │                    │ not what the test  │         │           │          │ │
+│ │                    │ case is expecting. │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ +@pytest.mark.fil… │                    │         │           │          │ │
-│ │  def               │                    │         │           │          │ │
-│ │ test_get_custom_r… │                    │         │           │          │ │
-│ │      response =    │                    │         │           │          │ │
-│ │ client.get("/item… │                    │         │           │          │ │
-│ │      assert        │                    │         │           │          │ │
-│ │ response.status_c… │                    │         │           │          │ │
-│ │ == 200,            │                    │         │           │          │ │
-│ │ response.text      │                    │         │           │          │ │
-│ │      assert        │                    │         │           │          │ │
-│ │ response.json() == │                    │         │           │          │ │
-│ │ [{"item_id":       │                    │         │           │          │ │
-│ │ "Foo"}]            │                    │         │           │          │ │
+│ │                    │ But the test case  │         │           │          │ │
+│ │                    │ in test_setattr.py │         │           │          │ │
+│ │                    │ is adding a test   │         │           │          │ │
+│ │                    │ where on_setattr   │         │           │          │ │
+│ │                    │ is NO_OP on a      │         │           │          │ │
+│ │                    │ frozen class, and  │         │           │          │ │
+│ │                    │ the test expects   │         │           │          │ │
+│ │                    │ it to work. So the │         │           │          │ │
+│ │                    │ new code would     │         │           │          │ │
+│ │                    │ actually block     │         │           │          │ │
+│ │                    │ this case.         │         │           │          │ │
 │ │                    │                    │         │           │          │ │
+│ │                    │ But according to   │         │           │          │ │
+│ │                    │ the diff, the code │         │           │          │ │
+│ │                    │ is allowing this   │         │           │          │ │
+│ │                    │ case. There's a    │         │           │          │ │
+│ │                    │ contradiction      │         │           │          │ │
+│ │                    │ here.              │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ +@pytest.mark.fil… │                    │         │           │          │ │
-│ │  def               │                    │         │           │          │ │
-│ │ test_openapi_sche… │                    │         │           │          │ │
-│ │      response =    │                    │         │           │          │ │
-│ │ client.get("/open… │                    │         │           │          │ │
-│ │      assert        │                    │         │           │          │ │
-│ │ response.status_c… │                    │         │           │          │ │
-│ │ == 200,            │                    │         │           │          │ │
-│ │ response.text      │                    │         │           │          │ │
+│ │                    │ Wait, maybe I'm    │         │           │          │ │
+│ │                    │ misunderstanding   │         │           │          │ │
+│ │                    │ the code. Let me   │         │           │          │ │
+│ │                    │ re-express the     │         │           │          │ │
+│ │                    │ logic.             │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ ```                │                    │         │           │          │ │
+│ │                    │ Original code:     │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ if a.on_setattr is │         │           │          │ │
+│ │                    │ not None:          │         │           │          │ │
+│ │                    │     if frozen is   │         │           │          │ │
+│ │                    │ True:              │         │           │          │ │
+│ │                    │         raise      │         │           │          │ │
+│ │                    │ error              │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So, if             │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ not None, and the  │         │           │          │ │
+│ │                    │ class is frozen,   │         │           │          │ │
+│ │                    │ then raise error.  │         │           │          │ │
+│ │                    │ But if             │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ None (or NO_OP?),  │         │           │          │ │
+│ │                    │ then it's allowed. │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Wait, but in the   │         │           │          │ │
+│ │                    │ code, on_setattr   │         │           │          │ │
+│ │                    │ is a parameter     │         │           │          │ │
+│ │                    │ passed to attr.ib. │         │           │          │ │
+│ │                    │ The default is     │         │           │          │ │
+│ │                    │ None. So if        │         │           │          │ │
+│ │                    │ on_setattr is set  │         │           │          │ │
+│ │                    │ to NO_OP, then     │         │           │          │ │
+│ │                    │ it's not None.     │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Wait, the original │         │           │          │ │
+│ │                    │ code raises an     │         │           │          │ │
+│ │                    │ error if           │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ not None (i.e.,    │         │           │          │ │
+│ │                    │ it's set to        │         │           │          │ │
+│ │                    │ something, like    │         │           │          │ │
+│ │                    │ NO_OP) and the     │         │           │          │ │
+│ │                    │ class is frozen.   │         │           │          │ │
+│ │                    │ The new code       │         │           │          │ │
+│ │                    │ changes this to:   │         │           │          │ │
+│ │                    │ if frozen is True  │         │           │          │ │
+│ │                    │ OR a.on_setattr is │         │           │          │ │
+│ │                    │ not NO_OP.         │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So, for example,   │         │           │          │ │
+│ │                    │ if a.on_setattr is │         │           │          │ │
+│ │                    │ NO_OP and the      │         │           │          │ │
+│ │                    │ class is frozen,   │         │           │          │ │
+│ │                    │ then the condition │         │           │          │ │
+│ │                    │ is frozen (True)   │         │           │          │ │
+│ │                    │ OR (a.on_setattr   │         │           │          │ │
+│ │                    │ is not NO_OP →     │         │           │          │ │
+│ │                    │ False) → True. So  │         │           │          │ │
+│ │                    │ the error is       │         │           │          │ │
+│ │                    │ raised.            │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ But the test case  │         │           │          │ │
+│ │                    │ in test_setattr.py │         │           │          │ │
+│ │                    │ is testing that    │         │           │          │ │
+│ │                    │ on_setattr can be  │         │           │          │ │
+│ │                    │ NO_OP on frozen    │         │           │          │ │
+│ │                    │ classes. So this   │         │           │          │ │
+│ │                    │ would cause the    │         │           │          │ │
+│ │                    │ test to fail.      │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ But the user says  │         │           │          │ │
+│ │                    │ that the test case │         │           │          │ │
+│ │                    │ is added. So       │         │           │          │ │
+│ │                    │ perhaps the code   │         │           │          │ │
+│ │                    │ change is allowing │         │           │          │ │
+│ │                    │ NO_OP on frozen    │         │           │          │ │
+│ │                    │ classes, but the   │         │           │          │ │
+│ │                    │ code as modified   │         │           │          │ │
+│ │                    │ actually blocks    │         │           │          │ │
+│ │                    │ it.                │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ This suggests that │         │           │          │ │
+│ │                    │ there might be a   │         │           │          │ │
+│ │                    │ mistake in the     │         │           │          │ │
+│ │                    │ code change. The   │         │           │          │ │
+│ │                    │ original code      │         │           │          │ │
+│ │                    │ blocks on_setattr  │         │           │          │ │
+│ │                    │ (including NO_OP)  │         │           │          │ │
+│ │                    │ on frozen classes. │         │           │          │ │
+│ │                    │ The new code       │         │           │          │ │
+│ │                    │ allows it only if  │         │           │          │ │
+│ │                    │ the on_setattr is  │         │           │          │ │
+│ │                    │ not NO_OP and the  │         │           │          │ │
+│ │                    │ class is not       │         │           │          │ │
+│ │                    │ frozen.            │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Wait, this seems   │         │           │          │ │
+│ │                    │ like a logical     │         │           │          │ │
+│ │                    │ error. The code    │         │           │          │ │
+│ │                    │ change would       │         │           │          │ │
+│ │                    │ prevent using      │         │           │          │ │
+│ │                    │ NO_OP on frozen    │         │           │          │ │
+│ │                    │ classes, which     │         │           │          │ │
+│ │                    │ contradicts the    │         │           │          │ │
+│ │                    │ test case's        │         │           │          │ │
+│ │                    │ intention.         │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ But the test case  │         │           │          │ │
+│ │                    │ is added to verify │         │           │          │ │
+│ │                    │ that it's allowed. │         │           │          │ │
+│ │                    │ So the code change │         │           │          │ │
+│ │                    │ is incorrect.      │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Therefore, this is │         │           │          │ │
+│ │                    │ a defect. The code │         │           │          │ │
+│ │                    │ change             │         │           │          │ │
+│ │                    │ inadvertently      │         │           │          │ │
+│ │                    │ blocks the NO_OP   │         │           │          │ │
+│ │                    │ case on frozen     │         │           │          │ │
+│ │                    │ classes.           │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So the block       │         │           │          │ │
+│ │                    │ decision is needed │         │           │          │ │
+│ │                    │ here, pointing out │         │           │          │ │
+│ │                    │ the logical error  │         │           │          │ │
+│ │                    │ in the condition.  │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ But wait, maybe    │         │           │          │ │
+│ │                    │ I'm                │         │           │          │ │
+│ │                    │ misunderstanding   │         │           │          │ │
+│ │                    │ the code. Let me   │         │           │          │ │
+│ │                    │ recheck.           │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Original code:     │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ if a.on_setattr is │         │           │          │ │
+│ │                    │ not None:          │         │           │          │ │
+│ │                    │     if frozen is   │         │           │          │ │
+│ │                    │ True:              │         │           │          │ │
+│ │                    │         raise      │         │           │          │ │
+│ │                    │ error              │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So, if on_setattr  │         │           │          │ │
+│ │                    │ is not None (could │         │           │          │ │
+│ │                    │ be NO_OP, but      │         │           │          │ │
+│ │                    │ since NO_OP is not │         │           │          │ │
+│ │                    │ None), then check  │         │           │          │ │
+│ │                    │ if frozen.         │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Now, the new code: │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ if a.on_setattr is │         │           │          │ │
+│ │                    │ not None:          │         │           │          │ │
+│ │                    │     if frozen is   │         │           │          │ │
+│ │                    │ True or            │         │           │          │ │
+│ │                    │ a.on_setattr is    │         │           │          │ │
+│ │                    │ not setters.NO_OP: │         │           │          │ │
+│ │                    │         raise      │         │           │          │ │
+│ │                    │ error              │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So, the new code   │         │           │          │ │
+│ │                    │ raises an error if │         │           │          │ │
+│ │                    │ either frozen is   │         │           │          │ │
+│ │                    │ True or if the     │         │           │          │ │
+│ │                    │ on_setattr is not  │         │           │          │ │
+│ │                    │ NO_OP.             │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So, for example,   │         │           │          │ │
+│ │                    │ even if on_setattr │         │           │          │ │
+│ │                    │ is NO_OP, if the   │         │           │          │ │
+│ │                    │ class is frozen,   │         │           │          │ │
+│ │                    │ then the condition │         │           │          │ │
+│ │                    │ is True (frozen is │         │           │          │ │
+│ │                    │ True), so error is │         │           │          │ │
+│ │                    │ raised.            │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ But that's not     │         │           │          │ │
+│ │                    │ what the test case │         │           │          │ │
+│ │                    │ is trying to do.   │         │           │          │ │
+│ │                    │ The test case is   │         │           │          │ │
+│ │                    │ trying to allow    │         │           │          │ │
+│ │                    │ NO_OP on frozen    │         │           │          │ │
+│ │                    │ classes.           │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Thus, the code     │         │           │          │ │
+│ │                    │ change is          │         │           │          │ │
+│ │                    │ incorrect. The     │         │           │          │ │
+│ │                    │ condition is now   │         │           │          │ │
+│ │                    │ checking for       │         │           │          │ │
+│ │                    │ frozen or not      │         │           │          │ │
+│ │                    │ NO_OP, which would │         │           │          │ │
+│ │                    │ cause even NO_OP   │         │           │          │ │
+│ │                    │ on frozen classes  │         │           │          │ │
+│ │                    │ to raise an error. │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Therefore, this is │         │           │          │ │
+│ │                    │ a bug. The code    │         │           │          │ │
+│ │                    │ change incorrectly │         │           │          │ │
+│ │                    │ blocks the use of  │         │           │          │ │
+│ │                    │ NO_OP on frozen    │         │           │          │ │
+│ │                    │ classes.           │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So the correct     │         │           │          │ │
+│ │                    │ decision is to     │         │           │          │ │
+│ │                    │ block this change, │         │           │          │ │
+│ │                    │ pointing out the   │         │           │          │ │
+│ │                    │ logical error in   │         │           │          │ │
+│ │                    │ the condition.     │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Therefore, the     │         │           │          │ │
+│ │                    │ answer should be   │         │           │          │ │
+│ │                    │ block with a       │         │           │          │ │
+│ │                    │ comment indicating │         │           │          │ │
+│ │                    │ the issue in the   │         │           │          │ │
+│ │                    │ condition.         │         │           │          │ │
+│ │                    │ </think>           │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ {"decision":       │         │           │          │ │
+│ │                    │ "block",           │         │           │          │ │
+│ │                    │ "comments":        │         │           │          │ │
+│ │                    │ [{"file":          │         │           │          │ │
+│ │                    │ "src/attr/_make.p… │         │           │          │ │
+│ │                    │ "line_start":      │         │           │          │ │
+│ │                    │ 2022, "line_end":  │         │           │          │ │
+│ │                    │ 2022, "body":      │         │           │          │ │
+│ │                    │ "Incorrect logic   │         │           │          │ │
+│ │                    │ allows frozen      │         │           │          │ │
+│ │                    │ classes with       │         │           │          │ │
+│ │                    │ on_setattr=NO_OP.  │         │           │          │ │
+│ │                    │ Condition checks   │         │           │          │ │
+│ │                    │ frozen or          │         │           │          │ │
+│ │                    │ on_setattr≠NO_OP,  │         │           │          │ │
+│ │                    │ which blocks NO_OP │         │           │          │ │
+│ │                    │ on frozen          │         │           │          │ │
+│ │                    │ classes."}]}       │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
