@@ -1,400 +1,400 @@
-│ │ is the worst       │ code had a check   │         │           │          │ │
-│ │ outcome.           │ for if not         │         │           │          │ │
-│ │ Your final answer  │ sequence, then it  │         │           │          │ │
-│ │ must be exactly    │ yielded an empty   │         │           │          │ │
-│ │ one JSON object:   │ tuple and          │         │           │          │ │
-│ │ {"decision":       │ returned. Then, n  │         │           │          │ │
-│ │ "approve|block|es… │ was calculated as  │         │           │          │ │
-│ │ "comments": []}    │ comb(len(sequence) │         │           │          │ │
-│ │ For block, include │ + r -1, r). But in │         │           │          │ │
-│ │ exactly one        │ the modified code, │         │           │          │ │
-│ │ comment with file, │ they changed that  │         │           │          │ │
-│ │ line_start,        │ to n = comb(...)   │         │           │          │ │
-│ │ line_end and body; │ if sequence else 1 │         │           │          │ │
-│ │ limit body to 40   │ if r else 0.       │         │           │          │ │
-│ │ words explaining   │                    │         │           │          │ │
-│ │ the defect. For    │ Wait, the original │         │           │          │ │
-│ │ approve or         │ code's approach    │         │           │          │ │
-│ │ escalate, use an   │ for an empty       │         │           │          │ │
-│ │ empty comments     │ sequence was to    │         │           │          │ │
-│ │ array. Do not      │ yield an empty     │         │           │          │ │
-│ │ include proposed   │ tuple and return.  │         │           │          │ │
-│ │ tests or test      │ But the new code   │         │           │          │ │
-│ │ source.            │ removes that check │         │           │          │ │
-│ │                    │ and instead sets n │         │           │          │ │
-│ │ USER               │ to 1 if r is       │         │           │          │ │
-│ │ Repository:        │ non-zero, or 0 if  │         │           │          │ │
-│ │ more-itertools     │ r is zero. Hmm.    │         │           │          │ │
-│ │ Files changed:     │ Let's think about  │         │           │          │ │
-│ │ more_itertools/mo… │ what the function  │         │           │          │ │
-│ │                    │ is supposed to do. │         │           │          │ │
-│ │ Context around the │ The function is    │         │           │          │ │
-│ │ change             │ supposed to return │         │           │          │ │
-│ │ (mechanically      │ combinations with  │         │           │          │ │
-│ │ extracted):        │ replacement in a   │         │           │          │ │
-│ │ Changed            │ random order.      │         │           │          │ │
-│ │ definitions:       │                    │         │           │          │ │
-│ │ more_itertools/mo… │ If the input       │         │           │          │ │
-│ │ Recent history of  │ iterable is empty, │         │           │          │ │
-│ │ more_itertools/mo… │ then               │         │           │          │ │
-│ │   b8fe920          │ combinations_with… │         │           │          │ │
-│ │ 2026-01-03 Add     │ would normally be  │         │           │          │ │
-│ │ random ordered     │ empty. But the     │         │           │          │ │
-│ │ combinatoric       │ original code had  │         │           │          │ │
-│ │ functions          │ a check that, if   │         │           │          │ │
-│ │   ce676d2          │ the sequence is    │         │           │          │ │
-│ │ 2026-09-04 Do not  │ empty, it yields   │         │           │          │ │
-│ │ yield an empty     │ an empty tuple and │         │           │          │ │
-│ │ list for an empty  │ returns. However,  │         │           │          │ │
-│ │ iterable when      │ the new code       │         │           │          │ │
-│ │ maxsplit is 0      │ removes that check │         │           │          │ │
-│ │   7847d43          │ and instead        │         │           │          │ │
-│ │ 2026-09-03 Don't   │ calculates n based │         │           │          │ │
-│ │ mask TypeError     │ on sequence and r. │         │           │          │ │
-│ │ raised while       │                    │         │           │          │ │
-│ │ iterating in       │ Wait, the original │         │           │          │ │
-│ │ value_chain        │ code's 'sequence = │         │           │          │ │
-│ │                    │ tuple(iterable)',  │         │           │          │ │
-│ │ Diff:              │ then if not        │         │           │          │ │
-│ │ ```diff            │ sequence, yield () │         │           │          │ │
-│ │ diff --git         │ and return. But    │         │           │          │ │
-│ │ a/more_itertools/… │ the new code       │         │           │          │ │
-│ │ b/more_itertools/… │ changes that part. │         │           │          │ │
-│ │ index              │ The original       │         │           │          │ │
-│ │ edb94d1..3b5b26a   │ code's n was       │         │           │          │ │
-│ │ 100755             │ comb(len(sequence) │         │           │          │ │
-│ │ ---                │ + r -1, r). So for │         │           │          │ │
-│ │ a/more_itertools/… │ an empty sequence, │         │           │          │ │
-│ │ +++                │ len(sequence) is   │         │           │          │ │
-│ │ b/more_itertools/… │ zero, so comb(0 +  │         │           │          │ │
-│ │ @@ -5672,9 +5672,6 │ r -1, r). That     │         │           │          │ │
-│ │ @@ def             │ would be comb(r-1, │         │           │          │ │
-│ │ random_ordered_co… │ r), which is zero. │         │           │          │ │
-│ │ r):                │ But the original   │         │           │          │ │
-│ │  def               │ code then had a    │         │           │          │ │
-│ │ random_ordered_co… │ check that if the  │         │           │          │ │
-│ │ r):                │ sequence is empty, │         │           │          │ │
-│ │      "Return       │ it yields an empty │         │           │          │ │
-│ │ :func:`combinatio… │ tuple. But the new │         │           │          │ │
-│ │ tuples in randomly │ code's calculation │         │           │          │ │
-│ │ shuffled order."   │ for n when         │         │           │          │ │
-│ │      sequence =    │ sequence is empty  │         │           │          │ │
-│ │ tuple(iterable)    │ is 1 if r else 0.  │         │           │          │ │
-│ │ -    if not        │                    │         │           │          │ │
-│ │ sequence:          │ Wait, the new code │         │           │          │ │
-│ │ -        yield ()  │ says n = comb(...) │         │           │          │ │
-│ │ -        return    │ if sequence else 1 │         │           │          │ │
-│ │ -    n =           │ if r else 0. So,   │         │           │          │ │
-│ │ comb(len(sequence) │ if the sequence is │         │           │          │ │
-│ │ + r - 1, r)        │ empty, then it's 1 │         │           │          │ │
-│ │ +    n =           │ if r is not zero,  │         │           │          │ │
-│ │ comb(len(sequence) │ else 0. But for    │         │           │          │ │
-│ │ + r - 1, r) if     │ combinations_with… │         │           │          │ │
-│ │ sequence else 1 if │ when the iterable  │         │           │          │ │
-│ │ r else 0           │ is empty, the      │         │           │          │ │
-│ │      for index in  │ number of          │         │           │          │ │
-│ │ _random_ordered_i… │ combinations with  │         │           │          │ │
-│ │          yield     │ replacement is 0.  │         │           │          │ │
-│ │ nth_combination_w… │ So if r is zero,   │         │           │          │ │
-│ │ r, index)          │ the number of      │         │           │          │ │
-│ │ ```                │ combinations is 1  │         │           │          │ │
-│ │                    │ (empty             │         │           │          │ │
-│ │                    │ combination?), but │         │           │          │ │
-│ │                    │ that's a bit       │         │           │          │ │
-│ │                    │ unclear.           │         │           │          │ │
+│ │ f"HttpOnly;        │                    │         │           │          │ │
+│ │ Max-Age=10;        │                    │         │           │          │ │
+│ │ {partitioned_text… │                    │         │           │          │ │
+│ │ SameSite=none;     │                    │         │           │          │ │
+│ │ Secure"            │                    │         │           │          │ │
+│ │      )             │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ Wait, the original │         │           │          │ │
-│ │                    │ code's approach    │         │           │          │ │
-│ │                    │ when the sequence  │         │           │          │ │
-│ │                    │ is empty was to    │         │           │          │ │
-│ │                    │ yield a single     │         │           │          │ │
-│ │                    │ empty tuple, but   │         │           │          │ │
-│ │                    │ the new code's     │         │           │          │ │
-│ │                    │ calculation for n  │         │           │          │ │
-│ │                    │ in that case is 1  │         │           │          │ │
-│ │                    │ if r is not zero.  │         │           │          │ │
-│ │                    │ Wait, but if the   │         │           │          │ │
-│ │                    │ sequence is empty, │         │           │          │ │
-│ │                    │ then the           │         │           │          │ │
-│ │                    │ combinations_with… │         │           │          │ │
-│ │                    │ would be empty.    │         │           │          │ │
-│ │                    │ However, the       │         │           │          │ │
-│ │                    │ function is        │         │           │          │ │
-│ │                    │ supposed to return │         │           │          │ │
-│ │                    │ combinations_with… │         │           │          │ │
-│ │                    │ in random order.   │         │           │          │ │
-│ │                    │ If the input is    │         │           │          │ │
-│ │                    │ empty, then the    │         │           │          │ │
-│ │                    │ combinations_with… │         │           │          │ │
-│ │                    │ would be empty.    │         │           │          │ │
-│ │                    │ But the original   │         │           │          │ │
-│ │                    │ code's check was   │         │           │          │ │
-│ │                    │ to yield an empty  │         │           │          │ │
-│ │                    │ tuple and return.  │         │           │          │ │
-│ │                    │ But in that case,  │         │           │          │ │
-│ │                    │ the function would │         │           │          │ │
-│ │                    │ yield one empty    │         │           │          │ │
-│ │                    │ tuple, but the     │         │           │          │ │
-│ │                    │ actual             │         │           │          │ │
-│ │                    │ combinations_with… │         │           │          │ │
-│ │                    │ for an empty       │         │           │          │ │
-│ │                    │ iterable would be  │         │           │          │ │
-│ │                    │ empty.             │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ Wait, maybe the    │         │           │          │ │
-│ │                    │ original code had  │         │           │          │ │
-│ │                    │ a bug. Because if  │         │           │          │ │
-│ │                    │ the iterable is    │         │           │          │ │
-│ │                    │ empty, then        │         │           │          │ │
-│ │                    │ combinations_with… │         │           │          │ │
-│ │                    │ would have zero    │         │           │          │ │
-│ │                    │ elements. So the   │         │           │          │ │
-│ │                    │ original code's    │         │           │          │ │
-│ │                    │ check for if not   │         │           │          │ │
-│ │                    │ sequence: yield () │         │           │          │ │
-│ │                    │ and return would   │         │           │          │ │
-│ │                    │ be incorrect.      │         │           │          │ │
-│ │                    │ Because            │         │           │          │ │
-│ │                    │ combinations_with… │         │           │          │ │
-│ │                    │ of an empty        │         │           │          │ │
-│ │                    │ iterable with r=2  │         │           │          │ │
-│ │                    │ would be empty,    │         │           │          │ │
-│ │                    │ not a single empty │         │           │          │ │
-│ │                    │ tuple.             │         │           │          │ │
+│ │ +@pytest.mark.ski… │                    │         │           │          │ │
+│ │ >= (3, 14),        │                    │         │           │          │ │
+│ │ reason="Only       │                    │         │           │          │ │
+│ │ relevant for       │                    │         │           │          │ │
+│ │ <3.14")            │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_set_cookie_r… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ test_client_facto… │                    │         │           │          │ │
+│ │ TestClientFactory, │                    │         │           │          │ │
+│ │ +) -> None:  #     │                    │         │           │          │ │
+│ │ pragma: no cover   │                    │         │           │          │ │
+│ │ +    async def     │                    │         │           │          │ │
+│ │ app(scope: Scope,  │                    │         │           │          │ │
+│ │ receive: Receive,  │                    │         │           │          │ │
+│ │ send: Send) ->     │                    │         │           │          │ │
+│ │ None:              │                    │         │           │          │ │
+│ │ +        response  │                    │         │           │          │ │
+│ │ = Response("Hello, │                    │         │           │          │ │
+│ │ world!",           │                    │         │           │          │ │
+│ │ media_type="text/… │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ pytest.raises(Val… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ response.set_cook… │                    │         │           │          │ │
+│ │ "myvalue",         │                    │         │           │          │ │
+│ │ partitioned=True)  │                    │         │           │          │ │
+│ │ +        await     │                    │         │           │          │ │
+│ │ response(scope,    │                    │         │           │          │ │
+│ │ receive, send)     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    client =      │                    │         │           │          │ │
+│ │ test_client_facto… │                    │         │           │          │ │
+│ │ +    response =    │                    │         │           │          │ │
+│ │ client.get("/")    │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.text ==   │                    │         │           │          │ │
+│ │ "Hello, world!"    │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.headers.… │                    │         │           │          │ │
+│ │ is None            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_set_cookie_p… │                    │         │           │          │ │
+│ │ TestClientFactory) │                    │         │           │          │ │
+│ │ -> None:           │                    │         │           │          │ │
+│ │      async def     │                    │         │           │          │ │
+│ │ app(scope: Scope,  │                    │         │           │          │ │
+│ │ receive: Receive,  │                    │         │           │          │ │
+│ │ send: Send) ->     │                    │         │           │          │ │
+│ │ None:              │                    │         │           │          │ │
+│ │          response  │                    │         │           │          │ │
+│ │ = Response("Hello, │                    │         │           │          │ │
+│ │ world!",           │                    │         │           │          │ │
+│ │ media_type="text/… │                    │         │           │          │ │
+│ │ ```                │                    │         │           │          │ │
+│ ├────────────────────┼────────────────────┼─────────┼───────────┼──────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │   -5.00 │     -1.09 │ approve  │ │
+│ │ You are the code   │ <think>            │         │           │          │ │
+│ │ review gate for a  │ Okay, let's take a │         │           │          │ │
+│ │ production         │ look at this code  │         │           │          │ │
+│ │ repository.        │ change. The user   │         │           │          │ │
+│ │ Approval merges    │ has modified the   │         │           │          │ │
+│ │ and deploys the    │ Starlette          │         │           │          │ │
+│ │ change without     │ repository,        │         │           │          │ │
+│ │ further human      │ specifically in    │         │           │          │ │
+│ │ review.            │ the responses.py   │         │           │          │ │
+│ │   approve  - you   │ file and the       │         │           │          │ │
+│ │ are confident the  │ test_responses.py. │         │           │          │ │
+│ │ change is correct  │ The main changes   │         │           │          │ │
+│ │ and safe to ship.  │ seem to be adding  │         │           │          │ │
+│ │   block    - you   │ support for        │         │           │          │ │
+│ │ found a concrete   │ partitioned        │         │           │          │ │
+│ │ defect in the      │ cookies, which are │         │           │          │ │
+│ │ change.            │ a new feature in   │         │           │          │ │
+│ │   escalate - you   │ Python 3.14.       │         │           │          │ │
+│ │ cannot establish   │                    │         │           │          │ │
+│ │ safety from the    │ First, in          │         │           │          │ │
+│ │ supplied evidence. │ responses.py, the  │         │           │          │ │
+│ │ Approving a        │ Response class's   │         │           │          │ │
+│ │ defective change   │ __init__ method    │         │           │          │ │
+│ │ is the worst       │ now has a new      │         │           │          │ │
+│ │ outcome.           │ parameter          │         │           │          │ │
+│ │ Your final answer  │ 'partitioned' with │         │           │          │ │
+│ │ must be exactly    │ a default of       │         │           │          │ │
+│ │ one JSON object:   │ False. The code    │         │           │          │ │
+│ │ {"decision":       │ checks if Python   │         │           │          │ │
+│ │ "approve|block|es… │ version is <=3.14  │         │           │          │ │
+│ │ "comments": []}    │ and raises an      │         │           │          │ │
+│ │ For block, include │ error if someone   │         │           │          │ │
+│ │ exactly one        │ tries to use       │         │           │          │ │
+│ │ comment with file, │ partitioned        │         │           │          │ │
+│ │ line_start,        │ cookies.           │         │           │          │ │
+│ │ line_end and body; │ Otherwise, it sets │         │           │          │ │
+│ │ limit body to 40   │ the partitioned    │         │           │          │ │
+│ │ words explaining   │ attribute on the   │         │           │          │ │
+│ │ the defect. For    │ cookie. That makes │         │           │          │ │
+│ │ approve or         │ sense because      │         │           │          │ │
+│ │ escalate, use an   │ partitioned        │         │           │          │ │
+│ │ empty comments     │ cookies aren't     │         │           │          │ │
+│ │ array. Do not      │ available in older │         │           │          │ │
+│ │ include proposed   │ versions.          │         │           │          │ │
+│ │ tests or test      │                    │         │           │          │ │
+│ │ source.            │ Then, in the test  │         │           │          │ │
+│ │                    │ file, there's a    │         │           │          │ │
+│ │ USER               │ new test case      │         │           │          │ │
+│ │ Repository:        │ test_set_cookie_r… │         │           │          │ │
+│ │ starlette          │ This test skips if │         │           │          │ │
+│ │ Files changed:     │ the Python version │         │           │          │ │
+│ │ docs/responses.md, │ is 3.14 or higher, │         │           │          │ │
+│ │ starlette/respons… │ which is logical   │         │           │          │ │
+│ │ tests/test_respon… │ because the        │         │           │          │ │
+│ │                    │ feature isn't      │         │           │          │ │
+│ │ Not shown          │ available in those │         │           │          │ │
+│ │ (non-code or over  │ versions. The test │         │           │          │ │
+│ │ budget; treat as   │ checks that        │         │           │          │ │
+│ │ unreviewed):       │ attempting to set  │         │           │          │ │
+│ │ docs/responses.md  │ a partitioned      │         │           │          │ │
+│ │ (1548 chars,       │ cookie in an       │         │           │          │ │
+│ │ non-code)          │ incompatible       │         │           │          │ │
+│ │                    │ version raises a   │         │           │          │ │
+│ │ Context around the │ ValueError. Also,  │         │           │          │ │
+│ │ change             │ there's an update  │         │           │          │ │
+│ │ (mechanically      │ in the existing    │         │           │          │ │
+│ │ extracted):        │ test_set_cookie to │         │           │          │ │
+│ │ Changed            │ conditionally      │         │           │          │ │
+│ │ definitions:       │ include the        │         │           │          │ │
+│ │ starlette/respons… │ 'Partitioned'      │         │           │          │ │
+│ │ starlette/respons… │ attribute based on │         │           │          │ │
+│ │ starlette/respons… │ the Python         │         │           │          │ │
+│ │ tests/test_respon… │ version.           │         │           │          │ │
+│ │ tests/test_respon… │                    │         │           │          │ │
+│ │ tests/test_respon… │ I need to check if │         │           │          │ │
+│ │ tests/test_respon… │ there are any      │         │           │          │ │
+│ │ tests/test_respon… │ issues here. The   │         │           │          │ │
+│ │ tests/test_respon… │ code seems to      │         │           │          │ │
+│ │ Recent history of  │ handle the Python  │         │           │          │ │
+│ │ starlette/respons… │ version check      │         │           │          │ │
+│ │   5cc4ddf          │ correctly. The     │         │           │          │ │
+│ │ 2025-02-22 Raise   │ test cases cover   │         │           │          │ │
+│ │ exception from     │ both the valid and │         │           │          │ │
+│ │ background task on │ invalid scenarios. │         │           │          │ │
+│ │ BaseHTTPMiddleware │ The new test is    │         │           │          │ │
+│ │ (#2812)            │ properly skipped   │         │           │          │ │
+│ │   a7d0b14          │ for versions where │         │           │          │ │
+│ │ 2025-02-02 Bump    │ partitioned        │         │           │          │ │
+│ │ the                │ cookies aren't     │         │           │          │ │
+│ │ python-packages    │ supported. The     │         │           │          │ │
+│ │ group with 5       │ error message in   │         │           │          │ │
+│ │ updates (#2860)    │ the code is clear, │         │           │          │ │
+│ │   e7605e1          │ and the test       │         │           │          │ │
+│ │ 2024-12-28 Drop    │ verifies that the  │         │           │          │ │
+│ │ Python 3.8 (#2823) │ exception is       │         │           │          │ │
+│ │ Recent history of  │ raised as          │         │           │          │ │
+│ │ tests/test_respon… │ expected.          │         │           │          │ │
+│ │   a7d0b14          │                    │         │           │          │ │
+│ │ 2025-02-02 Bump    │ I don't see any    │         │           │          │ │
+│ │ the                │ obvious defects.   │         │           │          │ │
+│ │ python-packages    │ The changes are    │         │           │          │ │
+│ │ group with 5       │ properly guarded   │         │           │          │ │
+│ │ updates (#2860)    │ against using new  │         │           │          │ │
+│ │   e7605e1          │ features in older  │         │           │          │ │
+│ │ 2024-12-28 Drop    │ Python versions.   │         │           │          │ │
+│ │ Python 3.8 (#2823) │ The tests ensure   │         │           │          │ │
+│ │   70a04ee          │ that the           │         │           │          │ │
+│ │ 2024-12-25 tests:  │ functionality      │         │           │          │ │
+│ │ branches coverage  │ works as intended  │         │           │          │ │
+│ │ in `responses.py`, │ and that errors    │         │           │          │ │
+│ │ `staticfiles.py`,  │ are correctly      │         │           │          │ │
+│ │ `templating.py`,   │ raised. The code   │         │           │          │ │
+│ │ `middleware/wsgi.… │ aligns with the    │         │           │          │ │
+│ │ and `endpoints.py` │ recent history of  │         │           │          │ │
+│ │ (#2804)            │ dropping Python    │         │           │          │ │
+│ │                    │ 3.8, so it's       │         │           │          │ │
+│ │ Diff:              │ likely that the    │         │           │          │ │
+│ │ ```diff            │ version checks are │         │           │          │ │
+│ │ diff --git         │ correctly          │         │           │          │ │
+│ │ a/starlette/respo… │ implemented.       │         │           │          │ │
+│ │ b/starlette/respo… │                    │         │           │          │ │
+│ │ index              │ Therefore, the     │         │           │          │ │
+│ │ 81e89fa..99e6456   │ decision should be │         │           │          │ │
+│ │ 100644             │ to approve the     │         │           │          │ │
+│ │ ---                │ changes. There's   │         │           │          │ │
+│ │ a/starlette/respo… │ no concrete defect │         │           │          │ │
+│ │ +++                │ in the code        │         │           │          │ │
+│ │ b/starlette/respo… │ provided, and the  │         │           │          │ │
+│ │ @@ -6,6 +6,7 @@    │ tests seem to      │         │           │          │ │
+│ │ import json        │ cover the          │         │           │          │ │
+│ │  import os         │ necessary cases.   │         │           │          │ │
+│ │  import re         │ </think>           │         │           │          │ │
+│ │  import stat       │                    │         │           │          │ │
+│ │ +import sys        │ {"decision":       │         │           │          │ │
+│ │  import typing     │ "approve",         │         │           │          │ │
+│ │  import warnings   │ "comments": []}    │         │           │          │ │
+│ │  from datetime     │                    │         │           │          │ │
+│ │ import datetime    │                    │         │           │          │ │
+│ │ @@ -97,6 +98,7 @@  │                    │         │           │          │ │
+│ │ class Response:    │                    │         │           │          │ │
+│ │          secure:   │                    │         │           │          │ │
+│ │ bool = False,      │                    │         │           │          │ │
+│ │          httponly: │                    │         │           │          │ │
+│ │ bool = False,      │                    │         │           │          │ │
+│ │          samesite: │                    │         │           │          │ │
+│ │ typing.Literal["l… │                    │         │           │          │ │
+│ │ "strict", "none"]  │                    │         │           │          │ │
+│ │ | None = "lax",    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ partitioned: bool  │                    │         │           │          │ │
+│ │ = False,           │                    │         │           │          │ │
+│ │      ) -> None:    │                    │         │           │          │ │
+│ │          cookie:   │                    │         │           │          │ │
+│ │ http.cookies.Base… │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ http.cookies.Simp… │                    │         │           │          │ │
+│ │          cookie[k… │                    │         │           │          │ │
+│ │ = value            │                    │         │           │          │ │
+│ │ @@ -122,6 +124,11  │                    │         │           │          │ │
+│ │ @@ class Response: │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │              ],    │                    │         │           │          │ │
+│ │ "samesite must be  │                    │         │           │          │ │
+│ │ either 'strict',   │                    │         │           │          │ │
+│ │ 'lax' or 'none'"   │                    │         │           │          │ │
+│ │              cook… │                    │         │           │          │ │
+│ │ = samesite         │                    │         │           │          │ │
+│ │ +        if        │                    │         │           │          │ │
+│ │ partitioned:       │                    │         │           │          │ │
+│ │ +            if    │                    │         │           │          │ │
+│ │ sys.version_info   │                    │         │           │          │ │
+│ │ <= (3, 14):        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ raise              │                    │         │           │          │ │
+│ │ ValueError("Parti… │                    │         │           │          │ │
+│ │ cookies are only   │                    │         │           │          │ │
+│ │ supported in       │                    │         │           │          │ │
+│ │ Python 3.14 and    │                    │         │           │          │ │
+│ │ above.")  #        │                    │         │           │          │ │
+│ │ pragma: no cover   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cookie[key]["part… │                    │         │           │          │ │
+│ │ = True  # pragma:  │                    │         │           │          │ │
+│ │ no cover           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │          cookie_v… │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ cookie.output(hea… │                    │         │           │          │ │
+│ │          self.raw… │                    │         │           │          │ │
+│ │ cookie_val.encode… │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ But the new code's │         │           │          │ │
-│ │                    │ logic for n when   │         │           │          │ │
-│ │                    │ the sequence is    │         │           │          │ │
-│ │                    │ empty is 1 if r    │         │           │          │ │
-│ │                    │ else 0. So for     │         │           │          │ │
-│ │                    │ example, if r is   │         │           │          │ │
-│ │                    │ 2, then n would be │         │           │          │ │
-│ │                    │ 1, which would     │         │           │          │ │
-│ │                    │ make the loop for  │         │           │          │ │
-│ │                    │ index in           │         │           │          │ │
-│ │                    │ _random_ordered_i… │         │           │          │ │
-│ │                    │ which would yield  │         │           │          │ │
-│ │                    │ one index (0),     │         │           │          │ │
-│ │                    │ then yield         │         │           │          │ │
-│ │                    │ nth_combination_w… │         │           │          │ │
-│ │                    │ r, index). But if  │         │           │          │ │
-│ │                    │ the sequence is    │         │           │          │ │
-│ │                    │ empty, then the    │         │           │          │ │
-│ │                    │ nth_combination_w… │         │           │          │ │
-│ │                    │ would not exist.   │         │           │          │ │
-│ │                    │ That's a problem.  │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_resp… │                    │         │           │          │ │
+│ │ b/tests/test_resp… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 0a00e93..baf7c98   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_resp… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_resp… │                    │         │           │          │ │
+│ │ @@ -1,6 +1,7 @@    │                    │         │           │          │ │
+│ │  from __future__   │                    │         │           │          │ │
+│ │ import annotations │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ Wait, the function │         │           │          │ │
-│ │                    │ nth_combination_w… │         │           │          │ │
-│ │                    │ would require a    │         │           │          │ │
-│ │                    │ non-empty          │         │           │          │ │
-│ │                    │ sequence. So if    │         │           │          │ │
-│ │                    │ the sequence is    │         │           │          │ │
-│ │                    │ empty, and r is    │         │           │          │ │
-│ │                    │ non-zero, then the │         │           │          │ │
-│ │                    │ for loop would run │         │           │          │ │
-│ │                    │ once, but trying   │         │           │          │ │
-│ │                    │ to get a           │         │           │          │ │
-│ │                    │ combination with   │         │           │          │ │
-│ │                    │ replacement from   │         │           │          │ │
-│ │                    │ an empty sequence  │         │           │          │ │
-│ │                    │ would be invalid.  │         │           │          │ │
-│ │                    │ So the new code    │         │           │          │ │
-│ │                    │ might be           │         │           │          │ │
-│ │                    │ introducing an     │         │           │          │ │
-│ │                    │ error here.        │         │           │          │ │
+│ │  import datetime   │                    │         │           │          │ │
+│ │ as dt              │                    │         │           │          │ │
+│ │ +import sys        │                    │         │           │          │ │
+│ │  import time       │                    │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ collections.abc    │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ AsyncGenerator,    │                    │         │           │          │ │
+│ │ AsyncIterator,     │                    │         │           │          │ │
+│ │ Iterator           │                    │         │           │          │ │
+│ │  from http.cookies │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ SimpleCookie       │                    │         │           │          │ │
+│ │ @@ -370,18 +371,37 │                    │         │           │          │ │
+│ │ @@ def             │                    │         │           │          │ │
+│ │ test_set_cookie(t… │                    │         │           │          │ │
+│ │ TestClientFactory, │                    │         │           │          │ │
+│ │ monkeypatch:       │                    │         │           │          │ │
+│ │ pytest.            │                    │         │           │          │ │
+│ │              secu… │                    │         │           │          │ │
+│ │              http… │                    │         │           │          │ │
+│ │              same… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ partitioned=True   │                    │         │           │          │ │
+│ │ if                 │                    │         │           │          │ │
+│ │ sys.version_info   │                    │         │           │          │ │
+│ │ >= (3, 14) else    │                    │         │           │          │ │
+│ │ False,             │                    │         │           │          │ │
+│ │          )         │                    │         │           │          │ │
+│ │          await     │                    │         │           │          │ │
+│ │ response(scope,    │                    │         │           │          │ │
+│ │ receive, send)     │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ In the original    │         │           │          │ │
-│ │                    │ code, the check    │         │           │          │ │
-│ │                    │ for sequence being │         │           │          │ │
-│ │                    │ empty would yield  │         │           │          │ │
-│ │                    │ an empty tuple,    │         │           │          │ │
-│ │                    │ which might be     │         │           │          │ │
-│ │                    │ incorrect, but the │         │           │          │ │
-│ │                    │ new code's         │         │           │          │ │
-│ │                    │ approach of        │         │           │          │ │
-│ │                    │ calculating n as 1 │         │           │          │ │
-│ │                    │ when sequence is   │         │           │          │ │
-│ │                    │ empty and r is     │         │           │          │ │
-│ │                    │ non-zero would     │         │           │          │ │
-│ │                    │ lead to generating │         │           │          │ │
-│ │                    │ an index that's    │         │           │          │ │
-│ │                    │ invalid.           │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ partitioned_text = │                    │         │           │          │ │
+│ │ "Partitioned; " if │                    │         │           │          │ │
+│ │ sys.version_info   │                    │         │           │          │ │
+│ │ >= (3, 14) else "" │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      client =      │                    │         │           │          │ │
+│ │ test_client_facto… │                    │         │           │          │ │
+│ │      response =    │                    │         │           │          │ │
+│ │ client.get("/")    │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.text ==   │                    │         │           │          │ │
+│ │ "Hello, world!"    │                    │         │           │          │ │
+│ │      assert (      │                    │         │           │          │ │
+│ │          response… │                    │         │           │          │ │
+│ │ ==                 │                    │         │           │          │ │
+│ │ "mycookie=myvalue; │                    │         │           │          │ │
+│ │ Domain=localhost;  │                    │         │           │          │ │
+│ │ expires=Thu, 22    │                    │         │           │          │ │
+│ │ Jan 2037 12:00:10  │                    │         │           │          │ │
+│ │ GMT; "             │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ "HttpOnly;         │                    │         │           │          │ │
+│ │ Max-Age=10;        │                    │         │           │          │ │
+│ │ Path=/;            │                    │         │           │          │ │
+│ │ SameSite=none;     │                    │         │           │          │ │
+│ │ Secure"            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ f"HttpOnly;        │                    │         │           │          │ │
+│ │ Max-Age=10;        │                    │         │           │          │ │
+│ │ {partitioned_text… │                    │         │           │          │ │
+│ │ SameSite=none;     │                    │         │           │          │ │
+│ │ Secure"            │                    │         │           │          │ │
+│ │      )             │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ Therefore, the     │         │           │          │ │
-│ │                    │ change might be    │         │           │          │ │
-│ │                    │ incorrect. The     │         │           │          │ │
-│ │                    │ original approach  │         │           │          │ │
-│ │                    │ of checking for    │         │           │          │ │
-│ │                    │ empty sequence and │         │           │          │ │
-│ │                    │ yielding a single  │         │           │          │ │
-│ │                    │ empty tuple might  │         │           │          │ │
-│ │                    │ be a bug, but the  │         │           │          │ │
-│ │                    │ new code's         │         │           │          │ │
-│ │                    │ handling of n      │         │           │          │ │
-│ │                    │ could be causing   │         │           │          │ │
-│ │                    │ issues.            │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ Wait, the original │         │           │          │ │
-│ │                    │ code's line: if    │         │           │          │ │
-│ │                    │ not sequence:      │         │           │          │ │
-│ │                    │ yield () and       │         │           │          │ │
-│ │                    │ return. That would │         │           │          │ │
-│ │                    │ produce a single   │         │           │          │ │
-│ │                    │ empty tuple. But   │         │           │          │ │
-│ │                    │ combinations_with… │         │           │          │ │
-│ │                    │ for an empty       │         │           │          │ │
-│ │                    │ iterable is empty. │         │           │          │ │
-│ │                    │ So yielding a      │         │           │          │ │
-│ │                    │ single empty tuple │         │           │          │ │
-│ │                    │ would be           │         │           │          │ │
-│ │                    │ incorrect.         │         │           │          │ │
-│ │                    │ However, perhaps   │         │           │          │ │
-│ │                    │ the function was   │         │           │          │ │
-│ │                    │ supposed to yield  │         │           │          │ │
-│ │                    │ an empty tuple in  │         │           │          │ │
-│ │                    │ that case. But     │         │           │          │ │
-│ │                    │ maybe that's not   │         │           │          │ │
-│ │                    │ correct.           │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Alternatively,     │         │           │          │ │
-│ │                    │ maybe the function │         │           │          │ │
-│ │                    │ should not yield   │         │           │          │ │
-│ │                    │ anything when the  │         │           │          │ │
-│ │                    │ input is empty.    │         │           │          │ │
-│ │                    │ But the original   │         │           │          │ │
-│ │                    │ code yielded one   │         │           │          │ │
-│ │                    │ empty tuple. So    │         │           │          │ │
-│ │                    │ the new code's     │         │           │          │ │
-│ │                    │ calculation of n   │         │           │          │ │
-│ │                    │ as 1 in that case  │         │           │          │ │
-│ │                    │ would generate a   │         │           │          │ │
-│ │                    │ single element.    │         │           │          │ │
-│ │                    │ But when the       │         │           │          │ │
-│ │                    │ sequence is empty, │         │           │          │ │
-│ │                    │ the                │         │           │          │ │
-│ │                    │ nth_combination_w… │         │           │          │ │
-│ │                    │ would fail because │         │           │          │ │
-│ │                    │ it's being called  │         │           │          │ │
-│ │                    │ with an empty      │         │           │          │ │
-│ │                    │ sequence.          │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ So the new code's  │         │           │          │ │
-│ │                    │ logic here is      │         │           │          │ │
-│ │                    │ incorrect. The     │         │           │          │ │
-│ │                    │ original code had  │         │           │          │ │
-│ │                    │ a check to handle  │         │           │          │ │
-│ │                    │ the empty sequence │         │           │          │ │
-│ │                    │ case, but the new  │         │           │          │ │
-│ │                    │ code removed that  │         │           │          │ │
-│ │                    │ check and relied   │         │           │          │ │
-│ │                    │ on the n           │         │           │          │ │
-│ │                    │ calculation.       │         │           │          │ │
-│ │                    │ However, when the  │         │           │          │ │
-│ │                    │ sequence is empty  │         │           │          │ │
-│ │                    │ and r is non-zero, │         │           │          │ │
-│ │                    │ the n calculation  │         │           │          │ │
-│ │                    │ is set to 1, which │         │           │          │ │
-│ │                    │ would result in an │         │           │          │ │
-│ │                    │ index that can't   │         │           │          │ │
-│ │                    │ be processed       │         │           │          │ │
-│ │                    │ because the        │         │           │          │ │
-│ │                    │ sequence is empty. │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Therefore, the     │         │           │          │ │
-│ │                    │ change is          │         │           │          │ │
-│ │                    │ incorrect. The new │         │           │          │ │
-│ │                    │ code would cause   │         │           │          │ │
-│ │                    │ an error when the  │         │           │          │ │
-│ │                    │ input is empty and │         │           │          │ │
-│ │                    │ r is non-zero. The │         │           │          │ │
-│ │                    │ original code's    │         │           │          │ │
-│ │                    │ check for empty    │         │           │          │ │
-│ │                    │ sequence would     │         │           │          │ │
-│ │                    │ have prevented     │         │           │          │ │
-│ │                    │ that.              │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ So the defect is   │         │           │          │ │
-│ │                    │ in the new code's  │         │           │          │ │
-│ │                    │ handling of the n  │         │           │          │ │
-│ │                    │ calculation when   │         │           │          │ │
-│ │                    │ the sequence is    │         │           │          │ │
-│ │                    │ empty. The line n  │         │           │          │ │
-│ │                    │ = comb(...) if     │         │           │          │ │
-│ │                    │ sequence else 1 if │         │           │          │ │
-│ │                    │ r else 0.          │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ So when the        │         │           │          │ │
-│ │                    │ sequence is empty, │         │           │          │ │
-│ │                    │ and r is non-zero, │         │           │          │ │
-│ │                    │ the code           │         │           │          │ │
-│ │                    │ calculates n as 1. │         │           │          │ │
-│ │                    │ Then, the loop for │         │           │          │ │
-│ │                    │ index in           │         │           │          │ │
-│ │                    │ _random_ordered_i… │         │           │          │ │
-│ │                    │ would generate one │         │           │          │ │
-│ │                    │ index, say 0.      │         │           │          │ │
-│ │                    │ Then, the function │         │           │          │ │
-│ │                    │ would call         │         │           │          │ │
-│ │                    │ nth_combination_w… │         │           │          │ │
-│ │                    │ with sequence      │         │           │          │ │
-│ │                    │ (empty), r, and    │         │           │          │ │
-│ │                    │ index 0. But that  │         │           │          │ │
-│ │                    │ function would     │         │           │          │ │
-│ │                    │ probably raise an  │         │           │          │ │
-│ │                    │ error because it's │         │           │          │ │
-│ │                    │ trying to generate │         │           │          │ │
-│ │                    │ a combination from │         │           │          │ │
-│ │                    │ an empty sequence. │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Therefore, the new │         │           │          │ │
-│ │                    │ code has a bug.    │         │           │          │ │
-│ │                    │ The original code  │         │           │          │ │
-│ │                    │ had a check that   │         │           │          │ │
-│ │                    │ if the sequence is │         │           │          │ │
-│ │                    │ empty, it yields   │         │           │          │ │
-│ │                    │ an empty tuple and │         │           │          │ │
-│ │                    │ returns, which is  │         │           │          │ │
-│ │                    │ incorrect, but the │         │           │          │ │
-│ │                    │ new code's logic   │         │           │          │ │
-│ │                    │ is even worse      │         │           │          │ │
-│ │                    │ because it causes  │         │           │          │ │
-│ │                    │ an error when the  │         │           │          │ │
-│ │                    │ sequence is empty  │         │           │          │ │
-│ │                    │ and r is non-zero. │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ So the correct     │         │           │          │ │
-│ │                    │ approach should be │         │           │          │ │
-│ │                    │ to handle the      │         │           │          │ │
-│ │                    │ empty sequence     │         │           │          │ │
-│ │                    │ case in a way that │         │           │          │ │
-│ │                    │ doesn't call       │         │           │          │ │
-│ │                    │ functions that     │         │           │          │ │
-│ │                    │ require a          │         │           │          │ │
-│ │                    │ non-empty          │         │           │          │ │
-│ │                    │ sequence.          │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Thus, the change   │         │           │          │ │
-│ │                    │ introduced a       │         │           │          │ │
-│ │                    │ defect. Therefore, │         │           │          │ │
-│ │                    │ the decision       │         │           │          │ │
-│ │                    │ should be to block │         │           │          │ │
-│ │                    │ the change.        │         │           │          │ │
-│ │                    │ </think>           │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ {"decision":       │         │           │          │ │
-│ │                    │ "block",           │         │           │          │ │
-│ │                    │ "comments":        │         │           │          │ │
-│ │                    │ [{"file":          │         │           │          │ │
-│ │                    │ "more_itertools/m… │         │           │          │ │
-│ │                    │ "line_start":      │         │           │          │ │
-│ │                    │ 5672, "line_end":  │         │           │          │ │
-│ │                    │ 5672, "body":      │         │           │          │ │
-│ │                    │ "Calculates n as 1 │         │           │          │ │
-│ │                    │ for empty sequence │         │           │          │ │
-│ │                    │ and non-zero r,    │         │           │          │ │
-│ │                    │ leading to invalid │         │           │          │ │
-│ │                    │ nth_combination_w… │         │           │          │ │
-│ │                    │ call."}]}          │         │           │          │ │
+│ │ +@pytest.mark.ski… │                    │         │           │          │ │
+│ │ >= (3, 14),        │                    │         │           │          │ │
+│ │ reason="Only       │                    │         │           │          │ │
+│ │ relevant for       │                    │         │           │          │ │
+│ │ <3.14")            │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_set_cookie_r… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ test_client_facto… │                    │         │           │          │ │
+│ │ TestClientFactory, │                    │         │           │          │ │
+│ │ +) -> None:  #     │                    │         │           │          │ │
+│ │ pragma: no cover   │                    │         │           │          │ │
+│ │ +    async def     │                    │         │           │          │ │
+│ │ app(scope: Scope,  │                    │         │           │          │ │
+│ │ receive: Receive,  │                    │         │           │          │ │
+│ │ send: Send) ->     │                    │         │           │          │ │
+│ │ None:              │                    │         │           │          │ │
+│ │ +        response  │                    │         │           │          │ │
+│ │ = Response("Hello, │                    │         │           │          │ │
+│ │ world!",           │                    │         │           │          │ │
+│ │ media_type="text/… │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ pytest.raises(Val… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ response.set_cook… │                    │         │           │          │ │
+│ │ "myvalue",         │                    │         │           │          │ │
+│ │ partitioned=True)  │                    │         │           │          │ │
+│ │ +        await     │                    │         │           │          │ │
+│ │ response(scope,    │                    │         │           │          │ │
+│ │ receive, send)     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    client =      │                    │         │           │          │ │
+│ │ test_client_facto… │                    │         │           │          │ │
+│ │ +    response =    │                    │         │           │          │ │
+│ │ client.get("/")    │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.text ==   │                    │         │           │          │ │
+│ │ "Hello, world!"    │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.headers.… │                    │         │           │          │ │
+│ │ is None            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_set_cookie_p… │                    │         │           │          │ │
+│ │ TestClientFactory) │                    │         │           │          │ │
+│ │ -> None:           │                    │         │           │          │ │
+│ │      async def     │                    │         │           │          │ │
+│ │ app(scope: Scope,  │                    │         │           │          │ │
+│ │ receive: Receive,  │                    │         │           │          │ │
+│ │ send: Send) ->     │                    │         │           │          │ │
+│ │ None:              │                    │         │           │          │ │
+│ │          response  │                    │         │           │          │ │
+│ │ = Response("Hello, │                    │         │           │          │ │
+│ │ world!",           │                    │         │           │          │ │
+│ │ media_type="text/… │                    │         │           │          │ │
+│ │ ```                │                    │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
