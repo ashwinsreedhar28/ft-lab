@@ -290,3 +290,12 @@ T 0.6 eval every 25. `configs/review_grpo_4b_v5.yaml`; `V=_v5 bash -s phase3`. ~
 **Oct 25 audit (external).** Decision counts above for v1–v4 came from a regex that accepted malformed JSON; the
 scorer's parser does not. Strict recounts, bench caveats and the pre-registered measurement job that now
 precedes any further training are in `docs/phase3b/MEASURE.md`; artifacts in `docs/phase3b/`.
+
+**Measurement job and v5 (Oct 25, ~$12).** After the audit, an evaluation-only job (3 prompt/thinking arms × 3 seeds,
+strict parser, matched decode) found: the compact no-test prompt halves invalid outputs; thinking cuts bug approvals
+by 5 on the 4B; the 4B's paired discrimination ceiling is ≈ 6/26 however prompted; **Qwen3-8B, thinking, compact
+prompt, 4k cap: bug approve 17.7/35, valid blocks 17/35, clean approve 22.3/26, 0 invalid, paired 9.8 ±1.4** — every
+gain over the 2k cap is the 22 truncated outputs finishing. GRPO v5 from that start (50 steps, lr 1e-5, raw
+advantages, reward v5, eval every 10 with step 0): kl 0.002, no movement; and the same untrained weights score
+paired 9.0 vs 13.5 across two seed-0 evals, so a single-seed 61-task eval cannot resolve the effects being chased.
+Details and the pre-registered rules: `docs/phase3b/MEASURE.md`.

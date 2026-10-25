@@ -51,3 +51,16 @@ training path differs from the eval path and the run is void. Success = paired r
 checkpoint with bug approvals not higher than step 0 and clean approvals ≥ 20, holding for two consecutive
 checkpoints. Failure = bug approvals ↓ only via clean approvals ↓ (block drift), or invalid/capped rising, or kl
 > 0.3 with paired flat. One run is one seed; a success is a reason to replicate, not a result.
+
+## v5 (8B) result — Oct 25, 1× H100, ~$9
+Curve (bug approve/block, clean approve/block, paired/26, single seed): step 0: 15/20, 25/1, **13.5**; 10: 17/17, 21/3, 8.5;
+20: 16/19, 23/2, 10.2; 30: 14/20, 22/3, 11.0; 40: 18/17, 22/3, 10.2; 50: 18/17, 22/4, 9.2. Standalone evals of the
+same untrained model (seed 0): paired 9.0; of the merged step-50 model: 13.2.
+- **kl 0.002 at step 50** (lr 1e-5, 32 completions/step): the policy did not move. Per-step reward −3.4…+0.7 is batch
+  composition (approve_bug_frac 0.03–0.75), not learning.
+- **Single-seed eval noise ≈ ±2–4 paired** on the same weights. The pre-registered "+4 for two checkpoints" rule sits
+  at the noise floor; every future checkpoint eval needs 3 seeds (~3 min each).
+- Verdict under the rule: failure. Diagnosis: undertrained and under-measured, not collapse. Best measured gate remains
+  the untrained 8B thinking / compact prompt / 4k cap start.
+- Next run (not before funds allow): lr 3e-5, 3-seed periodic eval, train set grown with mutation run 5 (296 positives;
+  eval frozen). Artifacts: `docs/phase3b/review_grpo_8b_v5/`.
