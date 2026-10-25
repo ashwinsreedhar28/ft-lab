@@ -1,0 +1,33 @@
+# Phase 3b v5 (Oct 25, after the measurement job): GRPO straight from Qwen3-8B in thinking mode, compact no-test
+# prompt, 4096-token cap. Untrained under this protocol (T 0.6 / top_p 0.95 / top_k 20, 3 seeds): bug approve
+# 17.7/35, valid blocks 17/35, clean approve 22.3/26, 0 invalid, PR-weighted paired correct 9.8 ±1.4 /26 —
+# the first start that discriminates (docs/phase3b/measure/TABLE.txt). The 4B stalled at ~6/26 however prompted.
+# Reward v4 (unparsable -3, free tokens 1200), raw advantages, G 16, lr 1e-5, beta 0.02, 50 steps, eval every 10
+# on the same decode settings (step 0 included). ~3-4 min/step on an H100 -> ~3 h, ~$9.
+extends: base.yaml
+name: review_grpo_8b_v5
+model: Qwen/Qwen3-8B
+enable_thinking: true
+system_prompt: compact
+lora: {enabled: true, r: 32, alpha: 64, target_modules: all-linear}
+data:
+  task: review
+  extra:
+    tasks: [review/bench/public_tasks.jsonl]
+    condition: diff+graph
+    eval_every: 10
+rewards: [review_gate_v4]
+grpo:
+  learning_rate: 1.0e-5
+  num_generations: 16
+  per_device_train_batch_size: 4      # 8B + 4k completions: half the v4 micro-batch
+  gradient_accumulation_steps: 8      # 4 x 8 = 32 completions per step, divisible by G=16
+  vllm_max_model_length: 20480        # 16k prompt budget + 4k completion
+  max_completion_length: 4096
+  vllm_gpu_memory_utilization: 0.30
+  max_steps: 50
+  temperature: 1.0
+  beta: 0.02
+  scale_rewards: none
+  save_steps: 10
+  save_total_limit: 2
