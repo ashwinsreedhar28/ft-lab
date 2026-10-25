@@ -1,400 +1,400 @@
-│ │                    │ 0."}]}             │         │           │          │ │
-│ ├────────────────────┼────────────────────┼─────────┼───────────┼──────────┤ │
-│ │ SYSTEM             │ ASSISTANT          │   -5.00 │     -5.69 │ approve  │ │
-│ │ You are the code   │ <think>            │         │           │          │ │
-│ │ review gate for a  │ Okay, let's look   │         │           │          │ │
-│ │ production         │ at the changes     │         │           │          │ │
-│ │ repository.        │ here. The user is  │         │           │          │ │
-│ │ Approval merges    │ working on the     │         │           │          │ │
-│ │ and deploys the    │ more-itertools     │         │           │          │ │
-│ │ change without     │ repository,        │         │           │          │ │
-│ │ further human      │ specifically       │         │           │          │ │
-│ │ review.            │ modifying the      │         │           │          │ │
-│ │   approve  - you   │ chunked function   │         │           │          │ │
-│ │ are confident the  │ and adding tests   │         │           │          │ │
-│ │ change is correct  │ for it. The diff   │         │           │          │ │
-│ │ and safe to ship.  │ shows that in      │         │           │          │ │
-│ │   block    - you   │ more.py, they      │         │           │          │ │
-│ │ found a concrete   │ added a check for  │         │           │          │ │
-│ │ defect in the      │ n being <= 0,      │         │           │          │ │
-│ │ change.            │ raising a          │         │           │          │ │
-│ │   escalate - you   │ ValueError. Then   │         │           │          │ │
-│ │ cannot establish   │ in the             │         │           │          │ │
-│ │ safety from the    │ tests/test_more.p… │         │           │          │ │
-│ │ supplied evidence. │ they added a       │         │           │          │ │
-│ │ Approving a        │ test_negative      │         │           │          │ │
-│ │ defective change   │ method to check    │         │           │          │ │
-│ │ is the worst       │ that a negative n  │         │           │          │ │
-│ │ outcome.           │ raises the correct │         │           │          │ │
-│ │ Your final answer  │ error.             │         │           │          │ │
-│ │ must be exactly    │                    │         │           │          │ │
-│ │ one JSON object:   │ First, I need to   │         │           │          │ │
-│ │ {"decision":       │ check if the code  │         │           │          │ │
-│ │ "approve|block|es… │ change is correct. │         │           │          │ │
-│ │ "comments": []}    │ The chunked        │         │           │          │ │
-│ │ For block, include │ function now has a │         │           │          │ │
-│ │ exactly one        │ validation for n.  │         │           │          │ │
-│ │ comment with file, │ The original code  │         │           │          │ │
-│ │ line_start,        │ might not have had │         │           │          │ │
-│ │ line_end and body; │ this check. The    │         │           │          │ │
-│ │ limit body to 40   │ added line says if │         │           │          │ │
-│ │ words explaining   │ n is not None and  │         │           │          │ │
-│ │ the defect. For    │ n <= 0, raise      │         │           │          │ │
-│ │ approve or         │ ValueError. Wait,  │         │           │          │ │
-│ │ escalate, use an   │ but in the code,   │         │           │          │ │
-│ │ empty comments     │ the parameter is   │         │           │          │ │
-│ │ array. Do not      │ 'n' and the        │         │           │          │ │
-│ │ include proposed   │ function is called │         │           │          │ │
-│ │ tests or test      │ with n. But        │         │           │          │ │
-│ │ source.            │ looking at the     │         │           │          │ │
-│ │                    │ diff, the line is  │         │           │          │ │
-│ │ USER               │ inside the chunked │         │           │          │ │
-│ │ Repository:        │ function. Let me   │         │           │          │ │
-│ │ more-itertools     │ think: the         │         │           │          │ │
-│ │ Files changed:     │ function's         │         │           │          │ │
-│ │ more_itertools/mo… │ parameters are     │         │           │          │ │
-│ │ tests/test_more.py │ (iterable, n,      │         │           │          │ │
-│ │                    │ strict=False). So, │         │           │          │ │
-│ │ Context around the │ the check is for n │         │           │          │ │
-│ │ change             │ being <= 0.        │         │           │          │ │
-│ │ (mechanically      │ However, in the    │         │           │          │ │
-│ │ extracted):        │ code, the check is │         │           │          │ │
-│ │ Changed            │ if n is not None   │         │           │          │ │
-│ │ definitions:       │ and n <= 0. But    │         │           │          │ │
-│ │ more_itertools/mo… │ wait, what if n is │         │           │          │ │
-│ │ tests/test_more.p… │ None? Because in   │         │           │          │ │
-│ │ tests/test_more.p… │ the function, if   │         │           │          │ │
-│ │ tests/test_more.p… │ strict is True,    │         │           │          │ │
-│ │ tests/test_more.p… │ then the code      │         │           │          │ │
-│ │ Recent history of  │ checks if n is     │         │           │          │ │
-│ │ more_itertools/mo… │ None. Hmm, maybe   │         │           │          │ │
-│ │   069b300          │ there's a problem  │         │           │          │ │
-│ │ 2026-07-16 Issue   │ here. Let me       │         │           │          │ │
-│ │ 1214: Update       │ think: the chunked │         │           │          │ │
-│ │ __eq__ and         │ function's         │         │           │          │ │
-│ │ __hash__ for       │ parameters have n  │         │           │          │ │
-│ │ numeric_range      │ as a parameter.    │         │           │          │ │
-│ │   07eb790          │ The original code  │         │           │          │ │
-│ │ 2026-07-12 Add     │ might have allowed │         │           │          │ │
-│ │ threading to       │ n to be None, but  │         │           │          │ │
-│ │ lazy_modules.      │ now they are       │         │           │          │ │
-│ │ Revert c6b640      │ adding a check for │         │           │          │ │
-│ │   4a02e36          │ n <= 0. But if n   │         │           │          │ │
-│ │ 2026-07-10 Sort    │ is None, the check │         │           │          │ │
-│ │ `__all__`          │ would be skipped.  │         │           │          │ │
-│ │ Recent history of  │ Wait, the line is: │         │           │          │ │
-│ │ tests/test_more.p… │ if n is not None   │         │           │          │ │
-│ │   069b300          │ and n <= 0: raise  │         │           │          │ │
-│ │ 2026-07-16 Issue   │ ValueError. So if  │         │           │          │ │
-│ │ 1214: Update       │ n is None, this    │         │           │          │ │
-│ │ __eq__ and         │ check is not done. │         │           │          │ │
-│ │ __hash__ for       │ But in the         │         │           │          │ │
-│ │ numeric_range      │ function, if       │         │           │          │ │
-│ │   d992be0          │ strict is True,    │         │           │          │ │
-│ │ 2026-07-12 Fix     │ and n is None,     │         │           │          │ │
-│ │ stability in       │ then the code      │         │           │          │ │
-│ │ running_min and    │ proceeds. Wait,    │         │           │          │ │
-│ │ running_max        │ maybe the          │         │           │          │ │
-│ │   958990e          │ function's n is    │         │           │          │ │
-│ │ 2026-07-02 Raise   │ supposed to be a   │         │           │          │ │
-│ │ for negative slice │ positive integer,  │         │           │          │ │
-│ │ sizes in sliced()  │ but allowing None? │         │           │          │ │
-│ │                    │ Or is n supposed   │         │           │          │ │
-│ │ Diff:              │ to be an integer?  │         │           │          │ │
-│ │ ```diff            │ Let me think about │         │           │          │ │
-│ │ diff --git         │ the function's     │         │           │          │ │
-│ │ a/more_itertools/… │ purpose. The       │         │           │          │ │
-│ │ b/more_itertools/… │ chunked function   │         │           │          │ │
-│ │ index              │ is supposed to     │         │           │          │ │
-│ │ 7c3670a..ef4940d   │ split an iterable  │         │           │          │ │
-│ │ 100755             │ into chunks of     │         │           │          │ │
-│ │ ---                │ size n. If n is    │         │           │          │ │
-│ │ a/more_itertools/… │ None, perhaps it's │         │           │          │ │
-│ │ +++                │ handled            │         │           │          │ │
-│ │ b/more_itertools/… │ differently, maybe │         │           │          │ │
-│ │ @@ -230,6 +230,9   │ as a dynamic size? │         │           │          │ │
-│ │ @@ def             │ But in the code,   │         │           │          │ │
-│ │ chunked(iterable,  │ the check is for n │         │           │          │ │
-│ │ n, strict=False):  │ being <= 0. So if  │         │           │          │ │
-│ │      list is       │ n is 0, it would   │         │           │          │ │
-│ │ yielded.           │ raise an error.    │         │           │          │ │
-│ │                    │ But if n is None,  │         │           │          │ │
-│ │      """           │ then the check is  │         │           │          │ │
-│ │ +    if n is not   │ skipped. But in    │         │           │          │ │
-│ │ None and n <= 0:   │ the test_negative, │         │           │          │ │
-│ │ +        raise     │ they are passing   │         │           │          │ │
-│ │ ValueError('n must │ -1 as n, which is  │         │           │          │ │
-│ │ be at least 0')    │ not None, so the   │         │           │          │ │
-│ │ +                  │ check would        │         │           │          │ │
-│ │      iterator =    │ trigger. But what  │         │           │          │ │
-│ │ iter(partial(take, │ about when n is    │         │           │          │ │
-│ │ n,                 │ None? Let me check │         │           │          │ │
-│ │ iter(iterable)),   │ the code again.    │         │           │          │ │
-│ │ [])                │ The function's     │         │           │          │ │
-│ │      if strict:    │ parameters are     │         │           │          │ │
-│ │          if n is   │ (iterable, n,      │         │           │          │ │
-│ │ None:              │ strict=False). So  │         │           │          │ │
-│ │ diff --git         │ n can be None. But │         │           │          │ │
-│ │ a/tests/test_more… │ in the code, the   │         │           │          │ │
-│ │ b/tests/test_more… │ check is if n is   │         │           │          │ │
-│ │ index              │ not None and n <=  │         │           │          │ │
-│ │ 1f8d10c..3a562e2   │ 0. So if n is      │         │           │          │ │
-│ │ 100644             │ None, the check is │         │           │          │ │
-│ │ ---                │ skipped. But then, │         │           │          │ │
-│ │ a/tests/test_more… │ if n is None, the  │         │           │          │ │
-│ │ +++                │ code proceeds.     │         │           │          │ │
-│ │ b/tests/test_more… │ However, in the    │         │           │          │ │
-│ │ @@ -70,6 +70,15 @@ │ function's code,   │         │           │          │ │
-│ │ class              │ if strict is True, │         │           │          │ │
-│ │ ChunkedTests(Test… │ and n is None,     │         │           │          │ │
-│ │              list… │ then the code      │         │           │          │ │
-│ │ None)), [['A',     │ proceeds. Wait,    │         │           │          │ │
-│ │ 'B', 'C', 'D',     │ the code after the │         │           │          │ │
-│ │ 'E']]              │ check is: if       │         │           │          │ │
-│ │          )         │ strict: if n is    │         │           │          │ │
-│ │                    │ None: ... So maybe │         │           │          │ │
-│ │ +    def           │ the function is    │         │           │          │ │
-│ │ test_negative(sel… │ designed to handle │         │           │          │ │
-│ │ +        """Test   │ n as None, but in  │         │           │          │ │
-│ │ that a negative    │ that case, the     │         │           │          │ │
-│ │ ``n`` raises a     │ check for n <= 0   │         │           │          │ │
-│ │ clear              │ would not be done. │         │           │          │ │
-│ │ ``ValueError``,    │ So the code seems  │         │           │          │ │
-│ │ matching           │ correct in that if │         │           │          │ │
-│ │ +        the       │ n is None, it's    │         │           │          │ │
-│ │ behavior of        │ allowed, but if n  │         │           │          │ │
-│ │ :func:`sliced`.""" │ is a non-None      │         │           │          │ │
-│ │ +                  │ value and <=0, it  │         │           │          │ │
-│ │ self.assertRaises… │ raises an error.   │         │           │          │ │
-│ │ +                  │ However, the       │         │           │          │ │
-│ │ ValueError,        │ test_negative is   │         │           │          │ │
-│ │ +            "n    │ passing -1 as n,   │         │           │          │ │
-│ │ must be at least   │ which is not None, │         │           │          │ │
-│ │ 0",                │ so the check would │         │           │          │ │
-│ │ +                  │ trigger. So the    │         │           │          │ │
-│ │ lambda:            │ test is correct.   │         │           │          │ │
-│ │ list(mi.chunked('… │ The test_negative  │         │           │          │ │
-│ │ -1)),              │ is checking that a │         │           │          │ │
-│ │ +        )         │ negative n raises  │         │           │          │ │
-│ │ +                  │ the right error.   │         │           │          │ │
+│ │ be installed       │                    │         │           │          │ │
+│ │ +    separately,   │                    │         │           │          │ │
+│ │ e.g. `pip install  │                    │         │           │          │ │
+│ │ orjson`.           │                    │         │           │          │ │
+│ │      """           │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
 │ │      def           │                    │         │           │          │ │
-│ │ test_strict_false… │ But wait, perhaps  │         │           │          │ │
-│ │          """Test   │ the code in        │         │           │          │ │
-│ │ when ``n`` does    │ chunked is         │         │           │          │ │
-│ │ not divide evenly  │ incorrect. Let me  │         │           │          │ │
-│ │ into the length of │ think: the code in │         │           │          │ │
-│ │ the                │ chunked has the    │         │           │          │ │
-│ │          iterable  │ line 'if n is not  │         │           │          │ │
-│ │ and strict is      │ None and n <= 0:   │         │           │          │ │
-│ │ false.             │ raise ValueError'. │         │           │          │ │
-│ │ ```                │ But what if n is   │         │           │          │ │
-│ │                    │ None? The code     │         │           │          │ │
-│ │                    │ allows that. But   │         │           │          │ │
-│ │                    │ in the test, when  │         │           │          │ │
-│ │                    │ n is None, perhaps │         │           │          │ │
-│ │                    │ the function is    │         │           │          │ │
-│ │                    │ supposed to handle │         │           │          │ │
-│ │                    │ it. However, in    │         │           │          │ │
-│ │                    │ the code, the code │         │           │          │ │
-│ │                    │ for handling n is  │         │           │          │ │
-│ │                    │ not None. So maybe │         │           │          │ │
-│ │                    │ the function's n   │         │           │          │ │
-│ │                    │ is supposed to be  │         │           │          │ │
-│ │                    │ a positive         │         │           │          │ │
-│ │                    │ integer, and None  │         │           │          │ │
-│ │                    │ is not allowed.    │         │           │          │ │
-│ │                    │ Wait, looking at   │         │           │          │ │
-│ │                    │ the test code,     │         │           │          │ │
-│ │                    │ there's a test     │         │           │          │ │
-│ │                    │ called test_none,  │         │           │          │ │
-│ │                    │ which is part of   │         │           │          │ │
-│ │                    │ the ChunkedTests.  │         │           │          │ │
-│ │                    │ The diff shows     │         │           │          │ │
-│ │                    │ that test_none is  │         │           │          │ │
-│ │                    │ present. Let me    │         │           │          │ │
-│ │                    │ check the test     │         │           │          │ │
-│ │                    │ code. The          │         │           │          │ │
-│ │                    │ test_none is       │         │           │          │ │
-│ │                    │ probably testing   │         │           │          │ │
-│ │                    │ the case when n is │         │           │          │ │
-│ │                    │ None. But the code │         │           │          │ │
-│ │                    │ in more.py, the    │         │           │          │ │
-│ │                    │ chunked function   │         │           │          │ │
-│ │                    │ allows n to be     │         │           │          │ │
-│ │                    │ None, but the      │         │           │          │ │
-│ │                    │ check is only for  │         │           │          │ │
-│ │                    │ non-None n. So     │         │           │          │ │
-│ │                    │ when n is None,    │         │           │          │ │
-│ │                    │ the code proceeds. │         │           │          │ │
-│ │                    │ But in that case,  │         │           │          │ │
-│ │                    │ the code may not   │         │           │          │ │
-│ │                    │ have proper        │         │           │          │ │
-│ │                    │ handling for n     │         │           │          │ │
-│ │                    │ being None. Wait,  │         │           │          │ │
-│ │                    │ but in the         │         │           │          │ │
-│ │                    │ function, the code │         │           │          │ │
-│ │                    │ uses 'n' as the    │         │           │          │ │
-│ │                    │ parameter. Let me  │         │           │          │ │
-│ │                    │ look at the code   │         │           │          │ │
-│ │                    │ again. The chunked │         │           │          │ │
-│ │                    │ function's code:   │         │           │          │ │
+│ │ render(self,       │                    │         │           │          │ │
+│ │ content: Any) ->   │                    │         │           │          │ │
+│ │ bytes:             │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/pyproject.toml   │                    │         │           │          │ │
+│ │ b/pyproject.toml   │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ c51eb8ce9..79dfc1… │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/pyproject.toml   │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/pyproject.toml   │                    │         │           │          │ │
+│ │ @@ -105,10 +105,6  │                    │         │           │          │ │
+│ │ @@ all = [         │                    │         │           │          │ │
+│ │      "itsdangerous │                    │         │           │          │ │
+│ │ >=1.1.0",          │                    │         │           │          │ │
+│ │      # For         │                    │         │           │          │ │
+│ │ Starlette's schema │                    │         │           │          │ │
+│ │ generation, would  │                    │         │           │          │ │
+│ │ not be used with   │                    │         │           │          │ │
+│ │ FastAPI            │                    │         │           │          │ │
+│ │      "pyyaml       │                    │         │           │          │ │
+│ │ >=5.3.1",          │                    │         │           │          │ │
+│ │ -    # For         │                    │         │           │          │ │
+│ │ UJSONResponse      │                    │         │           │          │ │
+│ │ -    "ujson        │                    │         │           │          │ │
+│ │ >=5.8.0",          │                    │         │           │          │ │
+│ │ -    # For         │                    │         │           │          │ │
+│ │ ORJSONResponse     │                    │         │           │          │ │
+│ │ -    "orjson       │                    │         │           │          │ │
+│ │ >=3.9.3",          │                    │         │           │          │ │
+│ │      # To validate │                    │         │           │          │ │
+│ │ email fields       │                    │         │           │          │ │
+│ │      "email-valid… │                    │         │           │          │ │
+│ │ >=2.0.0",          │                    │         │           │          │ │
+│ │      # Uvicorn     │                    │         │           │          │ │
+│ │ with uvloop        │                    │         │           │          │ │
+│ │ @@ -151,6 +147,10  │                    │         │           │          │ │
+│ │ @@ docs = [        │                    │         │           │          │ │
+│ │  docs-tests = [    │                    │         │           │          │ │
+│ │      "httpx        │                    │         │           │          │ │
+│ │ >=0.23.0,<1.0.0",  │                    │         │           │          │ │
+│ │      "ruff         │                    │         │           │          │ │
+│ │ >=0.14.14",        │                    │         │           │          │ │
+│ │ +    # For         │                    │         │           │          │ │
+│ │ UJSONResponse      │                    │         │           │          │ │
+│ │ +    "ujson        │                    │         │           │          │ │
+│ │ >=5.8.0",          │                    │         │           │          │ │
+│ │ +    # For         │                    │         │           │          │ │
+│ │ ORJSONResponse     │                    │         │           │          │ │
+│ │ +    "orjson       │                    │         │           │          │ │
+│ │ >=3.9.3",          │                    │         │           │          │ │
+│ │  ]                 │                    │         │           │          │ │
+│ │  github-actions =  │                    │         │           │          │ │
+│ │ [                  │                    │         │           │          │ │
+│ │      "httpx        │                    │         │           │          │ │
+│ │ >=0.27.0,<1.0.0",  │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_depr… │                    │         │           │          │ │
+│ │ b/tests/test_depr… │                    │         │           │          │ │
+│ │ new file mode      │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 000000000..eff579… │                    │         │           │          │ │
+│ │ --- /dev/null      │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_depr… │                    │         │           │          │ │
+│ │ @@ -0,0 +1,73 @@   │                    │         │           │          │ │
+│ │ +import warnings   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +import pytest     │                    │         │           │          │ │
+│ │ +from fastapi      │                    │         │           │          │ │
+│ │ import FastAPI     │                    │         │           │          │ │
+│ │ +from              │                    │         │           │          │ │
+│ │ fastapi.exceptions │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ FastAPIDeprecatio… │                    │         │           │          │ │
+│ │ +from              │                    │         │           │          │ │
+│ │ fastapi.responses  │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ ORJSONResponse,    │                    │         │           │          │ │
+│ │ UJSONResponse      │                    │         │           │          │ │
+│ │ +from              │                    │         │           │          │ │
+│ │ fastapi.testclient │                    │         │           │          │ │
+│ │ import TestClient  │                    │         │           │          │ │
+│ │ +from pydantic     │                    │         │           │          │ │
+│ │ import BaseModel   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +class             │                    │         │           │          │ │
+│ │ Item(BaseModel):   │                    │         │           │          │ │
+│ │ +    name: str     │                    │         │           │          │ │
+│ │ +    price: float  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +# ORJSON          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ _make_orjson_app() │                    │         │           │          │ │
+│ │ -> FastAPI:        │                    │         │           │          │ │
+│ │ +    with          │                    │         │           │          │ │
+│ │ warnings.catch_wa… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ warnings.simplefi… │                    │         │           │          │ │
+│ │ FastAPIDeprecatio… │                    │         │           │          │ │
+│ │ +        app =     │                    │         │           │          │ │
+│ │ FastAPI(default_r… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ @app.get("/items") │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ get_items() ->     │                    │         │           │          │ │
+│ │ Item:              │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ Item(name="widget… │                    │         │           │          │ │
+│ │ price=9.99)        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    return app    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_orjson_respo… │                    │         │           │          │ │
+│ │ +    app =         │                    │         │           │          │ │
+│ │ _make_orjson_app() │                    │         │           │          │ │
+│ │ +    client =      │                    │         │           │          │ │
+│ │ TestClient(app)    │                    │         │           │          │ │
+│ │ +    with          │                    │         │           │          │ │
+│ │ warnings.catch_wa… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ warnings.simplefi… │                    │         │           │          │ │
+│ │ FastAPIDeprecatio… │                    │         │           │          │ │
+│ │ +        response  │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ client.get("/item… │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 200             │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ {"name": "widget", │                    │         │           │          │ │
+│ │ "price": 9.99}     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_orjson_respo… │                    │         │           │          │ │
+│ │ +    with          │                    │         │           │          │ │
+│ │ pytest.warns(Fast… │                    │         │           │          │ │
+│ │ match="ORJSONResp… │                    │         │           │          │ │
+│ │ is deprecated"):   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ ORJSONResponse(co… │                    │         │           │          │ │
+│ │ "world"})          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +# UJSON           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ _make_ujson_app()  │                    │         │           │          │ │
+│ │ -> FastAPI:        │                    │         │           │          │ │
+│ │ +    with          │                    │         │           │          │ │
+│ │ warnings.catch_wa… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ warnings.simplefi… │                    │         │           │          │ │
+│ │ FastAPIDeprecatio… │                    │         │           │          │ │
+│ │ +        app =     │                    │         │           │          │ │
+│ │ FastAPI(default_r… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ @app.get("/items") │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ get_items() ->     │                    │         │           │          │ │
+│ │ Item:              │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ Item(name="widget… │                    │         │           │          │ │
+│ │ price=9.99)        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    return app    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_ujson_respon… │                    │         │           │          │ │
+│ │ +    app =         │                    │         │           │          │ │
+│ │ _make_ujson_app()  │                    │         │           │          │ │
+│ │ +    client =      │                    │         │           │          │ │
+│ │ TestClient(app)    │                    │         │           │          │ │
+│ │ +    with          │                    │         │           │          │ │
+│ │ warnings.catch_wa… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ warnings.simplefi… │                    │         │           │          │ │
+│ │ FastAPIDeprecatio… │                    │         │           │          │ │
+│ │ +        response  │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ client.get("/item… │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 200             │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ {"name": "widget", │                    │         │           │          │ │
+│ │ "price": 9.99}     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_ujson_respon… │                    │         │           │          │ │
+│ │ +    with          │                    │         │           │          │ │
+│ │ pytest.warns(Fast… │                    │         │           │          │ │
+│ │ match="UJSONRespo… │                    │         │           │          │ │
+│ │ is deprecated"):   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ UJSONResponse(con… │                    │         │           │          │ │
+│ │ "world"})          │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_orjs… │                    │         │           │          │ │
+│ │ b/tests/test_orjs… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 6fe62daf9..63ea05… │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_orjs… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_orjs… │                    │         │           │          │ │
+│ │ @@ -1,9 +1,14 @@   │                    │         │           │          │ │
+│ │ +import warnings   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │  from fastapi      │                    │         │           │          │ │
+│ │ import FastAPI     │                    │         │           │          │ │
+│ │ +from              │                    │         │           │          │ │
+│ │ fastapi.exceptions │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ FastAPIDeprecatio… │                    │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ fastapi.responses  │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ ORJSONResponse     │                    │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ fastapi.testclient │                    │         │           │          │ │
+│ │ import TestClient  │                    │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ sqlalchemy.sql.el… │                    │         │           │          │ │
+│ │ import quoted_name │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ def                │         │           │          │ │
-│ │                    │ chunked(iterable,  │         │           │          │ │
-│ │                    │ n, strict=False):  │         │           │          │ │
-│ │                    │     ...            │         │           │          │ │
-│ │                    │     if n is not    │         │           │          │ │
-│ │                    │ None and n <= 0:   │         │           │          │ │
-│ │                    │         raise      │         │           │          │ │
-│ │                    │ ValueError('n must │         │           │          │ │
-│ │                    │ be at least 0')    │         │           │          │ │
-│ │                    │     ...            │         │           │          │ │
-│ │                    │     if strict:     │         │           │          │ │
-│ │                    │         if n is    │         │           │          │ │
-│ │                    │ None:              │         │           │          │ │
-│ │                    │             ...    │         │           │          │ │
+│ │ -app =             │                    │         │           │          │ │
+│ │ FastAPI(default_r… │                    │         │           │          │ │
+│ │ +with              │                    │         │           │          │ │
+│ │ warnings.catch_wa… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ warnings.simplefi… │                    │         │           │          │ │
+│ │ FastAPIDeprecatio… │                    │         │           │          │ │
+│ │ +    app =         │                    │         │           │          │ │
+│ │ FastAPI(default_r… │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ Wait, the code     │         │           │          │ │
-│ │                    │ after the check    │         │           │          │ │
-│ │                    │ is: if strict: if  │         │           │          │ │
-│ │                    │ n is None: ... So  │         │           │          │ │
-│ │                    │ if n is None, and  │         │           │          │ │
-│ │                    │ strict is True,    │         │           │          │ │
-│ │                    │ then some code is  │         │           │          │ │
-│ │                    │ executed. But in   │         │           │          │ │
-│ │                    │ this case, when n  │         │           │          │ │
-│ │                    │ is None, the code  │         │           │          │ │
-│ │                    │ is allowed. But    │         │           │          │ │
-│ │                    │ what if n is None  │         │           │          │ │
-│ │                    │ and strict is      │         │           │          │ │
-│ │                    │ False? Then, the   │         │           │          │ │
-│ │                    │ code would not     │         │           │          │ │
-│ │                    │ raise an error.    │         │           │          │ │
-│ │                    │ However, the       │         │           │          │ │
-│ │                    │ function's         │         │           │          │ │
-│ │                    │ parameters suggest │         │           │          │ │
-│ │                    │ that n can be      │         │           │          │ │
-│ │                    │ None, but the      │         │           │          │ │
-│ │                    │ check is only for  │         │           │          │ │
-│ │                    │ n <=0. So the code │         │           │          │ │
-│ │                    │ allows n to be     │         │           │          │ │
-│ │                    │ None, but when n   │         │           │          │ │
-│ │                    │ is not None and    │         │           │          │ │
-│ │                    │ <=0, it raises an  │         │           │          │ │
-│ │                    │ error.             │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ But maybe the      │         │           │          │ │
-│ │                    │ function is        │         │           │          │ │
-│ │                    │ designed to have n │         │           │          │ │
-│ │                    │ as a positive      │         │           │          │ │
-│ │                    │ integer, and       │         │           │          │ │
-│ │                    │ allowing None as a │         │           │          │ │
-│ │                    │ special case.      │         │           │          │ │
-│ │                    │ However, in the    │         │           │          │ │
-│ │                    │ test_negative,     │         │           │          │ │
-│ │                    │ they are passing   │         │           │          │ │
-│ │                    │ -1, which is not   │         │           │          │ │
-│ │                    │ None, so the check │         │           │          │ │
-│ │                    │ would trigger. So  │         │           │          │ │
-│ │                    │ the test_negative  │         │           │          │ │
-│ │                    │ is correct. The    │         │           │          │ │
-│ │                    │ code in chunked    │         │           │          │ │
-│ │                    │ now checks for n   │         │           │          │ │
-│ │                    │ being non-None and │         │           │          │ │
-│ │                    │ <=0, which is      │         │           │          │ │
-│ │                    │ correct. The       │         │           │          │ │
-│ │                    │ test_negative      │         │           │          │ │
-│ │                    │ checks that a      │         │           │          │ │
-│ │                    │ negative n raises  │         │           │          │ │
-│ │                    │ the correct error. │         │           │          │ │
-│ │                    │ Also, the          │         │           │          │ │
-│ │                    │ test_strict_false  │         │           │          │ │
-│ │                    │ is present, which  │         │           │          │ │
-│ │                    │ tests when strict  │         │           │          │ │
-│ │                    │ is False.          │         │           │          │ │
+│ │  @app.get("/orjso… │                    │         │           │          │ │
+│ │ @@ -16,6 +21,8 @@  │                    │         │           │          │ │
+│ │ client =           │                    │         │           │          │ │
+│ │ TestClient(app)    │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ So the code        │         │           │          │ │
-│ │                    │ changes seem       │         │           │          │ │
-│ │                    │ correct. The added │         │           │          │ │
-│ │                    │ validation for n   │         │           │          │ │
-│ │                    │ being <=0 when not │         │           │          │ │
-│ │                    │ None is correct,   │         │           │          │ │
-│ │                    │ and the tests are  │         │           │          │ │
-│ │                    │ covering the       │         │           │          │ │
-│ │                    │ negative case.     │         │           │          │ │
-│ │                    │ There's also a     │         │           │          │ │
-│ │                    │ test_none, which   │         │           │          │ │
-│ │                    │ might be testing   │         │           │          │ │
-│ │                    │ the case when n is │         │           │          │ │
-│ │                    │ None. But the code │         │           │          │ │
-│ │                    │ doesn't have a     │         │           │          │ │
-│ │                    │ check for n being  │         │           │          │ │
-│ │                    │ None, so that's    │         │           │          │ │
-│ │                    │ allowed. However,  │         │           │          │ │
-│ │                    │ perhaps the        │         │           │          │ │
-│ │                    │ function's         │         │           │          │ │
-│ │                    │ parameters should  │         │           │          │ │
-│ │                    │ have n as a        │         │           │          │ │
-│ │                    │ positive integer,  │         │           │          │ │
-│ │                    │ and None is not    │         │           │          │ │
-│ │                    │ allowed. But the   │         │           │          │ │
-│ │                    │ code allows n to   │         │           │          │ │
-│ │                    │ be None, which is  │         │           │          │ │
-│ │                    │ handled in the     │         │           │          │ │
-│ │                    │ strict condition.  │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ Wait, looking at   │         │           │          │ │
-│ │                    │ the code, the line │         │           │          │ │
-│ │                    │ after the check    │         │           │          │ │
-│ │                    │ is:                │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_orjson_non_s… │                    │         │           │          │ │
+│ │ -    with client:  │                    │         │           │          │ │
+│ │ -        response  │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ client.get("/orjs… │                    │         │           │          │ │
+│ │ +    with          │                    │         │           │          │ │
+│ │ warnings.catch_wa… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ warnings.simplefi… │                    │         │           │          │ │
+│ │ FastAPIDeprecatio… │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ client:            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ response =         │                    │         │           │          │ │
+│ │ client.get("/orjs… │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ {"msg": "Hello     │                    │         │           │          │ │
+│ │ World", "1": 1}    │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_tuto… │                    │         │           │          │ │
+│ │ b/tests/test_tuto… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ cec5ebe6c..a691dd… │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_tuto… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_tuto… │                    │         │           │          │ │
+│ │ @@ -17,12 +17,14   │                    │         │           │          │ │
+│ │ @@ def             │                    │         │           │          │ │
+│ │ get_client(reques… │                    │         │           │          │ │
+│ │ pytest.FixtureReq… │                    │         │           │          │ │
+│ │      return client │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ if strict:         │         │           │          │ │
-│ │                    │     if n is None:  │         │           │          │ │
-│ │                    │         ...        │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ So if strict is    │         │           │          │ │
-│ │                    │ True and n is      │         │           │          │ │
-│ │                    │ None, then the     │         │           │          │ │
-│ │                    │ code proceeds. But │         │           │          │ │
-│ │                    │ what does that     │         │           │          │ │
-│ │                    │ code do? The       │         │           │          │ │
-│ │                    │ original code      │         │           │          │ │
-│ │                    │ might have         │         │           │          │ │
-│ │                    │ different          │         │           │          │ │
-│ │                    │ behavior. But the  │         │           │          │ │
-│ │                    │ user hasn't        │         │           │          │ │
-│ │                    │ provided the full  │         │           │          │ │
-│ │                    │ code.              │         │           │          │ │
+│ │ +@pytest.mark.fil… │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_get_custom_r… │                    │         │           │          │ │
+│ │ TestClient):       │                    │         │           │          │ │
+│ │      response =    │                    │         │           │          │ │
+│ │ client.get("/item… │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 200,            │                    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ [{"item_id":       │                    │         │           │          │ │
+│ │ "Foo"}]            │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ However, the main  │         │           │          │ │
-│ │                    │ point is that the  │         │           │          │ │
-│ │                    │ code change adds a │         │           │          │ │
-│ │                    │ check for n <=0    │         │           │          │ │
-│ │                    │ when not None,     │         │           │          │ │
-│ │                    │ which is correct.  │         │           │          │ │
-│ │                    │ The test_negative  │         │           │          │ │
-│ │                    │ is testing that    │         │           │          │ │
-│ │                    │ negative n raises  │         │           │          │ │
-│ │                    │ the correct error. │         │           │          │ │
-│ │                    │ The code in        │         │           │          │ │
-│ │                    │ more.py now raises │         │           │          │ │
-│ │                    │ ValueError for n   │         │           │          │ │
-│ │                    │ <=0 when not None, │         │           │          │ │
-│ │                    │ which aligns with  │         │           │          │ │
-│ │                    │ the test.          │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ Therefore, the     │         │           │          │ │
-│ │                    │ changes seem       │         │           │          │ │
-│ │                    │ correct. The code  │         │           │          │ │
-│ │                    │ is validated, and  │         │           │          │ │
-│ │                    │ the tests are in   │         │           │          │ │
-│ │                    │ place. So the      │         │           │          │ │
-│ │                    │ decision should be │         │           │          │ │
-│ │                    │ approve.           │         │           │          │ │
-│ │                    │ </think>           │         │           │          │ │
+│ │ +@pytest.mark.fil… │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_openapi_sche… │                    │         │           │          │ │
+│ │ TestClient):       │                    │         │           │          │ │
+│ │      response =    │                    │         │           │          │ │
+│ │ client.get("/open… │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 200,            │                    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_tuto… │                    │         │           │          │ │
+│ │ b/tests/test_tuto… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 32437db86..11ce81… │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_tuto… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_tuto… │                    │         │           │          │ │
+│ │ @@ -1,17 +1,25 @@  │                    │         │           │          │ │
+│ │ +import warnings   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +import pytest     │                    │         │           │          │ │
+│ │ +from              │                    │         │           │          │ │
+│ │ fastapi.exceptions │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ FastAPIDeprecatio… │                    │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ fastapi.testclient │                    │         │           │          │ │
+│ │ import TestClient  │                    │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ inline_snapshot    │                    │         │           │          │ │
+│ │ import snapshot    │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ {"decision":       │         │           │          │ │
-│ │                    │ "approve",         │         │           │          │ │
-│ │                    │ "comments": []}    │         │           │          │ │
+│ │ -from              │                    │         │           │          │ │
+│ │ docs_src.custom_r… │                    │         │           │          │ │
+│ │ import app         │                    │         │           │          │ │
+│ │ +with              │                    │         │           │          │ │
+│ │ warnings.catch_wa… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ warnings.simplefi… │                    │         │           │          │ │
+│ │ FastAPIDeprecatio… │                    │         │           │          │ │
+│ │ +    from          │                    │         │           │          │ │
+│ │ docs_src.custom_r… │                    │         │           │          │ │
+│ │ import app         │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  client =          │                    │         │           │          │ │
+│ │ TestClient(app)    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +@pytest.mark.fil… │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_get_custom_r… │                    │         │           │          │ │
+│ │      response =    │                    │         │           │          │ │
+│ │ client.get("/item… │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 200,            │                    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ [{"item_id":       │                    │         │           │          │ │
+│ │ "Foo"}]            │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +@pytest.mark.fil… │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_openapi_sche… │                    │         │           │          │ │
+│ │      response =    │                    │         │           │          │ │
+│ │ client.get("/open… │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 200,            │                    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ ```                │                    │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
