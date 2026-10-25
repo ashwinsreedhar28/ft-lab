@@ -1,400 +1,400 @@
-│ │ **kwargs:          │ checks if          │         │           │          │ │
-│ │ typing.Any) ->     │ `session.modified` │         │           │          │ │
-│ │ None:              │ is True and        │         │           │          │ │
-│ │ +                  │ whether the        │         │           │          │ │
-│ │ self.mark_modifie… │ session is not     │         │           │          │ │
-│ │ +                  │ empty. But the     │         │           │          │ │
-│ │ super().update(*a… │ `session` is an    │         │           │          │ │
-│ │ **kwargs)          │ instance of        │         │           │          │ │
-│ │ diff --git         │ `Session`, and     │         │           │          │ │
-│ │ a/starlette/reque… │ `modified` is an   │         │           │          │ │
-│ │ b/starlette/reque… │ instance variable. │         │           │          │ │
-│ │ index              │ So this should     │         │           │          │ │
-│ │ 716f293..c57b4ae   │ correctly          │         │           │          │ │
-│ │ 100644             │ determine if the   │         │           │          │ │
-│ │ ---                │ session was        │         │           │          │ │
-│ │ a/starlette/reque… │ modified. However, │         │           │          │ │
-│ │ +++                │ the code in        │         │           │          │ │
-│ │ b/starlette/reque… │ `send_wrapper` has │         │           │          │ │
-│ │ @@ -18,6 +18,7 @@  │ a line `if         │         │           │          │ │
-│ │ if TYPE_CHECKING:  │ session.modified   │         │           │          │ │
-│ │      from          │ and session:`.     │         │           │          │ │
-│ │ python_multipart.… │ Wait, `session` is │         │           │          │ │
-│ │ import             │ a Session          │         │           │          │ │
-│ │ parse_options_hea… │ instance, so       │         │           │          │ │
-│ │                    │ `session` is       │         │           │          │ │
-│ │      from          │ truthy if it's not │         │           │          │ │
-│ │ starlette.applica… │ empty. But when    │         │           │          │ │
-│ │ import Starlette   │ the session is     │         │           │          │ │
-│ │ +    from          │ empty,             │         │           │          │ │
-│ │ starlette.middlew… │ `session.modified` │         │           │          │ │
-│ │ import Session     │ is False. But the  │         │           │          │ │
-│ │      from          │ `modified` flag is │         │           │          │ │
-│ │ starlette.routing  │ set only when the  │         │           │          │ │
-│ │ import Router      │ session is         │         │           │          │ │
-│ │  else:             │ modified. So when  │         │           │          │ │
-│ │      try:          │ the session is     │         │           │          │ │
-│ │ @@ -167,7 +168,11  │ empty, even if     │         │           │          │ │
-│ │ @@ class           │ modified, it's     │         │           │          │ │
-│ │ HTTPConnection(Ma… │ possible. Wait,    │         │           │          │ │
-│ │ Any],              │ no. If the session │         │           │          │ │
-│ │ Generic[StateT]):  │ is empty, but was  │         │           │          │ │
-│ │      @property     │ modified, that's   │         │           │          │ │
-│ │      def           │ possible. For      │         │           │          │ │
-│ │ session(self) ->   │ example, if the    │         │           │          │ │
-│ │ dict[str, Any]:    │ session was        │         │           │          │ │
-│ │          assert    │ cleared. So the    │         │           │          │ │
-│ │ "session" in       │ code should check  │         │           │          │ │
-│ │ self.scope,        │ if the session was │         │           │          │ │
-│ │ "SessionMiddleware │ modified and       │         │           │          │ │
-│ │ must be installed  │ whether the        │         │           │          │ │
-│ │ to access          │ session is not     │         │           │          │ │
-│ │ request.session"   │ empty. Wait, the   │         │           │          │ │
-│ │ -        return    │ original code had  │         │           │          │ │
-│ │ self.scope["sessi… │ different logic.   │         │           │          │ │
-│ │ # type:            │ The original code  │         │           │          │ │
-│ │ ignore[no-any-ret… │ had `if            │         │           │          │ │
-│ │ +        session:  │ session.modified   │         │           │          │ │
-│ │ Session =          │ and session:`. But │         │           │          │ │
-│ │ self.scope["sessi… │ the `session` is a │         │           │          │ │
-│ │ +        # We keep │ Session instance,  │         │           │          │ │
-│ │ the hasattr in     │ which is a         │         │           │          │ │
-│ │ case people        │ subclass of dict.  │         │           │          │ │
-│ │ actually use their │ So `if session`    │         │           │          │ │
-│ │ own                │ checks if the      │         │           │          │ │
-│ │ `SessionMiddlewar… │ dictionary is      │         │           │          │ │
-│ │ implementation.    │ non-empty.         │         │           │          │ │
-│ │ +        if        │ However, if the    │         │           │          │ │
-│ │ hasattr(session,   │ session was        │         │           │          │ │
-│ │ "mark_accessed"):  │ modified (like     │         │           │          │ │
-│ │ # pragma: no       │ cleared), then     │         │           │          │ │
-│ │ branch             │ `session` is       │         │           │          │ │
-│ │ +                  │ empty, but         │         │           │          │ │
-│ │ session.mark_acce… │ `session.modified` │         │           │          │ │
-│ │ +        return    │ is True. In that   │         │           │          │ │
-│ │ session            │ case, the code     │         │           │          │ │
-│ │                    │ would set the      │         │           │          │ │
-│ │      @property     │ cookie with        │         │           │          │ │
-│ │      def           │ `data="null"` and  │         │           │          │ │
-│ │ auth(self) -> Any: │ the expires        │         │           │          │ │
-│ │ diff --git         │ header. That seems │         │           │          │ │
-│ │ a/tests/middlewar… │ correct.           │         │           │          │ │
-│ │ b/tests/middlewar… │                    │         │           │          │ │
-│ │ index              │ Another thing to   │         │           │          │ │
-│ │ b4f3c64..0f5db79   │ check is the test  │         │           │          │ │
-│ │ 100644             │ cases. The new     │         │           │          │ │
-│ │ ---                │ tests check that   │         │           │          │ │
-│ │ a/tests/middlewar… │ cookies are only   │         │           │          │ │
-│ │ +++                │ set on             │         │           │          │ │
-│ │ b/tests/middlewar… │ modification. For  │         │           │          │ │
-│ │ @@ -2,7 +2,7 @@    │ example, in        │         │           │          │ │
-│ │ import re          │ `test_set_cookie_… │         │           │          │ │
-│ │                    │ when the session   │         │           │          │ │
-│ │  from              │ is updated, a      │         │           │          │ │
-│ │ starlette.applica… │ Set-Cookie header  │         │           │          │ │
-│ │ import Starlette   │ is sent. When      │         │           │          │ │
-│ │  from              │ reading only, no   │         │           │          │ │
-│ │ starlette.middlew… │ Set-Cookie is      │         │           │          │ │
-│ │ import Middleware  │ sent. That's       │         │           │          │ │
-│ │ -from              │ correct.           │         │           │          │ │
-│ │ starlette.middlew… │                    │         │           │          │ │
-│ │ import             │ In the             │         │           │          │ │
-│ │ SessionMiddleware  │ `test_vary_cookie… │         │           │          │ │
-│ │ +from              │ modifying the      │         │           │          │ │
-│ │ starlette.middlew… │ session adds the   │         │           │          │ │
-│ │ import Session,    │ Vary: Cookie       │         │           │          │ │
-│ │ SessionMiddleware  │ header, and        │         │           │          │ │
-│ │  from              │ accessing the      │         │           │          │ │
-│ │ starlette.requests │ session (even if   │         │           │          │ │
-│ │ import Request     │ not modifying)     │         │           │          │ │
-│ │  from              │ also adds it. But  │         │           │          │ │
-│ │ starlette.respons… │ the                │         │           │          │ │
-│ │ import             │ `mark_accessed` is │         │           │          │ │
-│ │ JSONResponse       │ called in the      │         │           │          │ │
-│ │  from              │ `session` property │         │           │          │ │
-│ │ starlette.routing  │ of                 │         │           │          │ │
-│ │ import Mount,      │ `HTTPConnection`,  │         │           │          │ │
-│ │ Route              │ which is called    │         │           │          │ │
-│ │ @@ -25,6 +25,10 @@ │ when the session   │         │           │          │ │
-│ │ async def          │ is accessed. So    │         │           │          │ │
-│ │ clear_session(req… │ when the session   │         │           │          │ │
-│ │ Request) ->        │ is accessed (like  │         │           │          │ │
-│ │ JSONResponse:      │ in                 │         │           │          │ │
-│ │      return        │ `view_session`),   │         │           │          │ │
-│ │ JSONResponse({"se… │ the                │         │           │          │ │
-│ │ request.session})  │ `mark_accessed` is │         │           │          │ │
-│ │                    │ called, which sets │         │           │          │ │
-│ │                    │ the `accessed`     │         │           │          │ │
-│ │ +def               │ flag. Then, in     │         │           │          │ │
-│ │ no_session_access… │ `send_wrapper`, if │         │           │          │ │
-│ │ Request) ->        │ `session.accessed` │         │           │          │ │
-│ │ JSONResponse:      │ is True, the Vary  │         │           │          │ │
-│ │ +    return        │ header is added.   │         │           │          │ │
-│ │ JSONResponse({"st… │ So even reading    │         │           │          │ │
-│ │ "ok"})             │ the session adds   │         │           │          │ │
-│ │ +                  │ the Vary header,   │         │           │          │ │
-│ │ +                  │ which is correct   │         │           │          │ │
-│ │  def               │ according to the   │         │           │          │ │
-│ │ test_session(test… │ test.              │         │           │          │ │
-│ │ TestClientFactory) │                    │         │           │          │ │
-│ │ -> None:           │ Now, checking for  │         │           │          │ │
-│ │      app =         │ potential defects. │         │           │          │ │
-│ │ Starlette(         │ Let's see if       │         │           │          │ │
-│ │          routes=[  │ there's any issue  │         │           │          │ │
-│ │ @@ -198,3 +202,86  │ with the `Session` │         │           │          │ │
-│ │ @@ def             │ class. The         │         │           │          │ │
-│ │ test_domain_cooki… │ `Session` class    │         │           │          │ │
-│ │ TestClientFactory) │ uses `typing.Any`  │         │           │          │ │
-│ │ -> None:           │ for the dictionary │         │           │          │ │
-│ │      client.cooki… │ values, which is   │         │           │          │ │
-│ │      response =    │ acceptable. The    │         │           │          │ │
-│ │ client.get("/view… │ `mark_accessed`    │         │           │          │ │
-│ │      assert        │ and                │         │           │          │ │
-│ │ response.json() == │ `mark_modified`    │         │           │          │ │
-│ │ {"session": {}}    │ methods are        │         │           │          │ │
-│ │ +                  │ correctly updating │         │           │          │ │
-│ │ +                  │ the instance       │         │           │          │ │
-│ │ +def               │ variables.         │         │           │          │ │
-│ │ test_set_cookie_o… │                    │         │           │          │ │
-│ │ TestClientFactory) │ Wait, another      │         │           │          │ │
-│ │ -> None:           │ thing: in the      │         │           │          │ │
-│ │ +    app =         │ `Session` class,   │         │           │          │ │
-│ │ Starlette(         │ `accessed` and     │         │           │          │ │
-│ │ +        routes=[  │ `modified` are set │         │           │          │ │
-│ │ +                  │ as class           │         │           │          │ │
-│ │ Route("/view_sess… │ variables. But in  │         │           │          │ │
-│ │ endpoint=view_ses… │ the                │         │           │          │ │
-│ │ +                  │ `mark_accessed`    │         │           │          │ │
-│ │ Route("/update_se… │ method, when you   │         │           │          │ │
-│ │ endpoint=update_s… │ do `self.accessed  │         │           │          │ │
-│ │ methods=["POST"]), │ = True`, that      │         │           │          │ │
-│ │ +        ],        │ creates an         │         │           │          │ │
-│ │ +                  │ instance variable, │         │           │          │ │
-│ │ middleware=[Middl… │ not modifying the  │         │           │          │ │
-│ │ secret_key="examp… │ class variable. So │         │           │          │ │
-│ │ +    )             │ each instance will │         │           │          │ │
-│ │ +    client =      │ have its own       │         │           │          │ │
-│ │ test_client_facto… │ `accessed` and     │         │           │          │ │
-│ │ +                  │ `modified` flags,  │         │           │          │ │
-│ │ +    # Write to    │ which is correct.  │         │           │          │ │
-│ │ session - should   │ That's the         │         │           │          │ │
-│ │ send Set-Cookie    │ intended behavior. │         │           │          │ │
+│ │ OpenAPI 3.1.0      │ The commit history │         │           │          │ │
+│ │ (#9770)            │ doesn't show any   │         │           │          │ │
+│ │   50c1a928f        │ related issues.    │         │           │          │ │
+│ │ 2023-05-08 ✅      │ Therefore, the     │         │           │          │ │
+│ │ Refactor OpenAPI   │ change looks safe  │         │           │          │ │
+│ │ tests, prepare for │ to approve.        │         │           │          │ │
+│ │ Pydantic v2        │ </think>           │         │           │          │ │
+│ │ (#9503)            │                    │         │           │          │ │
+│ │ Recent history of  │ {"decision":       │         │           │          │ │
+│ │ tests/test_securi… │ "approve",         │         │           │          │ │
+│ │   7dad5a820        │ "comments": []}    │         │           │          │ │
+│ │ 2023-06-30 ✨ Add  │                    │         │           │          │ │
+│ │ support for        │                    │         │           │          │ │
+│ │ OpenAPI 3.1.0      │                    │         │           │          │ │
+│ │ (#9770)            │                    │         │           │          │ │
+│ │   50c1a928f        │                    │         │           │          │ │
+│ │ 2023-05-08 ✅      │                    │         │           │          │ │
+│ │ Refactor OpenAPI   │                    │         │           │          │ │
+│ │ tests, prepare for │                    │         │           │          │ │
+│ │ Pydantic v2        │                    │         │           │          │ │
+│ │ (#9503)            │                    │         │           │          │ │
+│ │   70a51b3af        │                    │         │           │          │ │
+│ │ 2020-07-10 ✨      │                    │         │           │          │ │
+│ │ Auto-generate      │                    │         │           │          │ │
+│ │ OpenAPI servers    │                    │         │           │          │ │
+│ │ from root_path     │                    │         │           │          │ │
+│ │ (#1596)            │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ Diff:              │                    │         │           │          │ │
+│ │ ```diff            │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/fastapi/securit… │                    │         │           │          │ │
+│ │ b/fastapi/securit… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 002e68b44..fd349a… │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/fastapi/securit… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/fastapi/securit… │                    │         │           │          │ │
+│ │ @@ -7,4 +7,4 @@    │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ get_authorization… │                    │         │           │          │ │
+│ │      if not        │                    │         │           │          │ │
+│ │ authorization_hea… │                    │         │           │          │ │
+│ │          return    │                    │         │           │          │ │
+│ │ "", ""             │                    │         │           │          │ │
+│ │      scheme, _,    │                    │         │           │          │ │
+│ │ param =            │                    │         │           │          │ │
+│ │ authorization_hea… │                    │         │           │          │ │
+│ │ ")                 │                    │         │           │          │ │
+│ │ -    return        │                    │         │           │          │ │
+│ │ scheme, param      │                    │         │           │          │ │
+│ │ +    return        │                    │         │           │          │ │
+│ │ scheme,            │                    │         │           │          │ │
+│ │ param.strip()      │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_secu… │                    │         │           │          │ │
+│ │ b/tests/test_secu… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 8cf259a75..ac38ee… │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_secu… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_secu… │                    │         │           │          │ │
+│ │ @@ -21,6 +21,12 @@ │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ test_security_htt… │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ {"scheme":         │                    │         │           │          │ │
+│ │ "Other",           │                    │         │           │          │ │
+│ │ "credentials":     │                    │         │           │          │ │
+│ │ "foobar"}          │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_security_htt… │                    │         │           │          │ │
 │ │ +    response =    │                    │         │           │          │ │
-│ │ client.post("/upd… │ Another potential  │         │           │          │ │
-│ │ json={"some":      │ issue: in the      │         │           │          │ │
-│ │ "data"})           │ `send_wrapper`,    │         │           │          │ │
-│ │ +    assert        │ when the session   │         │           │          │ │
-│ │ "set-cookie" in    │ is accessed, the   │         │           │          │ │
-│ │ response.headers   │ code checks if     │         │           │          │ │
-│ │ +                  │ `session.accessed` │         │           │          │ │
-│ │ +    # Read-only   │ is True. But the   │         │           │          │ │
-│ │ access - should    │ `session` is an    │         │           │          │ │
-│ │ NOT send           │ instance of        │         │           │          │ │
-│ │ Set-Cookie         │ `Session`, and     │         │           │          │ │
-│ │ +    response =    │ `accessed` is an   │         │           │          │ │
-│ │ client.get("/view… │ instance variable. │         │           │          │ │
-│ │ +    assert        │ So that should     │         │           │          │ │
-│ │ response.json() == │ work. However, in  │         │           │          │ │
-│ │ {"session":        │ the                │         │           │          │ │
-│ │ {"some": "data"}}  │ `HTTPConnection`   │         │           │          │ │
-│ │ +    assert        │ class's `session`  │         │           │          │ │
-│ │ "set-cookie" not   │ property, after    │         │           │          │ │
-│ │ in                 │ casting to         │         │           │          │ │
-│ │ response.headers   │ `Session`, it      │         │           │          │ │
-│ │ +                  │ calls              │         │           │          │ │
-│ │ +                  │ `mark_accessed()`, │         │           │          │ │
-│ │ +def               │ which sets         │         │           │          │ │
-│ │ test_vary_cookie_… │ `accessed` to      │         │           │          │ │
-│ │ TestClientFactory) │ True. So whenever  │         │           │          │ │
-│ │ -> None:           │ the session is     │         │           │          │ │
-│ │ +    app =         │ accessed (like in  │         │           │          │ │
-│ │ Starlette(         │ `request.session`… │         │           │          │ │
-│ │ +        routes=[  │ it marks it as     │         │           │          │ │
-│ │ +                  │ accessed. This     │         │           │          │ │
-│ │ Route("/view_sess… │ ensures that the   │         │           │          │ │
-│ │ endpoint=view_ses… │ Vary header is     │         │           │          │ │
-│ │ +                  │ added when the     │         │           │          │ │
-│ │ Route("/update_se… │ session is         │         │           │          │ │
-│ │ endpoint=update_s… │ accessed, which is │         │           │          │ │
-│ │ methods=["POST"]), │ correct.           │         │           │          │ │
+│ │ client.get("/user… │                    │         │           │          │ │
+│ │ headers={"Authori… │                    │         │           │          │ │
+│ │ "Other  foobar "}) │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 200,            │                    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ {"scheme":         │                    │         │           │          │ │
+│ │ "Other",           │                    │         │           │          │ │
+│ │ "credentials":     │                    │         │           │          │ │
+│ │ "foobar"}          │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ Route("/no_sessio… │ Another thing to   │         │           │          │ │
-│ │ endpoint=no_sessi… │ check: in the      │         │           │          │ │
-│ │ +        ],        │ `Session` class,   │         │           │          │ │
-│ │ +                  │ the `__setitem__`  │         │           │          │ │
-│ │ middleware=[Middl… │ method calls       │         │           │          │ │
-│ │ secret_key="examp… │ `mark_modified()`, │         │           │          │ │
-│ │ +    )             │ which sets         │         │           │          │ │
-│ │ +    client =      │ `modified` to      │         │           │          │ │
-│ │ test_client_facto… │ True. But the      │         │           │          │ │
-│ │ +                  │ `mark_modified`    │         │           │          │ │
-│ │ +    # Modifying   │ method sets both   │         │           │          │ │
-│ │ session should add │ `accessed` and     │         │           │          │ │
-│ │ Vary: Cookie       │ `modified` to      │         │           │          │ │
-│ │ +    response =    │ True. Wait,        │         │           │          │ │
-│ │ client.post("/upd… │ looking at the     │         │           │          │ │
-│ │ json={"some":      │ code:              │         │           │          │ │
-│ │ "data"})           │                    │         │           │          │ │
-│ │ +    assert        │ def                │         │           │          │ │
-│ │ "cookie" in        │ mark_modified(sel… │         │           │          │ │
-│ │ response.headers.… │ -> None:           │         │           │          │ │
-│ │ "").lower()        │     self.accessed  │         │           │          │ │
-│ │ +                  │ = True             │         │           │          │ │
-│ │ +    # Reading a   │     self.modified  │         │           │          │ │
-│ │ non-empty session  │ = True             │         │           │          │ │
-│ │ should add Vary:   │                    │         │           │          │ │
-│ │ Cookie             │ So, when a session │         │           │          │ │
-│ │ +    response =    │ is modified, both  │         │           │          │ │
-│ │ client.get("/view… │ `accessed` and     │         │           │          │ │
-│ │ +    assert        │ `modified` are set │         │           │          │ │
-│ │ "cookie" in        │ to True. But in    │         │           │          │ │
-│ │ response.headers.… │ the                │         │           │          │ │
-│ │ "").lower()        │ `send_wrapper`,    │         │           │          │ │
-│ │ +                  │ the code checks if │         │           │          │ │
-│ │ +    # Not         │ `session.accessed` │         │           │          │ │
-│ │ accessing session  │ is True and        │         │           │          │ │
-│ │ at all should NOT  │ `session.modified` │         │           │          │ │
-│ │ add Vary: Cookie   │ is True. Wait, no. │         │           │          │ │
-│ │ +    response =    │ Wait, in the       │         │           │          │ │
-│ │ client.get("/no_s… │ `send_wrapper`     │         │           │          │ │
-│ │ +    assert        │ code:              │         │           │          │ │
-│ │ "cookie" not in    │                    │         │           │          │ │
-│ │ response.headers.… │ if                 │         │           │          │ │
-│ │ "").lower()        │ session.accessed:  │         │           │          │ │
-│ │ +                  │     headers.add_v… │         │           │          │ │
-│ │ +                  │ if                 │         │           │          │ │
-│ │ +def               │ session.modified   │         │           │          │ │
-│ │ test_session_trac… │ and session:       │         │           │          │ │
-│ │ -> None:           │     # data to      │         │           │          │ │
-│ │ +    session =     │ persist            │         │           │          │ │
-│ │ Session({"a": "1", │     ...            │         │           │          │ │
-│ │ "b": "2"})         │                    │         │           │          │ │
-│ │ +    assert not    │ So, when the       │         │           │          │ │
-│ │ session.modified   │ session is         │         │           │          │ │
-│ │ +                  │ accessed (via      │         │           │          │ │
-│ │ +    # __setitem__ │ `mark_accessed` in │         │           │          │ │
-│ │ +    session["c"]  │ the `session`      │         │           │          │ │
-│ │ = "3"              │ property), the     │         │           │          │ │
-│ │ +    assert        │ Vary header is     │         │           │          │ │
-│ │ session.modified   │ added. But when    │         │           │          │ │
-│ │ +                  │ the session is     │         │           │          │ │
-│ │ +    # __delitem__ │ modified, the      │         │           │          │ │
-│ │ +    session =     │ Set-Cookie is      │         │           │          │ │
-│ │ Session({"a":      │ added. However, if │         │           │          │ │
-│ │ "1"})              │ the session is     │         │           │          │ │
-│ │ +    del           │ modified,          │         │           │          │ │
-│ │ session["a"]       │ `session.modified` │         │           │          │ │
-│ │ +    assert        │ is True. However,  │         │           │          │ │
-│ │ session.modified   │ the                │         │           │          │ │
-│ │ +                  │ `mark_modified`    │         │           │          │ │
-│ │ +    # clear       │ method sets both   │         │           │          │ │
-│ │ +    session =     │ `accessed` and     │         │           │          │ │
-│ │ Session({"a":      │ `modified`. So,    │         │           │          │ │
-│ │ "1"})              │ even if the        │         │           │          │ │
-│ │ +                  │ session is         │         │           │          │ │
-│ │ session.clear()    │ modified,          │         │           │          │ │
-│ │ +    assert        │ `session.accessed` │         │           │          │ │
-│ │ session.modified   │ is also True.      │         │           │          │ │
-│ │ +                  │ Therefore, in      │         │           │          │ │
-│ │ +    # pop with    │ `send_wrapper`,    │         │           │          │ │
-│ │ existing key       │ the Vary header is │         │           │          │ │
-│ │ +    session =     │ added even if the  │         │           │          │ │
-│ │ Session({"a":      │ session is         │         │           │          │ │
-│ │ "1"})              │ modified, which is │         │           │          │ │
-│ │ +                  │ correct because    │         │           │          │ │
-│ │ session.pop("a")   │ accessing the      │         │           │          │ │
-│ │ +    assert        │ session (even if   │         │           │          │ │
-│ │ session.modified   │ not modifying)     │         │           │          │ │
-│ │ +                  │ should add the     │         │           │          │ │
-│ │ +    # pop with    │ Vary header.       │         │           │          │ │
-│ │ missing key        │                    │         │           │          │ │
-│ │ +    session =     │ But the test case  │         │           │          │ │
-│ │ Session({"a":      │ `test_vary_cookie… │         │           │          │ │
-│ │ "1"})              │ checks that        │         │           │          │ │
-│ │ +                  │ reading the        │         │           │          │ │
-│ │ session.pop("miss… │ session (without   │         │           │          │ │
-│ │ None)              │ modifying) adds    │         │           │          │ │
-│ │ +    assert not    │ the Vary header,   │         │           │          │ │
-│ │ session.modified   │ which is correct.  │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    # setdefault  │ Another possible   │         │           │          │ │
-│ │ with missing key   │ issue: in the      │         │           │          │ │
-│ │ +    session =     │ `Session` class's  │         │           │          │ │
-│ │ Session({"a":      │ `pop` method, if   │         │           │          │ │
-│ │ "1"})              │ the key is not     │         │           │          │ │
-│ │ +                  │ present,           │         │           │          │ │
-│ │ session.setdefaul… │ `self.modified` is │         │           │          │ │
-│ │ "2")               │ set to the         │         │           │          │ │
-│ │ +    assert        │ previous value.    │         │           │          │ │
-│ │ session.modified   │ But if the key was │         │           │          │ │
-│ │ +                  │ not present,       │         │           │          │ │
-│ │ +    # setdefault  │ popping it doesn't │         │           │          │ │
-│ │ with existing key  │ change the         │         │           │          │ │
-│ │ +    session =     │ session, so        │         │           │          │ │
-│ │ Session({"a":      │ `modified` should  │         │           │          │ │
-│ │ "1"})              │ remain unchanged.  │         │           │          │ │
-│ │ +                  │ However, the code  │         │           │          │ │
-│ │ session.setdefaul… │ does               │         │           │          │ │
-│ │ "2")               │ `self.modified =   │         │           │          │ │
-│ │ +    assert not    │ self.modified or   │         │           │          │ │
-│ │ session.modified   │ key in self`. If   │         │           │          │ │
-│ │                    │ the key was not in │         │           │          │ │
-│ │ ```                │ the session, then  │         │           │          │ │
-│ │                    │ `key in self` is   │         │           │          │ │
-│ │                    │ False, so          │         │           │          │ │
-│ │                    │ `self.modified` is │         │           │          │ │
-│ │                    │ not changed.       │         │           │          │ │
-│ │                    │ That's correct.    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_security_htt… │                    │         │           │          │ │
+│ │      response =    │                    │         │           │          │ │
+│ │ client.get("/user… │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 401,            │                    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_secu… │                    │         │           │          │ │
+│ │ b/tests/test_secu… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ f2097b149..66f53a… │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_secu… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_secu… │                    │         │           │          │ │
+│ │ @@ -37,6 +37,12 @@ │                    │         │           │          │ │
+│ │ def test_token():  │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ {"token":          │                    │         │           │          │ │
+│ │ "testtoken"}       │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ Wait, but suppose  │         │           │          │ │
-│ │                    │ the key is not     │         │           │          │ │
-│ │                    │ present, and       │         │           │          │ │
-│ │                    │ `self.modified`    │         │           │          │ │
-│ │                    │ was True. Then,    │         │           │          │ │
-│ │                    │ `self.modified =   │         │           │          │ │
-│ │                    │ True or False`,    │         │           │          │ │
-│ │                    │ which remains      │         │           │          │ │
-│ │                    │ True. That's       │         │           │          │ │
-│ │                    │ correct because    │         │           │          │ │
-│ │                    │ the session was    │         │           │          │ │
-│ │                    │ already modified   │         │           │          │ │
-│ │                    │ before. If the key │         │           │          │ │
-│ │                    │ was not present    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_token_with_w… │                    │         │           │          │ │
+│ │ +    response =    │                    │         │           │          │ │
+│ │ client.get("/item… │                    │         │           │          │ │
+│ │ headers={"Authori… │                    │         │           │          │ │
+│ │ "Bearer  testtoken │                    │         │           │          │ │
+│ │ "})                │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 200,            │                    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ {"token":          │                    │         │           │          │ │
+│ │ "testtoken"}       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_openapi_sche… │                    │         │           │          │ │
+│ │      response =    │                    │         │           │          │ │
+│ │ client.get("/open… │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 200,            │                    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ ```                │                    │         │           │          │ │
+│ ├────────────────────┼────────────────────┼─────────┼───────────┼──────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │    1.00 │      0.00 │ approve  │ │
+│ │ You are the code   │ <think>            │         │           │          │ │
+│ │ review gate for a  │ Okay, let's see.   │         │           │          │ │
+│ │ production         │ The user has made  │         │           │          │ │
+│ │ repository.        │ changes to the     │         │           │          │ │
+│ │ Approval merges    │ FastAPI            │         │           │          │ │
+│ │ and deploys the    │ repository,        │         │           │          │ │
+│ │ change without     │ specifically in    │         │           │          │ │
+│ │ further human      │ the security       │         │           │          │ │
+│ │ review.            │ utils.py file and  │         │           │          │ │
+│ │   approve  - you   │ some test files.   │         │           │          │ │
+│ │ are confident the  │ The main change is │         │           │          │ │
+│ │ change is correct  │ in the             │         │           │          │ │
+│ │ and safe to ship.  │ get_authorization… │         │           │          │ │
+│ │   block    - you   │ function where     │         │           │          │ │
+│ │ found a concrete   │ they modified the  │         │           │          │ │
+│ │ defect in the      │ return statement   │         │           │          │ │
+│ │ change.            │ to use             │         │           │          │ │
+│ │   escalate - you   │ param.strip()      │         │           │          │ │
+│ │ cannot establish   │ instead of just    │         │           │          │ │
+│ │ safety from the    │ param. Also, they  │         │           │          │ │
+│ │ supplied evidence. │ added some test    │         │           │          │ │
+│ │ Approving a        │ cases for          │         │           │          │ │
+│ │ defective change   │ whitespace         │         │           │          │ │
+│ │ is the worst       │ handling in the    │         │           │          │ │
+│ │ outcome.           │ Authorization      │         │           │          │ │
+│ │ Your final answer  │ headers.           │         │           │          │ │
+│ │ must be exactly    │                    │         │           │          │ │
+│ │ one JSON object:   │ First, I need to   │         │           │          │ │
+│ │ {"decision":       │ understand what    │         │           │          │ │
+│ │ "approve|block|es… │ the original code  │         │           │          │ │
+│ │ "comments": []}    │ did. The original  │         │           │          │ │
+│ │ For block, include │ code split the     │         │           │          │ │
+│ │ exactly one        │ authorization      │         │           │          │ │
+│ │ comment with file, │ header into scheme │         │           │          │ │
+│ │ line_start,        │ and param using    │         │           │          │ │
+│ │ line_end and body; │ partition(" ").    │         │           │          │ │
+│ │ limit body to 40   │ Then it returned   │         │           │          │ │
+│ │ words explaining   │ scheme and param.  │         │           │          │ │
+│ │ the defect. For    │ The change here is │         │           │          │ │
+│ │ approve or         │ that now param is  │         │           │          │ │
+│ │ escalate, use an   │ stripped of        │         │           │          │ │
+│ │ empty comments     │ whitespace. So, if │         │           │          │ │
+│ │ array. Do not      │ the Authorization  │         │           │          │ │
+│ │ include proposed   │ header has extra   │         │           │          │ │
+│ │ tests or test      │ spaces after the   │         │           │          │ │
+│ │ source.            │ scheme, like       │         │           │          │ │
+│ │                    │ "Bearer  testtoken │         │           │          │ │
+│ │ USER               │ ", the param would │         │           │          │ │
+│ │ Repository:        │ be "testtoken"     │         │           │          │ │
+│ │ fastapi            │ after stripping.   │         │           │          │ │
+│ │ Files changed:     │                    │         │           │          │ │
+│ │ fastapi/security/… │ Looking at the     │         │           │          │ │
+│ │ tests/test_securi… │ test cases added:  │         │           │          │ │
+│ │ tests/test_securi… │ test_security_htt… │         │           │          │ │
 │ │                    │ and                │         │           │          │ │
-│ │                    │ `self.modified`    │         │           │          │ │
-│ │                    │ was False, then    │         │           │          │ │
-│ │                    │ `self.modified`    │         │           │          │ │
-│ │                    │ remains False.     │         │           │          │ │
-│ │                    │ That's correct.    │         │           │          │ │
+│ │ Context around the │ test_token_with_w… │         │           │          │ │
+│ │ change             │ These tests check  │         │           │          │ │
+│ │ (mechanically      │ if the code        │         │           │          │ │
+│ │ extracted):        │ correctly handles  │         │           │          │ │
+│ │ Changed            │ extra whitespaces  │         │           │          │ │
+│ │ definitions:       │ in the             │         │           │          │ │
+│ │ fastapi/security/… │ Authorization      │         │           │          │ │
+│ │ tests/test_securi… │ header. The tests  │         │           │          │ │
+│ │ tests/test_securi… │ expect that even   │         │           │          │ │
+│ │ tests/test_securi… │ with spaces, the   │         │           │          │ │
+│ │ tests/test_securi… │ credentials are    │         │           │          │ │
+│ │ tests/test_securi… │ correctly          │         │           │          │ │
+│ │ tests/test_securi… │ extracted as       │         │           │          │ │
+│ │ Recent history of  │ "foobar" or        │         │           │          │ │
+│ │ fastapi/security/… │ "testtoken".       │         │           │          │ │
+│ │   1c4fc96c9        │                    │         │           │          │ │
+│ │ 2025-12-17 ♻️      │ Now, considering   │         │           │          │ │
+│ │ Upgrade internal   │ the impact of this │         │           │          │ │
+│ │ syntax to Python   │ change. The        │         │           │          │ │
+│ │ 3.9+ 🎉 (#14564)   │ original code      │         │           │          │ │
+│ │   fdbd48be5        │ might have been    │         │           │          │ │
+│ │ 2022-11-13 ⬆       │ more lenient with  │         │           │          │ │
+│ │ Upgrade Starlette  │ whitespace, but    │         │           │          │ │
+│ │ to `0.21.0`,       │ the new code is    │         │           │          │ │
+│ │ including the new  │ trimming the       │         │           │          │ │
+│ │ [`TestClient`      │ param. This could  │         │           │          │ │
+│ │ based on           │ affect how the     │         │           │          │ │
+│ │ HTTPX](https://gi… │ security schemes   │         │           │          │ │
+│ │ (#5471)            │ handle spaces. For │         │           │          │ │
+│ │   4a0316bcf        │ example, if a      │         │           │          │ │
+│ │ 2018-12-28 :art:   │ user's token has   │         │           │          │ │
+│ │ Add missing type   │ leading or         │         │           │          │ │
+│ │ definition         │ trailing spaces,   │         │           │          │ │
+│ │ Recent history of  │ the stripped       │         │           │          │ │
+│ │ tests/test_securi… │ version would      │         │           │          │ │
+│ │   51ad909ff        │ remove them, which │         │           │          │ │
+│ │ 2025-11-24 🐛 Use  │ might be intended  │         │           │          │ │
+│ │ `401` status code  │ to normalize the   │         │           │          │ │
+│ │ in security        │ input.             │         │           │          │ │
+│ │ classes when       │                    │         │           │          │ │
+│ │ credentials are    │ But wait, in       │         │           │          │ │
+│ │ missing (#13786)   │ OAuth2 Bearer      │         │           │          │ │
+│ │   7dad5a820        │ tokens, the        │         │           │          │ │
+│ │ 2023-06-30 ✨ Add  │ credentials part   │         │           │          │ │
+│ │ support for        │ is usually a token │         │           │          │ │
+│ │ OpenAPI 3.1.0      │ string. If the     │         │           │          │ │
+│ │ (#9770)            │ token is meant to  │         │           │          │ │
+│ │   50c1a928f        │ be exactly as      │         │           │          │ │
+│ │ 2023-05-08 ✅      │ provided,          │         │           │          │ │
+│ │ Refactor OpenAPI   │ stripping          │         │           │          │ │
+│ │ tests, prepare for │ whitespace could   │         │           │          │ │
+│ │ Pydantic v2        │ be a problem.      │         │           │          │ │
+│ │ (#9503)            │ However, in        │         │           │          │ │
+│ │ Recent history of  │ practice, tokens   │         │           │          │ │
+│ │ tests/test_securi… │ might not have     │         │           │          │ │
+│ │   7dad5a820        │ trailing spaces,   │         │           │          │ │
+│ │ 2023-06-30 ✨ Add  │ but it's possible  │         │           │          │ │
+│ │ support for        │ that some          │         │           │          │ │
+│ │ OpenAPI 3.1.0      │ implementations    │         │           │          │ │
+│ │ (#9770)            │ might include      │         │           │          │ │
+│ │   50c1a928f        │ them. The change   │         │           │          │ │
+│ │ 2023-05-08 ✅      │ here is to make    │         │           │          │ │
+│ │ Refactor OpenAPI   │ the param          │         │           │          │ │
+│ │ tests, prepare for │ stripping, which   │         │           │          │ │
+│ │ Pydantic v2        │ could be a bug if  │         │           │          │ │
+│ │ (#9503)            │ the intended       │         │           │          │ │
+│ │   70a51b3af        │ behavior was to    │         │           │          │ │
+│ │ 2020-07-10 ✨      │ preserve the exact │         │           │          │ │
+│ │ Auto-generate      │ value.             │         │           │          │ │
+│ │ OpenAPI servers    │                    │         │           │          │ │
+│ │ from root_path     │ However, the test  │         │           │          │ │
+│ │ (#1596)            │ cases added are    │         │           │          │ │
+│ │                    │ passing because    │         │           │          │ │
+│ │ Diff:              │ they check that    │         │           │          │ │
+│ │ ```diff            │ the credentials    │         │           │          │ │
+│ │ diff --git         │ are "foobar" and   │         │           │          │ │
+│ │ a/fastapi/securit… │ "testtoken" even   │         │           │          │ │
+│ │ b/fastapi/securit… │ with spaces. So    │         │           │          │ │
+│ │ index              │ the code is now    │         │           │          │ │
+│ │ 002e68b44..fd349a… │ correctly          │         │           │          │ │
+│ │ 100644             │ stripping the      │         │           │          │ │
+│ │ ---                │ whitespace, and    │         │           │          │ │
+│ │ a/fastapi/securit… │ the tests are      │         │           │          │ │
+│ │ +++                │ verifying that.    │         │           │          │ │
+│ │ b/fastapi/securit… │                    │         │           │          │ │
+│ │ @@ -7,4 +7,4 @@    │ But is there a     │         │           │          │ │
+│ │ def                │ defect here? Let   │         │           │          │ │
+│ │ get_authorization… │ me think. The      │         │           │          │ │
+│ │      if not        │ original code      │         │           │          │ │
+│ │ authorization_hea… │ might have allowed │         │           │          │ │
+│ │          return    │ leading or         │         │           │          │ │
+│ │ "", ""             │ trailing spaces in │         │           │          │ │
+│ │      scheme, _,    │ the param, but the │         │           │          │ │
+│ │ param =            │ new code removes   │         │           │          │ │
+│ │ authorization_hea… │ them. If the       │         │           │          │ │
+│ │ ")                 │ security scheme    │         │           │          │ │
+│ │ -    return        │ expects the exact  │         │           │          │ │
+│ │ scheme, param      │ value, including   │         │           │          │ │
+│ │ +    return        │ any                │         │           │          │ │
+│ │ scheme,            │ leading/trailing   │         │           │          │ │
+│ │ param.strip()      │ spaces, then this  │         │           │          │ │
+│ │ diff --git         │ change would be    │         │           │          │ │
+│ │ a/tests/test_secu… │ incorrect.         │         │           │          │ │
+│ │ b/tests/test_secu… │ However, in HTTP   │         │           │          │ │
+│ │ index              │ authentication     │         │           │          │ │
+│ │ 8cf259a75..ac38ee… │ schemes,           │         │           │          │ │
+│ │ 100644             │ typically, the     │         │           │          │ │
+│ │ ---                │ parameters are     │         │           │          │ │
+│ │ a/tests/test_secu… │ supposed to be     │         │           │          │ │
+│ │ +++                │ parsed without     │         │           │          │ │
+│ │ b/tests/test_secu… │ leading/trailing   │         │           │          │ │
+│ │ @@ -21,6 +21,12 @@ │ spaces. For        │         │           │          │ │
+│ │ def                │ example, in Basic  │         │           │          │ │
+│ │ test_security_htt… │ Auth, the          │         │           │          │ │
+│ │      assert        │ credentials are    │         │           │          │ │
+│ │ response.json() == │ base64 encoded and │         │           │          │ │
+│ │ {"scheme":         │ shouldn't have     │         │           │          │ │
+│ │ "Other",           │ spaces. In Bearer  │         │           │          │ │
+│ │ "credentials":     │ tokens, the token  │         │           │          │ │
+│ │ "foobar"}          │ is a string that   │         │           │          │ │
+│ │                    │ shouldn't have     │         │           │          │ │
+│ │                    │ spaces. So         │         │           │          │ │
+│ │ +def               │ stripping the      │         │           │          │ │
+│ │ test_security_htt… │ whitespace might   │         │           │          │ │
+│ │ +    response =    │ be correct.        │         │           │          │ │
+│ │ client.get("/user… │                    │         │           │          │ │
+│ │ headers={"Authori… │ But wait, if the   │         │           │          │ │
+│ │ "Other  foobar "}) │ Authorization      │         │           │          │ │
+│ │ +    assert        │ header is "Bearer  │         │           │          │ │
+│ │ response.status_c… │ testtoken ", the   │         │           │          │ │
+│ │ == 200,            │ param is           │         │           │          │ │
+│ │ response.text      │ "testtoken " (with │         │           │          │ │
+│ │ +    assert        │ a trailing space)  │         │           │          │ │
+│ │ response.json() == │ before stripping.  │         │           │          │ │
+│ │ {"scheme":         │ After stripping,   │         │           │          │ │
+│ │ "Other",           │ it becomes         │         │           │          │ │
+│ │ "credentials":     │ "testtoken", which │         │           │          │ │
+│ │ "foobar"}          │ is correct. So the │         │           │          │ │
+│ │ +                  │ change is making   │         │           │          │ │
+│ │ +                  │ the code more      │         │           │          │ │
+│ │  def               │ robust by removing │         │           │          │ │
+│ │ test_security_htt… │ any accidental     │         │           │          │ │
+│ │      response =    │ whitespace. The    │         │           │          │ │
+│ │ client.get("/user… │ tests are          │         │           │          │ │
+│ │      assert        │ confirming that    │         │           │          │ │
+│ │ response.status_c… │ this works as      │         │           │          │ │
+│ │ == 401,            │ expected.          │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
+│ │ diff --git         │ So, the change     │         │           │          │ │
+│ │ a/tests/test_secu… │ seems correct. The │         │           │          │ │
+│ │ b/tests/test_secu… │ tests are added to │         │           │          │ │
+│ │ index              │ ensure that the    │         │           │          │ │
+│ │ f2097b149..66f53a… │ stripping is       │         │           │          │ │
+│ │ 100644             │ handled properly.  │         │           │          │ │
+│ │ ---                │ The defect would   │         │           │          │ │
+│ │ a/tests/test_secu… │ only exist if the  │         │           │          │ │
+│ │ +++                │ code was supposed  │         │           │          │ │
+│ │ b/tests/test_secu… │ to preserve the    │         │           │          │ │
+│ │ @@ -37,6 +37,12 @@ │ whitespace, but    │         │           │          │ │
+│ │ def test_token():  │ the original code  │         │           │          │ │
+│ │      assert        │ didn't. Since the  │         │           │          │ │
+│ │ response.json() == │ change is to       │         │           │          │ │
+│ │ {"token":          │ strip, and the     │         │           │          │ │
+│ │ "testtoken"}       │ tests are passing, │         │           │          │ │
+│ │                    │ I don't see a      │         │           │          │ │
+│ │                    │ concrete defect    │         │           │          │ │
+│ │ +def               │ here. Therefore,   │         │           │          │ │
+│ │ test_token_with_w… │ the decision       │         │           │          │ │
+│ │ +    response =    │ should be to       │         │           │          │ │
+│ │ client.get("/item… │ approve the        │         │           │          │ │
+│ │ headers={"Authori… │ change.            │         │           │          │ │
+│ │ "Bearer  testtoken │ </think>           │         │           │          │ │
+│ │ "})                │                    │         │           │          │ │
+│ │ +    assert        │ {"decision":       │         │           │          │ │
+│ │ response.status_c… │ "approve",         │         │           │          │ │
+│ │ == 200,            │ "comments": []}    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ response.json() == │                    │         │           │          │ │
+│ │ {"token":          │                    │         │           │          │ │
+│ │ "testtoken"}       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_openapi_sche… │                    │         │           │          │ │
+│ │      response =    │                    │         │           │          │ │
+│ │ client.get("/open… │                    │         │           │          │ │
+│ │      assert        │                    │         │           │          │ │
+│ │ response.status_c… │                    │         │           │          │ │
+│ │ == 200,            │                    │         │           │          │ │
+│ │ response.text      │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ Now, looking at    │         │           │          │ │
-│ │                    │ the code again, I  │         │           │          │ │
-│ │                    │ don't see any      │         │           │          │ │
-│ │                    │ clear defects. The │         │           │          │ │
-│ │                    │ changes seem to    │         │           │          │ │
-│ │                    │ correctly track    │         │           │          │ │
-│ │                    │ accessed and       │         │           │          │ │
-│ │                    │ modified states,   │         │           │          │ │
-│ │                    │ ensuring that      │         │           │          │ │
-│ │                    │ cookies are set    │         │           │          │ │
-│ │                    │ only when          │         │           │          │ │
-│ │                    │ necessary and the  │         │           │          │ │
-│ │                    │ Vary header is     │         │           │          │ │
-│ │                    │ added when         │         │           │          │ │
-│ │                    │ appropriate. The   │         │           │          │ │
-│ │                    │ tests also cover   │         │           │          │ │
-│ │                    │ these scenarios.   │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Therefore, the     │         │           │          │ │
-│ │                    │ code change is     │         │           │          │ │
-│ │                    │ safe to merge. I   │         │           │          │ │
-│ │                    │ don't see any      │         │           │          │ │
-│ │                    │ concrete defects   │         │           │          │ │
-│ │                    │ here.              │         │           │          │ │
-│ │                    │ </think>           │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ {"decision":       │         │           │          │ │
-│ │                    │ "approve",         │         │           │          │ │
-│ │                    │ "comments": []}    │         │           │          │ │
+│ │ ```                │                    │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
