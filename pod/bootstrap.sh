@@ -45,7 +45,7 @@ else
   tmux kill-session -t ft 2>/dev/null || true   # stale session from a failed/finished run
   mkdir -p runs
   rm -f "runs/${PHASE}.running"
-  tmux new -d -s ft "touch runs/${PHASE}.running; V=${V:-} bash pod/${PHASE}.sh 2>&1 | tee runs/${PHASE}${V:-}.log; rm -f runs/${PHASE}.running; bash pod/push_results.sh ${PHASE} final; echo PHASE-DONE; sleep 86400"
+  tmux new -d -s ft "touch runs/${PHASE}.running; V=${V:-} SFT=${SFT:-} GRPO=${GRPO:-} BASE=${BASE:-} bash pod/${PHASE}.sh 2>&1 | tee runs/${PHASE}${V:-}.log; rm -f runs/${PHASE}.running; bash pod/push_results.sh ${PHASE} final; echo PHASE-DONE; sleep 86400"
   echo "started pod/${PHASE}.sh in tmux 'ft'. tail: tmux attach -t ft   (ctrl-b d to detach)"
 fi
 echo "results branch: ${REPO}/tree/results/${PHASE}"

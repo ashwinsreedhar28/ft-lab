@@ -9,7 +9,7 @@ unset PYTHONPATH   # template dist-packages must not shadow the venv
 export TOKENIZERS_PARALLELISM=false
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True   # 7 GiB reserved-but-unallocated at the v3 OOM
 V="${V:-}"                      # run suffix: V=_v2 -> configs/review_{sft,grpo}_4b_v2.yaml, runs/phase3_v2.stages
-SFT=review_sft_4b$V; GRPO=review_grpo_4b$V
+SFT=${SFT:-review_sft_4b$V}; GRPO=${GRPO:-review_grpo_4b$V}; BASE=${BASE:-Qwen/Qwen3-4B}   # override for 8B: GRPO=review_grpo_8b_v5 BASE=Qwen/Qwen3-8B
 STAGES=runs/phase3$V.stages; touch $STAGES
 done_() { grep -qx "$1" $STAGES; }
 mark() { echo "$1" >> $STAGES; echo "=== stage done: $1 ($(date -u +%T))"; }
@@ -19,7 +19,7 @@ done_ setup || { bash pod/setup.sh; mark setup; }
 source /workspace/venv/bin/activate
 python -c 'import trl, vllm, peft; print("venv ok:", trl.__version__, vllm.__version__, peft.__version__)'
 test -s data/review_sft.jsonl || { echo "no data/review_sft.jsonl: run review/analysis/traces.py on the Mac and commit"; exit 2; }
-done_ base_eval || { mkdir -p runs/$GRPO; $EV --label base --model Qwen/Qwen3-4B; mark base_eval; }
+done_ base_eval || { mkdir -p runs/$GRPO; $EV --label base --model "$BASE"; mark base_eval; }
 if [ -f configs/$SFT.yaml ]; then       # v5+: no SFT stage, GRPO starts from the base (configs/review_grpo_4b_v5.yaml)
 done_ sft       || { mkdir -p runs/$SFT; python -m ftlab.sft configs/$SFT.yaml 2>&1 | tee runs/$SFT/train.log; mark sft; }
 done_ sft_eval  || { $EV --label sft --model runs/$SFT/final; mark sft_eval; }
