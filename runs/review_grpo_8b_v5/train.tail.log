@@ -1,399 +1,399 @@
-│ │ src/structlog/dev… │ Traceback.from_ex… │         │           │          │ │
-│ │ tests/test_dev.py  │ method when rich   │         │           │          │ │
-│ │                    │ doesn't support    │         │           │          │ │
-│ │ Not shown          │ it. If rich does   │         │           │          │ │
-│ │ (non-code or over  │ support            │         │           │          │ │
-│ │ budget; treat as   │ code_width, it     │         │           │          │ │
-│ │ unreviewed):       │ should be set to   │         │           │          │ │
-│ │ CHANGELOG.md (739  │ 88.                │         │           │          │ │
-│ │ chars, non-code)   │                    │         │           │          │ │
-│ │                    │ I need to check if │         │           │          │ │
-│ │ Context around the │ there are any      │         │           │          │ │
-│ │ change             │ issues here. The   │         │           │          │ │
-│ │ (mechanically      │ deprecation        │         │           │          │ │
-│ │ extracted):        │ warning for using  │         │           │          │ │
-│ │ Changed            │ -1 is handled, and │         │           │          │ │
-│ │ definitions:       │ the code seems to  │         │           │          │ │
-│ │ src/structlog/dev… │ correctly set      │         │           │          │ │
-│ │ src/structlog/dev… │ width to None. The │         │           │          │ │
-│ │ tests/test_dev.py… │ test for the       │         │           │          │ │
-│ │ tests/test_dev.py… │ deprecation is     │         │           │          │ │
-│ │ tests/test_dev.py… │ using              │         │           │          │ │
-│ │ Recent history of  │ pytest.deprecated… │         │           │          │ │
-│ │ src/structlog/dev… │ which should catch │         │           │          │ │
-│ │   4ce82b0          │ the warning. The   │         │           │          │ │
-│ │ 2025-05-01 docs:   │ new test for       │         │           │          │ │
-│ │ fix typo           │ code_width support │         │           │          │ │
-│ │   ea7cac4          │ seems to mock the  │         │           │          │ │
-│ │ 2025-02-19 expose  │ Traceback object   │         │           │          │ │
-│ │ RichTracebackForm… │ and ensure that    │         │           │          │ │
-│ │ for imports in     │ code_width isn't   │         │           │          │ │
-│ │ structlog.dev      │ passed unless      │         │           │          │ │
-│ │ (#699)             │ supported. That    │         │           │          │ │
-│ │   2f7298a          │ looks good.        │         │           │          │ │
-│ │ 2025-01-05 Handle  │                    │         │           │          │ │
-│ │ Logger.exception() │ Wait, in the       │         │           │          │ │
-│ │ outside "except"   │ __call__ method,   │         │           │          │ │
-│ │ block (#680)       │ when width is -1,  │         │           │          │ │
-│ │ Recent history of  │ it's set to None,  │         │           │          │ │
-│ │ tests/test_dev.py: │ and a              │         │           │          │ │
-│ │   2f7298a          │ DeprecationWarning │         │           │          │ │
-│ │ 2025-01-05 Handle  │ is raised. But in  │         │           │          │ │
-│ │ Logger.exception() │ the test, they are │         │           │          │ │
-│ │ outside "except"   │ using              │         │           │          │ │
-│ │ block (#680)       │ pytest.deprecated… │         │           │          │ │
-│ │   5551c2f          │ to check for that  │         │           │          │ │
-│ │ 2024-11-09 Stop    │ warning. That      │         │           │          │ │
-│ │ mutating styles in │ should work.       │         │           │          │ │
-│ │ ConsoleRenderer    │                    │         │           │          │ │
-│ │ (#669)             │ Another thing to   │         │           │          │ │
-│ │   2c77735          │ check is the new   │         │           │          │ │
-│ │ 2024-09-18 quote   │ code_width         │         │           │          │ │
-│ │ str value with     │ parameter. The     │         │           │          │ │
-│ │ special char in    │ code sets          │         │           │          │ │
-│ │ dev output (#649)  │ tb.code_width =    │         │           │          │ │
-│ │                    │ self.code_width if │         │           │          │ │
-│ │ Diff:              │ the Traceback has  │         │           │          │ │
-│ │ ```diff            │ that attribute.    │         │           │          │ │
-│ │ diff --git         │ But the test mocks │         │           │          │ │
-│ │ a/src/structlog/d… │ the Traceback to   │         │           │          │ │
-│ │ b/src/structlog/d… │ not have           │         │           │          │ │
-│ │ index              │ code_width when    │         │           │          │ │
-│ │ fd3f698..88889b9   │ code_width_support │         │           │          │ │
-│ │ 100644             │ is False. That     │         │           │          │ │
-│ │ ---                │ should prevent the │         │           │          │ │
-│ │ a/src/structlog/d… │ code_width from    │         │           │          │ │
-│ │ +++                │ being passed,      │         │           │          │ │
-│ │ b/src/structlog/d… │ which is correct.  │         │           │          │ │
-│ │ @@ -11,7 +11,6 @@  │                    │         │           │          │ │
-│ │ See also the       │ I don't see any    │         │           │          │ │
-│ │ narrative          │ obvious defects    │         │           │          │ │
-│ │ documentation in   │ here. The changes  │         │           │          │ │
-│ │ `console-output`.  │ align with the     │         │           │          │ │
-│ │                    │ version notes      │         │           │          │ │
-│ │  from __future__   │ mentioning         │         │           │          │ │
-│ │ import annotations │ deprecating -1 and │         │           │          │ │
-│ │                    │ adding code_width. │         │           │          │ │
-│ │ -import shutil     │ The tests seem to  │         │           │          │ │
-│ │  import sys        │ cover the          │         │           │          │ │
-│ │  import warnings   │ deprecation        │         │           │          │ │
-│ │                    │ warning and the    │         │           │          │ │
-│ │ @@ -348,10 +347,18 │ code_width         │         │           │          │ │
-│ │ @@ class           │ handling. The code │         │           │          │ │
-│ │ RichTracebackForm… │ updates look safe  │         │           │          │ │
-│ │                    │ and follow the     │         │           │          │ │
-│ │      See           │ documented         │         │           │          │ │
-│ │ :class:`rich.trac… │ changes. So, I     │         │           │          │ │
-│ │ for details on the │ think this change  │         │           │          │ │
-│ │ arguments.         │ is correct and can │         │           │          │ │
-│ │                    │ be approved.       │         │           │          │ │
-│ │ -    If a *width*  │ </think>           │         │           │          │ │
-│ │ of -1 is passed,   │                    │         │           │          │ │
-│ │ the terminal width │ {"decision":       │         │           │          │ │
-│ │ is used. If the    │ "approve",         │         │           │          │ │
-│ │ width              │ "comments": []}    │         │           │          │ │
-│ │ -    can't be      │                    │         │           │          │ │
-│ │ determined, fall   │                    │         │           │          │ │
-│ │ back to 80.        │                    │         │           │          │ │
-│ │ +    If *width* is │                    │         │           │          │ │
-│ │ `None`, the        │                    │         │           │          │ │
-│ │ terminal width is  │                    │         │           │          │ │
-│ │ used. If the width │                    │         │           │          │ │
-│ │ can't be           │                    │         │           │          │ │
-│ │ +    determined,   │                    │         │           │          │ │
-│ │ fall back to 80.   │                    │         │           │          │ │
+│ │ review gate for a  │ Okay, let's see.   │         │           │          │ │
+│ │ production         │ The user has made  │         │           │          │ │
+│ │ repository.        │ a change in the    │         │           │          │ │
+│ │ Approval merges    │ tenacity           │         │           │          │ │
+│ │ and deploys the    │ repository, and I  │         │           │          │ │
+│ │ change without     │ need to review it. │         │           │          │ │
+│ │ further human      │ The files changed  │         │           │          │ │
+│ │ review.            │ are the            │         │           │          │ │
+│ │   approve  - you   │ releasenotes,      │         │           │          │ │
+│ │ are confident the  │ wait.py, and       │         │           │          │ │
+│ │ change is correct  │ test_tenacity.py.  │         │           │          │ │
+│ │ and safe to ship.  │ The main change    │         │           │          │ │
+│ │   block    - you   │ seems to be        │         │           │          │ │
+│ │ found a concrete   │ deprecating the    │         │           │          │ │
+│ │ defect in the      │ 'initial'          │         │           │          │ │
+│ │ change.            │ parameter in favor │         │           │          │ │
+│ │   escalate - you   │ of 'multiplier' in │         │           │          │ │
+│ │ cannot establish   │ the                │         │           │          │ │
+│ │ safety from the    │ wait_exponential_… │         │           │          │ │
+│ │ supplied evidence. │ function.          │         │           │          │ │
+│ │ Approving a        │                    │         │           │          │ │
+│ │ defective change   │ First, I'll check  │         │           │          │ │
+│ │ is the worst       │ the diff. In       │         │           │          │ │
+│ │ outcome.           │ wait.py, the       │         │           │          │ │
+│ │ Your final answer  │ __init__ method of │         │           │          │ │
+│ │ must be exactly    │ wait_exponential_… │         │           │          │ │
+│ │ one JSON object:   │ now has a          │         │           │          │ │
+│ │ {"decision":       │ 'multiplier'       │         │           │          │ │
+│ │ "approve|block|es… │ parameter. The     │         │           │          │ │
+│ │ "comments": []}    │ code checks if     │         │           │          │ │
+│ │ For block, include │ both 'initial' and │         │           │          │ │
+│ │ exactly one        │ 'multiplier' are   │         │           │          │ │
+│ │ comment with file, │ set, raising a     │         │           │          │ │
+│ │ line_start,        │ ValueError if they │         │           │          │ │
+│ │ line_end and body; │ are. If 'initial'  │         │           │          │ │
+│ │ limit body to 40   │ is provided, a     │         │           │          │ │
+│ │ words explaining   │ DeprecationWarning │         │           │          │ │
+│ │ the defect. For    │ is issued, and     │         │           │          │ │
+│ │ approve or         │ 'multiplier' is    │         │           │          │ │
+│ │ escalate, use an   │ set to 'initial'.  │         │           │          │ │
+│ │ empty comments     │ The calculation in │         │           │          │ │
+│ │ array. Do not      │ __call__ uses      │         │           │          │ │
+│ │ include proposed   │ 'multiplier'       │         │           │          │ │
+│ │ tests or test      │ instead of         │         │           │          │ │
+│ │ source.            │ 'initial'.         │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │      ..            │                    │         │           │          │ │
-│ │ versionadded::     │                    │         │           │          │ │
-│ │ 23.2.0             │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    ..            │                    │         │           │          │ │
-│ │ versionchanged::   │                    │         │           │          │ │
-│ │ 25.4.0             │                    │         │           │          │ │
-│ │ +        Default   │                    │         │           │          │ │
-│ │ *width* is         │                    │         │           │          │ │
-│ │ ``None`` to have   │                    │         │           │          │ │
-│ │ full width and     │                    │         │           │          │ │
-│ │ reflow support.    │                    │         │           │          │ │
-│ │ +        Passing   │                    │         │           │          │ │
-│ │ ``-1`` as width is │                    │         │           │          │ │
-│ │ deprecated, use    │                    │         │           │          │ │
-│ │ ``None`` instead.  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ *word_wrap* is now │                    │         │           │          │ │
-│ │ True by default.   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    ..            │                    │         │           │          │ │
-│ │ versionadded::     │                    │         │           │          │ │
-│ │ 25.4.0             │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ *code_width*       │                    │         │           │          │ │
-│ │      """           │                    │         │           │          │ │
+│ │ USER               │ In the tests,      │         │           │          │ │
+│ │ Repository:        │ there's a new test │         │           │          │ │
+│ │ tenacity           │ for 'multiplier'   │         │           │          │ │
+│ │ Files changed:     │ and tests that     │         │           │          │ │
+│ │ releasenotes/note… │ check the          │         │           │          │ │
+│ │ tenacity/wait.py,  │ deprecation        │         │           │          │ │
+│ │ tests/test_tenaci… │ warning when       │         │           │          │ │
+│ │                    │ 'initial' is used. │         │           │          │ │
+│ │ Context around the │ The releasenotes   │         │           │          │ │
+│ │ change             │ file documents the │         │           │          │ │
+│ │ (mechanically      │ deprecation.       │         │           │          │ │
+│ │ extracted):        │                    │         │           │          │ │
+│ │ Changed            │ Now, I need to     │         │           │          │ │
+│ │ definitions:       │ check if this      │         │           │          │ │
+│ │ tenacity/wait.py:… │ change is correct. │         │           │          │ │
+│ │ tenacity/wait.py:… │ The deprecation    │         │           │          │ │
+│ │ tenacity/wait.py:… │ makes sense for    │         │           │          │ │
+│ │ tests/test_tenaci… │ consistency with   │         │           │          │ │
+│ │ tests/test_tenaci… │ wait_exponential.  │         │           │          │ │
+│ │ tests/test_tenaci… │ The error handling │         │           │          │ │
+│ │ tests/test_tenaci… │ when both          │         │           │          │ │
+│ │ tests/test_tenaci… │ parameters are     │         │           │          │ │
+│ │ tests/test_tenaci… │ provided is there, │         │           │          │ │
+│ │ tests/test_tenaci… │ which is good to   │         │           │          │ │
+│ │ tests/test_tenaci… │ prevent misuse.    │         │           │          │ │
+│ │ Recent history of  │ The warning is     │         │           │          │ │
+│ │ tenacity/wait.py:  │ properly issued,   │         │           │          │ │
+│ │   3233040          │ and the tests      │         │           │          │ │
+│ │ 2026-03-11 feat:   │ cover the new      │         │           │          │ │
+│ │ add `min` param    │ cases.             │         │           │          │ │
+│ │ and `timedelta`    │                    │         │           │          │ │
+│ │ support to         │ Wait, but in the   │         │           │          │ │
+│ │ `wait_exponential… │ __init__ method,   │         │           │          │ │
+│ │ (#628)             │ the code sets      │         │           │          │ │
+│ │   ae2d75e          │ 'multiplier =      │         │           │          │ │
+│ │ 2026-02-26         │ initial' when      │         │           │          │ │
+│ │ refactor: enable   │ 'initial' is not   │         │           │          │ │
+│ │ PGH, PYI ruff      │ 1. But what if     │         │           │          │ │
+│ │ rules and rename   │ 'initial' is 1?    │         │           │          │ │
+│ │ TCH to TC (#619)   │ Then, the warning  │         │           │          │ │
+│ │   ac9c21f          │ isn't issued. But  │         │           │          │ │
+│ │ 2026-02-26         │ the code checks if │         │           │          │ │
+│ │ refactor: replace  │ 'initial' is not   │         │           │          │ │
+│ │ deprecated typing  │ 1. So if someone   │         │           │          │ │
+│ │ constructs with    │ passes initial=1,  │         │           │          │ │
+│ │ modern syntax      │ it's allowed       │         │           │          │ │
+│ │ (#616)             │ without a warning? │         │           │          │ │
+│ │ Recent history of  │ That might be      │         │           │          │ │
+│ │ tests/test_tenaci… │ okay, but maybe    │         │           │          │ │
+│ │   3233040          │ the deprecation    │         │           │          │ │
+│ │ 2026-03-11 feat:   │ should apply even  │         │           │          │ │
+│ │ add `min` param    │ if initial is 1.   │         │           │          │ │
+│ │ and `timedelta`    │ However, the       │         │           │          │ │
+│ │ support to         │ user's note says   │         │           │          │ │
+│ │ `wait_exponential… │ that passing       │         │           │          │ │
+│ │ (#628)             │ 'initial' still    │         │           │          │ │
+│ │   7a73c93          │ works but emits a  │         │           │          │ │
+│ │ 2026-02-26         │ warning. So if     │         │           │          │ │
+│ │ refactor: enable   │ initial is 1,      │         │           │          │ │
+│ │ additional ruff    │ maybe the warning  │         │           │          │ │
+│ │ rule categories    │ is still emitted.  │         │           │          │ │
+│ │ (#620)             │ Wait, no. In the   │         │           │          │ │
+│ │   b8b4675          │ code, the warning  │         │           │          │ │
+│ │ 2026-02-26 chore:  │ is only emitted if │         │           │          │ │
+│ │ remove unused      │ initial !=1. Wait, │         │           │          │ │
+│ │ reports_deprecati… │ looking at the     │         │           │          │ │
+│ │ helper (#618)      │ code:              │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │      color_system: │                    │         │           │          │ │
-│ │ Literal[           │                    │         │           │          │ │
-│ │ @@ -360,9 +367,10  │                    │         │           │          │ │
-│ │ @@ class           │                    │         │           │          │ │
-│ │ RichTracebackForm… │                    │         │           │          │ │
-│ │      show_locals:  │                    │         │           │          │ │
-│ │ bool = True        │                    │         │           │          │ │
-│ │      max_frames:   │                    │         │           │          │ │
-│ │ int = 100          │                    │         │           │          │ │
-│ │      theme: str |  │                    │         │           │          │ │
-│ │ None = None        │                    │         │           │          │ │
-│ │ -    word_wrap:    │                    │         │           │          │ │
-│ │ bool = False       │                    │         │           │          │ │
-│ │ +    word_wrap:    │                    │         │           │          │ │
-│ │ bool = True        │                    │         │           │          │ │
-│ │      extra_lines:  │                    │         │           │          │ │
-│ │ int = 3            │                    │         │           │          │ │
-│ │ -    width: int =  │                    │         │           │          │ │
-│ │ 100                │                    │         │           │          │ │
-│ │ +    width: int |  │                    │         │           │          │ │
-│ │ None = None        │                    │         │           │          │ │
-│ │ +    code_width:   │                    │         │           │          │ │
-│ │ int | None = 88    │                    │         │           │          │ │
-│ │      indent_guide… │                    │         │           │          │ │
-│ │ bool = True        │                    │         │           │          │ │
-│ │      locals_max_l… │                    │         │           │          │ │
-│ │ int = 10           │                    │         │           │          │ │
-│ │      locals_max_s… │                    │         │           │          │ │
-│ │ int = 80           │                    │         │           │          │ │
-│ │ @@ -372,29 +380,37 │                    │         │           │          │ │
-│ │ @@ class           │                    │         │           │          │ │
-│ │ RichTracebackForm… │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │      def           │                    │         │           │          │ │
-│ │ __call__(self,     │                    │         │           │          │ │
-│ │ sio: TextIO,       │                    │         │           │          │ │
-│ │ exc_info: ExcInfo) │                    │         │           │          │ │
-│ │ -> None:           │                    │         │           │          │ │
-│ │          if        │                    │         │           │          │ │
-│ │ self.width == -1:  │                    │         │           │          │ │
+│ │ Diff:              │ if initial !=1:    │         │           │          │ │
+│ │ ```diff            │     warnings.warn… │         │           │          │ │
+│ │ diff --git         │     multiplier =   │         │           │          │ │
+│ │ a/releasenotes/no… │ initial            │         │           │          │ │
+│ │ b/releasenotes/no… │                    │         │           │          │ │
+│ │ new file mode      │ So if initial is   │         │           │          │ │
+│ │ 100644             │ 1, no warning. But │         │           │          │ │
+│ │ index              │ the deprecation    │         │           │          │ │
+│ │ 0000000..e558854   │ note says that     │         │           │          │ │
+│ │ --- /dev/null      │ passing initial    │         │           │          │ │
+│ │ +++                │ still works but    │         │           │          │ │
+│ │ b/releasenotes/no… │ emits a warning.   │         │           │          │ │
+│ │ @@ -0,0 +1,10 @@   │ So this seems like │         │           │          │ │
+│ │ +---               │ a problem. Because │         │           │          │ │
+│ │ +deprecations:     │ if someone passes  │         │           │          │ │
+│ │ +  - |             │ initial=1, which   │         │           │          │ │
+│ │ +    The           │ is the default,    │         │           │          │ │
+│ │ ``initial``        │ they wouldn't get  │         │           │          │ │
+│ │ parameter of       │ a warning. But the │         │           │          │ │
+│ │ ``wait_exponentia… │ deprecation note   │         │           │          │ │
+│ │ is deprecated in   │ says that passing  │         │           │          │ │
+│ │ +    favor of      │ initial emits a    │         │           │          │ │
+│ │ ``multiplier``,    │ warning. So this   │         │           │          │ │
+│ │ for consistency    │ might be an error  │         │           │          │ │
+│ │ with               │ in the code.       │         │           │          │ │
+│ │ ``wait_exponentia… │                    │         │           │          │ │
+│ │ Passing            │ Wait, the          │         │           │          │ │
+│ │ +    ``initial``   │ deprecation note   │         │           │          │ │
+│ │ still works but    │ says that passing  │         │           │          │ │
+│ │ emits a            │ 'initial' still    │         │           │          │ │
+│ │ ``DeprecationWarn… │ works but emits a  │         │           │          │ │
+│ │ +features:         │ DeprecationWarnin… │         │           │          │ │
+│ │ +  - |             │ So regardless of   │         │           │          │ │
+│ │ +    Add           │ the value of       │         │           │          │ │
+│ │ ``multiplier``     │ initial, if the    │         │           │          │ │
+│ │ parameter to       │ user provides it,  │         │           │          │ │
+│ │ ``wait_exponentia… │ they should get a  │         │           │          │ │
+│ │ consistent         │ warning. But in    │         │           │          │ │
+│ │ +    with          │ the current code,  │         │           │          │ │
+│ │ ``wait_exponentia… │ the warning is     │         │           │          │ │
+│ │ diff --git         │ only issued if     │         │           │          │ │
+│ │ a/tenacity/wait.py │ initial !=1. So if │         │           │          │ │
+│ │ b/tenacity/wait.py │ someone passes     │         │           │          │ │
+│ │ index              │ initial=1, they    │         │           │          │ │
+│ │ 92fa1f4..c7a430e   │ don't get a        │         │           │          │ │
+│ │ 100644             │ warning. That's a  │         │           │          │ │
+│ │ ---                │ problem. The       │         │           │          │ │
+│ │ a/tenacity/wait.py │ deprecation should │         │           │          │ │
+│ │ +++                │ apply to any usage │         │           │          │ │
+│ │ b/tenacity/wait.py │ of the 'initial'   │         │           │          │ │
+│ │ @@ -17,6 +17,7 @@  │ parameter, not     │         │           │          │ │
+│ │  import abc        │ just when it's     │         │           │          │ │
+│ │  import random     │ different from 1.  │         │           │          │ │
+│ │  import typing     │                    │         │           │          │ │
+│ │ +import warnings   │ So this is a       │         │           │          │ │
+│ │                    │ defect. The code   │         │           │          │ │
+│ │  from tenacity     │ only issues the    │         │           │          │ │
+│ │ import _utils      │ warning when       │         │           │          │ │
+│ │                    │ initial is not 1.  │         │           │          │ │
+│ │ @@ -240,12 +241,12 │ But according to   │         │           │          │ │
+│ │ @@ class           │ the release note,  │         │           │          │ │
+│ │ wait_random_expon… │ passing initial    │         │           │          │ │
+│ │  class             │ should emit a      │         │           │          │ │
+│ │ wait_exponential_… │ warning            │         │           │          │ │
+│ │      """Wait       │ regardless.        │         │           │          │ │
+│ │ strategy that      │ Therefore, the     │         │           │          │ │
+│ │ applies            │ code is not        │         │           │          │ │
+│ │ exponential        │ correctly applying │         │           │          │ │
+│ │ backoff and        │ the deprecation    │         │           │          │ │
+│ │ jitter.            │ warning for all    │         │           │          │ │
+│ │                    │ cases where        │         │           │          │ │
+│ │ -    It allows for │ initial is         │         │           │          │ │
+│ │ a customized       │ provided.          │         │           │          │ │
+│ │ initial wait,      │                    │         │           │          │ │
+│ │ maximum wait,      │ So this is a       │         │           │          │ │
+│ │ jitter and         │ block, because the │         │           │          │ │
+│ │ minimum.           │ deprecation        │         │           │          │ │
+│ │ +    It allows for │ warning is not     │         │           │          │ │
+│ │ a customized       │ issued when        │         │           │          │ │
+│ │ multiplier,        │ initial is 1,      │         │           │          │ │
+│ │ maximum wait,      │ which is the       │         │           │          │ │
+│ │ jitter and         │ default. The user  │         │           │          │ │
+│ │ minimum.           │ might not be aware │         │           │          │ │
+│ │                    │ that initial is    │         │           │          │ │
+│ │      This          │ deprecated even if │         │           │          │ │
+│ │ implements the     │ they use the       │         │           │          │ │
+│ │ strategy described │ default value. So  │         │           │          │ │
+│ │ here:              │ the code has a     │         │           │          │ │
+│ │      https://clou… │ defect here.       │         │           │          │ │
+│ │                    │ </think>           │         │           │          │ │
+│ │ -    The wait time │                    │         │           │          │ │
+│ │ is max(min,        │ {"decision":       │         │           │          │ │
+│ │ min(initial * 2**n │ "block",           │         │           │          │ │
+│ │ +                  │ "comments":        │         │           │          │ │
+│ │ random.uniform(0,  │ [{"file":          │         │           │          │ │
+│ │ jitter), maximum)) │ "tenacity/wait.py… │         │           │          │ │
+│ │ +    The wait time │ "line_start": 257, │         │           │          │ │
+│ │ is max(min,        │ "line_end": 257,   │         │           │          │ │
+│ │ min(multiplier *   │ "body":            │         │           │          │ │
+│ │ 2**n +             │ "DeprecationWarni… │         │           │          │ │
+│ │ random.uniform(0,  │ not issued when    │         │           │          │ │
+│ │ jitter), maximum)) │ initial=1. The     │         │           │          │ │
+│ │      where n is    │ warning should     │         │           │          │ │
+│ │ the retry count.   │ apply to all       │         │           │          │ │
+│ │      """           │ 'initial'          │         │           │          │ │
+│ │                    │ parameter uses,    │         │           │          │ │
+│ │ @@ -256,8 +257,22  │ not just           │         │           │          │ │
+│ │ @@ class           │ non-default        │         │           │          │ │
+│ │ wait_exponential_… │ values."}]}        │         │           │          │ │
+│ │          exp_base: │                    │         │           │          │ │
+│ │ float = 2,         │                    │         │           │          │ │
+│ │          jitter:   │                    │         │           │          │ │
+│ │ _utils.time_unit_… │                    │         │           │          │ │
+│ │ = 1,               │                    │         │           │          │ │
+│ │          min:      │                    │         │           │          │ │
+│ │ _utils.time_unit_… │                    │         │           │          │ │
+│ │ = 0,               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ multiplier: float  │                    │         │           │          │ │
+│ │ = 1,               │                    │         │           │          │ │
+│ │      ) -> None:    │                    │         │           │          │ │
 │ │ -                  │                    │         │           │          │ │
-│ │ self.width, _ =    │                    │         │           │          │ │
-│ │ shutil.get_termin… │                    │         │           │          │ │
-│ │ 0))                │                    │         │           │          │ │
+│ │ self.initial =     │                    │         │           │          │ │
+│ │ initial            │                    │         │           │          │ │
+│ │ +        if        │                    │         │           │          │ │
+│ │ initial != 1 and   │                    │         │           │          │ │
+│ │ multiplier != 1:   │                    │         │           │          │ │
+│ │ +            raise │                    │         │           │          │ │
+│ │ ValueError(        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "Cannot specify    │                    │         │           │          │ │
+│ │ both 'initial' and │                    │         │           │          │ │
+│ │ 'multiplier' — use │                    │         │           │          │ │
+│ │ 'multiplier' only" │                    │         │           │          │ │
+│ │ +            )     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        if        │                    │         │           │          │ │
+│ │ initial != 1:      │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
 │ │ warnings.warn(     │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ "Use None to use   │                    │         │           │          │ │
-│ │ the terminal width │                    │         │           │          │ │
-│ │ instead of -1.",   │                    │         │           │          │ │
+│ │ "The 'initial'     │                    │         │           │          │ │
+│ │ parameter is       │                    │         │           │          │ │
+│ │ deprecated, use    │                    │         │           │          │ │
+│ │ 'multiplier'       │                    │         │           │          │ │
+│ │ instead",          │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
 │ │ DeprecationWarnin… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
 │ │ stacklevel=2,      │                    │         │           │          │ │
 │ │ +            )     │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ self.width = None  │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │          sio.writ… │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ -        Console(  │                    │         │           │          │ │
-│ │ +        console = │                    │         │           │          │ │
-│ │ Console(           │                    │         │           │          │ │
-│ │              file… │                    │         │           │          │ │
-│ │ color_system=self… │                    │         │           │          │ │
-│ │ width=self.width   │                    │         │           │          │ │
-│ │ -        ).print(  │                    │         │           │          │ │
+│ │ multiplier =       │                    │         │           │          │ │
+│ │ initial            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.multiplier =  │                    │         │           │          │ │
+│ │ multiplier         │                    │         │           │          │ │
+│ │          self.max  │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ _utils.to_seconds… │                    │         │           │          │ │
+│ │          self.exp… │                    │         │           │          │ │
+│ │ = exp_base         │                    │         │           │          │ │
+│ │          self.jit… │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ _utils.to_seconds… │                    │         │           │          │ │
+│ │ @@ -267,7 +282,7   │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ wait_exponential_… │                    │         │           │          │ │
+│ │          jitter =  │                    │         │           │          │ │
+│ │ random.uniform(0,  │                    │         │           │          │ │
+│ │ self.jitter)       │                    │         │           │          │ │
+│ │          try:      │                    │         │           │          │ │
+│ │              exp = │                    │         │           │          │ │
+│ │ self.exp_base **   │                    │         │           │          │ │
+│ │ (retry_state.atte… │                    │         │           │          │ │
+│ │ - 1)               │                    │         │           │          │ │
 │ │ -                  │                    │         │           │          │ │
-│ │ Traceback.from_ex… │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ *exc_info,         │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ show_locals=self.… │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ max_frames=self.m… │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ theme=self.theme,  │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ word_wrap=self.wo… │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ extra_lines=self.… │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ width=self.width,  │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ indent_guides=sel… │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ locals_max_length… │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ locals_max_string… │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ locals_hide_dunde… │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ locals_hide_sunde… │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ suppress=self.sup… │                    │         │           │          │ │
-│ │ -            )     │                    │         │           │          │ │
-│ │          )         │                    │         │           │          │ │
-│ │ +        tb =      │                    │         │           │          │ │
-│ │ Traceback.from_ex… │                    │         │           │          │ │
+│ │ result =           │                    │         │           │          │ │
+│ │ self.initial * exp │                    │         │           │          │ │
+│ │ + jitter           │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ *exc_info,         │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ show_locals=self.… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ max_frames=self.m… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ theme=self.theme,  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ word_wrap=self.wo… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ extra_lines=self.… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ width=self.width,  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ indent_guides=sel… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ locals_max_length… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ locals_max_string… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ locals_hide_dunde… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ locals_hide_sunde… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ suppress=self.sup… │                    │         │           │          │ │
-│ │ +        )         │                    │         │           │          │ │
-│ │ +        if        │                    │         │           │          │ │
-│ │ hasattr(tb,        │                    │         │           │          │ │
-│ │ "code_width"):     │                    │         │           │          │ │
-│ │ +            #     │                    │         │           │          │ │
-│ │ `code_width`       │                    │         │           │          │ │
-│ │ requires           │                    │         │           │          │ │
-│ │ `rich>=13.8.0`     │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ tb.code_width =    │                    │         │           │          │ │
-│ │ self.code_width    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ console.print(tb)  │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │  rich_traceback =  │                    │         │           │          │ │
-│ │ RichTracebackForm… │                    │         │           │          │ │
+│ │ result =           │                    │         │           │          │ │
+│ │ self.multiplier *  │                    │         │           │          │ │
+│ │ exp + jitter       │                    │         │           │          │ │
+│ │          except    │                    │         │           │          │ │
+│ │ OverflowError:     │                    │         │           │          │ │
+│ │              resu… │                    │         │           │          │ │
+│ │ = self.max         │                    │         │           │          │ │
+│ │          return    │                    │         │           │          │ │
+│ │ max(max(0,         │                    │         │           │          │ │
+│ │ self.min),         │                    │         │           │          │ │
+│ │ min(result,        │                    │         │           │          │ │
+│ │ self.max))         │                    │         │           │          │ │
 │ │ diff --git         │                    │         │           │          │ │
-│ │ a/tests/test_dev.… │                    │         │           │          │ │
-│ │ b/tests/test_dev.… │                    │         │           │          │ │
+│ │ a/tests/test_tena… │                    │         │           │          │ │
+│ │ b/tests/test_tena… │                    │         │           │          │ │
 │ │ index              │                    │         │           │          │ │
-│ │ 8987130..9af2e5b   │                    │         │           │          │ │
+│ │ 7061cd7..6a39739   │                    │         │           │          │ │
 │ │ 100644             │                    │         │           │          │ │
 │ │ ---                │                    │         │           │          │ │
-│ │ a/tests/test_dev.… │                    │         │           │          │ │
+│ │ a/tests/test_tena… │                    │         │           │          │ │
 │ │ +++                │                    │         │           │          │ │
-│ │ b/tests/test_dev.… │                    │         │           │          │ │
-│ │ @@ -671,17 +671,46 │                    │         │           │          │ │
+│ │ b/tests/test_tena… │                    │         │           │          │ │
+│ │ @@ -609,7 +609,8   │                    │         │           │          │ │
 │ │ @@ class           │                    │         │           │          │ │
-│ │ TestRichTraceback… │                    │         │           │          │ │
+│ │ TestWaitCondition… │                    │         │           │          │ │
+│ │              self… │                    │         │           │          │ │
+│ │ 0)), 60)           │                    │         │           │          │ │
+│ │              self… │                    │         │           │          │ │
+│ │ 0)), 60)           │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │      def           │                    │         │           │          │ │
-│ │ test_width_minus_… │                    │         │           │          │ │
-│ │ sio):              │                    │         │           │          │ │
-│ │          """       │                    │         │           │          │ │
-│ │ -        If width  │                    │         │           │          │ │
-│ │ is -1, it's        │                    │         │           │          │ │
-│ │ replaced by the    │                    │         │           │          │ │
-│ │ terminal width on  │                    │         │           │          │ │
-│ │ first use.         │                    │         │           │          │ │
-│ │ +        If width  │                    │         │           │          │ │
-│ │ is -1, it raises a │                    │         │           │          │ │
-│ │ DeprecationWarning │                    │         │           │          │ │
-│ │ and is replaced by │                    │         │           │          │ │
-│ │ None to let `rich` │                    │         │           │          │ │
-│ │ handle it.         │                    │         │           │          │ │
-│ │          """       │                    │         │           │          │ │
-│ │          rtf =     │                    │         │           │          │ │
-│ │ dev.RichTraceback… │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ -        with      │                    │         │           │          │ │
-│ │ mock.patch("shuti… │                    │         │           │          │ │
-│ │ return_value=(42,  │                    │         │           │          │ │
-│ │ 0)):               │                    │         │           │          │ │
+│ │ -        fn =      │                    │         │           │          │ │
+│ │ tenacity.wait_exp… │                    │         │           │          │ │
+│ │ 5)                 │                    │         │           │          │ │
 │ │ +        with      │                    │         │           │          │ │
-│ │ pytest.deprecated… │                    │         │           │          │ │
-│ │              try:  │                    │         │           │          │ │
-│ │                  0 │                    │         │           │          │ │
-│ │ / 0                │                    │         │           │          │ │
-│ │              exce… │                    │         │           │          │ │
-│ │ ZeroDivisionError: │                    │         │           │          │ │
-│ │                  … │                    │         │           │          │ │
-│ │ sys.exc_info())    │                    │         │           │          │ │
+│ │ self.assertWarns(… │                    │         │           │          │ │
+│ │ +            fn =  │                    │         │           │          │ │
+│ │ tenacity.wait_exp… │                    │         │           │          │ │
+│ │ 5)                 │                    │         │           │          │ │
+│ │          for _ in  │                    │         │           │          │ │
+│ │ range(1000):       │                    │         │           │          │ │
+│ │              self… │                    │         │           │          │ │
+│ │ 0)), 5)            │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ -        assert 42 │                    │         │           │          │ │
-│ │ == rtf.width       │                    │         │           │          │ │
-│ │ +        assert    │                    │         │           │          │ │
-│ │ rtf.width is None  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ @pytest.mark.para… │                    │         │           │          │ │
-│ │ [True, False])     │                    │         │           │          │ │
+│ │ @@ -640,6 +641,23  │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ TestWaitCondition… │                    │         │           │          │ │
+│ │              self… │                    │         │           │          │ │
+│ │ 0)), 16, 17)       │                    │         │           │          │ │
+│ │              self… │                    │         │           │          │ │
+│ │ 0)), 60)           │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
 │ │ +    def           │                    │         │           │          │ │
-│ │ test_code_width_s… │                    │         │           │          │ │
-│ │ sio,               │                    │         │           │          │ │
-│ │ code_width_suppor… │                    │         │           │          │ │
-│ │ +        """       │                    │         │           │          │ │
-│ │ +        If rich   │                    │         │           │          │ │
-│ │ does not support   │                    │         │           │          │ │
-│ │ code_width, it     │                    │         │           │          │ │
-│ │ should not fail    │                    │         │           │          │ │
-│ │ +        """       │                    │         │           │          │ │
-│ │ +        from      │                    │         │           │          │ │
-│ │ rich.traceback     │                    │         │           │          │ │
-│ │ import Trace       │                    │         │           │          │ │
+│ │ test_wait_exponen… │                    │         │           │          │ │
+│ │ -> None:           │                    │         │           │          │ │
+│ │ +        fn =      │                    │         │           │          │ │
+│ │ tenacity.wait_exp… │                    │         │           │          │ │
+│ │ max=60, jitter=0)  │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +        tb =      │                    │         │           │          │ │
-│ │ mock.Mock(         │                    │         │           │          │ │
+│ │ self.assertEqual(… │                    │         │           │          │ │
+│ │ 0)), 10)           │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ spec=[             │                    │         │           │          │ │
+│ │ self.assertEqual(… │                    │         │           │          │ │
+│ │ 0)), 20)           │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ attr               │                    │         │           │          │ │
+│ │ self.assertEqual(… │                    │         │           │          │ │
+│ │ 0)), 40)           │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ for attr in        │                    │         │           │          │ │
-│ │ dir(dev.Traceback… │                    │         │           │          │ │
+│ │ self.assertEqual(… │                    │         │           │          │ │
+│ │ 0)), 60)           │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ if                 │                    │         │           │          │ │
-│ │ (code_width_suppo… │                    │         │           │          │ │
-│ │ or attr !=         │                    │         │           │          │ │
-│ │ "code_width")      │                    │         │           │          │ │
-│ │ +            ]     │                    │         │           │          │ │
-│ │ +        )         │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ tb.__rich_console… │                    │         │           │          │ │
-│ │ = "for Python 3.8  │                    │         │           │          │ │
-│ │ compatibility"     │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_wait_exponen… │                    │         │           │          │ │
+│ │ -> None:           │                    │         │           │          │ │
 │ │ +        with      │                    │         │           │          │ │
-│ │ mock.patch.object( │                    │         │           │          │ │
+│ │ self.assertWarns(… │                    │         │           │          │ │
+│ │ +            fn =  │                    │         │           │          │ │
+│ │ tenacity.wait_exp… │                    │         │           │          │ │
+│ │ max=60, jitter=0)  │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ dev.Traceback,     │                    │         │           │          │ │
-│ │ "from_exception",  │                    │         │           │          │ │
-│ │ return_value=tb    │                    │         │           │          │ │
-│ │ +        ) as      │                    │         │           │          │ │
-│ │ factory:           │                    │         │           │          │ │
-│ │ +            try:  │                    │         │           │          │ │
-│ │ +                0 │                    │         │           │          │ │
-│ │ / 0                │                    │         │           │          │ │
+│ │ self.assertEqual(… │                    │         │           │          │ │
+│ │ 0)), 10)           │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ except             │                    │         │           │          │ │
-│ │ ZeroDivisionError: │                    │         │           │          │ │
+│ │ self.assertEqual(… │                    │         │           │          │ │
+│ │ 0)), 20)           │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ dev.rich_tracebac… │                    │         │           │          │ │
-│ │ sys.exc_info())    │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_wait_exponen… │                    │         │           │          │ │
+│ │ -> None:           │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ self.assertRaises… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +        assert    │                    │         │           │          │ │
-│ │ "code_width" not   │                    │         │           │          │ │
-│ │ in                 │                    │         │           │          │ │
-│ │ factory.call_args… │                    │         │           │          │ │
+│ │ tenacity.wait_exp… │                    │         │           │          │ │
+│ │ multiplier=10)     │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +        if        │                    │         │           │          │ │
-│ │ code_width_suppor… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ assert             │                    │         │           │          │ │
-│ │ tb.code_width ==   │                    │         │           │          │ │
-│ │ 88                 │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │  @pytest.mark.ski… │                    │         │           │          │ │
+│ │      def           │                    │         │           │          │ │
+│ │ test_wait_retry_s… │                    │         │           │          │ │
+│ │ -> None:           │                    │         │           │          │ │
+│ │          class     │                    │         │           │          │ │
+│ │ ExtractCallState(… │                    │         │           │          │ │
+│ │              pass  │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
 │ │ ```                │                    │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │

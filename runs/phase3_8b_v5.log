@@ -4453,3 +4453,2324 @@ train rows: 126  columns: ['prompt', 'kind', 'gold_hunks', 'task_id']
 │ │ ```                │                    │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
+  8%|▊         | 4/50 [07:18<1:20:24, 104.88s/it]step 4  reward=0.580  reward_std=1.875  kl=0.001  mean_length=1431.875  clipped_ratio=0.000  step_time=123.554  loss=0.163  gate_v5=0.580
+                                                   8%|▊         | 4/50 [07:18<1:20:24, 104.88s/it]{'loss': '0.1629', 'grad_norm': '0.2638', 'learning_rate': '3e-06', 'num_tokens': '4.342e+05', 'completions/mean_length': '1432', 'completions/min_length': '441', 'completions/max_length': '3393', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '1432', 'completions/min_terminated_length': '441', 'completions/max_terminated_length': '3393', 'rewards/gate_v5/mean': '0.5796', 'rewards/gate_v5/std': '1.875', 'reward': '0.5796', 'reward_std': '1.875', 'frac_reward_zero_std': '0', 'review/approve_bug_frac': '0.09375', 'review/escalate_frac': '0', 'review/mean_tokens': '1432', 'review/unparsable_frac': '0', 'sampling/sampling_logp_difference/mean': '0.01919', 'sampling/sampling_logp_difference/max': '2.473', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.4881', 'sampling/importance_sampling_ratio/max': '2.778', 'kl': '0.001287', 'entropy': '0.2949', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '123.6', 'epoch': '0.06349'}
+╭─────────────────────────────────── Step 4 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt             ┃ Completion         ┃ gate_v5 ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM             │ ASSISTANT          │   -5.00 │     -5.28 │ approve  │ │
+│ │ You are the code   │ <think>            │         │           │          │ │
+│ │ review gate for a  │ Okay, let's go     │         │           │          │ │
+│ │ production         │ through this code  │         │           │          │ │
+│ │ repository.        │ change step by     │         │           │          │ │
+│ │ Approval merges    │ step. The user has │         │           │          │ │
+│ │ and deploys the    │ made several       │         │           │          │ │
+│ │ change without     │ changes across     │         │           │          │ │
+│ │ further human      │ different files in │         │           │          │ │
+│ │ review.            │ the more-itertools │         │           │          │ │
+│ │   approve  - you   │ repository. My job │         │           │          │ │
+│ │ are confident the  │ is to determine    │         │           │          │ │
+│ │ change is correct  │ whether to         │         │           │          │ │
+│ │ and safe to ship.  │ approve, block, or │         │           │          │ │
+│ │   block    - you   │ escalate the       │         │           │          │ │
+│ │ found a concrete   │ change based on    │         │           │          │ │
+│ │ defect in the      │ the provided diff  │         │           │          │ │
+│ │ change.            │ and context.       │         │           │          │ │
+│ │   escalate - you   │                    │         │           │          │ │
+│ │ cannot establish   │ First, looking at  │         │           │          │ │
+│ │ safety from the    │ the files changed: │         │           │          │ │
+│ │ supplied evidence. │ more.py,           │         │           │          │ │
+│ │ Approving a        │ recipes.py, and    │         │           │          │ │
+│ │ defective change   │ test_recipes.py.   │         │           │          │ │
+│ │ is the worst       │ The diff shows     │         │           │          │ │
+│ │ outcome.           │ modifications in   │         │           │          │ │
+│ │ Your final answer  │ these files. Let   │         │           │          │ │
+│ │ must be exactly    │ me check each      │         │           │          │ │
+│ │ one JSON object:   │ part.              │         │           │          │ │
+│ │ {"decision":       │                    │         │           │          │ │
+│ │ "approve|block|es… │ In more.py,        │         │           │          │ │
+│ │ "comments": []}    │ there's a change   │         │           │          │ │
+│ │ For block, include │ in the nth_prime   │         │           │          │ │
+│ │ exactly one        │ function where the │         │           │          │ │
+│ │ comment with file, │ call to first_true │         │           │          │ │
+│ │ line_start,        │ now uses           │         │           │          │ │
+│ │ line_end and body; │ 'predicate'        │         │           │          │ │
+│ │ limit body to 40   │ instead of 'pred'. │         │           │          │ │
+│ │ words explaining   │ Also, in the       │         │           │          │ │
+│ │ the defect. For    │ argmin function,   │         │           │          │ │
+│ │ approve or         │ there's no change. │         │           │          │ │
+│ │ escalate, use an   │ Wait, the diff     │         │           │          │ │
+│ │ empty comments     │ shows that in      │         │           │          │ │
+│ │ array. Do not      │ more.py, the line  │         │           │          │ │
+│ │ include proposed   │ for nth_prime was  │         │           │          │ │
+│ │ tests or test      │ modified to remove │         │           │          │ │
+│ │ source.            │ 'pred' and use     │         │           │          │ │
+│ │                    │ 'predicate' in the │         │           │          │ │
+│ │ USER               │ first_true call.   │         │           │          │ │
+│ │ Repository:        │ But the function   │         │           │          │ │
+│ │ more-itertools     │ definition in      │         │           │          │ │
+│ │ Files changed:     │ recipes.py has     │         │           │          │ │
+│ │ more_itertools/mo… │ been updated as    │         │           │          │ │
+│ │ more_itertools/re… │ well.              │         │           │          │ │
+│ │ more_itertools/re… │                    │         │           │          │ │
+│ │ tests/test_recipe… │ Looking at         │         │           │          │ │
+│ │                    │ recipes.py, the    │         │           │          │ │
+│ │ Not shown          │ function           │         │           │          │ │
+│ │ (non-code or over  │ first_true has its │         │           │          │ │
+│ │ budget; treat as   │ parameter renamed  │         │           │          │ │
+│ │ unreviewed):       │ from 'pred' to     │         │           │          │ │
+│ │ more_itertools/re… │ 'predicate'. The   │         │           │          │ │
+│ │ (700 chars,        │ docstring examples │         │           │          │ │
+│ │ non-code)          │ also reflect this  │         │           │          │ │
+│ │                    │ change, replacing  │         │           │          │ │
+│ │ Context around the │ 'pred' with        │         │           │          │ │
+│ │ change             │ 'predicate'. The   │         │           │          │ │
+│ │ (mechanically      │ implementation     │         │           │          │ │
+│ │ extracted):        │ uses 'predicate'   │         │           │          │ │
+│ │ Changed            │ in the filter      │         │           │          │ │
+│ │ definitions:       │ function. So the   │         │           │          │ │
+│ │ more_itertools/mo… │ parameter name     │         │           │          │ │
+│ │ more_itertools/mo… │ change is          │         │           │          │ │
+│ │ more_itertools/re… │ consistent across  │         │           │          │ │
+│ │ more_itertools/re… │ the function       │         │           │          │ │
+│ │ more_itertools/re… │ definition and its │         │           │          │ │
+│ │ tests/test_recipe… │ usage.             │         │           │          │ │
+│ │ tests/test_recipe… │                    │         │           │          │ │
+│ │ tests/test_recipe… │ In the             │         │           │          │ │
+│ │ Recent history of  │ tests/test_recipe… │         │           │          │ │
+│ │ more_itertools/mo… │ the test case      │         │           │          │ │
+│ │   e4d2a4a          │ 'test_pred' has    │         │           │          │ │
+│ │ 2026-03-31 Merge   │ been updated to    │         │           │          │ │
+│ │ pull request #1126 │ use 'predicate'    │         │           │          │ │
+│ │ from               │ instead of 'pred'  │         │           │          │ │
+│ │ veeceey/fix/issue… │ in the function    │         │           │          │ │
+│ │   18c57c7          │ call. This aligns  │         │           │          │ │
+│ │ 2026-03-31 Issue   │ with the parameter │         │           │          │ │
+│ │ #1134: Add         │ name change in the │         │           │          │ │
+│ │ running_statistics │ function           │         │           │          │ │
+│ │ (#1135)            │ definition.        │         │           │          │ │
+│ │   b290c27          │                    │         │           │          │ │
+│ │ 2026-03-23 docs:   │ Now, I need to     │         │           │          │ │
+│ │ add                │ check if there are │         │           │          │ │
+│ │ cross-references   │ any issues here.   │         │           │          │ │
+│ │ between            │ The main change is │         │           │          │ │
+│ │ groupby_transform, │ renaming 'pred' to │         │           │          │ │
+│ │ bucket, and        │ 'predicate' in the │         │           │          │ │
+│ │ map_reduce         │ first_true         │         │           │          │ │
+│ │ Recent history of  │ function. This is  │         │           │          │ │
+│ │ more_itertools/re… │ a parameter name   │         │           │          │ │
+│ │   d0c20f5          │ change, which is a │         │           │          │ │
+│ │ 2026-03-31         │ common practice to │         │           │          │ │
+│ │ quantify: pred ->  │ make the code more │         │           │          │ │
+│ │ predicate          │ readable. However, │         │           │          │ │
+│ │   a7bac4a          │ I need to ensure   │         │           │          │ │
+│ │ 2026-03-31         │ that this change   │         │           │          │ │
+│ │ flatten:           │ doesn't break any  │         │           │          │ │
+│ │ listOfLists ->     │ existing code that │         │           │          │ │
+│ │ list_of_lists      │ relies on the old  │         │           │          │ │
+│ │   38b66e2          │ parameter name.    │         │           │          │ │
+│ │ 2026-03-31         │                    │         │           │          │ │
+│ │ repeatfunc: func   │ Looking at the     │         │           │          │ │
+│ │ -> function        │ context, the       │         │           │          │ │
+│ │ Recent history of  │ recent history of  │         │           │          │ │
+│ │ tests/test_recipe… │ recipes.py shows   │         │           │          │ │
+│ │   18c57c7          │ that similar       │         │           │          │ │
+│ │ 2026-03-31 Issue   │ parameter name     │         │           │          │ │
+│ │ #1134: Add         │ changes were made, │         │           │          │ │
+│ │ running_statistics │ like 'pred' to     │         │           │          │ │
+│ │ (#1135)            │ 'predicate' in     │         │           │          │ │
+│ │   db4f41b          │ quantify and       │         │           │          │ │
+│ │ 2026-02-09 Add     │ 'func' to          │         │           │          │ │
+│ │ running_mean       │ 'function' in      │         │           │          │ │
+│ │ recipe             │ repeatfunc. These  │         │           │          │ │
+│ │   def2d82          │ changes were       │         │           │          │ │
+│ │ 2026-01-02         │ likely part of a   │         │           │          │ │
+│ │ Simplify           │ naming convention  │         │           │          │ │
+│ │ nth_permutation.   │ update. The tests  │         │           │          │ │
+│ │ Fix incorrect      │ have also been     │         │           │          │ │
+│ │ exception.         │ updated to match   │         │           │          │ │
+│ │                    │ these changes, so  │         │           │          │ │
+│ │ Diff:              │ the test cases are │         │           │          │ │
+│ │ ```diff            │ now using          │         │           │          │ │
+│ │ diff --git         │ 'predicate'        │         │           │          │ │
+│ │ a/more_itertools/… │ instead of 'pred'. │         │           │          │ │
+│ │ b/more_itertools/… │                    │         │           │          │ │
+│ │ index              │ The diff for the   │         │           │          │ │
+│ │ 6b0360e..8f1bfe7   │ test case shows    │         │           │          │ │
+│ │ 100755             │ that the test now  │         │           │          │ │
+│ │ ---                │ uses 'predicate'   │         │           │          │ │
+│ │ a/more_itertools/… │ in the function    │         │           │          │ │
+│ │ +++                │ call, which        │         │           │          │ │
+│ │ b/more_itertools/… │ matches the        │         │           │          │ │
+│ │ @@ -5227,7 +5227,7 │ updated function   │         │           │          │ │
+│ │ @@ def             │ definition.        │         │           │          │ │
+│ │ nth_prime(n, *,    │ Therefore, the     │         │           │          │ │
+│ │ approximate=False… │ test should pass   │         │           │          │ │
+│ │                    │ as expected.       │         │           │          │ │
+│ │      # Search from │ There's no         │         │           │          │ │
+│ │ the midpoint and   │ indication that    │         │           │          │ │
+│ │ return the first   │ any code is using  │         │           │          │ │
+│ │ odd prime          │ the old parameter  │         │           │          │ │
+│ │      odd =         │ name 'pred'        │         │           │          │ │
+│ │ floor((lb + ub) /  │ anymore, so the    │         │           │          │ │
+│ │ 2) | 1             │ change should be   │         │           │          │ │
+│ │ -    return        │ safe.              │         │           │          │ │
+│ │ first_true(count(… │                    │         │           │          │ │
+│ │ step=2),           │ Another thing to   │         │           │          │ │
+│ │ pred=is_prime)     │ check: in the      │         │           │          │ │
+│ │ +    return        │ nth_prime          │         │           │          │ │
+│ │ first_true(count(… │ function, the call │         │           │          │ │
+│ │ step=2))           │ to first_true now  │         │           │          │ │
+│ │                    │ uses 'predicate'   │         │           │          │ │
+│ │                    │ without any        │         │           │          │ │
+│ │  def               │ default value. The │         │           │          │ │
+│ │ argmin(iterable,   │ original code had  │         │           │          │ │
+│ │ *, key=None):      │ 'pred' which was a │         │           │          │ │
+│ │ diff --git         │ parameter that     │         │           │          │ │
+│ │ a/more_itertools/… │ could be None.     │         │           │          │ │
+│ │ b/more_itertools/… │ However, in the    │         │           │          │ │
+│ │ index              │ updated function,  │         │           │          │ │
+│ │ 7548fc3..acab086   │ the default is set │         │           │          │ │
+│ │ 100644             │ to None, so even   │         │           │          │ │
+│ │ ---                │ if 'predicate' is  │         │           │          │ │
+│ │ a/more_itertools/… │ not provided, it   │         │           │          │ │
+│ │ +++                │ should default to  │         │           │          │ │
+│ │ b/more_itertools/… │ None. Wait, the    │         │           │          │ │
+│ │ @@ -557,7 +557,7   │ function           │         │           │          │ │
+│ │ @@ def             │ definition in      │         │           │          │ │
+│ │ iter_except(func,  │ recipes.py now has │         │           │          │ │
+│ │ exception,         │ 'predicate=None'   │         │           │          │ │
+│ │ first=None):       │ as a parameter. So │         │           │          │ │
+│ │              yield │ the call in        │         │           │          │ │
+│ │ func()             │ nth_prime is using │         │           │          │ │
+│ │                    │ 'predicate'        │         │           │          │ │
+│ │                    │ without any        │         │           │          │ │
+│ │ -def               │ default, but the   │         │           │          │ │
+│ │ first_true(iterab… │ function's default │         │           │          │ │
+│ │ default=None,      │ is None. That      │         │           │          │ │
+│ │ pred=None):        │ should be okay     │         │           │          │ │
+│ │ +def               │ because if the     │         │           │          │ │
+│ │ first_true(iterab… │ user doesn't       │         │           │          │ │
+│ │ default=None,      │ provide a          │         │           │          │ │
+│ │ predicate=None):   │ predicate, it will │         │           │          │ │
+│ │      """           │ default to None,   │         │           │          │ │
+│ │      Returns the   │ which is handled   │         │           │          │ │
+│ │ first true value   │ correctly in the   │         │           │          │ │
+│ │ in the iterable.   │ filter function.   │         │           │          │ │
+│ │                    │ The filter         │         │           │          │ │
+│ │ @@ -568,13 +568,13 │ function will then │         │           │          │ │
+│ │ @@ def             │ check for truthy   │         │           │          │ │
+│ │ first_true(iterab… │ values, which is   │         │           │          │ │
+│ │ default=None,      │ the original       │         │           │          │ │
+│ │ pred=None):        │ behavior before    │         │           │          │ │
+│ │                    │ the parameter name │         │           │          │ │
+│ │          >>>       │ change.            │         │           │          │ │
+│ │ first_true(range(… │                    │         │           │          │ │
+│ │          1         │ So the changes are │         │           │          │ │
+│ │ -        >>>       │ consistent, the    │         │           │          │ │
+│ │ first_true(range(… │ parameters are     │         │           │          │ │
+│ │ pred=lambda x: x > │ renamed correctly, │         │           │          │ │
+│ │ 5)                 │ and the tests have │         │           │          │ │
+│ │ +        >>>       │ been updated       │         │           │          │ │
+│ │ first_true(range(… │ accordingly.       │         │           │          │ │
+│ │ predicate=lambda   │ There's no obvious │         │           │          │ │
+│ │ x: x > 5)          │ defect here. The   │         │           │          │ │
+│ │          6         │ code should still  │         │           │          │ │
+│ │ -        >>>       │ function as        │         │           │          │ │
+│ │ first_true(range(… │ intended. The      │         │           │          │ │
+│ │ default='missing', │ parameter name     │         │           │          │ │
+│ │ pred=lambda x: x > │ change is a        │         │           │          │ │
+│ │ 9)                 │ semantic           │         │           │          │ │
+│ │ +        >>>       │ improvement and    │         │           │          │ │
+│ │ first_true(range(… │ doesn't introduce  │         │           │          │ │
+│ │ default='missing', │ any breaking       │         │           │          │ │
+│ │ predicate=lambda   │ changes.           │         │           │          │ │
+│ │ x: x > 9)          │ Therefore, the     │         │           │          │ │
+│ │          'missing' │ decision should be │         │           │          │ │
+│ │                    │ to approve the     │         │           │          │ │
+│ │      """           │ change.            │         │           │          │ │
+│ │ -    return        │ </think>           │         │           │          │ │
+│ │ next(filter(pred,  │                    │         │           │          │ │
+│ │ iterable),         │ {"decision":       │         │           │          │ │
+│ │ default)           │ "approve",         │         │           │          │ │
+│ │ +    return        │ "comments": []}    │         │           │          │ │
+│ │ next(filter(predi… │                    │         │           │          │ │
+│ │ iterable),         │                    │         │           │          │ │
+│ │ default)           │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ random_product(*i… │                    │         │           │          │ │
+│ │ repeat=1):         │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_reci… │                    │         │           │          │ │
+│ │ b/tests/test_reci… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 814b63f..dcbdde8   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_reci… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_reci… │                    │         │           │          │ │
+│ │ @@ -522,7 +522,7   │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ FirstTrueTests(Te… │                    │         │           │          │ │
+│ │      def           │                    │         │           │          │ │
+│ │ test_pred(self):   │                    │         │           │          │ │
+│ │          """Test   │                    │         │           │          │ │
+│ │ with a custom      │                    │         │           │          │ │
+│ │ predicate"""       │                    │         │           │          │ │
+│ │          self.ass… │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ mi.first_true([2,  │                    │         │           │          │ │
+│ │ 4, 6], pred=lambda │                    │         │           │          │ │
+│ │ x: x % 3 == 0), 6  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ mi.first_true([2,  │                    │         │           │          │ │
+│ │ 4, 6],             │                    │         │           │          │ │
+│ │ predicate=lambda   │                    │         │           │          │ │
+│ │ x: x % 3 == 0), 6  │                    │         │           │          │ │
+│ │          )         │                    │         │           │          │ │
+│ │ ```                │                    │         │           │          │ │
+│ ├────────────────────┼────────────────────┼─────────┼───────────┼──────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │    1.50 │      1.22 │ block    │ │
+│ │ You are the code   │ <think>            │         │           │          │ │
+│ │ review gate for a  │ Okay, let me try   │         │           │          │ │
+│ │ production         │ to figure this     │         │           │          │ │
+│ │ repository.        │ out. The user has  │         │           │          │ │
+│ │ Approval merges    │ provided a code    │         │           │          │ │
+│ │ and deploys the    │ review scenario    │         │           │          │ │
+│ │ change without     │ where they need to │         │           │          │ │
+│ │ further human      │ decide whether to  │         │           │          │ │
+│ │ review.            │ approve, block, or │         │           │          │ │
+│ │   approve  - you   │ escalate a change  │         │           │          │ │
+│ │ are confident the  │ in the             │         │           │          │ │
+│ │ change is correct  │ more-itertools     │         │           │          │ │
+│ │ and safe to ship.  │ repository.        │         │           │          │ │
+│ │   block    - you   │                    │         │           │          │ │
+│ │ found a concrete   │ First, I'll look   │         │           │          │ │
+│ │ defect in the      │ at the files       │         │           │          │ │
+│ │ change.            │ changed: more.py,  │         │           │          │ │
+│ │   escalate - you   │ recipes.py, and    │         │           │          │ │
+│ │ cannot establish   │ test_recipes.py.   │         │           │          │ │
+│ │ safety from the    │ The diff shows     │         │           │          │ │
+│ │ supplied evidence. │ that in            │         │           │          │ │
+│ │ Approving a        │ recipes.py, the    │         │           │          │ │
+│ │ defective change   │ function           │         │           │          │ │
+│ │ is the worst       │ first_true had its │         │           │          │ │
+│ │ outcome.           │ parameter name     │         │           │          │ │
+│ │ Your final answer  │ changed from       │         │           │          │ │
+│ │ must be exactly    │ 'pred' to          │         │           │          │ │
+│ │ one JSON object:   │ 'predicate'. Also, │         │           │          │ │
+│ │ {"decision":       │ in more.py, the    │         │           │          │ │
+│ │ "approve|block|es… │ nth_prime function │         │           │          │ │
+│ │ "comments": []}    │ now calls          │         │           │          │ │
+│ │ For block, include │ first_true without │         │           │          │ │
+│ │ exactly one        │ the 'pred'         │         │           │          │ │
+│ │ comment with file, │ parameter. The     │         │           │          │ │
+│ │ line_start,        │ test file          │         │           │          │ │
+│ │ line_end and body; │ test_recipes.py    │         │           │          │ │
+│ │ limit body to 40   │ has a test case    │         │           │          │ │
+│ │ words explaining   │ that was updated   │         │           │          │ │
+│ │ the defect. For    │ to use 'predicate' │         │           │          │ │
+│ │ approve or         │ instead of 'pred'. │         │           │          │ │
+│ │ escalate, use an   │                    │         │           │          │ │
+│ │ empty comments     │ So the main change │         │           │          │ │
+│ │ array. Do not      │ here is renaming   │         │           │          │ │
+│ │ include proposed   │ the parameter from │         │           │          │ │
+│ │ tests or test      │ 'pred' to          │         │           │          │ │
+│ │ source.            │ 'predicate' in the │         │           │          │ │
+│ │                    │ first_true         │         │           │          │ │
+│ │ USER               │ function. The      │         │           │          │ │
+│ │ Repository:        │ function's         │         │           │          │ │
+│ │ more-itertools     │ implementation     │         │           │          │ │
+│ │ Files changed:     │ uses 'predicate'   │         │           │          │ │
+│ │ more_itertools/mo… │ now, and the tests │         │           │          │ │
+│ │ more_itertools/re… │ have been updated  │         │           │          │ │
+│ │ more_itertools/re… │ accordingly.       │         │           │          │ │
+│ │ tests/test_recipe… │                    │         │           │          │ │
+│ │                    │ I need to check if │         │           │          │ │
+│ │ Not shown          │ this change is     │         │           │          │ │
+│ │ (non-code or over  │ correct. The       │         │           │          │ │
+│ │ budget; treat as   │ function           │         │           │          │ │
+│ │ unreviewed):       │ first_true was     │         │           │          │ │
+│ │ more_itertools/re… │ previously using   │         │           │          │ │
+│ │ (700 chars,        │ 'pred' as the      │         │           │          │ │
+│ │ non-code)          │ parameter, and the │         │           │          │ │
+│ │                    │ tests were using   │         │           │          │ │
+│ │ Context around the │ that. Now, the     │         │           │          │ │
+│ │ change             │ parameter name is  │         │           │          │ │
+│ │ (mechanically      │ changed to         │         │           │          │ │
+│ │ extracted):        │ 'predicate', which │         │           │          │ │
+│ │ Changed            │ is a more          │         │           │          │ │
+│ │ definitions:       │ descriptive name.  │         │           │          │ │
+│ │ more_itertools/mo… │ The function's     │         │           │          │ │
+│ │ more_itertools/mo… │ docstring also     │         │           │          │ │
+│ │ more_itertools/re… │ reflects this      │         │           │          │ │
+│ │ more_itertools/re… │ change.            │         │           │          │ │
+│ │ more_itertools/re… │                    │         │           │          │ │
+│ │ tests/test_recipe… │ Looking at the     │         │           │          │ │
+│ │ tests/test_recipe… │ code, the          │         │           │          │ │
+│ │ tests/test_recipe… │ function's         │         │           │          │ │
+│ │ Recent history of  │ implementation     │         │           │          │ │
+│ │ more_itertools/mo… │ uses 'predicate'   │         │           │          │ │
+│ │   e4d2a4a          │ in the filter,     │         │           │          │ │
+│ │ 2026-03-31 Merge   │ which matches the  │         │           │          │ │
+│ │ pull request #1126 │ parameter name.    │         │           │          │ │
+│ │ from               │ The tests have     │         │           │          │ │
+│ │ veeceey/fix/issue… │ been updated to    │         │           │          │ │
+│ │   18c57c7          │ use 'predicate' in │         │           │          │ │
+│ │ 2026-03-31 Issue   │ their calls. The   │         │           │          │ │
+│ │ #1134: Add         │ nth_prime function │         │           │          │ │
+│ │ running_statistics │ in more.py now     │         │           │          │ │
+│ │ (#1135)            │ calls first_true   │         │           │          │ │
+│ │   b290c27          │ without the 'pred' │         │           │          │ │
+│ │ 2026-03-23 docs:   │ argument, which    │         │           │          │ │
+│ │ add                │ should now be      │         │           │          │ │
+│ │ cross-references   │ correct since the  │         │           │          │ │
+│ │ between            │ parameter is       │         │           │          │ │
+│ │ groupby_transform, │ renamed.           │         │           │          │ │
+│ │ bucket, and        │                    │         │           │          │ │
+│ │ map_reduce         │ Wait, in the diff  │         │           │          │ │
+│ │ Recent history of  │ for more.py, the   │         │           │          │ │
+│ │ more_itertools/re… │ nth_prime          │         │           │          │ │
+│ │   d0c20f5          │ function's call to │         │           │          │ │
+│ │ 2026-03-31         │ first_true was     │         │           │          │ │
+│ │ quantify: pred ->  │ changed from using │         │           │          │ │
+│ │ predicate          │ 'pred' to not      │         │           │          │ │
+│ │   a7bac4a          │ passing it. But    │         │           │          │ │
+│ │ 2026-03-31         │ the function's     │         │           │          │ │
+│ │ flatten:           │ signature now      │         │           │          │ │
+│ │ listOfLists ->     │ expects            │         │           │          │ │
+│ │ list_of_lists      │ 'predicate' as a   │         │           │          │ │
+│ │   38b66e2          │ parameter. Wait,   │         │           │          │ │
+│ │ 2026-03-31         │ no—the function's  │         │           │          │ │
+│ │ repeatfunc: func   │ signature in       │         │           │          │ │
+│ │ -> function        │ recipes.py was     │         │           │          │ │
+│ │ Recent history of  │ changed to         │         │           │          │ │
+│ │ tests/test_recipe… │ 'predicate', but   │         │           │          │ │
+│ │   18c57c7          │ in the more.py     │         │           │          │ │
+│ │ 2026-03-31 Issue   │ code, the call to  │         │           │          │ │
+│ │ #1134: Add         │ first_true is now  │         │           │          │ │
+│ │ running_statistics │ using the          │         │           │          │ │
+│ │ (#1135)            │ parameter name     │         │           │          │ │
+│ │   db4f41b          │ 'predicate'? Wait, │         │           │          │ │
+│ │ 2026-02-09 Add     │ let me check       │         │           │          │ │
+│ │ running_mean       │ again.             │         │           │          │ │
+│ │ recipe             │                    │         │           │          │ │
+│ │   def2d82          │ In the diff for    │         │           │          │ │
+│ │ 2026-01-02         │ more.py, the line  │         │           │          │ │
+│ │ Simplify           │ was changed from:  │         │           │          │ │
+│ │ nth_permutation.   │                    │         │           │          │ │
+│ │ Fix incorrect      │ return             │         │           │          │ │
+│ │ exception.         │ first_true(count(… │         │           │          │ │
+│ │                    │ step=2),           │         │           │          │ │
+│ │ Diff:              │ pred=is_prime)     │         │           │          │ │
+│ │ ```diff            │                    │         │           │          │ │
+│ │ diff --git         │ to                 │         │           │          │ │
+│ │ a/more_itertools/… │                    │         │           │          │ │
+│ │ b/more_itertools/… │ return             │         │           │          │ │
+│ │ index              │ first_true(count(… │         │           │          │ │
+│ │ 6b0360e..8f1bfe7   │ step=2))           │         │           │          │ │
+│ │ 100755             │                    │         │           │          │ │
+│ │ ---                │ Wait, so the       │         │           │          │ │
+│ │ a/more_itertools/… │ original code was  │         │           │          │ │
+│ │ +++                │ passing            │         │           │          │ │
+│ │ b/more_itertools/… │ 'pred=is_prime',   │         │           │          │ │
+│ │ @@ -5227,7 +5227,7 │ but now it's       │         │           │          │ │
+│ │ @@ def             │ removed. But the   │         │           │          │ │
+│ │ nth_prime(n, *,    │ function           │         │           │          │ │
+│ │ approximate=False… │ first_true now     │         │           │          │ │
+│ │                    │ expects the        │         │           │          │ │
+│ │      # Search from │ parameter to be    │         │           │          │ │
+│ │ the midpoint and   │ called             │         │           │          │ │
+│ │ return the first   │ 'predicate', not   │         │           │          │ │
+│ │ odd prime          │ 'pred'. So this    │         │           │          │ │
+│ │      odd =         │ seems like a       │         │           │          │ │
+│ │ floor((lb + ub) /  │ problem. Wait,     │         │           │          │ │
+│ │ 2) | 1             │ perhaps there's a  │         │           │          │ │
+│ │ -    return        │ mistake here. Let  │         │           │          │ │
+│ │ first_true(count(… │ me re-examine the  │         │           │          │ │
+│ │ step=2),           │ code.              │         │           │          │ │
+│ │ pred=is_prime)     │                    │         │           │          │ │
+│ │ +    return        │ Original code in   │         │           │          │ │
+│ │ first_true(count(… │ more.py for        │         │           │          │ │
+│ │ step=2))           │ nth_prime:         │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ def nth_prime(n,   │         │           │          │ │
+│ │  def               │ *,                 │         │           │          │ │
+│ │ argmin(iterable,   │ approximate=False… │         │           │          │ │
+│ │ *, key=None):      │     ...            │         │           │          │ │
+│ │ diff --git         │     return         │         │           │          │ │
+│ │ a/more_itertools/… │ first_true(count(… │         │           │          │ │
+│ │ b/more_itertools/… │ step=2),           │         │           │          │ │
+│ │ index              │ pred=is_prime)     │         │           │          │ │
+│ │ 7548fc3..acab086   │                    │         │           │          │ │
+│ │ 100644             │ After the change,  │         │           │          │ │
+│ │ ---                │ it's:              │         │           │          │ │
+│ │ a/more_itertools/… │                    │         │           │          │ │
+│ │ +++                │ return             │         │           │          │ │
+│ │ b/more_itertools/… │ first_true(count(… │         │           │          │ │
+│ │ @@ -557,7 +557,7   │ step=2))           │         │           │          │ │
+│ │ @@ def             │                    │         │           │          │ │
+│ │ iter_except(func,  │ But the function   │         │           │          │ │
+│ │ exception,         │ first_true now has │         │           │          │ │
+│ │ first=None):       │ parameters         │         │           │          │ │
+│ │              yield │ (iterable,         │         │           │          │ │
+│ │ func()             │ default=None,      │         │           │          │ │
+│ │                    │ predicate=None).   │         │           │          │ │
+│ │                    │ So the original    │         │           │          │ │
+│ │ -def               │ code was passing   │         │           │          │ │
+│ │ first_true(iterab… │ pred=is_prime, but │         │           │          │ │
+│ │ default=None,      │ now the parameter  │         │           │          │ │
+│ │ pred=None):        │ is called          │         │           │          │ │
+│ │ +def               │ predicate. So the  │         │           │          │ │
+│ │ first_true(iterab… │ function call in   │         │           │          │ │
+│ │ default=None,      │ more.py is missing │         │           │          │ │
+│ │ predicate=None):   │ the predicate      │         │           │          │ │
+│ │      """           │ argument. That's a │         │           │          │ │
+│ │      Returns the   │ problem because    │         │           │          │ │
+│ │ first true value   │ the function now   │         │           │          │ │
+│ │ in the iterable.   │ requires the       │         │           │          │ │
+│ │                    │ predicate          │         │           │          │ │
+│ │ @@ -568,13 +568,13 │ parameter. Wait,   │         │           │          │ │
+│ │ @@ def             │ but in the diff,   │         │           │          │ │
+│ │ first_true(iterab… │ the line was       │         │           │          │ │
+│ │ default=None,      │ changed from       │         │           │          │ │
+│ │ pred=None):        │ passing            │         │           │          │ │
+│ │                    │ pred=is_prime to   │         │           │          │ │
+│ │          >>>       │ not passing it.    │         │           │          │ │
+│ │ first_true(range(… │ That would mean    │         │           │          │ │
+│ │          1         │ that the code is   │         │           │          │ │
+│ │ -        >>>       │ now incorrect      │         │           │          │ │
+│ │ first_true(range(… │ because the        │         │           │          │ │
+│ │ pred=lambda x: x > │ function           │         │           │          │ │
+│ │ 5)                 │ first_true now     │         │           │          │ │
+│ │ +        >>>       │ requires the       │         │           │          │ │
+│ │ first_true(range(… │ predicate          │         │           │          │ │
+│ │ predicate=lambda   │ parameter.         │         │           │          │ │
+│ │ x: x > 5)          │ However, maybe the │         │           │          │ │
+│ │          6         │ function's default │         │           │          │ │
+│ │ -        >>>       │ value for          │         │           │          │ │
+│ │ first_true(range(… │ predicate is None, │         │           │          │ │
+│ │ default='missing', │ and the code is    │         │           │          │ │
+│ │ pred=lambda x: x > │ using the default. │         │           │          │ │
+│ │ 9)                 │ Or perhaps there's │         │           │          │ │
+│ │ +        >>>       │ a mistake in the   │         │           │          │ │
+│ │ first_true(range(… │ diff.              │         │           │          │ │
+│ │ default='missing', │                    │         │           │          │ │
+│ │ predicate=lambda   │ Wait, looking at   │         │           │          │ │
+│ │ x: x > 9)          │ the diff for       │         │           │          │ │
+│ │          'missing' │ more.py:           │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      """           │ Original line:     │         │           │          │ │
+│ │ -    return        │ return             │         │           │          │ │
+│ │ next(filter(pred,  │ first_true(count(… │         │           │          │ │
+│ │ iterable),         │ step=2),           │         │           │          │ │
+│ │ default)           │ pred=is_prime)     │         │           │          │ │
+│ │ +    return        │                    │         │           │          │ │
+│ │ next(filter(predi… │ Modified line:     │         │           │          │ │
+│ │ iterable),         │ return             │         │           │          │ │
+│ │ default)           │ first_true(count(… │         │           │          │ │
+│ │                    │ step=2))           │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  def               │ So the 'pred'      │         │           │          │ │
+│ │ random_product(*i… │ argument is        │         │           │          │ │
+│ │ repeat=1):         │ removed. But the   │         │           │          │ │
+│ │ diff --git         │ function           │         │           │          │ │
+│ │ a/tests/test_reci… │ first_true now     │         │           │          │ │
+│ │ b/tests/test_reci… │ uses 'predicate'   │         │           │          │ │
+│ │ index              │ as the parameter   │         │           │          │ │
+│ │ 814b63f..dcbdde8   │ name. So the       │         │           │          │ │
+│ │ 100644             │ original code was  │         │           │          │ │
+│ │ ---                │ passing            │         │           │          │ │
+│ │ a/tests/test_reci… │ 'pred=is_prime',   │         │           │          │ │
+│ │ +++                │ but the function   │         │           │          │ │
+│ │ b/tests/test_reci… │ now expects        │         │           │          │ │
+│ │ @@ -522,7 +522,7   │ 'predicate' as a   │         │           │          │ │
+│ │ @@ class           │ parameter.         │         │           │          │ │
+│ │ FirstTrueTests(Te… │ Therefore, the     │         │           │          │ │
+│ │      def           │ code in more.py is │         │           │          │ │
+│ │ test_pred(self):   │ now incorrect      │         │           │          │ │
+│ │          """Test   │ because it's not   │         │           │          │ │
+│ │ with a custom      │ passing the        │         │           │          │ │
+│ │ predicate"""       │ predicate anymore. │         │           │          │ │
+│ │          self.ass… │ Wait, but maybe    │         │           │          │ │
+│ │ -                  │ the function's     │         │           │          │ │
+│ │ mi.first_true([2,  │ parameters have    │         │           │          │ │
+│ │ 4, 6], pred=lambda │ changed, and the   │         │           │          │ │
+│ │ x: x % 3 == 0), 6  │ code in more.py is │         │           │          │ │
+│ │ +                  │ updated            │         │           │          │ │
+│ │ mi.first_true([2,  │ accordingly. Wait, │         │           │          │ │
+│ │ 4, 6],             │ maybe the          │         │           │          │ │
+│ │ predicate=lambda   │ function's default │         │           │          │ │
+│ │ x: x % 3 == 0), 6  │ value is handled   │         │           │          │ │
+│ │          )         │ correctly. Let me  │         │           │          │ │
+│ │ ```                │ check the          │         │           │          │ │
+│ │                    │ function's code.   │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ In the recipes.py  │         │           │          │ │
+│ │                    │ diff, the function │         │           │          │ │
+│ │                    │ first_true is      │         │           │          │ │
+│ │                    │ modified to:       │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ def                │         │           │          │ │
+│ │                    │ first_true(iterab… │         │           │          │ │
+│ │                    │ default=None,      │         │           │          │ │
+│ │                    │ predicate=None):   │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ And the            │         │           │          │ │
+│ │                    │ implementation is: │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ return             │         │           │          │ │
+│ │                    │ next(filter(predi… │         │           │          │ │
+│ │                    │ iterable),         │         │           │          │ │
+│ │                    │ default)           │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So the function    │         │           │          │ │
+│ │                    │ now requires the   │         │           │          │ │
+│ │                    │ predicate          │         │           │          │ │
+│ │                    │ parameter.         │         │           │          │ │
+│ │                    │ However, in the    │         │           │          │ │
+│ │                    │ more.py code, the  │         │           │          │ │
+│ │                    │ call to first_true │         │           │          │ │
+│ │                    │ was modified to    │         │           │          │ │
+│ │                    │ not pass the       │         │           │          │ │
+│ │                    │ predicate. That    │         │           │          │ │
+│ │                    │ would mean that    │         │           │          │ │
+│ │                    │ the code in        │         │           │          │ │
+│ │                    │ more.py is now     │         │           │          │ │
+│ │                    │ incorrect. Because │         │           │          │ │
+│ │                    │ the function       │         │           │          │ │
+│ │                    │ first_true now     │         │           │          │ │
+│ │                    │ requires the       │         │           │          │ │
+│ │                    │ predicate          │         │           │          │ │
+│ │                    │ parameter, but the │         │           │          │ │
+│ │                    │ code is not        │         │           │          │ │
+│ │                    │ passing it. Unless │         │           │          │ │
+│ │                    │ the function has a │         │           │          │ │
+│ │                    │ default value for  │         │           │          │ │
+│ │                    │ predicate. Wait,   │         │           │          │ │
+│ │                    │ the function's     │         │           │          │ │
+│ │                    │ parameters are     │         │           │          │ │
+│ │                    │ (iterable,         │         │           │          │ │
+│ │                    │ default=None,      │         │           │          │ │
+│ │                    │ predicate=None),   │         │           │          │ │
+│ │                    │ so predicate has a │         │           │          │ │
+│ │                    │ default of None.   │         │           │          │ │
+│ │                    │ So in the original │         │           │          │ │
+│ │                    │ code, the 'pred'   │         │           │          │ │
+│ │                    │ argument was       │         │           │          │ │
+│ │                    │ passed, but now    │         │           │          │ │
+│ │                    │ the code is not    │         │           │          │ │
+│ │                    │ passing it. So if  │         │           │          │ │
+│ │                    │ the function's     │         │           │          │ │
+│ │                    │ default for        │         │           │          │ │
+│ │                    │ predicate is None, │         │           │          │ │
+│ │                    │ then the code is   │         │           │          │ │
+│ │                    │ now correct. Wait, │         │           │          │ │
+│ │                    │ but the original   │         │           │          │ │
+│ │                    │ code was using     │         │           │          │ │
+│ │                    │ 'pred=is_prime'    │         │           │          │ │
+│ │                    │ which is now       │         │           │          │ │
+│ │                    │ replaced by the    │         │           │          │ │
+│ │                    │ default. Wait, no. │         │           │          │ │
+│ │                    │ Let me think       │         │           │          │ │
+│ │                    │ again.             │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Original code in   │         │           │          │ │
+│ │                    │ more.py:           │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ return             │         │           │          │ │
+│ │                    │ first_true(count(… │         │           │          │ │
+│ │                    │ step=2),           │         │           │          │ │
+│ │                    │ pred=is_prime)     │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Which was passing  │         │           │          │ │
+│ │                    │ the 'pred'         │         │           │          │ │
+│ │                    │ argument. Now,     │         │           │          │ │
+│ │                    │ after the change,  │         │           │          │ │
+│ │                    │ the function's     │         │           │          │ │
+│ │                    │ parameters are     │         │           │          │ │
+│ │                    │ 'predicate', and   │         │           │          │ │
+│ │                    │ the code is        │         │           │          │ │
+│ │                    │ calling first_true │         │           │          │ │
+│ │                    │ without passing    │         │           │          │ │
+│ │                    │ the predicate. So  │         │           │          │ │
+│ │                    │ the function would │         │           │          │ │
+│ │                    │ use the default    │         │           │          │ │
+│ │                    │ value of None for  │         │           │          │ │
+│ │                    │ predicate. But in  │         │           │          │ │
+│ │                    │ the original code, │         │           │          │ │
+│ │                    │ the 'pred' was set │         │           │          │ │
+│ │                    │ to is_prime. So    │         │           │          │ │
+│ │                    │ the change in      │         │           │          │ │
+│ │                    │ more.py is         │         │           │          │ │
+│ │                    │ actually removing  │         │           │          │ │
+│ │                    │ the predicate      │         │           │          │ │
+│ │                    │ argument. That     │         │           │          │ │
+│ │                    │ would be a problem │         │           │          │ │
+│ │                    │ because the        │         │           │          │ │
+│ │                    │ function           │         │           │          │ │
+│ │                    │ first_true now     │         │           │          │ │
+│ │                    │ requires the       │         │           │          │ │
+│ │                    │ predicate          │         │           │          │ │
+│ │                    │ parameter, but the │         │           │          │ │
+│ │                    │ code is not        │         │           │          │ │
+│ │                    │ passing it. Unless │         │           │          │ │
+│ │                    │ the function's     │         │           │          │ │
+│ │                    │ default is set to  │         │           │          │ │
+│ │                    │ something else.    │         │           │          │ │
+│ │                    │ Wait, looking at   │         │           │          │ │
+│ │                    │ the function's     │         │           │          │ │
+│ │                    │ definition again:  │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ def                │         │           │          │ │
+│ │                    │ first_true(iterab… │         │           │          │ │
+│ │                    │ default=None,      │         │           │          │ │
+│ │                    │ predicate=None):   │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So the predicate   │         │           │          │ │
+│ │                    │ has a default of   │         │           │          │ │
+│ │                    │ None. Therefore,   │         │           │          │ │
+│ │                    │ if the code in     │         │           │          │ │
+│ │                    │ more.py is not     │         │           │          │ │
+│ │                    │ passing the        │         │           │          │ │
+│ │                    │ predicate, then    │         │           │          │ │
+│ │                    │ the function would │         │           │          │ │
+│ │                    │ use the default,   │         │           │          │ │
+│ │                    │ which is None. But │         │           │          │ │
+│ │                    │ in the original    │         │           │          │ │
+│ │                    │ code, the          │         │           │          │ │
+│ │                    │ predicate was set  │         │           │          │ │
+│ │                    │ to is_prime, which │         │           │          │ │
+│ │                    │ would have been    │         │           │          │ │
+│ │                    │ used. So this      │         │           │          │ │
+│ │                    │ change in more.py  │         │           │          │ │
+│ │                    │ is actually        │         │           │          │ │
+│ │                    │ causing the code   │         │           │          │ │
+│ │                    │ to no longer pass  │         │           │          │ │
+│ │                    │ the predicate,     │         │           │          │ │
+│ │                    │ which was          │         │           │          │ │
+│ │                    │ previously         │         │           │          │ │
+│ │                    │ required.          │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Ah! So this is a   │         │           │          │ │
+│ │                    │ bug. The function  │         │           │          │ │
+│ │                    │ call in more.py is │         │           │          │ │
+│ │                    │ now missing the    │         │           │          │ │
+│ │                    │ predicate          │         │           │          │ │
+│ │                    │ argument, which    │         │           │          │ │
+│ │                    │ was previously     │         │           │          │ │
+│ │                    │ provided.          │         │           │          │ │
+│ │                    │ Therefore, the     │         │           │          │ │
+│ │                    │ code in more.py    │         │           │          │ │
+│ │                    │ would now not use  │         │           │          │ │
+│ │                    │ the is_prime       │         │           │          │ │
+│ │                    │ predicate, leading │         │           │          │ │
+│ │                    │ to incorrect       │         │           │          │ │
+│ │                    │ behavior.          │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ But wait, looking  │         │           │          │ │
+│ │                    │ at the diff for    │         │           │          │ │
+│ │                    │ more.py, the line  │         │           │          │ │
+│ │                    │ was changed from   │         │           │          │ │
+│ │                    │ passing            │         │           │          │ │
+│ │                    │ 'pred=is_prime' to │         │           │          │ │
+│ │                    │ not passing any    │         │           │          │ │
+│ │                    │ arguments. So the  │         │           │          │ │
+│ │                    │ code is now not    │         │           │          │ │
+│ │                    │ passing the        │         │           │          │ │
+│ │                    │ predicate. That    │         │           │          │ │
+│ │                    │ would mean that    │         │           │          │ │
+│ │                    │ the first_true     │         │           │          │ │
+│ │                    │ function is called │         │           │          │ │
+│ │                    │ without the        │         │           │          │ │
+│ │                    │ predicate, which   │         │           │          │ │
+│ │                    │ is now a           │         │           │          │ │
+│ │                    │ parameter. So in   │         │           │          │ │
+│ │                    │ the function, the  │         │           │          │ │
+│ │                    │ predicate would    │         │           │          │ │
+│ │                    │ default to None.   │         │           │          │ │
+│ │                    │ So the code in     │         │           │          │ │
+│ │                    │ more.py is         │         │           │          │ │
+│ │                    │ incorrect now.     │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Therefore, the     │         │           │          │ │
+│ │                    │ change in more.py  │         │           │          │ │
+│ │                    │ is a regression.   │         │           │          │ │
+│ │                    │ The function       │         │           │          │ │
+│ │                    │ first_true is now  │         │           │          │ │
+│ │                    │ expecting the      │         │           │          │ │
+│ │                    │ predicate          │         │           │          │ │
+│ │                    │ parameter, but the │         │           │          │ │
+│ │                    │ code is not        │         │           │          │ │
+│ │                    │ passing it.        │         │           │          │ │
+│ │                    │ Therefore, this is │         │           │          │ │
+│ │                    │ a bug.             │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ But why was the    │         │           │          │ │
+│ │                    │ code in more.py    │         │           │          │ │
+│ │                    │ changed in this    │         │           │          │ │
+│ │                    │ way? Maybe the     │         │           │          │ │
+│ │                    │ original code had  │         │           │          │ │
+│ │                    │ a different        │         │           │          │ │
+│ │                    │ function           │         │           │          │ │
+│ │                    │ signature. Let me  │         │           │          │ │
+│ │                    │ check the original │         │           │          │ │
+│ │                    │ code.              │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ In the original    │         │           │          │ │
+│ │                    │ code (before the   │         │           │          │ │
+│ │                    │ change), the       │         │           │          │ │
+│ │                    │ function           │         │           │          │ │
+│ │                    │ first_true had     │         │           │          │ │
+│ │                    │ parameters         │         │           │          │ │
+│ │                    │ (iterable,         │         │           │          │ │
+│ │                    │ default=None,      │         │           │          │ │
+│ │                    │ pred=None). Then,  │         │           │          │ │
+│ │                    │ the code in        │         │           │          │ │
+│ │                    │ more.py was        │         │           │          │ │
+│ │                    │ passing            │         │           │          │ │
+│ │                    │ pred=is_prime.     │         │           │          │ │
+│ │                    │ After the change,  │         │           │          │ │
+│ │                    │ the function's     │         │           │          │ │
+│ │                    │ parameter is       │         │           │          │ │
+│ │                    │ renamed to         │         │           │          │ │
+│ │                    │ 'predicate' and    │         │           │          │ │
+│ │                    │ the code in        │         │           │          │ │
+│ │                    │ more.py is not     │         │           │          │ │
+│ │                    │ passing it. So the │         │           │          │ │
+│ │                    │ code in more.py is │         │           │          │ │
+│ │                    │ now not passing    │         │           │          │ │
+│ │                    │ the predicate,     │         │           │          │ │
+│ │                    │ which would cause  │         │           │          │ │
+│ │                    │ the function to    │         │           │          │ │
+│ │                    │ use the default.   │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ This is a problem. │         │           │          │ │
+│ │                    │ Therefore, this is │         │           │          │ │
+│ │                    │ a defect in the    │         │           │          │ │
+│ │                    │ code.              │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ But the user's     │         │           │          │ │
+│ │                    │ task is to         │         │           │          │ │
+│ │                    │ determine whether  │         │           │          │ │
+│ │                    │ to approve, block, │         │           │          │ │
+│ │                    │ or escalate. Since │         │           │          │ │
+│ │                    │ the code in        │         │           │          │ │
+│ │                    │ more.py is now not │         │           │          │ │
+│ │                    │ passing the        │         │           │          │ │
+│ │                    │ predicate, which   │         │           │          │ │
+│ │                    │ was previously     │         │           │          │ │
+│ │                    │ passed, this is a  │         │           │          │ │
+│ │                    │ defect. Therefore, │         │           │          │ │
+│ │                    │ the decision       │         │           │          │ │
+│ │                    │ should be block,   │         │           │          │ │
+│ │                    │ with a comment     │         │           │          │ │
+│ │                    │ pointing out the   │         │           │          │ │
+│ │                    │ issue.             │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ But wait, perhaps  │         │           │          │ │
+│ │                    │ I'm                │         │           │          │ │
+│ │                    │ misunderstanding.  │         │           │          │ │
+│ │                    │ Let me check the   │         │           │          │ │
+│ │                    │ diff again.        │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ In more.py, the    │         │           │          │ │
+│ │                    │ line was changed   │         │           │          │ │
+│ │                    │ from:              │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ return             │         │           │          │ │
+│ │                    │ first_true(count(… │         │           │          │ │
+│ │                    │ step=2),           │         │           │          │ │
+│ │                    │ pred=is_prime)     │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ to                 │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ return             │         │           │          │ │
+│ │                    │ first_true(count(… │         │           │          │ │
+│ │                    │ step=2))           │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So the original    │         │           │          │ │
+│ │                    │ code was passing   │         │           │          │ │
+│ │                    │ the 'pred'         │         │           │          │ │
+│ │                    │ argument, which    │         │           │          │ │
+│ │                    │ was then removed.  │         │           │          │ │
+│ │                    │ But the function   │         │           │          │ │
+│ │                    │ now has            │         │           │          │ │
+│ │                    │ 'predicate' as the │         │           │          │ │
+│ │                    │ parameter. So the  │         │           │          │ │
+│ │                    │ code is now not    │         │           │          │ │
+│ │                    │ passing that       │         │           │          │ │
+│ │                    │ parameter.         │         │           │          │ │
+│ │                    │ However, if the    │         │           │          │ │
+│ │                    │ function's         │         │           │          │ │
+│ │                    │ 'predicate'        │         │           │          │ │
+│ │                    │ parameter has a    │         │           │          │ │
+│ │                    │ default value of   │         │           │          │ │
+│ │                    │ None, then the     │         │           │          │ │
+│ │                    │ code would still   │         │           │          │ │
+│ │                    │ work, because the  │         │           │          │ │
+│ │                    │ default is None.   │         │           │          │ │
+│ │                    │ But in that case,  │         │           │          │ │
+│ │                    │ the code would be  │         │           │          │ │
+│ │                    │ using the default  │         │           │          │ │
+│ │                    │ predicate, which   │         │           │          │ │
+│ │                    │ is None. But that  │         │           │          │ │
+│ │                    │ would not be       │         │           │          │ │
+│ │                    │ correct. Because   │         │           │          │ │
+│ │                    │ in the original    │         │           │          │ │
+│ │                    │ code, the          │         │           │          │ │
+│ │                    │ predicate was set  │         │           │          │ │
+│ │                    │ to is_prime, which │         │           │          │ │
+│ │                    │ was necessary for  │         │           │          │ │
+│ │                    │ the function to    │         │           │          │ │
+│ │                    │ work correctly.    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So the code in     │         │           │          │ │
+│ │                    │ more.py is now     │         │           │          │ │
+│ │                    │ incorrect.         │         │           │          │ │
+│ │                    │ Therefore, this is │         │           │          │ │
+│ │                    │ a defect.          │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So the correct     │         │           │          │ │
+│ │                    │ decision is to     │         │           │          │ │
+│ │                    │ block the change,  │         │           │          │ │
+│ │                    │ because the code   │         │           │          │ │
+│ │                    │ in more.py is not  │         │           │          │ │
+│ │                    │ passing the        │         │           │          │ │
+│ │                    │ predicate argument │         │           │          │ │
+│ │                    │ anymore, leading   │         │           │          │ │
+│ │                    │ to incorrect       │         │           │          │ │
+│ │                    │ behavior.          │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ But the user's     │         │           │          │ │
+│ │                    │ diff shows that    │         │           │          │ │
+│ │                    │ the function       │         │           │          │ │
+│ │                    │ first_true's       │         │           │          │ │
+│ │                    │ parameter was      │         │           │          │ │
+│ │                    │ renamed from       │         │           │          │ │
+│ │                    │ 'pred' to          │         │           │          │ │
+│ │                    │ 'predicate', and   │         │           │          │ │
+│ │                    │ the code in        │         │           │          │ │
+│ │                    │ more.py was        │         │           │          │ │
+│ │                    │ modified to remove │         │           │          │ │
+│ │                    │ the 'pred'         │         │           │          │ │
+│ │                    │ argument. This is  │         │           │          │ │
+│ │                    │ a mistake.         │         │           │          │ │
+│ │                    │ Therefore, the     │         │           │          │ │
+│ │                    │ code in more.py is │         │           │          │ │
+│ │                    │ incorrect.         │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So the answer      │         │           │          │ │
+│ │                    │ should be block,   │         │           │          │ │
+│ │                    │ with a comment     │         │           │          │ │
+│ │                    │ pointing out that  │         │           │          │ │
+│ │                    │ the more.py code   │         │           │          │ │
+│ │                    │ is missing the     │         │           │          │ │
+│ │                    │ predicate          │         │           │          │ │
+│ │                    │ argument, leading  │         │           │          │ │
+│ │                    │ to the function    │         │           │          │ │
+│ │                    │ using the default  │         │           │          │ │
+│ │                    │ None, which was    │         │           │          │ │
+│ │                    │ previously set to  │         │           │          │ │
+│ │                    │ is_prime.          │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ But I need to      │         │           │          │ │
+│ │                    │ verify this. Let   │         │           │          │ │
+│ │                    │ me make sure.      │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ The original code  │         │           │          │ │
+│ │                    │ in more.py was     │         │           │          │ │
+│ │                    │ passing            │         │           │          │ │
+│ │                    │ pred=is_prime.     │         │           │          │ │
+│ │                    │ After the change,  │         │           │          │ │
+│ │                    │ it's not passing   │         │           │          │ │
+│ │                    │ anything. The      │         │           │          │ │
+│ │                    │ function's         │         │           │          │ │
+│ │                    │ parameters are now │         │           │          │ │
+│ │                    │ (iterable,         │         │           │          │ │
+│ │                    │ default=None,      │         │           │          │ │
+│ │                    │ predicate=None).   │         │           │          │ │
+│ │                    │ Therefore, the     │         │           │          │ │
+│ │                    │ code in more.py is │         │           │          │ │
+│ │                    │ not passing the    │         │           │          │ │
+│ │                    │ predicate, so it   │         │           │          │ │
+│ │                    │ uses the default   │         │           │          │ │
+│ │                    │ of None. But the   │         │           │          │ │
+│ │                    │ original code was  │         │           │          │ │
+│ │                    │ using the is_prime │         │           │          │ │
+│ │                    │ function.          │         │           │          │ │
+│ │                    │ Therefore, the     │         │           │          │ │
+│ │                    │ code in more.py    │         │           │          │ │
+│ │                    │ would now not work │         │           │          │ │
+│ │                    │ as intended.       │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So this is a       │         │           │          │ │
+│ │                    │ defect.            │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Therefore, the     │         │           │          │ │
+│ │                    │ decision is to     │         │           │          │ │
+│ │                    │ block, with a      │         │           │          │ │
+│ │                    │ comment indicating │         │           │          │ │
+│ │                    │ the problem.       │         │           │          │ │
+│ │                    │ </think>           │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ {"decision":       │         │           │          │ │
+│ │                    │ "block",           │         │           │          │ │
+│ │                    │ "comments":        │         │           │          │ │
+│ │                    │ [{"file":          │         │           │          │ │
+│ │                    │ "more_itertools/m… │         │           │          │ │
+│ │                    │ "line_start":      │         │           │          │ │
+│ │                    │ 5227, "line_end":  │         │           │          │ │
+│ │                    │ 5227, "body":      │         │           │          │ │
+│ │                    │ "Removed 'pred'    │         │           │          │ │
+│ │                    │ argument from      │         │           │          │ │
+│ │                    │ first_true call,   │         │           │          │ │
+│ │                    │ but function now   │         │           │          │ │
+│ │                    │ expects            │         │           │          │ │
+│ │                    │ 'predicate'        │         │           │          │ │
+│ │                    │ parameter.         │         │           │          │ │
+│ │                    │ Previously used    │         │           │          │ │
+│ │                    │ is_prime as        │         │           │          │ │
+│ │                    │ predicate, now     │         │           │          │ │
+│ │                    │ defaulting to      │         │           │          │ │
+│ │                    │ None."}]}          │         │           │          │ │
+│ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ 10%|█         | 5/50 [09:57<1:33:16, 124.37s/it]step 5  reward=0.477  reward_std=1.208  kl=0.001  mean_length=1020.625  clipped_ratio=0.062  step_time=153.370  loss=-0.039  gate_v5=0.477
+                                                  10%|█         | 5/50 [09:57<1:33:16, 124.37s/it]{'loss': '-0.03882', 'grad_norm': '0.06348', 'learning_rate': '4e-06', 'num_tokens': '5.643e+05', 'completions/mean_length': '1021', 'completions/min_length': '319', 'completions/max_length': '4096', 'completions/clipped_ratio': '0.0625', 'completions/mean_terminated_length': '815.6', 'completions/min_terminated_length': '319', 'completions/max_terminated_length': '1864', 'rewards/gate_v5/mean': '0.4767', 'rewards/gate_v5/std': '1.208', 'reward': '0.4767', 'reward_std': '1.208', 'frac_reward_zero_std': '0.5', 'review/approve_bug_frac': '0', 'review/escalate_frac': '0', 'review/mean_tokens': '1021', 'review/unparsable_frac': '0.0625', 'sampling/sampling_logp_difference/mean': '0.01925', 'sampling/sampling_logp_difference/max': '1.398', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.38', 'sampling/importance_sampling_ratio/max': '2.416', 'kl': '0.001447', 'entropy': '0.2561', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '153.4', 'epoch': '0.07937'}
+╭─────────────────────────────────── Step 5 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt             ┃ Completion         ┃ gate_v5 ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM             │ ASSISTANT          │    1.00 │      0.00 │ approve  │ │
+│ │ You are the code   │ <think>            │         │           │          │ │
+│ │ review gate for a  │ Okay, let me try   │         │           │          │ │
+│ │ production         │ to figure this     │         │           │          │ │
+│ │ repository.        │ out. The user has  │         │           │          │ │
+│ │ Approval merges    │ provided a code    │         │           │          │ │
+│ │ and deploys the    │ change in the      │         │           │          │ │
+│ │ change without     │ Requests           │         │           │          │ │
+│ │ further human      │ repository, and I  │         │           │          │ │
+│ │ review.            │ need to decide     │         │           │          │ │
+│ │   approve  - you   │ whether to         │         │           │          │ │
+│ │ are confident the  │ approve, block, or │         │           │          │ │
+│ │ change is correct  │ escalate the       │         │           │          │ │
+│ │ and safe to ship.  │ change.            │         │           │          │ │
+│ │   block    - you   │                    │         │           │          │ │
+│ │ found a concrete   │ First, looking at  │         │           │          │ │
+│ │ defect in the      │ the files changed: │         │           │          │ │
+│ │ change.            │ pyproject.toml and │         │           │          │ │
+│ │   escalate - you   │ several Python     │         │           │          │ │
+│ │ cannot establish   │ files in the       │         │           │          │ │
+│ │ safety from the    │ requests           │         │           │          │ │
+│ │ supplied evidence. │ directory. The     │         │           │          │ │
+│ │ Approving a        │ diff shows that a  │         │           │          │ │
+│ │ defective change   │ lot of type ignore │         │           │          │ │
+│ │ is the worst       │ comments are being │         │           │          │ │
+│ │ outcome.           │ removed. For       │         │           │          │ │
+│ │ Your final answer  │ example, in        │         │           │          │ │
+│ │ must be exactly    │ auth.py, they      │         │           │          │ │
+│ │ one JSON object:   │ removed the type:  │         │           │          │ │
+│ │ {"decision":       │ ignore[reportPriv… │         │           │          │ │
+│ │ "approve|block|es… │ and similar        │         │           │          │ │
+│ │ "comments": []}    │ annotations.       │         │           │          │ │
+│ │ For block, include │                    │         │           │          │ │
+│ │ exactly one        │ The context        │         │           │          │ │
+│ │ comment with file, │ mentions that      │         │           │          │ │
+│ │ line_start,        │ recent history for │         │           │          │ │
+│ │ line_end and body; │ some files         │         │           │          │ │
+│ │ limit body to 40   │ includes bumping   │         │           │          │ │
+│ │ words explaining   │ codeql-action, but │         │           │          │ │
+│ │ the defect. For    │ the main change    │         │           │          │ │
+│ │ approve or         │ here seems to be   │         │           │          │ │
+│ │ escalate, use an   │ about type         │         │           │          │ │
+│ │ empty comments     │ checking and       │         │           │          │ │
+│ │ array. Do not      │ linting rules. The │         │           │          │ │
+│ │ include proposed   │ pyproject.toml     │         │           │          │ │
+│ │ tests or test      │ change adds some   │         │           │          │ │
+│ │ source.            │ linting rules to   │         │           │          │ │
+│ │                    │ suppress certain   │         │           │          │ │
+│ │ USER               │ warnings.          │         │           │          │ │
+│ │ Repository:        │                    │         │           │          │ │
+│ │ requests           │ Looking at the     │         │           │          │ │
+│ │ Files changed:     │ diff in detail,    │         │           │          │ │
+│ │ pyproject.toml,    │ the changes are    │         │           │          │ │
+│ │ src/requests/__in… │ removing type      │         │           │          │ │
+│ │ src/requests/adap… │ ignore comments.   │         │           │          │ │
+│ │ src/requests/auth… │ For instance, in   │         │           │          │ │
+│ │ src/requests/comp… │ __init__.py, they  │         │           │          │ │
+│ │ src/requests/cook… │ removed the type:  │         │           │          │ │
+│ │ src/requests/help… │ ignore[reportPriv… │         │           │          │ │
+│ │ src/requests/mode… │ from lines where   │         │           │          │ │
+│ │ src/requests/sess… │ urllib3 is         │         │           │          │ │
+│ │ src/requests/util… │ imported.          │         │           │          │ │
+│ │                    │ Similarly, in      │         │           │          │ │
+│ │ Context around the │ adapters.py, they  │         │           │          │ │
+│ │ change             │ removed the type   │         │           │          │ │
+│ │ (mechanically      │ ignore for the     │         │           │          │ │
+│ │ extracted):        │ socket import.     │         │           │          │ │
+│ │ Changed            │                    │         │           │          │ │
+│ │ definitions:       │ The main question  │         │           │          │ │
+│ │ src/requests/auth… │ is whether         │         │           │          │ │
+│ │ src/requests/auth… │ removing these     │         │           │          │ │
+│ │ src/requests/auth… │ type ignores is    │         │           │          │ │
+│ │ src/requests/cook… │ safe. The type     │         │           │          │ │
+│ │ src/requests/help… │ ignore comments    │         │           │          │ │
+│ │ src/requests/mode… │ were probably      │         │           │          │ │
+│ │ src/requests/mode… │ there to suppress  │         │           │          │ │
+│ │ src/requests/mode… │ linter errors for  │         │           │          │ │
+│ │ src/requests/mode… │ private imports or │         │           │          │ │
+│ │ src/requests/mode… │ unnecessary        │         │           │          │ │
+│ │ src/requests/mode… │ checks. But if     │         │           │          │ │
+│ │ src/requests/mode… │ those suppressions │         │           │          │ │
+│ │ src/requests/sess… │ are no longer      │         │           │          │ │
+│ │ src/requests/sess… │ needed, removing   │         │           │          │ │
+│ │ src/requests/util… │ them could be      │         │           │          │ │
+│ │ src/requests/util… │ correct.           │         │           │          │ │
+│ │ Recent history of  │                    │         │           │          │ │
+│ │ src/requests/auth… │ However, I need to │         │           │          │ │
+│ │   a634611          │ check if there's   │         │           │          │ │
+│ │ 2026-06-02 Bump    │ any potential      │         │           │          │ │
+│ │ github/codeql-act… │ issue. For         │         │           │          │ │
+│ │ from 4.35.1 to     │ example, if the    │         │           │          │ │
+│ │ 4.36.0 in the      │ code relies on     │         │           │          │ │
+│ │ actions group      │ those private      │         │           │          │ │
+│ │ (#7492)            │ imports, removing  │         │           │          │ │
+│ │ Recent history of  │ the ignore might   │         │           │          │ │
+│ │ src/requests/cook… │ cause errors. But  │         │           │          │ │
+│ │   a634611          │ looking at the     │         │           │          │ │
+│ │ 2026-06-02 Bump    │ code, urllib3 is a │         │           │          │ │
+│ │ github/codeql-act… │ dependency, and    │         │           │          │ │
+│ │ from 4.35.1 to     │ importing it is    │         │           │          │ │
+│ │ 4.36.0 in the      │ standard. The      │         │           │          │ │
+│ │ actions group      │ private import     │         │           │          │ │
+│ │ (#7492)            │ warning might be a │         │           │          │ │
+│ │ Recent history of  │ false positive if  │         │           │          │ │
+│ │ src/requests/help… │ urllib3's          │         │           │          │ │
+│ │   e50e594          │ __version__ is     │         │           │          │ │
+│ │ 2026-06-04 Improve │ being accessed,    │         │           │          │ │
+│ │ static typing of   │ but that's part of │         │           │          │ │
+│ │ 3rd party imports  │ the public API.    │         │           │          │ │
+│ │ (#7496)            │                    │         │           │          │ │
+│ │   a634611          │ In the auth.py     │         │           │          │ │
+│ │ 2026-06-02 Bump    │ file, the code was │         │           │          │ │
+│ │ github/codeql-act… │ using basestring,  │         │           │          │ │
+│ │ from 4.35.1 to     │ which is from the  │         │           │          │ │
+│ │ 4.36.0 in the      │ compat module. The │         │           │          │ │
+│ │ actions group      │ type ignore was    │         │           │          │ │
+│ │ (#7492)            │ for                │         │           │          │ │
+│ │ Recent history of  │ reportUnnecessary… │         │           │          │ │
+│ │ src/requests/mode… │ Removing that      │         │           │          │ │
+│ │   1190afd          │ might not be an    │         │           │          │ │
+│ │ 2026-06-04 Add     │ issue because the  │         │           │          │ │
+│ │ type annotation    │ check is there for │         │           │          │ │
+│ │ for                │ runtime guards.    │         │           │          │ │
+│ │ `Request.hooks`    │                    │         │           │          │ │
+│ │ (#7498)            │ In the cookies.py  │         │           │          │ │
+│ │   e50e594          │ file, there's a    │         │           │          │ │
+│ │ 2026-06-04 Improve │ check for          │         │           │          │ │
+│ │ static typing of   │ isinstance(cookie… │         │           │          │ │
+│ │ 3rd party imports  │ cookielib.CookieJ… │         │           │          │ │
+│ │ (#7496)            │ which is part of   │         │           │          │ │
+│ │   a634611          │ the code's logic.  │         │           │          │ │
+│ │ 2026-06-02 Bump    │ Removing the type  │         │           │          │ │
+│ │ github/codeql-act… │ ignore here might  │         │           │          │ │
+│ │ from 4.35.1 to     │ be okay if the     │         │           │          │ │
+│ │ 4.36.0 in the      │ code is correct.   │         │           │          │ │
+│ │ actions group      │                    │         │           │          │ │
+│ │ (#7492)            │ The changes seem   │         │           │          │ │
+│ │ Recent history of  │ to be removing     │         │           │          │ │
+│ │ src/requests/sess… │ unnecessary type   │         │           │          │ │
+│ │   a634611          │ ignores, which is  │         │           │          │ │
+│ │ 2026-06-02 Bump    │ a good practice.   │         │           │          │ │
+│ │ github/codeql-act… │ The linting rules  │         │           │          │ │
+│ │ from 4.35.1 to     │ in pyproject.toml  │         │           │          │ │
+│ │ 4.36.0 in the      │ are adjusting to   │         │           │          │ │
+│ │ actions group      │ suppress certain   │         │           │          │ │
+│ │ (#7492)            │ warnings, which    │         │           │          │ │
+│ │ Recent history of  │ might be part of   │         │           │          │ │
+│ │ src/requests/util… │ improving code     │         │           │          │ │
+│ │   a634611          │ quality.           │         │           │          │ │
+│ │ 2026-06-02 Bump    │                    │         │           │          │ │
+│ │ github/codeql-act… │ I don't see any    │         │           │          │ │
+│ │ from 4.35.1 to     │ concrete defects   │         │           │          │ │
+│ │ 4.36.0 in the      │ here. The changes  │         │           │          │ │
+│ │ actions group      │ are about removing │         │           │          │ │
+│ │ (#7492)            │ type ignores that  │         │           │          │ │
+│ │                    │ might no longer be │         │           │          │ │
+│ │ Diff:              │ necessary, which   │         │           │          │ │
+│ │ ```diff            │ is a code cleanup. │         │           │          │ │
+│ │ diff --git         │ There's no obvious │         │           │          │ │
+│ │ a/pyproject.toml   │ bug or regression. │         │           │          │ │
+│ │ b/pyproject.toml   │ The code still     │         │           │          │ │
+│ │ index              │ functions as       │         │           │          │ │
+│ │ a09fda1..e7a1e01   │ intended, and the  │         │           │          │ │
+│ │ 100644             │ type checks are    │         │           │          │ │
+│ │ ---                │ being handled      │         │           │          │ │
+│ │ a/pyproject.toml   │ correctly.         │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/pyproject.toml   │ So, the decision   │         │           │          │ │
+│ │ @@ -118,3 +118,8   │ should be to       │         │           │          │ │
+│ │ @@ testpaths =     │ approve the change │         │           │          │ │
+│ │ ["tests"]          │ since it's a       │         │           │          │ │
+│ │  [tool.pyright]    │ cleanup and        │         │           │          │ │
+│ │  include =         │ there's no         │         │           │          │ │
+│ │ ["src/requests"]   │ evidence of a      │         │           │          │ │
+│ │  typeCheckingMode  │ defect.            │         │           │          │ │
+│ │ = "strict"         │ </think>           │         │           │          │ │
+│ │ +# linting rules   │                    │         │           │          │ │
+│ │ unrelated to type  │ {"decision":       │         │           │          │ │
+│ │ checking           │ "approve",         │         │           │          │ │
+│ │ +reportPrivateUsa… │ "comments": []}    │         │           │          │ │
+│ │ = false            │                    │         │           │          │ │
+│ │ +reportPrivateImp… │                    │         │           │          │ │
+│ │ = false            │                    │         │           │          │ │
+│ │ +reportUnnecessar… │                    │         │           │          │ │
+│ │ = false            │                    │         │           │          │ │
+│ │ +reportUnusedImpo… │                    │         │           │          │ │
+│ │ = false  #         │                    │         │           │          │ │
+│ │ duplicate of       │                    │         │           │          │ │
+│ │ Ruff's F401 rule   │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/src/requests/__… │                    │         │           │          │ │
+│ │ b/src/requests/__… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 5c65ff8..1093ff8   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/requests/__… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/requests/__… │                    │         │           │          │ │
+│ │ @@ -111,13 +111,13 │                    │         │           │          │ │
+│ │ @@ def             │                    │         │           │          │ │
+│ │ _check_cryptograp… │                    │         │           │          │ │
+│ │ str) -> None:      │                    │         │           │          │ │
+│ │  # Check imported  │                    │         │           │          │ │
+│ │ dependencies for   │                    │         │           │          │ │
+│ │ compatibility.     │                    │         │           │          │ │
+│ │  try:              │                    │         │           │          │ │
+│ │      check_compat… │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ urllib3.__version… │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ urllib3.__version… │                    │         │           │          │ │
+│ │          chardet_… │                    │         │           │          │ │
+│ │          charset_… │                    │         │           │          │ │
+│ │      )             │                    │         │           │          │ │
+│ │  except            │                    │         │           │          │ │
+│ │ (AssertionError,   │                    │         │           │          │ │
+│ │ ValueError):       │                    │         │           │          │ │
+│ │      warnings.war… │                    │         │           │          │ │
+│ │ -        f"urllib3 │                    │         │           │          │ │
+│ │ ({urllib3.__versi… │                    │         │           │          │ │
+│ │ or chardet "  #    │                    │         │           │          │ │
+│ │ type:              │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ +        f"urllib3 │                    │         │           │          │ │
+│ │ ({urllib3.__versi… │                    │         │           │          │ │
+│ │ or chardet "       │                    │         │           │          │ │
+│ │          f"({char… │                    │         │           │          │ │
+│ │ ({charset_normali… │                    │         │           │          │ │
+│ │ "                  │                    │         │           │          │ │
+│ │          "doesn't  │                    │         │           │          │ │
+│ │ match a supported  │                    │         │           │          │ │
+│ │ version!",         │                    │         │           │          │ │
+│ │          Requests… │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/src/requests/ad… │                    │         │           │          │ │
+│ │ b/src/requests/ad… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 40fe8a6..79ed426   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/requests/ad… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/requests/ad… │                    │         │           │          │ │
+│ │ @@ -9,7 +9,7 @@    │                    │         │           │          │ │
+│ │ and maintain       │                    │         │           │          │ │
+│ │ connections.       │                    │         │           │          │ │
+│ │  from __future__   │                    │         │           │          │ │
+│ │ import annotations │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  import os.path    │                    │         │           │          │ │
+│ │ -import socket  #  │                    │         │           │          │ │
+│ │ noqa: F401  #      │                    │         │           │          │ │
+│ │ type:              │                    │         │           │          │ │
+│ │ ignore[reportUnus… │                    │         │           │          │ │
+│ │ +import socket  #  │                    │         │           │          │ │
+│ │ noqa: F401         │                    │         │           │          │ │
+│ │  import typing     │                    │         │           │          │ │
+│ │  import warnings   │                    │         │           │          │ │
+│ │  from typing       │                    │         │           │          │ │
+│ │ import Any         │                    │         │           │          │ │
+│ │ @@ -33,7 +33,7 @@  │                    │         │           │          │ │
+│ │ from urllib3.util  │                    │         │           │          │ │
+│ │ import Timeout as  │                    │         │           │          │ │
+│ │ TimeoutSauce       │                    │         │           │          │ │
+│ │  from urllib3.util │                    │         │           │          │ │
+│ │ import parse_url   │                    │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ urllib3.util.retry │                    │         │           │          │ │
+│ │ import Retry       │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ -from .auth import │                    │         │           │          │ │
+│ │ _basic_auth_str  # │                    │         │           │          │ │
+│ │ type:              │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ +from .auth import │                    │         │           │          │ │
+│ │ _basic_auth_str    │                    │         │           │          │ │
+│ │  from .compat      │                    │         │           │          │ │
+│ │ import basestring, │                    │         │           │          │ │
+│ │ urlparse           │                    │         │           │          │ │
+│ │  from .cookies     │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ extract_cookies_t… │                    │         │           │          │ │
+│ │  from .exceptions  │                    │         │           │          │ │
+│ │ import (           │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/src/requests/au… │                    │         │           │          │ │
+│ │ b/src/requests/au… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 2af481d..aff9b5b   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/requests/au… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/requests/au… │                    │         │           │          │ │
+│ │ @@ -41,7 +41,7 @@  │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ _basic_auth_str(u… │                    │         │           │          │ │
+│ │ bytes | str,       │                    │         │           │          │ │
+│ │ password: bytes |  │                    │         │           │          │ │
+│ │ str) -> str:       │                    │         │           │          │ │
+│ │      #             │                    │         │           │          │ │
+│ │      # These are   │                    │         │           │          │ │
+│ │ here solely to     │                    │         │           │          │ │
+│ │ maintain backwards │                    │         │           │          │ │
+│ │ compatibility      │                    │         │           │          │ │
+│ │      # for things  │                    │         │           │          │ │
+│ │ like ints. This    │                    │         │           │          │ │
+│ │ will be removed in │                    │         │           │          │ │
+│ │ 3.0.0.             │                    │         │           │          │ │
+│ │ -    if not        │                    │         │           │          │ │
+│ │ isinstance(userna… │                    │         │           │          │ │
+│ │ basestring):  #    │                    │         │           │          │ │
+│ │ type:              │                    │         │           │          │ │
+│ │ ignore[reportUnne… │                    │         │           │          │ │
+│ │ # runtime guard    │                    │         │           │          │ │
+│ │ for non-str/bytes  │                    │         │           │          │ │
+│ │ +    if not        │                    │         │           │          │ │
+│ │ isinstance(userna… │                    │         │           │          │ │
+│ │ basestring):  #    │                    │         │           │          │ │
+│ │ runtime guard for  │                    │         │           │          │ │
+│ │ non-str/bytes      │                    │         │           │          │ │
+│ │          warnings… │                    │         │           │          │ │
+│ │              "Non… │                    │         │           │          │ │
+│ │ usernames will no  │                    │         │           │          │ │
+│ │ longer be          │                    │         │           │          │ │
+│ │ supported in       │                    │         │           │          │ │
+│ │ Requests "         │                    │         │           │          │ │
+│ │              f"3.… │                    │         │           │          │ │
+│ │ Please convert the │                    │         │           │          │ │
+│ │ object you've      │                    │         │           │          │ │
+│ │ passed in          │                    │         │           │          │ │
+│ │ ({username!r}) to  │                    │         │           │          │ │
+│ │ "                  │                    │         │           │          │ │
+│ │ @@ -51,7 +51,7 @@  │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ _basic_auth_str(u… │                    │         │           │          │ │
+│ │ bytes | str,       │                    │         │           │          │ │
+│ │ password: bytes |  │                    │         │           │          │ │
+│ │ str) -> str:       │                    │         │           │          │ │
+│ │          )         │                    │         │           │          │ │
+│ │          username  │                    │         │           │          │ │
+│ │ = str(username)    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ -    if not        │                    │         │           │          │ │
+│ │ isinstance(passwo… │                    │         │           │          │ │
+│ │ basestring):  #    │                    │         │           │          │ │
+│ │ type:              │                    │         │           │          │ │
+│ │ ignore[reportUnne… │                    │         │           │          │ │
+│ │ # runtime guard    │                    │         │           │          │ │
+│ │ for non-str/bytes  │                    │         │           │          │ │
+│ │ +    if not        │                    │         │           │          │ │
+│ │ isinstance(passwo… │                    │         │           │          │ │
+│ │ basestring):  #    │                    │         │           │          │ │
+│ │ runtime guard for  │                    │         │           │          │ │
+│ │ non-str/bytes      │                    │         │           │          │ │
+│ │          warnings… │                    │         │           │          │ │
+│ │              "Non… │                    │         │           │          │ │
+│ │ passwords will no  │                    │         │           │          │ │
+│ │ longer be          │                    │         │           │          │ │
+│ │ supported in       │                    │         │           │          │ │
+│ │ Requests "         │                    │         │           │          │ │
+│ │              f"3.… │                    │         │           │          │ │
+│ │ Please convert the │                    │         │           │          │ │
+│ │ object you've      │                    │         │           │          │ │
+│ │ passed in          │                    │         │           │          │ │
+│ │ ({type(password)!… │                    │         │           │          │ │
+│ │ to "               │                    │         │           │          │ │
+│ │ @@ -300,7 +300,7   │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ HTTPDigestAuth(Au… │                    │         │           │          │ │
+│ │              r.co… │                    │         │           │          │ │
+│ │              r.cl… │                    │         │           │          │ │
+│ │              prep  │                    │         │           │          │ │
+│ │ = r.request.copy() │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ cookie_jar =       │                    │         │           │          │ │
+│ │ cast("CookieJar",  │                    │         │           │          │ │
+│ │ prep._cookies)  #  │                    │         │           │          │ │
+│ │ type:              │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cookie_jar =       │                    │         │           │          │ │
+│ │ cast("CookieJar",  │                    │         │           │          │ │
+│ │ prep._cookies)     │                    │         │           │          │ │
+│ │              extr… │                    │         │           │          │ │
+│ │ r.request, r.raw)  │                    │         │           │          │ │
+│ │              prep… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/src/requests/co… │                    │         │           │          │ │
+│ │ b/src/requests/co… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 7c8e813..6f5b0dd   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/requests/co… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/requests/co… │                    │         │           │          │ │
+│ │ @@ -19,9 +19,7 @@  │                    │         │           │          │ │
+│ │ from typing import │                    │         │           │          │ │
+│ │ TYPE_CHECKING      │                    │         │           │          │ │
+│ │  # -------         │                    │         │           │          │ │
+│ │  # urllib3         │                    │         │           │          │ │
+│ │  # -------         │                    │         │           │          │ │
+│ │ -from urllib3      │                    │         │           │          │ │
+│ │ import (           │                    │         │           │          │ │
+│ │ -    __version__   │                    │         │           │          │ │
+│ │ as                 │                    │         │           │          │ │
+│ │ urllib3_version,   │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ -)                 │                    │         │           │          │ │
+│ │ +from urllib3      │                    │         │           │          │ │
+│ │ import __version__ │                    │         │           │          │ │
+│ │ as urllib3_version │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  # Detect which    │                    │         │           │          │ │
+│ │ major version of   │                    │         │           │          │ │
+│ │ urllib3 is being   │                    │         │           │          │ │
+│ │ used.              │                    │         │           │          │ │
+│ │  try:              │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/src/requests/co… │                    │         │           │          │ │
+│ │ b/src/requests/co… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 2e3fc21..24dd9a7   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/requests/co… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/requests/co… │                    │         │           │          │ │
+│ │ @@ -610,7 +610,7   │                    │         │           │          │ │
+│ │ @@ def             │                    │         │           │          │ │
+│ │ merge_cookies(     │                    │         │           │          │ │
+│ │      :param        │                    │         │           │          │ │
+│ │ cookies:           │                    │         │           │          │ │
+│ │ Dictionary or      │                    │         │           │          │ │
+│ │ CookieJar object   │                    │         │           │          │ │
+│ │ to be added.       │                    │         │           │          │ │
+│ │      :rtype:       │                    │         │           │          │ │
+│ │ CookieJar          │                    │         │           │          │ │
+│ │      """           │                    │         │           │          │ │
+│ │ -    if not        │                    │         │           │          │ │
+│ │ isinstance(cookie… │                    │         │           │          │ │
+│ │ cookielib.CookieJ… │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportUnne… │                    │         │           │          │ │
+│ │ # runtime guard    │                    │         │           │          │ │
+│ │ +    if not        │                    │         │           │          │ │
+│ │ isinstance(cookie… │                    │         │           │          │ │
+│ │ cookielib.CookieJ… │                    │         │           │          │ │
+│ │ # runtime guard    │                    │         │           │          │ │
+│ │          raise     │                    │         │           │          │ │
+│ │ ValueError("You    │                    │         │           │          │ │
+│ │ can only merge     │                    │         │           │          │ │
+│ │ into CookieJar")   │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      if            │                    │         │           │          │ │
+│ │ isinstance(cookie… │                    │         │           │          │ │
+│ │ dict):             │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/src/requests/he… │                    │         │           │          │ │
+│ │ b/src/requests/he… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ f1a62c3..f0fced2   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/requests/he… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/requests/he… │                    │         │           │          │ │
+│ │ @@ -78,7 +78,7 @@  │                    │         │           │          │ │
+│ │ def info() ->      │                    │         │           │          │ │
+│ │ dict[str, Any]:    │                    │         │           │          │ │
+│ │          }         │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      implementati… │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ _implementation()  │                    │         │           │          │ │
+│ │ -    urllib3_info  │                    │         │           │          │ │
+│ │ = {"version":      │                    │         │           │          │ │
+│ │ urllib3.__version… │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ +    urllib3_info  │                    │         │           │          │ │
+│ │ = {"version":      │                    │         │           │          │ │
+│ │ urllib3.__version… │                    │         │           │          │ │
+│ │      charset_norm… │                    │         │           │          │ │
+│ │ = {"version":      │                    │         │           │          │ │
+│ │ None}              │                    │         │           │          │ │
+│ │      chardet_info: │                    │         │           │          │ │
+│ │ dict[str, str |    │                    │         │           │          │ │
+│ │ None] =            │                    │         │           │          │ │
+│ │ {"version": None}  │                    │         │           │          │ │
+│ │      if            │                    │         │           │          │ │
+│ │ charset_normalize… │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/src/requests/mo… │                    │         │           │          │ │
+│ │ b/src/requests/mo… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ c6ffb1f..c4cc028   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/requests/mo… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/requests/mo… │                    │         │           │          │ │
+│ │ @@ -12,7 +12,7 @@  │                    │         │           │          │ │
+│ │ import datetime    │                    │         │           │          │ │
+│ │  # Import encoding │                    │         │           │          │ │
+│ │ now, to avoid      │                    │         │           │          │ │
+│ │ implicit import    │                    │         │           │          │ │
+│ │ later.             │                    │         │           │          │ │
+│ │  # Implicit import │                    │         │           │          │ │
+│ │ within threads may │                    │         │           │          │ │
+│ │ cause LookupError  │                    │         │           │          │ │
+│ │ when standard      │                    │         │           │          │ │
+│ │ library is in a    │                    │         │           │          │ │
+│ │ ZIP,               │                    │         │           │          │ │
+│ │  # such as in      │                    │         │           │          │ │
+│ │ Embedded Python.   │                    │         │           │          │ │
+│ │ See                │                    │         │           │          │ │
+│ │ https://github.co… │                    │         │           │          │ │
+│ │ -import            │                    │         │           │          │ │
+│ │ encodings.idna  #  │                    │         │           │          │ │
+│ │ noqa: F401  #      │                    │         │           │          │ │
+│ │ type:              │                    │         │           │          │ │
+│ │ ignore[reportUnus… │                    │         │           │          │ │
+│ │ +import            │                    │         │           │          │ │
+│ │ encodings.idna  #  │                    │         │           │          │ │
+│ │ noqa: F401         │                    │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ collections.abc    │                    │         │           │          │ │
+│ │ import Callable,   │                    │         │           │          │ │
+│ │ Generator,         │                    │         │           │          │ │
+│ │ Iterable,          │                    │         │           │          │ │
+│ │ Iterator, Mapping  │                    │         │           │          │ │
+│ │  from io import    │                    │         │           │          │ │
+│ │ UnsupportedOperat… │                    │         │           │          │ │
+│ │  from typing       │                    │         │           │          │ │
+│ │ import (           │                    │         │           │          │ │
+│ │ @@ -50,7 +50,7 @@  │                    │         │           │          │ │
+│ │ from .compat       │                    │         │           │          │ │
+│ │ import (           │                    │         │           │          │ │
+│ │  )                 │                    │         │           │          │ │
+│ │  from .compat      │                    │         │           │          │ │
+│ │ import json as     │                    │         │           │          │ │
+│ │ complexjson        │                    │         │           │          │ │
+│ │  from .cookies     │                    │         │           │          │ │
+│ │ import (           │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ _copy_cookie_jar,  │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _copy_cookie_jar,  │                    │         │           │          │ │
+│ │      cookiejar_fr… │                    │         │           │          │ │
+│ │      get_cookie_h… │                    │         │           │          │ │
+│ │  )                 │                    │         │           │          │ │
+│ │ @@ -236,7 +236,7   │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ RequestEncodingMi… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │              if    │                    │         │           │          │ │
+│ │ isinstance(fp,     │                    │         │           │          │ │
+│ │ (str, bytes,       │                    │         │           │          │ │
+│ │ bytearray)):       │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ = fp               │                    │         │           │          │ │
+│ │ -            elif  │                    │         │           │          │ │
+│ │ isinstance(fp,     │                    │         │           │          │ │
+│ │ _SupportsRead):  # │                    │         │           │          │ │
+│ │ type:              │                    │         │           │          │ │
+│ │ ignore[reportUnne… │                    │         │           │          │ │
+│ │ # defensive check  │                    │         │           │          │ │
+│ │ for untyped        │                    │         │           │          │ │
+│ │ callers            │                    │         │           │          │ │
+│ │ +            elif  │                    │         │           │          │ │
+│ │ isinstance(fp,     │                    │         │           │          │ │
+│ │ _SupportsRead):  # │                    │         │           │          │ │
+│ │ defensive check    │                    │         │           │          │ │
+│ │ for untyped        │                    │         │           │          │ │
+│ │ callers            │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ = fp.read()        │                    │         │           │          │ │
+│ │              elif  │                    │         │           │          │ │
+│ │ fp is None:  #     │                    │         │           │          │ │
+│ │ defensive check    │                    │         │           │          │ │
+│ │ for untyped        │                    │         │           │          │ │
+│ │ callers            │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ @@ -266,7 +266,9   │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ RequestHooksMixin: │                    │         │           │          │ │
+│ │          if        │                    │         │           │          │ │
+│ │ isinstance(hook,   │                    │         │           │          │ │
+│ │ Callable):         │                    │         │           │          │ │
+│ │              self… │                    │         │           │          │ │
+│ │          elif      │                    │         │           │          │ │
+│ │ hasattr(hook,      │                    │         │           │          │ │
+│ │ "__iter__"):       │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self.hooks[event]… │                    │         │           │          │ │
+│ │ for h in hook if   │                    │         │           │          │ │
+│ │ isinstance(h,      │                    │         │           │          │ │
+│ │ Callable))  #      │                    │         │           │          │ │
+│ │ type:              │                    │         │           │          │ │
+│ │ ignore[reportUnne… │                    │         │           │          │ │
+│ │ # defensive        │                    │         │           │          │ │
+│ │ runtime filter     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.hooks[event]… │                    │         │           │          │ │
+│ │ +                h │                    │         │           │          │ │
+│ │ for h in hook if   │                    │         │           │          │ │
+│ │ isinstance(h,      │                    │         │           │          │ │
+│ │ Callable)          │                    │         │           │          │ │
+│ │ +            )  #  │                    │         │           │          │ │
+│ │ defensive runtime  │                    │         │           │          │ │
+│ │ filter             │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      def           │                    │         │           │          │ │
+│ │ deregister_hook(s… │                    │         │           │          │ │
+│ │ event: str, hook:  │                    │         │           │          │ │
+│ │ _t.HookType) ->    │                    │         │           │          │ │
+│ │ bool:              │                    │         │           │          │ │
+│ │          """Dereg… │                    │         │           │          │ │
+│ │ a previously       │                    │         │           │          │ │
+│ │ registered hook.   │                    │         │           │          │ │
+│ │ @@ -956,7 +958,9   │                    │         │           │          │ │
+│ │ @@ class Response: │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │          if        │                    │         │           │          │ │
+│ │ self._content_con… │                    │         │           │          │ │
+│ │ and                │                    │         │           │          │ │
+│ │ isinstance(self._… │                    │         │           │          │ │
+│ │ bool):             │                    │         │           │          │ │
+│ │              raise │                    │         │           │          │ │
+│ │ StreamConsumedErr… │                    │         │           │          │ │
+│ │ -        elif      │                    │         │           │          │ │
+│ │ chunk_size is not  │                    │         │           │          │ │
+│ │ None and not       │                    │         │           │          │ │
+│ │ isinstance(chunk_… │                    │         │           │          │ │
+│ │ int):  # type:     │                    │         │           │          │ │
+│ │ ignore[reportUnne… │                    │         │           │          │ │
+│ │ # runtime guard    │                    │         │           │          │ │
+│ │ for untyped        │                    │         │           │          │ │
+│ │ callers            │                    │         │           │          │ │
+│ │ +        elif      │                    │         │           │          │ │
+│ │ chunk_size is not  │                    │         │           │          │ │
+│ │ None and not       │                    │         │           │          │ │
+│ │ isinstance(        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ chunk_size, int    │                    │         │           │          │ │
+│ │ +        ):  #     │                    │         │           │          │ │
+│ │ runtime guard for  │                    │         │           │          │ │
+│ │ untyped callers    │                    │         │           │          │ │
+│ │              raise │                    │         │           │          │ │
+│ │ TypeError(         │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ must be an int, it │                    │         │           │          │ │
+│ │ is instead a       │                    │         │           │          │ │
+│ │ {type(chunk_size)… │                    │         │           │          │ │
+│ │              )     │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/src/requests/se… │                    │         │           │          │ │
+│ │ b/src/requests/se… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ c2ab373..d11355b   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/requests/se… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/requests/se… │                    │         │           │          │ │
+│ │ @@ -19,7 +19,7 @@  │                    │         │           │          │ │
+│ │ from typing import │                    │         │           │          │ │
+│ │ TYPE_CHECKING,     │                    │         │           │          │ │
+│ │ Any, cast          │                    │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ ._internal_utils   │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ to_native_string   │                    │         │           │          │ │
+│ │  from ._types      │                    │         │           │          │ │
+│ │ import is_prepared │                    │         │           │          │ │
+│ │ as _is_prepared    │                    │         │           │          │ │
+│ │  from .adapters    │                    │         │           │          │ │
+│ │ import HTTPAdapter │                    │         │           │          │ │
+│ │ -from .auth import │                    │         │           │          │ │
+│ │ _basic_auth_str  # │                    │         │           │          │ │
+│ │ type:              │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ +from .auth import │                    │         │           │          │ │
+│ │ _basic_auth_str    │                    │         │           │          │ │
+│ │  from .compat      │                    │         │           │          │ │
+│ │ import cookielib,  │                    │         │           │          │ │
+│ │ urljoin, urlparse  │                    │         │           │          │ │
+│ │  from .cookies     │                    │         │           │          │ │
+│ │ import (           │                    │         │           │          │ │
+│ │      RequestsCook… │                    │         │           │          │ │
+│ │ @@ -38,7 +38,7 @@  │                    │         │           │          │ │
+│ │ from .hooks import │                    │         │           │          │ │
+│ │ default_hooks,     │                    │         │           │          │ │
+│ │ dispatch_hook      │                    │         │           │          │ │
+│ │  # formerly        │                    │         │           │          │ │
+│ │ defined here,      │                    │         │           │          │ │
+│ │ reexposed here for │                    │         │           │          │ │
+│ │ backward           │                    │         │           │          │ │
+│ │ compatibility      │                    │         │           │          │ │
+│ │  from .models      │                    │         │           │          │ │
+│ │ import (  # noqa:  │                    │         │           │          │ │
+│ │ F401               │                    │         │           │          │ │
+│ │      DEFAULT_REDI… │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ REDIRECT_STATI,  # │                    │         │           │          │ │
+│ │ type:              │                    │         │           │          │ │
+│ │ ignore[reportUnus… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ REDIRECT_STATI,    │                    │         │           │          │ │
+│ │      PreparedRequ… │                    │         │           │          │ │
+│ │      Request,      │                    │         │           │          │ │
+│ │      Response,     │                    │         │           │          │ │
+│ │ @@ -54,7 +54,7 @@  │                    │         │           │          │ │
+│ │ from .utils import │                    │         │           │          │ │
+│ │ (  # noqa: F401    │                    │         │           │          │ │
+│ │      requote_uri,  │                    │         │           │          │ │
+│ │      resolve_prox… │                    │         │           │          │ │
+│ │      rewind_body,  │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ should_bypass_pro… │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportUnus… │                    │         │           │          │ │
+│ │ # re-export for    │                    │         │           │          │ │
+│ │ external consumers │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ should_bypass_pro… │                    │         │           │          │ │
+│ │ # re-export for    │                    │         │           │          │ │
+│ │ external consumers │                    │         │           │          │ │
+│ │      to_key_val_l… │                    │         │           │          │ │
+│ │  )                 │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ @@ -263,7 +263,7   │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ SessionRedirectMi… │                    │         │           │          │ │
+│ │              #     │                    │         │           │          │ │
+│ │ Extract any        │                    │         │           │          │ │
+│ │ cookies sent on    │                    │         │           │          │ │
+│ │ the response to    │                    │         │           │          │ │
+│ │ the cookiejar      │                    │         │           │          │ │
+│ │              # in  │                    │         │           │          │ │
+│ │ the new request.   │                    │         │           │          │ │
+│ │ Because we've      │                    │         │           │          │ │
+│ │ mutated our copied │                    │         │           │          │ │
+│ │ prepared           │                    │         │           │          │ │
+│ │              #     │                    │         │           │          │ │
+│ │ request, use the   │                    │         │           │          │ │
+│ │ old one that we    │                    │         │           │          │ │
+│ │ haven't yet        │                    │         │           │          │ │
+│ │ touched.           │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ cookie_jar =       │                    │         │           │          │ │
+│ │ cast("CookieJar",  │                    │         │           │          │ │
+│ │ prepared_request.… │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cookie_jar =       │                    │         │           │          │ │
+│ │ cast("CookieJar",  │                    │         │           │          │ │
+│ │ prepared_request.… │                    │         │           │          │ │
+│ │              extr… │                    │         │           │          │ │
+│ │ req, resp.raw)     │                    │         │           │          │ │
+│ │              merg… │                    │         │           │          │ │
+│ │ self.cookies)      │                    │         │           │          │ │
+│ │              prep… │                    │         │           │          │ │
+│ │ @@ -275,7 +275,7   │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ SessionRedirectMi… │                    │         │           │          │ │
+│ │              # A   │                    │         │           │          │ │
+│ │ failed tell() sets │                    │         │           │          │ │
+│ │ `_body_position`   │                    │         │           │          │ │
+│ │ to `object()`.     │                    │         │           │          │ │
+│ │ This non-None      │                    │         │           │          │ │
+│ │              #     │                    │         │           │          │ │
+│ │ value ensures      │                    │         │           │          │ │
+│ │ `rewindable` will  │                    │         │           │          │ │
+│ │ be True, allowing  │                    │         │           │          │ │
+│ │ us to raise an     │                    │         │           │          │ │
+│ │              #     │                    │         │           │          │ │
+│ │ UnrewindableBodyE… │                    │         │           │          │ │
+│ │ instead of hanging │                    │         │           │          │ │
+│ │ the connection.    │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ rewindable =       │                    │         │           │          │ │
+│ │ prepared_request.… │                    │         │           │          │ │
+│ │ is not None and (  │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ rewindable =       │                    │         │           │          │ │
+│ │ prepared_request.… │                    │         │           │          │ │
+│ │ is not None and (  │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ in headers or      │                    │         │           │          │ │
+│ │ "Transfer-Encodin… │                    │         │           │          │ │
+│ │ in headers         │                    │         │           │          │ │
+│ │              )     │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/src/requests/ut… │                    │         │           │          │ │
+│ │ b/src/requests/ut… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 120336d..fff6edf   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/requests/ut… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/requests/ut… │                    │         │           │          │ │
+│ │ @@ -37,10 +37,10   │                    │         │           │          │ │
+│ │ @@ from            │                    │         │           │          │ │
+│ │ .__version__       │                    │         │           │          │ │
+│ │ import __version__ │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  #                 │                    │         │           │          │ │
+│ │ to_native_string   │                    │         │           │          │ │
+│ │ is unused here,    │                    │         │           │          │ │
+│ │ but imported here  │                    │         │           │          │ │
+│ │ for backwards      │                    │         │           │          │ │
+│ │ compatibility      │                    │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ ._internal_utils   │                    │         │           │          │ │
+│ │ import (  # noqa:  │                    │         │           │          │ │
+│ │ F401               │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ _HEADER_VALIDATOR… │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ _HEADER_VALIDATOR… │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ HEADER_VALIDATORS, │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportUnus… │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ to_native_string,  │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportUnus… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _HEADER_VALIDATOR… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _HEADER_VALIDATOR… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ HEADER_VALIDATORS, │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ to_native_string,  │                    │         │           │          │ │
+│ │  )                 │                    │         │           │          │ │
+│ │  from ._types      │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ SupportsItems as   │                    │         │           │          │ │
+│ │ _SupportsItems     │                    │         │           │          │ │
+│ │  from .compat      │                    │         │           │          │ │
+│ │ import (           │                    │         │           │          │ │
+│ │ @@ -1102,7 +1102,7 │                    │         │           │          │ │
+│ │ @@ def             │                    │         │           │          │ │
+│ │ _validate_header_… │                    │         │           │          │ │
+│ │  ) -> None:        │                    │         │           │          │ │
+│ │      if            │                    │         │           │          │ │
+│ │ isinstance(header… │                    │         │           │          │ │
+│ │ str):              │                    │         │           │          │ │
+│ │          validator │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ _HEADER_VALIDATOR… │                    │         │           │          │ │
+│ │ -    elif          │                    │         │           │          │ │
+│ │ isinstance(header… │                    │         │           │          │ │
+│ │ bytes):  # type:   │                    │         │           │          │ │
+│ │ ignore[reportUnne… │                    │         │           │          │ │
+│ │ +    elif          │                    │         │           │          │ │
+│ │ isinstance(header… │                    │         │           │          │ │
+│ │ bytes):            │                    │         │           │          │ │
+│ │          # runtime │                    │         │           │          │ │
+│ │ guard for          │                    │         │           │          │ │
+│ │ non-str/bytes      │                    │         │           │          │ │
+│ │ input              │                    │         │           │          │ │
+│ │          validator │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ _HEADER_VALIDATOR… │                    │         │           │          │ │
+│ │      else:         │                    │         │           │          │ │
+│ │ @@ -1142,11        │                    │         │           │          │ │
+│ │ +1142,11 @@ def    │                    │         │           │          │ │
+│ │ rewind_body(prepa… │                    │         │           │          │ │
+│ │ PreparedRequest)   │                    │         │           │          │ │
+│ │ -> None:           │                    │         │           │          │ │
+│ │      """           │                    │         │           │          │ │
+│ │      body_seek =   │                    │         │           │          │ │
+│ │ getattr(prepared_… │                    │         │           │          │ │
+│ │ "seek", None)      │                    │         │           │          │ │
+│ │      if body_seek  │                    │         │           │          │ │
+│ │ is not None and    │                    │         │           │          │ │
+│ │ isinstance(        │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ prepared_request.… │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ prepared_request.… │                    │         │           │          │ │
+│ │          integer_… │                    │         │           │          │ │
+│ │      ):            │                    │         │           │          │ │
+│ │          try:      │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ body_seek(prepare… │                    │         │           │          │ │
+│ │ # type:            │                    │         │           │          │ │
+│ │ ignore[reportPriv… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ body_seek(prepare… │                    │         │           │          │ │
+│ │          except    │                    │         │           │          │ │
+│ │ OSError:           │                    │         │           │          │ │
+│ │              raise │                    │         │           │          │ │
+│ │ UnrewindableBodyE… │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ error occurred     │                    │         │           │          │ │
+│ │ when rewinding     │                    │         │           │          │ │
+│ │ request body for   │                    │         │           │          │ │
+│ │ redirect."         │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ ```                │                    │         │           │          │ │
+│ ├────────────────────┼────────────────────┼─────────┼───────────┼──────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │   -0.50 │     -0.45 │ block    │ │
+│ │ You are the code   │ <think>            │         │           │          │ │
+│ │ review gate for a  │ Okay, let's see.   │         │           │          │ │
+│ │ production         │ The user has made  │         │           │          │ │
+│ │ repository.        │ a change in the    │         │           │          │ │
+│ │ Approval merges    │ tenacity           │         │           │          │ │
+│ │ and deploys the    │ repository, and I  │         │           │          │ │
+│ │ change without     │ need to review it. │         │           │          │ │
+│ │ further human      │ The files changed  │         │           │          │ │
+│ │ review.            │ are the            │         │           │          │ │
+│ │   approve  - you   │ releasenotes,      │         │           │          │ │
+│ │ are confident the  │ wait.py, and       │         │           │          │ │
+│ │ change is correct  │ test_tenacity.py.  │         │           │          │ │
+│ │ and safe to ship.  │ The main change    │         │           │          │ │
+│ │   block    - you   │ seems to be        │         │           │          │ │
+│ │ found a concrete   │ deprecating the    │         │           │          │ │
+│ │ defect in the      │ 'initial'          │         │           │          │ │
+│ │ change.            │ parameter in favor │         │           │          │ │
+│ │   escalate - you   │ of 'multiplier' in │         │           │          │ │
+│ │ cannot establish   │ the                │         │           │          │ │
+│ │ safety from the    │ wait_exponential_… │         │           │          │ │
+│ │ supplied evidence. │ function.          │         │           │          │ │
+│ │ Approving a        │                    │         │           │          │ │
+│ │ defective change   │ First, I'll check  │         │           │          │ │
+│ │ is the worst       │ the diff. In       │         │           │          │ │
+│ │ outcome.           │ wait.py, the       │         │           │          │ │
+│ │ Your final answer  │ __init__ method of │         │           │          │ │
+│ │ must be exactly    │ wait_exponential_… │         │           │          │ │
+│ │ one JSON object:   │ now has a          │         │           │          │ │
+│ │ {"decision":       │ 'multiplier'       │         │           │          │ │
+│ │ "approve|block|es… │ parameter. The     │         │           │          │ │
+│ │ "comments": []}    │ code checks if     │         │           │          │ │
+│ │ For block, include │ both 'initial' and │         │           │          │ │
+│ │ exactly one        │ 'multiplier' are   │         │           │          │ │
+│ │ comment with file, │ set, raising a     │         │           │          │ │
+│ │ line_start,        │ ValueError if they │         │           │          │ │
+│ │ line_end and body; │ are. If 'initial'  │         │           │          │ │
+│ │ limit body to 40   │ is provided, a     │         │           │          │ │
+│ │ words explaining   │ DeprecationWarning │         │           │          │ │
+│ │ the defect. For    │ is issued, and     │         │           │          │ │
+│ │ approve or         │ 'multiplier' is    │         │           │          │ │
+│ │ escalate, use an   │ set to 'initial'.  │         │           │          │ │
+│ │ empty comments     │ The calculation in │         │           │          │ │
+│ │ array. Do not      │ __call__ uses      │         │           │          │ │
+│ │ include proposed   │ 'multiplier'       │         │           │          │ │
+│ │ tests or test      │ instead of         │         │           │          │ │
+│ │ source.            │ 'initial'.         │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ USER               │ In the tests,      │         │           │          │ │
+│ │ Repository:        │ there's a new test │         │           │          │ │
+│ │ tenacity           │ for 'multiplier'   │         │           │          │ │
+│ │ Files changed:     │ and tests that     │         │           │          │ │
+│ │ releasenotes/note… │ check the          │         │           │          │ │
+│ │ tenacity/wait.py,  │ deprecation        │         │           │          │ │
+│ │ tests/test_tenaci… │ warning when       │         │           │          │ │
+│ │                    │ 'initial' is used. │         │           │          │ │
+│ │ Context around the │ The releasenotes   │         │           │          │ │
+│ │ change             │ file documents the │         │           │          │ │
+│ │ (mechanically      │ deprecation.       │         │           │          │ │
+│ │ extracted):        │                    │         │           │          │ │
+│ │ Changed            │ Now, I need to     │         │           │          │ │
+│ │ definitions:       │ check if this      │         │           │          │ │
+│ │ tenacity/wait.py:… │ change is correct. │         │           │          │ │
+│ │ tenacity/wait.py:… │ The deprecation    │         │           │          │ │
+│ │ tenacity/wait.py:… │ makes sense for    │         │           │          │ │
+│ │ tests/test_tenaci… │ consistency with   │         │           │          │ │
+│ │ tests/test_tenaci… │ wait_exponential.  │         │           │          │ │
+│ │ tests/test_tenaci… │ The error handling │         │           │          │ │
+│ │ tests/test_tenaci… │ when both          │         │           │          │ │
+│ │ tests/test_tenaci… │ parameters are     │         │           │          │ │
+│ │ tests/test_tenaci… │ provided is there, │         │           │          │ │
+│ │ tests/test_tenaci… │ which is good to   │         │           │          │ │
+│ │ tests/test_tenaci… │ prevent misuse.    │         │           │          │ │
+│ │ Recent history of  │ The warning is     │         │           │          │ │
+│ │ tenacity/wait.py:  │ properly issued,   │         │           │          │ │
+│ │   3233040          │ and the tests      │         │           │          │ │
+│ │ 2026-03-11 feat:   │ cover the new      │         │           │          │ │
+│ │ add `min` param    │ cases.             │         │           │          │ │
+│ │ and `timedelta`    │                    │         │           │          │ │
+│ │ support to         │ Wait, but in the   │         │           │          │ │
+│ │ `wait_exponential… │ __init__ method,   │         │           │          │ │
+│ │ (#628)             │ the code sets      │         │           │          │ │
+│ │   ae2d75e          │ 'multiplier =      │         │           │          │ │
+│ │ 2026-02-26         │ initial' when      │         │           │          │ │
+│ │ refactor: enable   │ 'initial' is not   │         │           │          │ │
+│ │ PGH, PYI ruff      │ 1. But what if     │         │           │          │ │
+│ │ rules and rename   │ 'initial' is 1?    │         │           │          │ │
+│ │ TCH to TC (#619)   │ Then, the warning  │         │           │          │ │
+│ │   ac9c21f          │ isn't issued. But  │         │           │          │ │
+│ │ 2026-02-26         │ the code checks if │         │           │          │ │
+│ │ refactor: replace  │ 'initial' is not   │         │           │          │ │
+│ │ deprecated typing  │ 1. So if someone   │         │           │          │ │
+│ │ constructs with    │ passes initial=1,  │         │           │          │ │
+│ │ modern syntax      │ it's allowed       │         │           │          │ │
+│ │ (#616)             │ without a warning? │         │           │          │ │
+│ │ Recent history of  │ That might be      │         │           │          │ │
+│ │ tests/test_tenaci… │ okay, but maybe    │         │           │          │ │
+│ │   3233040          │ the deprecation    │         │           │          │ │
+│ │ 2026-03-11 feat:   │ should apply even  │         │           │          │ │
+│ │ add `min` param    │ if initial is 1.   │         │           │          │ │
+│ │ and `timedelta`    │ However, the       │         │           │          │ │
+│ │ support to         │ user's note says   │         │           │          │ │
+│ │ `wait_exponential… │ that passing       │         │           │          │ │
+│ │ (#628)             │ 'initial' still    │         │           │          │ │
+│ │   7a73c93          │ works but emits a  │         │           │          │ │
+│ │ 2026-02-26         │ warning. So if     │         │           │          │ │
+│ │ refactor: enable   │ initial is 1,      │         │           │          │ │
+│ │ additional ruff    │ maybe the warning  │         │           │          │ │
+│ │ rule categories    │ is still emitted.  │         │           │          │ │
+│ │ (#620)             │ Wait, no. In the   │         │           │          │ │
+│ │   b8b4675          │ code, the warning  │         │           │          │ │
+│ │ 2026-02-26 chore:  │ is only emitted if │         │           │          │ │
+│ │ remove unused      │ initial !=1. Wait, │         │           │          │ │
+│ │ reports_deprecati… │ looking at the     │         │           │          │ │
+│ │ helper (#618)      │ code:              │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ Diff:              │ if initial !=1:    │         │           │          │ │
+│ │ ```diff            │     warnings.warn… │         │           │          │ │
+│ │ diff --git         │     multiplier =   │         │           │          │ │
+│ │ a/releasenotes/no… │ initial            │         │           │          │ │
+│ │ b/releasenotes/no… │                    │         │           │          │ │
+│ │ new file mode      │ So if initial is   │         │           │          │ │
+│ │ 100644             │ 1, no warning. But │         │           │          │ │
+│ │ index              │ the deprecation    │         │           │          │ │
+│ │ 0000000..e558854   │ note says that     │         │           │          │ │
+│ │ --- /dev/null      │ passing initial    │         │           │          │ │
+│ │ +++                │ still works but    │         │           │          │ │
+│ │ b/releasenotes/no… │ emits a warning.   │         │           │          │ │
+│ │ @@ -0,0 +1,10 @@   │ So this seems like │         │           │          │ │
+│ │ +---               │ a problem. Because │         │           │          │ │
+│ │ +deprecations:     │ if someone passes  │         │           │          │ │
+│ │ +  - |             │ initial=1, which   │         │           │          │ │
+│ │ +    The           │ is the default,    │         │           │          │ │
+│ │ ``initial``        │ they wouldn't get  │         │           │          │ │
+│ │ parameter of       │ a warning. But the │         │           │          │ │
+│ │ ``wait_exponentia… │ deprecation note   │         │           │          │ │
+│ │ is deprecated in   │ says that passing  │         │           │          │ │
+│ │ +    favor of      │ initial emits a    │         │           │          │ │
+│ │ ``multiplier``,    │ warning. So this   │         │           │          │ │
+│ │ for consistency    │ might be an error  │         │           │          │ │
+│ │ with               │ in the code.       │         │           │          │ │
+│ │ ``wait_exponentia… │                    │         │           │          │ │
+│ │ Passing            │ Wait, the          │         │           │          │ │
+│ │ +    ``initial``   │ deprecation note   │         │           │          │ │
+│ │ still works but    │ says that passing  │         │           │          │ │
+│ │ emits a            │ 'initial' still    │         │           │          │ │
+│ │ ``DeprecationWarn… │ works but emits a  │         │           │          │ │
+│ │ +features:         │ DeprecationWarnin… │         │           │          │ │
+│ │ +  - |             │ So regardless of   │         │           │          │ │
+│ │ +    Add           │ the value of       │         │           │          │ │
+│ │ ``multiplier``     │ initial, if the    │         │           │          │ │
+│ │ parameter to       │ user provides it,  │         │           │          │ │
+│ │ ``wait_exponentia… │ they should get a  │         │           │          │ │
+│ │ consistent         │ warning. But in    │         │           │          │ │
+│ │ +    with          │ the current code,  │         │           │          │ │
+│ │ ``wait_exponentia… │ the warning is     │         │           │          │ │
+│ │ diff --git         │ only issued if     │         │           │          │ │
+│ │ a/tenacity/wait.py │ initial !=1. So if │         │           │          │ │
+│ │ b/tenacity/wait.py │ someone passes     │         │           │          │ │
+│ │ index              │ initial=1, they    │         │           │          │ │
+│ │ 92fa1f4..c7a430e   │ don't get a        │         │           │          │ │
+│ │ 100644             │ warning. That's a  │         │           │          │ │
+│ │ ---                │ problem. The       │         │           │          │ │
+│ │ a/tenacity/wait.py │ deprecation should │         │           │          │ │
+│ │ +++                │ apply to any usage │         │           │          │ │
+│ │ b/tenacity/wait.py │ of the 'initial'   │         │           │          │ │
+│ │ @@ -17,6 +17,7 @@  │ parameter, not     │         │           │          │ │
+│ │  import abc        │ just when it's     │         │           │          │ │
+│ │  import random     │ different from 1.  │         │           │          │ │
+│ │  import typing     │                    │         │           │          │ │
+│ │ +import warnings   │ So this is a       │         │           │          │ │
+│ │                    │ defect. The code   │         │           │          │ │
+│ │  from tenacity     │ only issues the    │         │           │          │ │
+│ │ import _utils      │ warning when       │         │           │          │ │
+│ │                    │ initial is not 1.  │         │           │          │ │
+│ │ @@ -240,12 +241,12 │ But according to   │         │           │          │ │
+│ │ @@ class           │ the release note,  │         │           │          │ │
+│ │ wait_random_expon… │ passing initial    │         │           │          │ │
+│ │  class             │ should emit a      │         │           │          │ │
+│ │ wait_exponential_… │ warning            │         │           │          │ │
+│ │      """Wait       │ regardless.        │         │           │          │ │
+│ │ strategy that      │ Therefore, the     │         │           │          │ │
+│ │ applies            │ code is not        │         │           │          │ │
+│ │ exponential        │ correctly applying │         │           │          │ │
+│ │ backoff and        │ the deprecation    │         │           │          │ │
+│ │ jitter.            │ warning for all    │         │           │          │ │
+│ │                    │ cases where        │         │           │          │ │
+│ │ -    It allows for │ initial is         │         │           │          │ │
+│ │ a customized       │ provided.          │         │           │          │ │
+│ │ initial wait,      │                    │         │           │          │ │
+│ │ maximum wait,      │ So this is a       │         │           │          │ │
+│ │ jitter and         │ block, because the │         │           │          │ │
+│ │ minimum.           │ deprecation        │         │           │          │ │
+│ │ +    It allows for │ warning is not     │         │           │          │ │
+│ │ a customized       │ issued when        │         │           │          │ │
+│ │ multiplier,        │ initial is 1,      │         │           │          │ │
+│ │ maximum wait,      │ which is the       │         │           │          │ │
+│ │ jitter and         │ default. The user  │         │           │          │ │
+│ │ minimum.           │ might not be aware │         │           │          │ │
+│ │                    │ that initial is    │         │           │          │ │
+│ │      This          │ deprecated even if │         │           │          │ │
+│ │ implements the     │ they use the       │         │           │          │ │
+│ │ strategy described │ default value. So  │         │           │          │ │
+│ │ here:              │ the code has a     │         │           │          │ │
+│ │      https://clou… │ defect here.       │         │           │          │ │
+│ │                    │ </think>           │         │           │          │ │
+│ │ -    The wait time │                    │         │           │          │ │
+│ │ is max(min,        │ {"decision":       │         │           │          │ │
+│ │ min(initial * 2**n │ "block",           │         │           │          │ │
+│ │ +                  │ "comments":        │         │           │          │ │
+│ │ random.uniform(0,  │ [{"file":          │         │           │          │ │
+│ │ jitter), maximum)) │ "tenacity/wait.py… │         │           │          │ │
+│ │ +    The wait time │ "line_start": 257, │         │           │          │ │
+│ │ is max(min,        │ "line_end": 257,   │         │           │          │ │
+│ │ min(multiplier *   │ "body":            │         │           │          │ │
+│ │ 2**n +             │ "DeprecationWarni… │         │           │          │ │
+│ │ random.uniform(0,  │ not issued when    │         │           │          │ │
+│ │ jitter), maximum)) │ initial=1. The     │         │           │          │ │
+│ │      where n is    │ warning should     │         │           │          │ │
+│ │ the retry count.   │ apply to all       │         │           │          │ │
+│ │      """           │ 'initial'          │         │           │          │ │
+│ │                    │ parameter uses,    │         │           │          │ │
+│ │ @@ -256,8 +257,22  │ not just           │         │           │          │ │
+│ │ @@ class           │ non-default        │         │           │          │ │
+│ │ wait_exponential_… │ values."}]}        │         │           │          │ │
+│ │          exp_base: │                    │         │           │          │ │
+│ │ float = 2,         │                    │         │           │          │ │
+│ │          jitter:   │                    │         │           │          │ │
+│ │ _utils.time_unit_… │                    │         │           │          │ │
+│ │ = 1,               │                    │         │           │          │ │
+│ │          min:      │                    │         │           │          │ │
+│ │ _utils.time_unit_… │                    │         │           │          │ │
+│ │ = 0,               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ multiplier: float  │                    │         │           │          │ │
+│ │ = 1,               │                    │         │           │          │ │
+│ │      ) -> None:    │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self.initial =     │                    │         │           │          │ │
+│ │ initial            │                    │         │           │          │ │
+│ │ +        if        │                    │         │           │          │ │
+│ │ initial != 1 and   │                    │         │           │          │ │
+│ │ multiplier != 1:   │                    │         │           │          │ │
+│ │ +            raise │                    │         │           │          │ │
+│ │ ValueError(        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "Cannot specify    │                    │         │           │          │ │
+│ │ both 'initial' and │                    │         │           │          │ │
+│ │ 'multiplier' — use │                    │         │           │          │ │
+│ │ 'multiplier' only" │                    │         │           │          │ │
+│ │ +            )     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        if        │                    │         │           │          │ │
+│ │ initial != 1:      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ warnings.warn(     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "The 'initial'     │                    │         │           │          │ │
+│ │ parameter is       │                    │         │           │          │ │
+│ │ deprecated, use    │                    │         │           │          │ │
+│ │ 'multiplier'       │                    │         │           │          │ │
+│ │ instead",          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ DeprecationWarnin… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ stacklevel=2,      │                    │         │           │          │ │
+│ │ +            )     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ multiplier =       │                    │         │           │          │ │
+│ │ initial            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.multiplier =  │                    │         │           │          │ │
+│ │ multiplier         │                    │         │           │          │ │
+│ │          self.max  │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ _utils.to_seconds… │                    │         │           │          │ │
+│ │          self.exp… │                    │         │           │          │ │
+│ │ = exp_base         │                    │         │           │          │ │
+│ │          self.jit… │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ _utils.to_seconds… │                    │         │           │          │ │
+│ │ @@ -267,7 +282,7   │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ wait_exponential_… │                    │         │           │          │ │
+│ │          jitter =  │                    │         │           │          │ │
+│ │ random.uniform(0,  │                    │         │           │          │ │
+│ │ self.jitter)       │                    │         │           │          │ │
+│ │          try:      │                    │         │           │          │ │
+│ │              exp = │                    │         │           │          │ │
+│ │ self.exp_base **   │                    │         │           │          │ │
+│ │ (retry_state.atte… │                    │         │           │          │ │
+│ │ - 1)               │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ result =           │                    │         │           │          │ │
+│ │ self.initial * exp │                    │         │           │          │ │
+│ │ + jitter           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ result =           │                    │         │           │          │ │
+│ │ self.multiplier *  │                    │         │           │          │ │
+│ │ exp + jitter       │                    │         │           │          │ │
+│ │          except    │                    │         │           │          │ │
+│ │ OverflowError:     │                    │         │           │          │ │
+│ │              resu… │                    │         │           │          │ │
+│ │ = self.max         │                    │         │           │          │ │
+│ │          return    │                    │         │           │          │ │
+│ │ max(max(0,         │                    │         │           │          │ │
+│ │ self.min),         │                    │         │           │          │ │
+│ │ min(result,        │                    │         │           │          │ │
+│ │ self.max))         │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_tena… │                    │         │           │          │ │
+│ │ b/tests/test_tena… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 7061cd7..6a39739   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_tena… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_tena… │                    │         │           │          │ │
+│ │ @@ -609,7 +609,8   │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ TestWaitCondition… │                    │         │           │          │ │
+│ │              self… │                    │         │           │          │ │
+│ │ 0)), 60)           │                    │         │           │          │ │
+│ │              self… │                    │         │           │          │ │
+│ │ 0)), 60)           │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ -        fn =      │                    │         │           │          │ │
+│ │ tenacity.wait_exp… │                    │         │           │          │ │
+│ │ 5)                 │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ self.assertWarns(… │                    │         │           │          │ │
+│ │ +            fn =  │                    │         │           │          │ │
+│ │ tenacity.wait_exp… │                    │         │           │          │ │
+│ │ 5)                 │                    │         │           │          │ │
+│ │          for _ in  │                    │         │           │          │ │
+│ │ range(1000):       │                    │         │           │          │ │
+│ │              self… │                    │         │           │          │ │
+│ │ 0)), 5)            │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ @@ -640,6 +641,23  │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ TestWaitCondition… │                    │         │           │          │ │
+│ │              self… │                    │         │           │          │ │
+│ │ 0)), 16, 17)       │                    │         │           │          │ │
+│ │              self… │                    │         │           │          │ │
+│ │ 0)), 60)           │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_wait_exponen… │                    │         │           │          │ │
+│ │ -> None:           │                    │         │           │          │ │
+│ │ +        fn =      │                    │         │           │          │ │
+│ │ tenacity.wait_exp… │                    │         │           │          │ │
+│ │ max=60, jitter=0)  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.assertEqual(… │                    │         │           │          │ │
+│ │ 0)), 10)           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.assertEqual(… │                    │         │           │          │ │
+│ │ 0)), 20)           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.assertEqual(… │                    │         │           │          │ │
+│ │ 0)), 40)           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.assertEqual(… │                    │         │           │          │ │
+│ │ 0)), 60)           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_wait_exponen… │                    │         │           │          │ │
+│ │ -> None:           │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ self.assertWarns(… │                    │         │           │          │ │
+│ │ +            fn =  │                    │         │           │          │ │
+│ │ tenacity.wait_exp… │                    │         │           │          │ │
+│ │ max=60, jitter=0)  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.assertEqual(… │                    │         │           │          │ │
+│ │ 0)), 10)           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.assertEqual(… │                    │         │           │          │ │
+│ │ 0)), 20)           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_wait_exponen… │                    │         │           │          │ │
+│ │ -> None:           │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ self.assertRaises… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ tenacity.wait_exp… │                    │         │           │          │ │
+│ │ multiplier=10)     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      def           │                    │         │           │          │ │
+│ │ test_wait_retry_s… │                    │         │           │          │ │
+│ │ -> None:           │                    │         │           │          │ │
+│ │          class     │                    │         │           │          │ │
+│ │ ExtractCallState(… │                    │         │           │          │ │
+│ │              pass  │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ ```                │                    │         │           │          │ │
+│ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯
