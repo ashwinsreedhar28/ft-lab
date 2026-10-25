@@ -13,7 +13,7 @@ SFT=${SFT:-review_sft_4b$V}; GRPO=${GRPO:-review_grpo_4b$V}; BASE=${BASE:-Qwen/Q
 STAGES=runs/phase3$V.stages; touch $STAGES
 done_() { grep -qx "$1" $STAGES; }
 mark() { echo "$1" >> $STAGES; echo "=== stage done: $1 ($(date -u +%T))"; }
-EV="python -m ftlab.eval configs/$GRPO.yaml --max-model-len 16384"   # max tokens = config max_completion_length (500 no-think, 2048 thinking)
+EV="python -m ftlab.eval configs/$GRPO.yaml"   # max tokens / max model len / sampling all from the config + eval.py defaults (T 0.6, top_p .95, top_k 20, seed 0 in thinking mode)
 
 done_ setup || { bash pod/setup.sh; mark setup; }
 source /workspace/venv/bin/activate
