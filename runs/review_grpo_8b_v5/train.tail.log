@@ -1,400 +1,400 @@
-│ │   04fd6395         │ `main.py` seem to  │         │           │          │ │
-│ │ 2025-04-07 Update  │ be addressing      │         │           │          │ │
-│ │ V1 copy to         │ compatibility      │         │           │          │ │
-│ │ v1.10.21 (#11706)  │ issues with Python │         │           │          │ │
-│ │   0672da16         │ 3.14, such as      │         │           │          │ │
-│ │ 2024-08-22 Bump    │ handling unions    │         │           │          │ │
-│ │ `v1` version stub  │ and annotations    │         │           │          │ │
-│ │ to `v1.10.18`      │ correctly.         │         │           │          │ │
-│ │ (#10214)           │                    │         │           │          │ │
-│ │   055f900f         │ The possible       │         │           │          │ │
-│ │ 2024-06-12 V1 bump │ issues to check    │         │           │          │ │
-│ │ to v1.10.16        │ for are:           │         │           │          │ │
-│ │ (#9639)            │                    │         │           │          │ │
-│ │                    │ - Are the changes  │         │           │          │ │
-│ │ Diff:              │ in `generics.py`   │         │           │          │ │
-│ │ ```diff            │ correctly          │         │           │          │ │
-│ │ diff --git         │ replacing          │         │           │          │ │
-│ │ a/pydantic/v1/__i… │ `_UnionGenericAli… │         │           │          │ │
-│ │ b/pydantic/v1/__i… │ with a method that │         │           │          │ │
-│ │ index              │ works for Python   │         │           │          │ │
-│ │ 4807865c..6ad3f466 │ 3.14? Using        │         │           │          │ │
-│ │ 100644             │ `functools.reduce… │         │           │          │ │
-│ │ ---                │ might be a way to  │         │           │          │ │
-│ │ a/pydantic/v1/__i… │ handle unions      │         │           │          │ │
-│ │ +++                │ without relying on │         │           │          │ │
-│ │ b/pydantic/v1/__i… │ the deprecated     │         │           │          │ │
-│ │ @@ -1,7 +1,4 @@    │ `_UnionGenericAli… │         │           │          │ │
-│ │  # flake8: noqa    │ which was removed  │         │           │          │ │
-│ │ -import sys        │ in Python 3.10.    │         │           │          │ │
-│ │ -import warnings   │ However, I need to │         │           │          │ │
-│ │ -                  │ confirm if this    │         │           │          │ │
-│ │  from pydantic.v1  │ approach is        │         │           │          │ │
-│ │ import dataclasses │ correct and safe.  │         │           │          │ │
-│ │  from              │                    │         │           │          │ │
-│ │ pydantic.v1.annot… │ - In `main.py`,    │         │           │          │ │
-│ │ import             │ the use of         │         │           │          │ │
-│ │ create_model_from… │ `annotationlib`    │         │           │          │ │
-│ │ create_model_from… │ for Python 3.14    │         │           │          │ │
-│ │  from              │ might be           │         │           │          │ │
-│ │ pydantic.v1.class… │ necessary. But if  │         │           │          │ │
-│ │ import             │ the code is not    │         │           │          │ │
-│ │ root_validator,    │ handling all cases │         │           │          │ │
-│ │ validator          │ correctly, it      │         │           │          │ │
-│ │ @@ -132,11 +129,3  │ could lead to      │         │           │          │ │
-│ │ @@ __all__ = [     │ errors. However,   │         │           │          │ │
-│ │      'compiled',   │ the code seems to  │         │           │          │ │
-│ │      'VERSION',    │ check for the      │         │           │          │ │
-│ │  ]                 │ Python version     │         │           │          │ │
-│ │ -                  │ before using it,   │         │           │          │ │
-│ │ -                  │ so that's a        │         │           │          │ │
-│ │ -if                │ positive sign.     │         │           │          │ │
-│ │ sys.version_info   │                    │         │           │          │ │
-│ │ >= (3, 14):        │ - In `typing.py`,  │         │           │          │ │
-│ │ -                  │ the                │         │           │          │ │
-│ │ warnings.warn(     │ `evaluate_forward… │         │           │          │ │
-│ │ -        "Core     │ function for       │         │           │          │ │
-│ │ Pydantic V1        │ Python 3.14 uses   │         │           │          │ │
-│ │ functionality      │ `typing.evaluate_… │         │           │          │ │
-│ │ isn't compatible   │ which might be a   │         │           │          │ │
-│ │ with Python 3.14   │ new function       │         │           │          │ │
-│ │ or greater.",      │ introduced in a    │         │           │          │ │
-│ │ -                  │ newer Python       │         │           │          │ │
-│ │ UserWarning,       │ version. The code  │         │           │          │ │
-│ │ -                  │ correctly checks   │         │           │          │ │
-│ │ stacklevel=2,      │ the version before │         │           │          │ │
-│ │ -    )             │ using it, which is │         │           │          │ │
-│ │ diff --git         │ good.              │         │           │          │ │
-│ │ a/pydantic/v1/gen… │                    │         │           │          │ │
-│ │ b/pydantic/v1/gen… │ - The              │         │           │          │ │
-│ │ index              │ `pyproject.toml`   │         │           │          │ │
-│ │ 9a69f2b3..fa1dcec4 │ change removes the │         │           │          │ │
-│ │ 100644             │ warning about      │         │           │          │ │
-│ │ ---                │ Python 3.14        │         │           │          │ │
-│ │ a/pydantic/v1/gen… │ compatibility.     │         │           │          │ │
-│ │ +++                │ This might         │         │           │          │ │
-│ │ b/pydantic/v1/gen… │ indicate that the  │         │           │          │ │
-│ │ @@ -1,3 +1,5 @@    │ code is now        │         │           │          │ │
-│ │ +import functools  │ compatible with    │         │           │          │ │
-│ │ +import operator   │ 3.14, so the       │         │           │          │ │
-│ │  import sys        │ warning is no      │         │           │          │ │
-│ │  import types      │ longer needed.     │         │           │          │ │
-│ │  import typing     │ However, the       │         │           │          │ │
-│ │ @@ -29,8 +31,6 @@  │ warning was        │         │           │          │ │
-│ │ from               │ originally in      │         │           │          │ │
-│ │ pydantic.v1.types  │ `__init__.py`,     │         │           │          │ │
-│ │ import JsonWrapper │ which was removed. │         │           │          │ │
-│ │  from              │ The code in        │         │           │          │ │
-│ │ pydantic.v1.typing │ `main.py` now      │         │           │          │ │
-│ │ import             │ handles 3.14, so   │         │           │          │ │
-│ │ display_as_type,   │ the warning might  │         │           │          │ │
-│ │ get_all_type_hint… │ be redundant.      │         │           │          │ │
-│ │ get_args,          │                    │         │           │          │ │
-│ │ get_origin,        │ Potential risks:   │         │           │          │ │
-│ │ typing_base        │                    │         │           │          │ │
-│ │  from              │ - The replacement  │         │           │          │ │
-│ │ pydantic.v1.utils  │ of                 │         │           │          │ │
-│ │ import             │ `_UnionGenericAli… │         │           │          │ │
-│ │ all_identical,     │ with               │         │           │          │ │
-│ │ lenient_issubclass │ `functools.reduce… │         │           │          │ │
-│ │                    │ could have         │         │           │          │ │
-│ │ -if                │ unintended side    │         │           │          │ │
-│ │ sys.version_info   │ effects if the     │         │           │          │ │
-│ │ >= (3, 10):        │ original code      │         │           │          │ │
-│ │ -    from typing   │ relied on specific │         │           │          │ │
-│ │ import             │ behavior of        │         │           │          │ │
-│ │ _UnionGenericAlias │ `_UnionGenericAli… │         │           │          │ │
-│ │  if                │ However, since     │         │           │          │ │
-│ │ sys.version_info   │ `_UnionGenericAli… │         │           │          │ │
-│ │ >= (3, 8):         │ was deprecated,    │         │           │          │ │
-│ │      from typing   │ the change might   │         │           │          │ │
-│ │ import Literal     │ be necessary for   │         │           │          │ │
-│ │                    │ Python 3.14        │         │           │          │ │
-│ │ @@ -294,7 +294,7   │ compatibility.     │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      def __exit__( │                    │         │           │          │ │
+│ │ @@ -342,8 +352,13  │                    │         │           │          │ │
+│ │ @@ def echo(       │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ get_binary_stream… │                    │         │           │          │ │
+│ │ t.Literal["stdin", │                    │         │           │          │ │
+│ │ "stdout",          │                    │         │           │          │ │
+│ │ "stderr"]) ->      │                    │         │           │          │ │
+│ │ t.BinaryIO:        │                    │         │           │          │ │
+│ │      """Returns a  │                    │         │           │          │ │
+│ │ system stream for  │                    │         │           │          │ │
+│ │ byte processing.   │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +    ..            │                    │         │           │          │ │
+│ │ deprecated:: 8.5   │                    │         │           │          │ │
+│ │ +        Will be   │                    │         │           │          │ │
+│ │ removed in Click   │                    │         │           │          │ │
+│ │ 9.0.               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      :param name:  │                    │         │           │          │ │
+│ │ the name of the    │                    │         │           │          │ │
+│ │ stream to open.    │                    │         │           │          │ │
+│ │ Valid names are    │                    │         │           │          │ │
+│ │ ``'stdin'``,       │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ and ``'stderr'``   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    :meta         │                    │         │           │          │ │
+│ │ private:           │                    │         │           │          │ │
+│ │      """           │                    │         │           │          │ │
+│ │      opener =      │                    │         │           │          │ │
+│ │ binary_streams.ge… │                    │         │           │          │ │
+│ │      if opener is  │                    │         │           │          │ │
+│ │ None:              │                    │         │           │          │ │
+│ │ @@ -356,11 +371,16 │                    │         │           │          │ │
 │ │ @@ def             │                    │         │           │          │ │
-│ │ replace_types(typ… │ - The use of       │         │           │          │ │
-│ │ Any, type_map:     │ `annotationlib` in │         │           │          │ │
-│ │ Mapping[Any, Any]) │ `main.py` for      │         │           │          │ │
-│ │ -> Any:            │ Python 3.14 might  │         │           │          │ │
-│ │          # PEP-604 │ require that the   │         │           │          │ │
-│ │ syntax (Ex.: list  │ `annotationlib`    │         │           │          │ │
-│ │ | str) is          │ module is          │         │           │          │ │
-│ │ represented with a │ available. If      │         │           │          │ │
-│ │ types.UnionType    │ that's not the     │         │           │          │ │
-│ │ object that does   │ case, it could     │         │           │          │ │
-│ │ not have           │ cause an import    │         │           │          │ │
-│ │ __getitem__.       │ error. But the     │         │           │          │ │
-│ │          # We also │ code checks for    │         │           │          │ │
-│ │ cannot use         │ the Python version │         │           │          │ │
-│ │ isinstance() since │ before importing,  │         │           │          │ │
-│ │ we have to compare │ so that's handled. │         │           │          │ │
-│ │ types.             │                    │         │           │          │ │
-│ │          if        │ - The              │         │           │          │ │
-│ │ sys.version_info   │ `evaluate_forward… │         │           │          │ │
-│ │ >= (3, 10) and     │ function for       │         │           │          │ │
-│ │ origin_type is     │ Python 3.14 uses   │         │           │          │ │
-│ │ types.UnionType:   │ `typing.evaluate_… │         │           │          │ │
-│ │ # noqa: E721       │ which might be a   │         │           │          │ │
-│ │ -                  │ newer function. If │         │           │          │ │
-│ │ return             │ the code is being  │         │           │          │ │
-│ │ _UnionGenericAlia… │ run on a version   │         │           │          │ │
-│ │ resolved_type_arg… │ of Python that     │         │           │          │ │
-│ │ +                  │ doesn't have this  │         │           │          │ │
-│ │ return             │ function, it could │         │           │          │ │
-│ │ functools.reduce(… │ fail. But the code │         │           │          │ │
-│ │ resolved_type_arg… │ checks the         │         │           │          │ │
-│ │          return    │ version, so it's   │         │           │          │ │
-│ │ origin_type[resol… │ safe.              │         │           │          │ │
+│ │ get_text_stream(   │                    │         │           │          │ │
+│ │      encoding: str │                    │         │           │          │ │
+│ │ | None = None,     │                    │         │           │          │ │
+│ │      errors: str | │                    │         │           │          │ │
+│ │ None = "strict",   │                    │         │           │          │ │
+│ │  ) -> t.TextIO:    │                    │         │           │          │ │
+│ │ -    """Returns a  │                    │         │           │          │ │
+│ │ system stream for  │                    │         │           │          │ │
+│ │ text processing.   │                    │         │           │          │ │
+│ │ This usually       │                    │         │           │          │ │
+│ │ returns            │                    │         │           │          │ │
+│ │ -    a wrapped     │                    │         │           │          │ │
+│ │ stream around a    │                    │         │           │          │ │
+│ │ binary stream      │                    │         │           │          │ │
+│ │ returned from      │                    │         │           │          │ │
+│ │ +    """Returns a  │                    │         │           │          │ │
+│ │ system stream for  │                    │         │           │          │ │
+│ │ text processing.   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    ..            │                    │         │           │          │ │
+│ │ deprecated:: 8.5   │                    │         │           │          │ │
+│ │ +        Will be   │                    │         │           │          │ │
+│ │ removed in Click   │                    │         │           │          │ │
+│ │ 9.0.               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    This usually  │                    │         │           │          │ │
+│ │ returns a wrapped  │                    │         │           │          │ │
+│ │ stream around a    │                    │         │           │          │ │
+│ │ binary stream      │                    │         │           │          │ │
+│ │ returned from      │                    │         │           │          │ │
+│ │      :func:`get_b… │                    │         │           │          │ │
+│ │ but it also can    │                    │         │           │          │ │
+│ │ take shortcuts for │                    │         │           │          │ │
+│ │ already            │                    │         │           │          │ │
+│ │      correctly     │                    │         │           │          │ │
+│ │ configured         │                    │         │           │          │ │
+│ │ streams.           │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │      # We handle   │ Another thing to   │         │           │          │ │
-│ │ pydantic generic   │ note is the        │         │           │          │ │
-│ │ models separately  │ removal of the     │         │           │          │ │
-│ │ as they don't have │ warning in         │         │           │          │ │
-│ │ the same           │ `pyproject.toml`,  │         │           │          │ │
-│ │ diff --git         │ which might be a   │         │           │          │ │
-│ │ a/pydantic/v1/mai… │ regression if the  │         │           │          │ │
-│ │ b/pydantic/v1/mai… │ code is not        │         │           │          │ │
-│ │ index              │ actually           │         │           │          │ │
-│ │ 8000967e..d2dbc21e │ compatible with    │         │           │          │ │
-│ │ 100644             │ Python 3.14.       │         │           │          │ │
-│ │ ---                │ However, the       │         │           │          │ │
-│ │ a/pydantic/v1/mai… │ changes in         │         │           │          │ │
-│ │ +++                │ `main.py` and      │         │           │          │ │
-│ │ b/pydantic/v1/mai… │ `typing.py`        │         │           │          │ │
-│ │ @@ -1,3 +1,4 @@    │ suggest that they  │         │           │          │ │
-│ │ +import sys        │ are making efforts │         │           │          │ │
-│ │  import warnings   │ to support 3.14,   │         │           │          │ │
-│ │  from abc import   │ so the warning is  │         │           │          │ │
-│ │ ABCMeta            │ being removed as   │         │           │          │ │
-│ │  from copy import  │ the code is now    │         │           │          │ │
-│ │ deepcopy           │ compatible.        │         │           │          │ │
-│ │ @@ -175,6 +176,22  │                    │         │           │          │ │
-│ │ @@ class           │ Overall, the       │         │           │          │ │
-│ │ ModelMetaclass(AB… │ changes seem to be │         │           │          │ │
-│ │              retu… │ addressing Python  │         │           │          │ │
-│ │ isinstance(v,      │ 3.14               │         │           │          │ │
-│ │ untouched_types)   │ compatibility,     │         │           │          │ │
-│ │ or                 │ which is a new     │         │           │          │ │
-│ │ v.__class__.__nam… │ requirement. The   │         │           │          │ │
-│ │ ==                 │ code modifications │         │           │          │ │
-│ │ 'cython_function_… │ are targeted, with │         │           │          │ │
-│ │                    │ version checks to  │         │           │          │ │
-│ │          if        │ ensure             │         │           │          │ │
-│ │ (namespace.get('_… │ compatibility. The │         │           │          │ │
-│ │ namespace.get('__… │ only possible      │         │           │          │ │
-│ │ !=                 │ issue is if the    │         │           │          │ │
-│ │ ('pydantic.main',  │ new methods used   │         │           │          │ │
-│ │ 'BaseModel'):      │ (like              │         │           │          │ │
-│ │ +            if    │ `functools.reduce… │         │           │          │ │
-│ │ sys.version_info   │ for unions) are    │         │           │          │ │
-│ │ >= (3, 14):        │ not handling all   │         │           │          │ │
-│ │ +                  │ edge cases         │         │           │          │ │
-│ │ if                 │ correctly.         │         │           │          │ │
-│ │ '__annotations__'  │ However, without   │         │           │          │ │
-│ │ in namespace:      │ specific test      │         │           │          │ │
-│ │ +                  │ cases or further   │         │           │          │ │
-│ │ # `from __future__ │ information, it's  │         │           │          │ │
-│ │ import             │ hard to confirm.   │         │           │          │ │
-│ │ annotations` was   │ Since the user is  │         │           │          │ │
-│ │ used in the        │ asking for a code  │         │           │          │ │
-│ │ model's module     │ review gate        │         │           │          │ │
-│ │ +                  │ decision, and the  │         │           │          │ │
-│ │ raw_annotations =  │ changes are        │         │           │          │ │
-│ │ namespace['__anno… │ intended to        │         │           │          │ │
-│ │ +                  │ support Python     │         │           │          │ │
-│ │ else:              │ 3.14, which is a   │         │           │          │ │
-│ │ +                  │ valid and          │         │           │          │ │
-│ │ # See              │ necessary update,  │         │           │          │ │
-│ │ https://docs.pyth… │ the code seems to  │         │           │          │ │
-│ │ +                  │ be handled         │         │           │          │ │
-│ │ from annotationlib │ correctly.         │         │           │          │ │
-│ │ import Format,     │                    │         │           │          │ │
-│ │ call_annotate_fun… │ Therefore, the     │         │           │          │ │
-│ │ get_annotate_from… │ decision would be  │         │           │          │ │
-│ │ +                  │ to approve the     │         │           │          │ │
-│ │ +                  │ changes, as they   │         │           │          │ │
-│ │ annotate =         │ seem to be         │         │           │          │ │
-│ │ get_annotate_from… │ addressing         │         │           │          │ │
-│ │ +                  │ compatibility      │         │           │          │ │
-│ │ if annotate is not │ issues with new    │         │           │          │ │
-│ │ None:              │ Python versions    │         │           │          │ │
-│ │ +                  │ and are            │         │           │          │ │
-│ │ raw_annotations =  │ implemented with   │         │           │          │ │
-│ │ call_annotate_fun… │ proper version     │         │           │          │ │
-│ │ format=Format.FOR… │ checks.            │         │           │          │ │
-│ │ +                  │ </think>           │         │           │          │ │
-│ │ else:              │                    │         │           │          │ │
-│ │ +                  │ {"decision":       │         │           │          │ │
-│ │ raw_annotations =  │ "approve",         │         │           │          │ │
-│ │ {}                 │ "comments": []}    │         │           │          │ │
-│ │ +            else: │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ raw_annotations =  │                    │         │           │          │ │
-│ │ namespace.get('__… │                    │         │           │          │ │
-│ │ {})                │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │              anno… │                    │         │           │          │ │
-│ │ =                  │                    │         │           │          │ │
-│ │ resolve_annotatio… │                    │         │           │          │ │
-│ │ {}),               │                    │         │           │          │ │
-│ │ namespace.get('__… │                    │         │           │          │ │
-│ │ None))             │                    │         │           │          │ │
-│ │              #     │                    │         │           │          │ │
-│ │ annotation only    │                    │         │           │          │ │
-│ │ fields need to     │                    │         │           │          │ │
-│ │ come first in      │                    │         │           │          │ │
-│ │ fields             │                    │         │           │          │ │
-│ │              for   │                    │         │           │          │ │
-│ │ ann_name, ann_type │                    │         │           │          │ │
-│ │ in                 │                    │         │           │          │ │
-│ │ annotations.items… │                    │         │           │          │ │
-│ │ diff --git         │                    │         │           │          │ │
-│ │ a/pydantic/v1/typ… │                    │         │           │          │ │
-│ │ b/pydantic/v1/typ… │                    │         │           │          │ │
-│ │ index              │                    │         │           │          │ │
-│ │ 97411618..c5c59794 │                    │         │           │          │ │
-│ │ 100644             │                    │         │           │          │ │
-│ │ ---                │                    │         │           │          │ │
-│ │ a/pydantic/v1/typ… │                    │         │           │          │ │
-│ │ +++                │                    │         │           │          │ │
-│ │ b/pydantic/v1/typ… │                    │         │           │          │ │
-│ │ @@ -69,13 +69,26   │                    │         │           │          │ │
-│ │ @@ elif            │                    │         │           │          │ │
-│ │ sys.version_info < │                    │         │           │          │ │
-│ │ (3, 12, 4):        │                    │         │           │          │ │
-│ │          #         │                    │         │           │          │ │
-│ │ TypeError:         │                    │         │           │          │ │
-│ │ ForwardRef._evalu… │                    │         │           │          │ │
-│ │ missing 1 required │                    │         │           │          │ │
-│ │ keyword-only       │                    │         │           │          │ │
-│ │ argument:          │                    │         │           │          │ │
-│ │ 'recursive_guard'  │                    │         │           │          │ │
+│ │ +    :meta         │                    │         │           │          │ │
+│ │ private:           │                    │         │           │          │ │
+│ │      :param name:  │                    │         │           │          │ │
+│ │ the name of the    │                    │         │           │          │ │
+│ │ stream to open.    │                    │         │           │          │ │
+│ │ Valid names are    │                    │         │           │          │ │
+│ │ ``'stdin'``,       │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ and ``'stderr'``   │                    │         │           │          │ │
+│ │      :param        │                    │         │           │          │ │
+│ │ encoding:          │                    │         │           │          │ │
+│ │ overrides the      │                    │         │           │          │ │
+│ │ detected default   │                    │         │           │          │ │
+│ │ encoding.          │                    │         │           │          │ │
+│ │ @@ -410,13 +430,13 │                    │         │           │          │ │
+│ │ @@ def open_file(  │                    │         │           │          │ │
+│ │      """           │                    │         │           │          │ │
+│ │      if lazy:      │                    │         │           │          │ │
 │ │          return    │                    │         │           │          │ │
-│ │ cast(Any,          │                    │         │           │          │ │
-│ │ type_)._evaluate(… │                    │         │           │          │ │
-│ │ localns,           │                    │         │           │          │ │
-│ │ recursive_guard=s… │                    │         │           │          │ │
+│ │ t.cast(            │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ "t.IO[t.Any]",     │                    │         │           │          │ │
+│ │ LazyFile(filename, │                    │         │           │          │ │
+│ │ mode, encoding,    │                    │         │           │          │ │
+│ │ errors,            │                    │         │           │          │ │
+│ │ atomic=atomic)     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "t.IO[t.Any]",     │                    │         │           │          │ │
+│ │ _LazyFile(filenam… │                    │         │           │          │ │
+│ │ mode, encoding,    │                    │         │           │          │ │
+│ │ errors,            │                    │         │           │          │ │
+│ │ atomic=atomic)     │                    │         │           │          │ │
+│ │          )         │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ -else:             │                    │         │           │          │ │
-│ │ +elif              │                    │         │           │          │ │
-│ │ sys.version_info < │                    │         │           │          │ │
-│ │ (3, 14):           │                    │         │           │          │ │
+│ │      f,            │                    │         │           │          │ │
+│ │ should_close =     │                    │         │           │          │ │
+│ │ open_stream(filen… │                    │         │           │          │ │
+│ │ mode, encoding,    │                    │         │           │          │ │
+│ │ errors,            │                    │         │           │          │ │
+│ │ atomic=atomic)     │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │      def           │                    │         │           │          │ │
-│ │ evaluate_forwardr… │                    │         │           │          │ │
-│ │ ForwardRef,        │                    │         │           │          │ │
-│ │ globalns: Any,     │                    │         │           │          │ │
-│ │ localns: Any) ->   │                    │         │           │          │ │
-│ │ Any:               │                    │         │           │          │ │
-│ │          #         │                    │         │           │          │ │
-│ │ Pydantic 1.x will  │                    │         │           │          │ │
-│ │ not support PEP    │                    │         │           │          │ │
-│ │ 695 syntax, but    │                    │         │           │          │ │
-│ │ provide            │                    │         │           │          │ │
-│ │ `type_params` to   │                    │         │           │          │ │
-│ │ avoid              │                    │         │           │          │ │
-│ │          #         │                    │         │           │          │ │
-│ │ warnings:          │                    │         │           │          │ │
-│ │          return    │                    │         │           │          │ │
-│ │ cast(Any,          │                    │         │           │          │ │
-│ │ type_)._evaluate(… │                    │         │           │          │ │
-│ │ localns,           │                    │         │           │          │ │
-│ │ type_params=(),    │                    │         │           │          │ │
-│ │ recursive_guard=s… │                    │         │           │          │ │
+│ │      if not        │                    │         │           │          │ │
+│ │ should_close:      │                    │         │           │          │ │
+│ │ -        f =       │                    │         │           │          │ │
+│ │ t.cast("t.IO[t.An… │                    │         │           │          │ │
+│ │ KeepOpenFile(f))   │                    │         │           │          │ │
+│ │ +        f =       │                    │         │           │          │ │
+│ │ t.cast("t.IO[t.An… │                    │         │           │          │ │
+│ │ _KeepOpenFile(f))  │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ +else:             │                    │         │           │          │ │
+│ │      return f      │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ @@ -512,13 +532,15 │                    │         │           │          │ │
+│ │ @@ def             │                    │         │           │          │ │
+│ │ get_app_dir(app_n… │                    │         │           │          │ │
+│ │ str, roaming: bool │                    │         │           │          │ │
+│ │ = True,            │                    │         │           │          │ │
+│ │ force_posix: bool  │                    │         │           │          │ │
+│ │ = False)           │                    │         │           │          │ │
+│ │      )             │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ -class             │                    │         │           │          │ │
+│ │ PacifyFlushWrappe… │                    │         │           │          │ │
+│ │ +class             │                    │         │           │          │ │
+│ │ _PacifyFlushWrapp… │                    │         │           │          │ │
+│ │      """This       │                    │         │           │          │ │
+│ │ wrapper is used to │                    │         │           │          │ │
+│ │ catch and suppress │                    │         │           │          │ │
+│ │ BrokenPipeErrors   │                    │         │           │          │ │
+│ │ resulting          │                    │         │           │          │ │
+│ │      from          │                    │         │           │          │ │
+│ │ ``.flush()`` being │                    │         │           │          │ │
+│ │ called on broken   │                    │         │           │          │ │
+│ │ pipe during the    │                    │         │           │          │ │
+│ │ shutdown/final-GC  │                    │         │           │          │ │
+│ │      of the Python │                    │         │           │          │ │
+│ │ interpreter.       │                    │         │           │          │ │
+│ │ Notably            │                    │         │           │          │ │
+│ │ ``.flush()`` is    │                    │         │           │          │ │
+│ │ always called on   │                    │         │           │          │ │
+│ │      ``sys.stdout… │                    │         │           │          │ │
+│ │ and                │                    │         │           │          │ │
+│ │ ``sys.stderr``. So │                    │         │           │          │ │
+│ │ as to have minimal │                    │         │           │          │ │
+│ │ impact on any      │                    │         │           │          │ │
+│ │      other cleanup │                    │         │           │          │ │
+│ │ code, and the case │                    │         │           │          │ │
+│ │ where the          │                    │         │           │          │ │
+│ │ underlying file is │                    │         │           │          │ │
+│ │ not a broken       │                    │         │           │          │ │
+│ │      pipe, all     │                    │         │           │          │ │
+│ │ calls and          │                    │         │           │          │ │
+│ │ attributes are     │                    │         │           │          │ │
+│ │ proxied.           │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    def           │                    │         │           │          │ │
-│ │ evaluate_forwardr… │                    │         │           │          │ │
-│ │ ForwardRef,        │                    │         │           │          │ │
-│ │ globalns: Any,     │                    │         │           │          │ │
-│ │ localns: Any) ->   │                    │         │           │          │ │
-│ │ Any:               │                    │         │           │          │ │
-│ │ +        #         │                    │         │           │          │ │
-│ │ Pydantic 1.x will  │                    │         │           │          │ │
-│ │ not support PEP    │                    │         │           │          │ │
-│ │ 695 syntax, but    │                    │         │           │          │ │
-│ │ provide            │                    │         │           │          │ │
-│ │ `type_params` to   │                    │         │           │          │ │
-│ │ avoid              │                    │         │           │          │ │
-│ │ +        #         │                    │         │           │          │ │
-│ │ warnings:          │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ typing.evaluate_f… │                    │         │           │          │ │
+│ │ +    :meta         │                    │         │           │          │ │
+│ │ private:           │                    │         │           │          │ │
+│ │      """           │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      wrapped:      │                    │         │           │          │ │
+│ │ t.IO[t.Any]        │                    │         │           │          │ │
+│ │ @@ -644,3 +666,24  │                    │         │           │          │ │
+│ │ @@ def             │                    │         │           │          │ │
+│ │ _expand_args(      │                    │         │           │          │ │
+│ │              out.… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      return out    │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ type_,             │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ globals=globalns,  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ __getattr__(name:  │                    │         │           │          │ │
+│ │ str) -> object:    │                    │         │           │          │ │
+│ │ +    import        │                    │         │           │          │ │
+│ │ warnings           │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ locals=localns,    │                    │         │           │          │ │
+│ │ +    if name in {  │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ type_params=(),    │                    │         │           │          │ │
+│ │ "LazyFile",        │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ _recursive_guard=… │                    │         │           │          │ │
+│ │ "KeepOpenFile",    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "make_default_sho… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "PacifyFlushWrapp… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "safecall",        │                    │         │           │          │ │
+│ │ +    }:            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ warnings.warn(     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ f"'click.utils.{n… │                    │         │           │          │ │
+│ │ was never          │                    │         │           │          │ │
+│ │ intentionally      │                    │         │           │          │ │
+│ │ public and will    │                    │         │           │          │ │
+│ │ be"                │                    │         │           │          │ │
+│ │ +            "     │                    │         │           │          │ │
+│ │ renamed in Click   │                    │         │           │          │ │
+│ │ 9.0.",             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ DeprecationWarnin… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ stacklevel=2,      │                    │         │           │          │ │
 │ │ +        )         │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ globals()[f"_{nam… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │  if                │                    │         │           │          │ │
-│ │ sys.version_info < │                    │         │           │          │ │
-│ │ (3, 9):            │                    │         │           │          │ │
-│ │      # Ensure we   │                    │         │           │          │ │
-│ │ always get all the │                    │         │           │          │ │
-│ │ whole `Annotated`  │                    │         │           │          │ │
-│ │ hint, not just the │                    │         │           │          │ │
-│ │ annotated type.    │                    │         │           │          │ │
+│ │ +    raise         │                    │         │           │          │ │
+│ │ AttributeError(na… │                    │         │           │          │ │
 │ │ diff --git         │                    │         │           │          │ │
-│ │ a/pydantic/v1/uti… │                    │         │           │          │ │
-│ │ b/pydantic/v1/uti… │                    │         │           │          │ │
+│ │ a/tests/test_test… │                    │         │           │          │ │
+│ │ b/tests/test_test… │                    │         │           │          │ │
 │ │ index              │                    │         │           │          │ │
-│ │ 02543fd1..2094e84f │                    │         │           │          │ │
+│ │ a7508b9..6fae8cb   │                    │         │           │          │ │
 │ │ 100644             │                    │         │           │          │ │
 │ │ ---                │                    │         │           │          │ │
-│ │ a/pydantic/v1/uti… │                    │         │           │          │ │
+│ │ a/tests/test_test… │                    │         │           │          │ │
 │ │ +++                │                    │         │           │          │ │
-│ │ b/pydantic/v1/uti… │                    │         │           │          │ │
-│ │ @@ -710,6 +710,7   │                    │         │           │          │ │
-│ │ @@                 │                    │         │           │          │ │
-│ │ DUNDER_ATTRIBUTES  │                    │         │           │          │ │
-│ │ = {                │                    │         │           │          │ │
-│ │      '__qualname_… │                    │         │           │          │ │
-│ │      '__firstline… │                    │         │           │          │ │
-│ │      '__static_at… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ '__classdictcell_… │                    │         │           │          │ │
-│ │  }                 │                    │         │           │          │ │
+│ │ b/tests/test_test… │                    │         │           │          │ │
+│ │ @@ -10,13 +10,14   │                    │         │           │          │ │
+│ │ @@ import pytest   │                    │         │           │          │ │
+│ │  import click      │                    │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ click.exceptions   │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ ClickException     │                    │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ click.testing      │                    │         │           │          │ │
+│ │ import CliRunner   │                    │         │           │          │ │
+│ │ +from click.utils  │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ get_binary_stream  │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_runner():     │                    │         │           │          │ │
+│ │      @click.comma… │                    │         │           │          │ │
+│ │      def test():   │                    │         │           │          │ │
+│ │ -        i =       │                    │         │           │          │ │
+│ │ click.get_binary_… │                    │         │           │          │ │
+│ │ -        o =       │                    │         │           │          │ │
+│ │ click.get_binary_… │                    │         │           │          │ │
+│ │ +        i =       │                    │         │           │          │ │
+│ │ get_binary_stream… │                    │         │           │          │ │
+│ │ +        o =       │                    │         │           │          │ │
+│ │ get_binary_stream… │                    │         │           │          │ │
+│ │          while     │                    │         │           │          │ │
+│ │ True:              │                    │         │           │          │ │
+│ │              chunk │                    │         │           │          │ │
+│ │ = i.read(4096)     │                    │         │           │          │ │
+│ │              if    │                    │         │           │          │ │
+│ │ not chunk:         │                    │         │           │          │ │
+│ │ @@ -33,8 +34,8 @@  │                    │         │           │          │ │
+│ │ def test_runner(): │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_echo_stdin_s… │                    │         │           │          │ │
+│ │      @click.comma… │                    │         │           │          │ │
+│ │      def test():   │                    │         │           │          │ │
+│ │ -        i =       │                    │         │           │          │ │
+│ │ click.get_binary_… │                    │         │           │          │ │
+│ │ -        o =       │                    │         │           │          │ │
+│ │ click.get_binary_… │                    │         │           │          │ │
+│ │ +        i =       │                    │         │           │          │ │
+│ │ get_binary_stream… │                    │         │           │          │ │
+│ │ +        o =       │                    │         │           │          │ │
+│ │ get_binary_stream… │                    │         │           │          │ │
+│ │          while     │                    │         │           │          │ │
+│ │ True:              │                    │         │           │          │ │
+│ │              chunk │                    │         │           │          │ │
+│ │ = i.read(4096)     │                    │         │           │          │ │
+│ │              if    │                    │         │           │          │ │
+│ │ not chunk:         │                    │         │           │          │ │
+│ │ @@ -91,8 +92,8 @@  │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ test_echo_stdin_p… │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_runner_with_… │                    │         │           │          │ │
+│ │      @click.comma… │                    │         │           │          │ │
+│ │      def test():   │                    │         │           │          │ │
+│ │ -        i =       │                    │         │           │          │ │
+│ │ click.get_binary_… │                    │         │           │          │ │
+│ │ -        o =       │                    │         │           │          │ │
+│ │ click.get_binary_… │                    │         │           │          │ │
+│ │ +        i =       │                    │         │           │          │ │
+│ │ get_binary_stream… │                    │         │           │          │ │
+│ │ +        o =       │                    │         │           │          │ │
+│ │ get_binary_stream… │                    │         │           │          │ │
+│ │          while     │                    │         │           │          │ │
+│ │ True:              │                    │         │           │          │ │
+│ │              chunk │                    │         │           │          │ │
+│ │ = i.read(4096)     │                    │         │           │          │ │
+│ │              if    │                    │         │           │          │ │
+│ │ not chunk:         │                    │         │           │          │ │
 │ │ diff --git         │                    │         │           │          │ │
-│ │ a/pyproject.toml   │                    │         │           │          │ │
-│ │ b/pyproject.toml   │                    │         │           │          │ │
+│ │ a/tests/test_util… │                    │         │           │          │ │
+│ │ b/tests/test_util… │                    │         │           │          │ │
 │ │ index              │                    │         │           │          │ │
-│ │ 45e329e9..f37699d6 │                    │         │           │          │ │
+│ │ 26bfe45..0ba2cab   │                    │         │           │          │ │
 │ │ 100644             │                    │         │           │          │ │
 │ │ ---                │                    │         │           │          │ │
-│ │ a/pyproject.toml   │                    │         │           │          │ │
+│ │ a/tests/test_util… │                    │         │           │          │ │
 │ │ +++                │                    │         │           │          │ │
-│ │ b/pyproject.toml   │                    │         │           │          │ │
-│ │ @@ -173,7 +173,6   │                    │         │           │          │ │
-│ │ @@ xfail_strict =  │                    │         │           │          │ │
-│ │ true               │                    │         │           │          │ │
-│ │  filterwarnings =  │                    │         │           │          │ │
-│ │ [                  │                    │         │           │          │ │
-│ │      'error',      │                    │         │           │          │ │
-│ │      'ignore:path  │                    │         │           │          │ │
-│ │ is                 │                    │         │           │          │ │
-│ │ deprecated.*:Depr… │                    │         │           │          │ │
-│ │ -    "ignore:Core  │                    │         │           │          │ │
-│ │ Pydantic V1        │                    │         │           │          │ │
-│ │ functionality      │                    │         │           │          │ │
-│ │ isn't compatible   │                    │         │           │          │ │
-│ │ with Python 3.14   │                    │         │           │          │ │
-│ │ or                 │                    │         │           │          │ │
-│ │ greater:UserWarni… │                    │         │           │          │ │
-│ │  ]                 │                    │         │           │          │ │
-│ │  addopts = [       │                    │         │           │          │ │
-│ │      '--benchmark… │                    │         │           │          │ │
-│ │ 'min,mean,stddev,… │                    │         │           │          │ │
+│ │ b/tests/test_util… │                    │         │           │          │ │
+│ │ @@ -6,5 +6,5 @@    │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ test_iter_keepope… │                    │         │           │          │ │
+│ │      p =           │                    │         │           │          │ │
+│ │ tmpdir.mkdir("tes… │                    │         │           │          │ │
+│ │      p.write("\n"… │                    │         │           │          │ │
+│ │      with p.open() │                    │         │           │          │ │
+│ │ as f:              │                    │         │           │          │ │
+│ │ -        for       │                    │         │           │          │ │
+│ │ e_line, a_line in  │                    │         │           │          │ │
+│ │ zip(expected,      │                    │         │           │          │ │
+│ │ click.utils.KeepO… │                    │         │           │          │ │
+│ │ strict=False):     │                    │         │           │          │ │
+│ │ +        for       │                    │         │           │          │ │
+│ │ e_line, a_line in  │                    │         │           │          │ │
+│ │ zip(expected,      │                    │         │           │          │ │
+│ │ click.utils._Keep… │                    │         │           │          │ │
+│ │ strict=False):     │                    │         │           │          │ │
+│ │              asse… │                    │         │           │          │ │
+│ │ e_line ==          │                    │         │           │          │ │
+│ │ a_line.strip()     │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_util… │                    │         │           │          │ │
+│ │ b/tests/test_util… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ e3dd09b..8d0775a   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_util… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_util… │                    │         │           │          │ │
+│ │ @@ -6,6 +6,6 @@    │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ test_iter_lazyfil… │                    │         │           │          │ │
+│ │      p =           │                    │         │           │          │ │
+│ │ tmpdir.mkdir("tes… │                    │         │           │          │ │
+│ │      p.write("\n"… │                    │         │           │          │ │
+│ │      with p.open() │                    │         │           │          │ │
+│ │ as f:              │                    │         │           │          │ │
+│ │ -        with      │                    │         │           │          │ │
+│ │ click.utils.LazyF… │                    │         │           │          │ │
+│ │ as lf:             │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ click.utils._Lazy… │                    │         │           │          │ │
+│ │ as lf:             │                    │         │           │          │ │
+│ │              for   │                    │         │           │          │ │
+│ │ e_line, a_line in  │                    │         │           │          │ │
+│ │ zip(expected, lf,  │                    │         │           │          │ │
+│ │ strict=False):     │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ e_line ==          │                    │         │           │          │ │
+│ │ a_line.strip()     │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_util… │                    │         │           │          │ │
+│ │ b/tests/test_util… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ cb9886c..c2a1f8e   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_util… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_util… │                    │         │           │          │ │
+│ │ @@ -35,5 +35,5 @@  │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ test_make_default… │                    │         │           │          │ │
+│ │ max_length, alter, │                    │         │           │          │ │
+│ │ expect):           │                    │         │           │          │ │
+│ │      if alter:     │                    │         │           │          │ │
+│ │          value =   │                    │         │           │          │ │
+│ │ alter(value)       │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
+│ │ -    out =         │                    │         │           │          │ │
+│ │ click.utils.make_… │                    │         │           │          │ │
+│ │ max_length)        │                    │         │           │          │ │
+│ │ +    out =         │                    │         │           │          │ │
+│ │ click.utils._make… │                    │         │           │          │ │
+│ │ max_length)        │                    │         │           │          │ │
+│ │      assert out == │                    │         │           │          │ │
+│ │ expect             │                    │         │           │          │ │
 │ │ ```                │                    │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
