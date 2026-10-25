@@ -1,399 +1,399 @@
-│ │ You are the code   │ <think>            │         │           │          │ │
-│ │ review gate for a  │ Okay, let's look   │         │           │          │ │
-│ │ production         │ at this code       │         │           │          │ │
-│ │ repository.        │ change. The user   │         │           │          │ │
-│ │ Approval merges    │ has modified the   │         │           │          │ │
-│ │ and deploys the    │ _BaseUrl class in  │         │           │          │ │
-│ │ change without     │ pydantic/networks… │         │           │          │ │
-│ │ further human      │ to add checks for  │         │           │          │ │
-│ │ review.            │ the class type in  │         │           │          │ │
-│ │   approve  - you   │ the comparison     │         │           │          │ │
-│ │ are confident the  │ operators (__lt__, │         │           │          │ │
-│ │ change is correct  │ __gt__, etc.).     │         │           │          │ │
-│ │ and safe to ship.  │ Previously, these  │         │           │          │ │
-│ │   block    - you   │ methods would only │         │           │          │ │
-│ │ found a concrete   │ compare if the     │         │           │          │ │
-│ │ defect in the      │ classes were the   │         │           │          │ │
-│ │ change.            │ same, but now they │         │           │          │ │
-│ │   escalate - you   │ return             │         │           │          │ │
-│ │ cannot establish   │ NotImplemented if  │         │           │          │ │
-│ │ safety from the    │ the classes        │         │           │          │ │
-│ │ supplied evidence. │ differ. The tests  │         │           │          │ │
-│ │ Approving a        │ in                 │         │           │          │ │
-│ │ defective change   │ test_networks.py   │         │           │          │ │
-│ │ is the worst       │ have also been     │         │           │          │ │
-│ │ outcome.           │ updated to include │         │           │          │ │
-│ │ Your final answer  │ new test cases for │         │           │          │ │
-│ │ must be exactly    │ ordering with      │         │           │          │ │
-│ │ one JSON object:   │ different types    │         │           │          │ │
-│ │ {"decision":       │ and consistency in │         │           │          │ │
-│ │ "approve|block|es… │ sorting.           │         │           │          │ │
-│ │ "comments": []}    │                    │         │           │          │ │
-│ │ For block, include │ Hmm, the main      │         │           │          │ │
-│ │ exactly one        │ change here is     │         │           │          │ │
-│ │ comment with file, │ that the           │         │           │          │ │
-│ │ line_start,        │ comparison         │         │           │          │ │
-│ │ line_end and body; │ operators now      │         │           │          │ │
-│ │ limit body to 40   │ handle cases where │         │           │          │ │
-│ │ words explaining   │ the other object   │         │           │          │ │
-│ │ the defect. For    │ is not of the same │         │           │          │ │
-│ │ approve or         │ class by returning │         │           │          │ │
-│ │ escalate, use an   │ NotImplemented.    │         │           │          │ │
-│ │ empty comments     │ This is important  │         │           │          │ │
-│ │ array. Do not      │ because, in        │         │           │          │ │
-│ │ include proposed   │ Python, if a       │         │           │          │ │
-│ │ tests or test      │ comparison         │         │           │          │ │
-│ │ source.            │ operator returns   │         │           │          │ │
-│ │                    │ NotImplemented,    │         │           │          │ │
-│ │ USER               │ the interpreter    │         │           │          │ │
-│ │ Repository:        │ will try the       │         │           │          │ │
-│ │ pydantic           │ reverse operation. │         │           │          │ │
-│ │ Files changed:     │ For example, if a  │         │           │          │ │
-│ │ pydantic/networks… │ < b returns        │         │           │          │ │
-│ │ tests/test_networ… │ NotImplemented,    │         │           │          │ │
-│ │                    │ then the           │         │           │          │ │
-│ │ Context around the │ interpreter will   │         │           │          │ │
-│ │ change             │ check if b has a   │         │           │          │ │
-│ │ (mechanically      │ __gt__ method that │         │           │          │ │
-│ │ extracted):        │ can handle a.      │         │           │          │ │
-│ │ Changed            │                    │         │           │          │ │
-│ │ definitions:       │ Wait, but in the   │         │           │          │ │
-│ │ pydantic/networks… │ current code, the  │         │           │          │ │
-│ │ pydantic/networks… │ __lt__ method      │         │           │          │ │
-│ │ pydantic/networks… │ checks if the      │         │           │          │ │
-│ │ pydantic/networks… │ class is the same. │         │           │          │ │
-│ │ pydantic/networks… │ If not, it returns │         │           │          │ │
-│ │ pydantic/networks… │ NotImplemented.    │         │           │          │ │
-│ │ pydantic/networks… │ That makes sense   │         │           │          │ │
-│ │ tests/test_networ… │ because if you're  │         │           │          │ │
-│ │ tests/test_networ… │ comparing a        │         │           │          │ │
-│ │ tests/test_networ… │ _BaseUrl instance  │         │           │          │ │
-│ │ tests/test_networ… │ with a different   │         │           │          │ │
-│ │ tests/test_networ… │ type, the          │         │           │          │ │
-│ │ Callers elsewhere  │ comparison isn't   │         │           │          │ │
-│ │ (file:line):       │ defined. The new   │         │           │          │ │
-│ │   pydantic-core/t… │ tests are checking │         │           │          │ │
-│ │ class              │ that trying to     │         │           │          │ │
-│ │ SubModel(Model):   │ compare with       │         │           │          │ │
-│ │   pydantic-core/t… │ different types    │         │           │          │ │
-│ │ dc = SubModel(x=1, │ raises a           │         │           │          │ │
-│ │ y='a', x2=2,       │ TypeError.         │         │           │          │ │
-│ │ y2='b')            │                    │         │           │          │ │
-│ │   pydantic-core/t… │ Looking at the     │         │           │          │ │
-│ │ class              │ test_any_url_orde… │         │           │          │ │
-│ │ SubModel(Model):   │ they use the       │         │           │          │ │
-│ │   pydantic-core/t… │ operator module to │         │           │          │ │
-│ │ dc = SubModel(x=1, │ call lt, gt, etc., │         │           │          │ │
-│ │ y='a', x2=2,       │ on an AnyUrl and   │         │           │          │ │
-│ │ y2='b')            │ other types. The   │         │           │          │ │
-│ │   pydantic-core/t… │ test expects a     │         │           │          │ │
-│ │ BasicSubModel(Bas… │ TypeError, which   │         │           │          │ │
-│ │   pydantic-core/t… │ would happen if    │         │           │          │ │
-│ │ assert             │ the operator isn't │         │           │          │ │
-│ │ s.to_python(Basic… │ defined. But wait, │         │           │          │ │
-│ │ bar=b'more')) ==   │ if the __lt__      │         │           │          │ │
-│ │ IsStrictDict(foo=… │ method returns     │         │           │          │ │
-│ │ bar=b'more')       │ NotImplemented,    │         │           │          │ │
-│ │   pydantic-core/t… │ then when you do   │         │           │          │ │
-│ │ assert             │ url < other, it    │         │           │          │ │
-│ │ s.to_python(Basic… │ would return       │         │           │          │ │
-│ │ foo=1, c=3),       │ NotImplemented,    │         │           │          │ │
-│ │ mode='json') ==    │ and the            │         │           │          │ │
-│ │ IsStrictDict(bar=… │ interpreter would  │         │           │          │ │
-│ │ foo=1)             │ then check if      │         │           │          │ │
-│ │   pydantic-core/t… │ other has a __gt__ │         │           │          │ │
-│ │ assert             │ method. If other   │         │           │          │ │
-│ │ json.loads(s.to_j… │ doesn't, then it   │         │           │          │ │
-│ │ foo=1, c=3))) ==   │ would raise a      │         │           │          │ │
-│ │ {'bar': 'more',    │ TypeError.         │         │           │          │ │
-│ │ 'foo': 1}          │                    │         │           │          │ │
-│ │   pydantic-core/t… │ But the test is    │         │           │          │ │
-│ │ # class            │ expecting that the │         │           │          │ │
-│ │ SubSubModel(BaseM… │ operation raises a │         │           │          │ │
-│ │   pydantic-core/t… │ TypeError. So the  │         │           │          │ │
-│ │ # class            │ code change should │         │           │          │ │
-│ │ SubModel(BaseMode… │ be correct. The    │         │           │          │ │
-│ │   pydantic-core/t… │ previous           │         │           │          │ │
-│ │ RootSubModel(Root… │ implementation     │         │           │          │ │
-│ │   pydantic-core/t… │ might have         │         │           │          │ │
-│ │ assert             │ silently returned  │         │           │          │ │
-│ │ s.to_python(RootS… │ False if the       │         │           │          │ │
-│ │ == 1               │ classes were       │         │           │          │ │
-│ │   pydantic-core/t… │ different, but now │         │           │          │ │
-│ │ assert             │ it's properly      │         │           │          │ │
-│ │ json.loads(s.to_j… │ handling that by   │         │           │          │ │
-│ │ == 1               │ returning          │         │           │          │ │
-│ │   pydantic-core/t… │ NotImplemented,    │         │           │          │ │
-│ │ class              │ which would cause  │         │           │          │ │
-│ │ SubModel(Model):   │ the error to be    │         │           │          │ │
-│ │   pydantic-core/t… │ raised.            │         │           │          │ │
-│ │ class              │                    │         │           │          │ │
-│ │ MySubModel(MyMode… │ Another test,      │         │           │          │ │
-│ │   pydantic-core/t… │ test_any_url_orde… │         │           │          │ │
-│ │ m2 = MySubModel()  │ checks that        │         │           │          │ │
-│ │   pydantic-core/t… │ sorted() on mixed  │         │           │          │ │
-│ │ class              │ URL types raises   │         │           │          │ │
-│ │ MySubModel(MyMode… │ an error. That's   │         │           │          │ │
-│ │   pydantic-core/t… │ because when you   │         │           │          │ │
-│ │ m2 = MySubModel()  │ sort, Python tries │         │           │          │ │
-│ │   pydantic-core/t… │ to compare         │         │           │          │ │
-│ │ m4 = MySubModel()  │ elements, and if   │         │           │          │ │
-│ │   pydantic-core/t… │ they are different │         │           │          │ │
-│ │ class              │ types, the         │         │           │          │ │
-│ │ MySubModel(MyMode… │ comparisons would  │         │           │          │ │
-│ │   pydantic-core/t… │ return             │         │           │          │ │
-│ │ m3 = MySubModel()  │ NotImplemented,    │         │           │          │ │
-│ │   pydantic-core/t… │ leading to a       │         │           │          │ │
-│ │ class              │ TypeError. The     │         │           │          │ │
-│ │ MySubModel(MyMode… │ test also confirms │         │           │          │ │
-│ │   pydantic-core/t… │ that equality      │         │           │          │ │
-│ │ m3 = MySubModel()  │ checks between     │         │           │          │ │
-│ │   pydantic-core/t… │ different types    │         │           │          │ │
-│ │ m5 = MySubModel()  │ are handled        │         │           │          │ │
-│ │   tests/test_comp… │ correctly, which   │         │           │          │ │
-│ │ class              │ is good.           │         │           │          │ │
-│ │ MySubModel(MyMode… │                    │         │           │          │ │
-│ │ Recent history of  │ The code changes   │         │           │          │ │
-│ │ pydantic/networks… │ seem to be making  │         │           │          │ │
-│ │   be3e4d17         │ the comparison     │         │           │          │ │
-│ │ 2026-06-29 Allow   │ operators more     │         │           │          │ │
-│ │ periods in         │ robust by properly │         │           │          │ │
-│ │ unquoted           │ handling type      │         │           │          │ │
-│ │ `NameEmail`        │ mismatches. The    │         │           │          │ │
-│ │ display names      │ tests are ensuring │         │           │          │ │
-│ │ (#13206)           │ that comparing     │         │           │          │ │
-│ │   718ef06e         │ with different     │         │           │          │ │
-│ │ 2026-06-05 Fix     │ types raises the   │         │           │          │ │
-│ │ missing period     │ appropriate error, │         │           │          │ │
-│ │ after 'e.g' in     │ which is the       │         │           │          │ │
-│ │ docstrings and     │ correct behavior.  │         │           │          │ │
-│ │ grammar in docs    │                    │         │           │          │ │
-│ │ (#13283)           │ I don't see any    │         │           │          │ │
-│ │   b36eaeb4         │ obvious defects    │         │           │          │ │
-│ │ 2026-04-15 Drop    │ here. The code is  │         │           │          │ │
-│ │ support for Python │ handling the type  │         │           │          │ │
-│ │ 3.9 (#13070)       │ checks correctly,  │         │           │          │ │
-│ │ Recent history of  │ and the tests are  │         │           │          │ │
-│ │ tests/test_networ… │ verifying the      │         │           │          │ │
-│ │   be3e4d17         │ expected behavior. │         │           │          │ │
-│ │ 2026-06-29 Allow   │ So the decision    │         │           │          │ │
-│ │ periods in         │ should be to       │         │           │          │ │
-│ │ unquoted           │ approve the        │         │           │          │ │
-│ │ `NameEmail`        │ change.            │         │           │          │ │
-│ │ display names      │ </think>           │         │           │          │ │
-│ │ (#13206)           │                    │         │           │          │ │
-│ │   b9715628         │ {"decision":       │         │           │          │ │
-│ │ 2026-04-30 Upgrade │ "approve",         │         │           │          │ │
-│ │ to pytest 9, use   │ "comments": []}    │         │           │          │ │
-│ │ strict mode        │                    │         │           │          │ │
-│ │ (#13110)           │                    │         │           │          │ │
-│ │   b36eaeb4         │                    │         │           │          │ │
-│ │ 2026-04-15 Drop    │                    │         │           │          │ │
-│ │ support for Python │                    │         │           │          │ │
-│ │ 3.9 (#13070)       │                    │         │           │          │ │
+│ │   04fd6395         │ `main.py` seem to  │         │           │          │ │
+│ │ 2025-04-07 Update  │ be addressing      │         │           │          │ │
+│ │ V1 copy to         │ compatibility      │         │           │          │ │
+│ │ v1.10.21 (#11706)  │ issues with Python │         │           │          │ │
+│ │   0672da16         │ 3.14, such as      │         │           │          │ │
+│ │ 2024-08-22 Bump    │ handling unions    │         │           │          │ │
+│ │ `v1` version stub  │ and annotations    │         │           │          │ │
+│ │ to `v1.10.18`      │ correctly.         │         │           │          │ │
+│ │ (#10214)           │                    │         │           │          │ │
+│ │   055f900f         │ The possible       │         │           │          │ │
+│ │ 2024-06-12 V1 bump │ issues to check    │         │           │          │ │
+│ │ to v1.10.16        │ for are:           │         │           │          │ │
+│ │ (#9639)            │                    │         │           │          │ │
+│ │                    │ - Are the changes  │         │           │          │ │
+│ │ Diff:              │ in `generics.py`   │         │           │          │ │
+│ │ ```diff            │ correctly          │         │           │          │ │
+│ │ diff --git         │ replacing          │         │           │          │ │
+│ │ a/pydantic/v1/__i… │ `_UnionGenericAli… │         │           │          │ │
+│ │ b/pydantic/v1/__i… │ with a method that │         │           │          │ │
+│ │ index              │ works for Python   │         │           │          │ │
+│ │ 4807865c..6ad3f466 │ 3.14? Using        │         │           │          │ │
+│ │ 100644             │ `functools.reduce… │         │           │          │ │
+│ │ ---                │ might be a way to  │         │           │          │ │
+│ │ a/pydantic/v1/__i… │ handle unions      │         │           │          │ │
+│ │ +++                │ without relying on │         │           │          │ │
+│ │ b/pydantic/v1/__i… │ the deprecated     │         │           │          │ │
+│ │ @@ -1,7 +1,4 @@    │ `_UnionGenericAli… │         │           │          │ │
+│ │  # flake8: noqa    │ which was removed  │         │           │          │ │
+│ │ -import sys        │ in Python 3.10.    │         │           │          │ │
+│ │ -import warnings   │ However, I need to │         │           │          │ │
+│ │ -                  │ confirm if this    │         │           │          │ │
+│ │  from pydantic.v1  │ approach is        │         │           │          │ │
+│ │ import dataclasses │ correct and safe.  │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ pydantic.v1.annot… │ - In `main.py`,    │         │           │          │ │
+│ │ import             │ the use of         │         │           │          │ │
+│ │ create_model_from… │ `annotationlib`    │         │           │          │ │
+│ │ create_model_from… │ for Python 3.14    │         │           │          │ │
+│ │  from              │ might be           │         │           │          │ │
+│ │ pydantic.v1.class… │ necessary. But if  │         │           │          │ │
+│ │ import             │ the code is not    │         │           │          │ │
+│ │ root_validator,    │ handling all cases │         │           │          │ │
+│ │ validator          │ correctly, it      │         │           │          │ │
+│ │ @@ -132,11 +129,3  │ could lead to      │         │           │          │ │
+│ │ @@ __all__ = [     │ errors. However,   │         │           │          │ │
+│ │      'compiled',   │ the code seems to  │         │           │          │ │
+│ │      'VERSION',    │ check for the      │         │           │          │ │
+│ │  ]                 │ Python version     │         │           │          │ │
+│ │ -                  │ before using it,   │         │           │          │ │
+│ │ -                  │ so that's a        │         │           │          │ │
+│ │ -if                │ positive sign.     │         │           │          │ │
+│ │ sys.version_info   │                    │         │           │          │ │
+│ │ >= (3, 14):        │ - In `typing.py`,  │         │           │          │ │
+│ │ -                  │ the                │         │           │          │ │
+│ │ warnings.warn(     │ `evaluate_forward… │         │           │          │ │
+│ │ -        "Core     │ function for       │         │           │          │ │
+│ │ Pydantic V1        │ Python 3.14 uses   │         │           │          │ │
+│ │ functionality      │ `typing.evaluate_… │         │           │          │ │
+│ │ isn't compatible   │ which might be a   │         │           │          │ │
+│ │ with Python 3.14   │ new function       │         │           │          │ │
+│ │ or greater.",      │ introduced in a    │         │           │          │ │
+│ │ -                  │ newer Python       │         │           │          │ │
+│ │ UserWarning,       │ version. The code  │         │           │          │ │
+│ │ -                  │ correctly checks   │         │           │          │ │
+│ │ stacklevel=2,      │ the version before │         │           │          │ │
+│ │ -    )             │ using it, which is │         │           │          │ │
+│ │ diff --git         │ good.              │         │           │          │ │
+│ │ a/pydantic/v1/gen… │                    │         │           │          │ │
+│ │ b/pydantic/v1/gen… │ - The              │         │           │          │ │
+│ │ index              │ `pyproject.toml`   │         │           │          │ │
+│ │ 9a69f2b3..fa1dcec4 │ change removes the │         │           │          │ │
+│ │ 100644             │ warning about      │         │           │          │ │
+│ │ ---                │ Python 3.14        │         │           │          │ │
+│ │ a/pydantic/v1/gen… │ compatibility.     │         │           │          │ │
+│ │ +++                │ This might         │         │           │          │ │
+│ │ b/pydantic/v1/gen… │ indicate that the  │         │           │          │ │
+│ │ @@ -1,3 +1,5 @@    │ code is now        │         │           │          │ │
+│ │ +import functools  │ compatible with    │         │           │          │ │
+│ │ +import operator   │ 3.14, so the       │         │           │          │ │
+│ │  import sys        │ warning is no      │         │           │          │ │
+│ │  import types      │ longer needed.     │         │           │          │ │
+│ │  import typing     │ However, the       │         │           │          │ │
+│ │ @@ -29,8 +31,6 @@  │ warning was        │         │           │          │ │
+│ │ from               │ originally in      │         │           │          │ │
+│ │ pydantic.v1.types  │ `__init__.py`,     │         │           │          │ │
+│ │ import JsonWrapper │ which was removed. │         │           │          │ │
+│ │  from              │ The code in        │         │           │          │ │
+│ │ pydantic.v1.typing │ `main.py` now      │         │           │          │ │
+│ │ import             │ handles 3.14, so   │         │           │          │ │
+│ │ display_as_type,   │ the warning might  │         │           │          │ │
+│ │ get_all_type_hint… │ be redundant.      │         │           │          │ │
+│ │ get_args,          │                    │         │           │          │ │
+│ │ get_origin,        │ Potential risks:   │         │           │          │ │
+│ │ typing_base        │                    │         │           │          │ │
+│ │  from              │ - The replacement  │         │           │          │ │
+│ │ pydantic.v1.utils  │ of                 │         │           │          │ │
+│ │ import             │ `_UnionGenericAli… │         │           │          │ │
+│ │ all_identical,     │ with               │         │           │          │ │
+│ │ lenient_issubclass │ `functools.reduce… │         │           │          │ │
+│ │                    │ could have         │         │           │          │ │
+│ │ -if                │ unintended side    │         │           │          │ │
+│ │ sys.version_info   │ effects if the     │         │           │          │ │
+│ │ >= (3, 10):        │ original code      │         │           │          │ │
+│ │ -    from typing   │ relied on specific │         │           │          │ │
+│ │ import             │ behavior of        │         │           │          │ │
+│ │ _UnionGenericAlias │ `_UnionGenericAli… │         │           │          │ │
+│ │  if                │ However, since     │         │           │          │ │
+│ │ sys.version_info   │ `_UnionGenericAli… │         │           │          │ │
+│ │ >= (3, 8):         │ was deprecated,    │         │           │          │ │
+│ │      from typing   │ the change might   │         │           │          │ │
+│ │ import Literal     │ be necessary for   │         │           │          │ │
+│ │                    │ Python 3.14        │         │           │          │ │
+│ │ @@ -294,7 +294,7   │ compatibility.     │         │           │          │ │
+│ │ @@ def             │                    │         │           │          │ │
+│ │ replace_types(typ… │ - The use of       │         │           │          │ │
+│ │ Any, type_map:     │ `annotationlib` in │         │           │          │ │
+│ │ Mapping[Any, Any]) │ `main.py` for      │         │           │          │ │
+│ │ -> Any:            │ Python 3.14 might  │         │           │          │ │
+│ │          # PEP-604 │ require that the   │         │           │          │ │
+│ │ syntax (Ex.: list  │ `annotationlib`    │         │           │          │ │
+│ │ | str) is          │ module is          │         │           │          │ │
+│ │ represented with a │ available. If      │         │           │          │ │
+│ │ types.UnionType    │ that's not the     │         │           │          │ │
+│ │ object that does   │ case, it could     │         │           │          │ │
+│ │ not have           │ cause an import    │         │           │          │ │
+│ │ __getitem__.       │ error. But the     │         │           │          │ │
+│ │          # We also │ code checks for    │         │           │          │ │
+│ │ cannot use         │ the Python version │         │           │          │ │
+│ │ isinstance() since │ before importing,  │         │           │          │ │
+│ │ we have to compare │ so that's handled. │         │           │          │ │
+│ │ types.             │                    │         │           │          │ │
+│ │          if        │ - The              │         │           │          │ │
+│ │ sys.version_info   │ `evaluate_forward… │         │           │          │ │
+│ │ >= (3, 10) and     │ function for       │         │           │          │ │
+│ │ origin_type is     │ Python 3.14 uses   │         │           │          │ │
+│ │ types.UnionType:   │ `typing.evaluate_… │         │           │          │ │
+│ │ # noqa: E721       │ which might be a   │         │           │          │ │
+│ │ -                  │ newer function. If │         │           │          │ │
+│ │ return             │ the code is being  │         │           │          │ │
+│ │ _UnionGenericAlia… │ run on a version   │         │           │          │ │
+│ │ resolved_type_arg… │ of Python that     │         │           │          │ │
+│ │ +                  │ doesn't have this  │         │           │          │ │
+│ │ return             │ function, it could │         │           │          │ │
+│ │ functools.reduce(… │ fail. But the code │         │           │          │ │
+│ │ resolved_type_arg… │ checks the         │         │           │          │ │
+│ │          return    │ version, so it's   │         │           │          │ │
+│ │ origin_type[resol… │ safe.              │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ Diff:              │                    │         │           │          │ │
-│ │ ```diff            │                    │         │           │          │ │
+│ │      # We handle   │ Another thing to   │         │           │          │ │
+│ │ pydantic generic   │ note is the        │         │           │          │ │
+│ │ models separately  │ removal of the     │         │           │          │ │
+│ │ as they don't have │ warning in         │         │           │          │ │
+│ │ the same           │ `pyproject.toml`,  │         │           │          │ │
+│ │ diff --git         │ which might be a   │         │           │          │ │
+│ │ a/pydantic/v1/mai… │ regression if the  │         │           │          │ │
+│ │ b/pydantic/v1/mai… │ code is not        │         │           │          │ │
+│ │ index              │ actually           │         │           │          │ │
+│ │ 8000967e..d2dbc21e │ compatible with    │         │           │          │ │
+│ │ 100644             │ Python 3.14.       │         │           │          │ │
+│ │ ---                │ However, the       │         │           │          │ │
+│ │ a/pydantic/v1/mai… │ changes in         │         │           │          │ │
+│ │ +++                │ `main.py` and      │         │           │          │ │
+│ │ b/pydantic/v1/mai… │ `typing.py`        │         │           │          │ │
+│ │ @@ -1,3 +1,4 @@    │ suggest that they  │         │           │          │ │
+│ │ +import sys        │ are making efforts │         │           │          │ │
+│ │  import warnings   │ to support 3.14,   │         │           │          │ │
+│ │  from abc import   │ so the warning is  │         │           │          │ │
+│ │ ABCMeta            │ being removed as   │         │           │          │ │
+│ │  from copy import  │ the code is now    │         │           │          │ │
+│ │ deepcopy           │ compatible.        │         │           │          │ │
+│ │ @@ -175,6 +176,22  │                    │         │           │          │ │
+│ │ @@ class           │ Overall, the       │         │           │          │ │
+│ │ ModelMetaclass(AB… │ changes seem to be │         │           │          │ │
+│ │              retu… │ addressing Python  │         │           │          │ │
+│ │ isinstance(v,      │ 3.14               │         │           │          │ │
+│ │ untouched_types)   │ compatibility,     │         │           │          │ │
+│ │ or                 │ which is a new     │         │           │          │ │
+│ │ v.__class__.__nam… │ requirement. The   │         │           │          │ │
+│ │ ==                 │ code modifications │         │           │          │ │
+│ │ 'cython_function_… │ are targeted, with │         │           │          │ │
+│ │                    │ version checks to  │         │           │          │ │
+│ │          if        │ ensure             │         │           │          │ │
+│ │ (namespace.get('_… │ compatibility. The │         │           │          │ │
+│ │ namespace.get('__… │ only possible      │         │           │          │ │
+│ │ !=                 │ issue is if the    │         │           │          │ │
+│ │ ('pydantic.main',  │ new methods used   │         │           │          │ │
+│ │ 'BaseModel'):      │ (like              │         │           │          │ │
+│ │ +            if    │ `functools.reduce… │         │           │          │ │
+│ │ sys.version_info   │ for unions) are    │         │           │          │ │
+│ │ >= (3, 14):        │ not handling all   │         │           │          │ │
+│ │ +                  │ edge cases         │         │           │          │ │
+│ │ if                 │ correctly.         │         │           │          │ │
+│ │ '__annotations__'  │ However, without   │         │           │          │ │
+│ │ in namespace:      │ specific test      │         │           │          │ │
+│ │ +                  │ cases or further   │         │           │          │ │
+│ │ # `from __future__ │ information, it's  │         │           │          │ │
+│ │ import             │ hard to confirm.   │         │           │          │ │
+│ │ annotations` was   │ Since the user is  │         │           │          │ │
+│ │ used in the        │ asking for a code  │         │           │          │ │
+│ │ model's module     │ review gate        │         │           │          │ │
+│ │ +                  │ decision, and the  │         │           │          │ │
+│ │ raw_annotations =  │ changes are        │         │           │          │ │
+│ │ namespace['__anno… │ intended to        │         │           │          │ │
+│ │ +                  │ support Python     │         │           │          │ │
+│ │ else:              │ 3.14, which is a   │         │           │          │ │
+│ │ +                  │ valid and          │         │           │          │ │
+│ │ # See              │ necessary update,  │         │           │          │ │
+│ │ https://docs.pyth… │ the code seems to  │         │           │          │ │
+│ │ +                  │ be handled         │         │           │          │ │
+│ │ from annotationlib │ correctly.         │         │           │          │ │
+│ │ import Format,     │                    │         │           │          │ │
+│ │ call_annotate_fun… │ Therefore, the     │         │           │          │ │
+│ │ get_annotate_from… │ decision would be  │         │           │          │ │
+│ │ +                  │ to approve the     │         │           │          │ │
+│ │ +                  │ changes, as they   │         │           │          │ │
+│ │ annotate =         │ seem to be         │         │           │          │ │
+│ │ get_annotate_from… │ addressing         │         │           │          │ │
+│ │ +                  │ compatibility      │         │           │          │ │
+│ │ if annotate is not │ issues with new    │         │           │          │ │
+│ │ None:              │ Python versions    │         │           │          │ │
+│ │ +                  │ and are            │         │           │          │ │
+│ │ raw_annotations =  │ implemented with   │         │           │          │ │
+│ │ call_annotate_fun… │ proper version     │         │           │          │ │
+│ │ format=Format.FOR… │ checks.            │         │           │          │ │
+│ │ +                  │ </think>           │         │           │          │ │
+│ │ else:              │                    │         │           │          │ │
+│ │ +                  │ {"decision":       │         │           │          │ │
+│ │ raw_annotations =  │ "approve",         │         │           │          │ │
+│ │ {}                 │ "comments": []}    │         │           │          │ │
+│ │ +            else: │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ raw_annotations =  │                    │         │           │          │ │
+│ │ namespace.get('__… │                    │         │           │          │ │
+│ │ {})                │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │              anno… │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ resolve_annotatio… │                    │         │           │          │ │
+│ │ {}),               │                    │         │           │          │ │
+│ │ namespace.get('__… │                    │         │           │          │ │
+│ │ None))             │                    │         │           │          │ │
+│ │              #     │                    │         │           │          │ │
+│ │ annotation only    │                    │         │           │          │ │
+│ │ fields need to     │                    │         │           │          │ │
+│ │ come first in      │                    │         │           │          │ │
+│ │ fields             │                    │         │           │          │ │
+│ │              for   │                    │         │           │          │ │
+│ │ ann_name, ann_type │                    │         │           │          │ │
+│ │ in                 │                    │         │           │          │ │
+│ │ annotations.items… │                    │         │           │          │ │
 │ │ diff --git         │                    │         │           │          │ │
-│ │ a/pydantic/networ… │                    │         │           │          │ │
-│ │ b/pydantic/networ… │                    │         │           │          │ │
+│ │ a/pydantic/v1/typ… │                    │         │           │          │ │
+│ │ b/pydantic/v1/typ… │                    │         │           │          │ │
 │ │ index              │                    │         │           │          │ │
-│ │ 59bb0c6d..a0155e1b │                    │         │           │          │ │
+│ │ 97411618..c5c59794 │                    │         │           │          │ │
 │ │ 100644             │                    │         │           │          │ │
 │ │ ---                │                    │         │           │          │ │
-│ │ a/pydantic/networ… │                    │         │           │          │ │
+│ │ a/pydantic/v1/typ… │                    │         │           │          │ │
 │ │ +++                │                    │         │           │          │ │
-│ │ b/pydantic/networ… │                    │         │           │          │ │
-│ │ @@ -241,16 +241,24 │                    │         │           │          │ │
-│ │ @@ class _BaseUrl: │                    │         │           │          │ │
+│ │ b/pydantic/v1/typ… │                    │         │           │          │ │
+│ │ @@ -69,13 +69,26   │                    │         │           │          │ │
+│ │ @@ elif            │                    │         │           │          │ │
+│ │ sys.version_info < │                    │         │           │          │ │
+│ │ (3, 12, 4):        │                    │         │           │          │ │
+│ │          #         │                    │         │           │          │ │
+│ │ TypeError:         │                    │         │           │          │ │
+│ │ ForwardRef._evalu… │                    │         │           │          │ │
+│ │ missing 1 required │                    │         │           │          │ │
+│ │ keyword-only       │                    │         │           │          │ │
+│ │ argument:          │                    │         │           │          │ │
+│ │ 'recursive_guard'  │                    │         │           │          │ │
 │ │          return    │                    │         │           │          │ │
-│ │ self.__class__ is  │                    │         │           │          │ │
-│ │ other.__class__    │                    │         │           │          │ │
-│ │ and self._url ==   │                    │         │           │          │ │
-│ │ other._url         │                    │         │           │          │ │
+│ │ cast(Any,          │                    │         │           │          │ │
+│ │ type_)._evaluate(… │                    │         │           │          │ │
+│ │ localns,           │                    │         │           │          │ │
+│ │ recursive_guard=s… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ -else:             │                    │         │           │          │ │
+│ │ +elif              │                    │         │           │          │ │
+│ │ sys.version_info < │                    │         │           │          │ │
+│ │ (3, 14):           │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
 │ │      def           │                    │         │           │          │ │
-│ │ __lt__(self,       │                    │         │           │          │ │
-│ │ other: Any) ->     │                    │         │           │          │ │
-│ │ bool:              │                    │         │           │          │ │
-│ │ -        return    │                    │         │           │          │ │
-│ │ self.__class__ is  │                    │         │           │          │ │
-│ │ other.__class__    │                    │         │           │          │ │
-│ │ and self._url <    │                    │         │           │          │ │
-│ │ other._url         │                    │         │           │          │ │
-│ │ +        if        │                    │         │           │          │ │
-│ │ self.__class__ is  │                    │         │           │          │ │
-│ │ not                │                    │         │           │          │ │
-│ │ other.__class__:   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ return             │                    │         │           │          │ │
-│ │ NotImplemented     │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ self._url <        │                    │         │           │          │ │
-│ │ other._url         │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │      def           │                    │         │           │          │ │
-│ │ __gt__(self,       │                    │         │           │          │ │
-│ │ other: Any) ->     │                    │         │           │          │ │
-│ │ bool:              │                    │         │           │          │ │
-│ │ -        return    │                    │         │           │          │ │
-│ │ self.__class__ is  │                    │         │           │          │ │
-│ │ other.__class__    │                    │         │           │          │ │
-│ │ and self._url >    │                    │         │           │          │ │
-│ │ other._url         │                    │         │           │          │ │
-│ │ +        if        │                    │         │           │          │ │
-│ │ self.__class__ is  │                    │         │           │          │ │
-│ │ not                │                    │         │           │          │ │
-│ │ other.__class__:   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ return             │                    │         │           │          │ │
-│ │ NotImplemented     │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ self._url >        │                    │         │           │          │ │
-│ │ other._url         │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │      def           │                    │         │           │          │ │
-│ │ __le__(self,       │                    │         │           │          │ │
-│ │ other: Any) ->     │                    │         │           │          │ │
-│ │ bool:              │                    │         │           │          │ │
-│ │ -        return    │                    │         │           │          │ │
-│ │ self.__class__ is  │                    │         │           │          │ │
-│ │ other.__class__    │                    │         │           │          │ │
-│ │ and self._url <=   │                    │         │           │          │ │
-│ │ other._url         │                    │         │           │          │ │
-│ │ +        if        │                    │         │           │          │ │
-│ │ self.__class__ is  │                    │         │           │          │ │
-│ │ not                │                    │         │           │          │ │
-│ │ other.__class__:   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ return             │                    │         │           │          │ │
-│ │ NotImplemented     │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ self._url <=       │                    │         │           │          │ │
-│ │ other._url         │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │      def           │                    │         │           │          │ │
-│ │ __ge__(self,       │                    │         │           │          │ │
-│ │ other: Any) ->     │                    │         │           │          │ │
-│ │ bool:              │                    │         │           │          │ │
-│ │ -        return    │                    │         │           │          │ │
-│ │ self.__class__ is  │                    │         │           │          │ │
-│ │ other.__class__    │                    │         │           │          │ │
-│ │ and self._url >=   │                    │         │           │          │ │
-│ │ other._url         │                    │         │           │          │ │
-│ │ +        if        │                    │         │           │          │ │
-│ │ self.__class__ is  │                    │         │           │          │ │
-│ │ not                │                    │         │           │          │ │
-│ │ other.__class__:   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ return             │                    │         │           │          │ │
-│ │ NotImplemented     │                    │         │           │          │ │
-│ │ +        return    │                    │         │           │          │ │
-│ │ self._url >=       │                    │         │           │          │ │
-│ │ other._url         │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │      def           │                    │         │           │          │ │
-│ │ __hash__(self) ->  │                    │         │           │          │ │
-│ │ int:               │                    │         │           │          │ │
+│ │ evaluate_forwardr… │                    │         │           │          │ │
+│ │ ForwardRef,        │                    │         │           │          │ │
+│ │ globalns: Any,     │                    │         │           │          │ │
+│ │ localns: Any) ->   │                    │         │           │          │ │
+│ │ Any:               │                    │         │           │          │ │
+│ │          #         │                    │         │           │          │ │
+│ │ Pydantic 1.x will  │                    │         │           │          │ │
+│ │ not support PEP    │                    │         │           │          │ │
+│ │ 695 syntax, but    │                    │         │           │          │ │
+│ │ provide            │                    │         │           │          │ │
+│ │ `type_params` to   │                    │         │           │          │ │
+│ │ avoid              │                    │         │           │          │ │
+│ │          #         │                    │         │           │          │ │
+│ │ warnings:          │                    │         │           │          │ │
 │ │          return    │                    │         │           │          │ │
-│ │ hash(self._url)    │                    │         │           │          │ │
+│ │ cast(Any,          │                    │         │           │          │ │
+│ │ type_)._evaluate(… │                    │         │           │          │ │
+│ │ localns,           │                    │         │           │          │ │
+│ │ type_params=(),    │                    │         │           │          │ │
+│ │ recursive_guard=s… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +else:             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ evaluate_forwardr… │                    │         │           │          │ │
+│ │ ForwardRef,        │                    │         │           │          │ │
+│ │ globalns: Any,     │                    │         │           │          │ │
+│ │ localns: Any) ->   │                    │         │           │          │ │
+│ │ Any:               │                    │         │           │          │ │
+│ │ +        #         │                    │         │           │          │ │
+│ │ Pydantic 1.x will  │                    │         │           │          │ │
+│ │ not support PEP    │                    │         │           │          │ │
+│ │ 695 syntax, but    │                    │         │           │          │ │
+│ │ provide            │                    │         │           │          │ │
+│ │ `type_params` to   │                    │         │           │          │ │
+│ │ avoid              │                    │         │           │          │ │
+│ │ +        #         │                    │         │           │          │ │
+│ │ warnings:          │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ typing.evaluate_f… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ type_,             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ globals=globalns,  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ locals=localns,    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ type_params=(),    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _recursive_guard=… │                    │         │           │          │ │
+│ │ +        )         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  if                │                    │         │           │          │ │
+│ │ sys.version_info < │                    │         │           │          │ │
+│ │ (3, 9):            │                    │         │           │          │ │
+│ │      # Ensure we   │                    │         │           │          │ │
+│ │ always get all the │                    │         │           │          │ │
+│ │ whole `Annotated`  │                    │         │           │          │ │
+│ │ hint, not just the │                    │         │           │          │ │
+│ │ annotated type.    │                    │         │           │          │ │
 │ │ diff --git         │                    │         │           │          │ │
-│ │ a/tests/test_netw… │                    │         │           │          │ │
-│ │ b/tests/test_netw… │                    │         │           │          │ │
+│ │ a/pydantic/v1/uti… │                    │         │           │          │ │
+│ │ b/pydantic/v1/uti… │                    │         │           │          │ │
 │ │ index              │                    │         │           │          │ │
-│ │ ae25de2c..d9235c84 │                    │         │           │          │ │
+│ │ 02543fd1..2094e84f │                    │         │           │          │ │
 │ │ 100644             │                    │         │           │          │ │
 │ │ ---                │                    │         │           │          │ │
-│ │ a/tests/test_netw… │                    │         │           │          │ │
+│ │ a/pydantic/v1/uti… │                    │         │           │          │ │
 │ │ +++                │                    │         │           │          │ │
-│ │ b/tests/test_netw… │                    │         │           │          │ │
-│ │ @@ -1,4 +1,5 @@    │                    │         │           │          │ │
-│ │  import json       │                    │         │           │          │ │
-│ │ +import operator   │                    │         │           │          │ │
-│ │  from typing       │                    │         │           │          │ │
-│ │ import Annotated,  │                    │         │           │          │ │
-│ │ Any                │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │  import pytest     │                    │         │           │          │ │
-│ │ @@ -1182,6         │                    │         │           │          │ │
-│ │ +1183,27 @@ def    │                    │         │           │          │ │
-│ │ test_any_url_comp… │                    │         │           │          │ │
-│ │ -> None:           │                    │         │           │          │ │
-│ │      assert        │                    │         │           │          │ │
-│ │ second_url >=      │                    │         │           │          │ │
-│ │ first_url          │                    │         │           │          │ │
+│ │ b/pydantic/v1/uti… │                    │         │           │          │ │
+│ │ @@ -710,6 +710,7   │                    │         │           │          │ │
+│ │ @@                 │                    │         │           │          │ │
+│ │ DUNDER_ATTRIBUTES  │                    │         │           │          │ │
+│ │ = {                │                    │         │           │          │ │
+│ │      '__qualname_… │                    │         │           │          │ │
+│ │      '__firstline… │                    │         │           │          │ │
+│ │      '__static_at… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ '__classdictcell_… │                    │         │           │          │ │
+│ │  }                 │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ +@pytest.mark.par… │                    │         │           │          │ │
-│ │ ['https://a.com',  │                    │         │           │          │ │
-│ │ 5, None,           │                    │         │           │          │ │
-│ │ HttpUrl('https://… │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_any_url_orde… │                    │         │           │          │ │
-│ │ Any) -> None:      │                    │         │           │          │ │
-│ │ +    """Ordering   │                    │         │           │          │ │
-│ │ against a          │                    │         │           │          │ │
-│ │ different type is  │                    │         │           │          │ │
-│ │ unsupported,       │                    │         │           │          │ │
-│ │ rather than        │                    │         │           │          │ │
-│ │ silently           │                    │         │           │          │ │
-│ │ `False`."""        │                    │         │           │          │ │
-│ │ +    url =         │                    │         │           │          │ │
-│ │ AnyUrl('https://a… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    for op in     │                    │         │           │          │ │
-│ │ (operator.lt,      │                    │         │           │          │ │
-│ │ operator.gt,       │                    │         │           │          │ │
-│ │ operator.le,       │                    │         │           │          │ │
-│ │ operator.ge):      │                    │         │           │          │ │
-│ │ +        with      │                    │         │           │          │ │
-│ │ pytest.raises(Typ… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ op(url, other)     │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_any_url_orde… │                    │         │           │          │ │
-│ │ -> None:           │                    │         │           │          │ │
-│ │ +    """`sorted()` │                    │         │           │          │ │
-│ │ on mixed URL types │                    │         │           │          │ │
-│ │ raises instead of  │                    │         │           │          │ │
-│ │ returning a        │                    │         │           │          │ │
-│ │ meaningless        │                    │         │           │          │ │
-│ │ order."""          │                    │         │           │          │ │
-│ │ +    with          │                    │         │           │          │ │
-│ │ pytest.raises(Typ… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ sorted([AnyUrl('h… │                    │         │           │          │ │
-│ │ HttpUrl('https://… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    # Equality is │                    │         │           │          │ │
-│ │ unaffected: unlike │                    │         │           │          │ │
-│ │ ordering,          │                    │         │           │          │ │
-│ │ comparing against  │                    │         │           │          │ │
-│ │ another type is    │                    │         │           │          │ │
-│ │ well defined.      │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ AnyUrl('https://a… │                    │         │           │          │ │
-│ │ !=                 │                    │         │           │          │ │
-│ │ HttpUrl('https://… │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ AnyUrl('https://a… │                    │         │           │          │ │
-│ │ != 'https://a.com' │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ AnyUrl('https://a… │                    │         │           │          │ │
-│ │ ==                 │                    │         │           │          │ │
-│ │ AnyUrl('https://a… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │  def               │                    │         │           │          │ │
-│ │ test_max_length_b… │                    │         │           │          │ │
-│ │ -> None:           │                    │         │           │          │ │
-│ │      class         │                    │         │           │          │ │
-│ │ Model(BaseModel):  │                    │         │           │          │ │
-│ │          url:      │                    │         │           │          │ │
-│ │ AnyUrl =           │                    │         │           │          │ │
-│ │ Field(max_length=… │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/pyproject.toml   │                    │         │           │          │ │
+│ │ b/pyproject.toml   │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 45e329e9..f37699d6 │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/pyproject.toml   │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/pyproject.toml   │                    │         │           │          │ │
+│ │ @@ -173,7 +173,6   │                    │         │           │          │ │
+│ │ @@ xfail_strict =  │                    │         │           │          │ │
+│ │ true               │                    │         │           │          │ │
+│ │  filterwarnings =  │                    │         │           │          │ │
+│ │ [                  │                    │         │           │          │ │
+│ │      'error',      │                    │         │           │          │ │
+│ │      'ignore:path  │                    │         │           │          │ │
+│ │ is                 │                    │         │           │          │ │
+│ │ deprecated.*:Depr… │                    │         │           │          │ │
+│ │ -    "ignore:Core  │                    │         │           │          │ │
+│ │ Pydantic V1        │                    │         │           │          │ │
+│ │ functionality      │                    │         │           │          │ │
+│ │ isn't compatible   │                    │         │           │          │ │
+│ │ with Python 3.14   │                    │         │           │          │ │
+│ │ or                 │                    │         │           │          │ │
+│ │ greater:UserWarni… │                    │         │           │          │ │
+│ │  ]                 │                    │         │           │          │ │
+│ │  addopts = [       │                    │         │           │          │ │
+│ │      '--benchmark… │                    │         │           │          │ │
+│ │ 'min,mean,stddev,… │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
 │ │ ```                │                    │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
