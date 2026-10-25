@@ -1,400 +1,400 @@
-│ │ f"HttpOnly;        │                    │         │           │          │ │
-│ │ Max-Age=10;        │                    │         │           │          │ │
-│ │ {partitioned_text… │                    │         │           │          │ │
-│ │ SameSite=none;     │                    │         │           │          │ │
-│ │ Secure"            │                    │         │           │          │ │
-│ │      )             │                    │         │           │          │ │
+│ │ &mut               │                    │         │           │          │ │
+│ │ DefinitionsBuilde… │                    │         │           │          │ │
+│ │  ) ->              │                    │         │           │          │ │
+│ │ PyResult<Arc<Comb… │                    │         │           │          │ │
+│ │ {                  │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ build_validator_i… │                    │         │           │          │ │
+│ │ config,            │                    │         │           │          │ │
+│ │ definitions, true) │                    │         │           │          │ │
+│ │ +    // Read       │                    │         │           │          │ │
+│ │ use_prebuilt from  │                    │         │           │          │ │
+│ │ the definitions    │                    │         │           │          │ │
+│ │ builder - this     │                    │         │           │          │ │
+│ │ ensures all nested │                    │         │           │          │ │
+│ │ +    // validators │                    │         │           │          │ │
+│ │ respect the same   │                    │         │           │          │ │
+│ │ setting as the     │                    │         │           │          │ │
+│ │ top-level build    │                    │         │           │          │ │
+│ │ +    let           │                    │         │           │          │ │
+│ │ use_prebuilt =     │                    │         │           │          │ │
+│ │ definitions.use_p… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ build_validator_i… │                    │         │           │          │ │
+│ │ config,            │                    │         │           │          │ │
+│ │ definitions,       │                    │         │           │          │ │
+│ │ use_prebuilt)      │                    │         │           │          │ │
+│ │  }                 │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ +@pytest.mark.ski… │                    │         │           │          │ │
-│ │ >= (3, 14),        │                    │         │           │          │ │
-│ │ reason="Only       │                    │         │           │          │ │
-│ │ relevant for       │                    │         │           │          │ │
-│ │ <3.14")            │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_set_cookie_r… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ test_client_facto… │                    │         │           │          │ │
-│ │ TestClientFactory, │                    │         │           │          │ │
-│ │ +) -> None:  #     │                    │         │           │          │ │
-│ │ pragma: no cover   │                    │         │           │          │ │
-│ │ +    async def     │                    │         │           │          │ │
-│ │ app(scope: Scope,  │                    │         │           │          │ │
-│ │ receive: Receive,  │                    │         │           │          │ │
-│ │ send: Send) ->     │                    │         │           │          │ │
-│ │ None:              │                    │         │           │          │ │
-│ │ +        response  │                    │         │           │          │ │
-│ │ = Response("Hello, │                    │         │           │          │ │
-│ │ world!",           │                    │         │           │          │ │
-│ │ media_type="text/… │                    │         │           │          │ │
-│ │ +        with      │                    │         │           │          │ │
-│ │ pytest.raises(Val… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ response.set_cook… │                    │         │           │          │ │
-│ │ "myvalue",         │                    │         │           │          │ │
-│ │ partitioned=True)  │                    │         │           │          │ │
-│ │ +        await     │                    │         │           │          │ │
-│ │ response(scope,    │                    │         │           │          │ │
-│ │ receive, send)     │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +    client =      │                    │         │           │          │ │
-│ │ test_client_facto… │                    │         │           │          │ │
-│ │ +    response =    │                    │         │           │          │ │
-│ │ client.get("/")    │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ response.text ==   │                    │         │           │          │ │
-│ │ "Hello, world!"    │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ response.headers.… │                    │         │           │          │ │
-│ │ is None            │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │  def               │                    │         │           │          │ │
-│ │ test_set_cookie_p… │                    │         │           │          │ │
-│ │ TestClientFactory) │                    │         │           │          │ │
-│ │ -> None:           │                    │         │           │          │ │
-│ │      async def     │                    │         │           │          │ │
-│ │ app(scope: Scope,  │                    │         │           │          │ │
-│ │ receive: Receive,  │                    │         │           │          │ │
-│ │ send: Send) ->     │                    │         │           │          │ │
-│ │ None:              │                    │         │           │          │ │
-│ │          response  │                    │         │           │          │ │
-│ │ = Response("Hello, │                    │         │           │          │ │
-│ │ world!",           │                    │         │           │          │ │
-│ │ media_type="text/… │                    │         │           │          │ │
-│ │ ```                │                    │         │           │          │ │
-│ ├────────────────────┼────────────────────┼─────────┼───────────┼──────────┤ │
-│ │ SYSTEM             │ ASSISTANT          │   -5.00 │     -1.09 │ approve  │ │
-│ │ You are the code   │ <think>            │         │           │          │ │
-│ │ review gate for a  │ Okay, let's take a │         │           │          │ │
-│ │ production         │ look at this code  │         │           │          │ │
-│ │ repository.        │ change. The user   │         │           │          │ │
-│ │ Approval merges    │ has modified the   │         │           │          │ │
-│ │ and deploys the    │ Starlette          │         │           │          │ │
-│ │ change without     │ repository,        │         │           │          │ │
-│ │ further human      │ specifically in    │         │           │          │ │
-│ │ review.            │ the responses.py   │         │           │          │ │
-│ │   approve  - you   │ file and the       │         │           │          │ │
-│ │ are confident the  │ test_responses.py. │         │           │          │ │
-│ │ change is correct  │ The main changes   │         │           │          │ │
-│ │ and safe to ship.  │ seem to be adding  │         │           │          │ │
-│ │   block    - you   │ support for        │         │           │          │ │
-│ │ found a concrete   │ partitioned        │         │           │          │ │
-│ │ defect in the      │ cookies, which are │         │           │          │ │
-│ │ change.            │ a new feature in   │         │           │          │ │
-│ │   escalate - you   │ Python 3.14.       │         │           │          │ │
-│ │ cannot establish   │                    │         │           │          │ │
-│ │ safety from the    │ First, in          │         │           │          │ │
-│ │ supplied evidence. │ responses.py, the  │         │           │          │ │
-│ │ Approving a        │ Response class's   │         │           │          │ │
-│ │ defective change   │ __init__ method    │         │           │          │ │
-│ │ is the worst       │ now has a new      │         │           │          │ │
-│ │ outcome.           │ parameter          │         │           │          │ │
-│ │ Your final answer  │ 'partitioned' with │         │           │          │ │
-│ │ must be exactly    │ a default of       │         │           │          │ │
-│ │ one JSON object:   │ False. The code    │         │           │          │ │
-│ │ {"decision":       │ checks if Python   │         │           │          │ │
-│ │ "approve|block|es… │ version is <=3.14  │         │           │          │ │
-│ │ "comments": []}    │ and raises an      │         │           │          │ │
-│ │ For block, include │ error if someone   │         │           │          │ │
-│ │ exactly one        │ tries to use       │         │           │          │ │
-│ │ comment with file, │ partitioned        │         │           │          │ │
-│ │ line_start,        │ cookies.           │         │           │          │ │
-│ │ line_end and body; │ Otherwise, it sets │         │           │          │ │
-│ │ limit body to 40   │ the partitioned    │         │           │          │ │
-│ │ words explaining   │ attribute on the   │         │           │          │ │
-│ │ the defect. For    │ cookie. That makes │         │           │          │ │
-│ │ approve or         │ sense because      │         │           │          │ │
-│ │ escalate, use an   │ partitioned        │         │           │          │ │
-│ │ empty comments     │ cookies aren't     │         │           │          │ │
-│ │ array. Do not      │ available in older │         │           │          │ │
-│ │ include proposed   │ versions.          │         │           │          │ │
-│ │ tests or test      │                    │         │           │          │ │
-│ │ source.            │ Then, in the test  │         │           │          │ │
-│ │                    │ file, there's a    │         │           │          │ │
-│ │ USER               │ new test case      │         │           │          │ │
-│ │ Repository:        │ test_set_cookie_r… │         │           │          │ │
-│ │ starlette          │ This test skips if │         │           │          │ │
-│ │ Files changed:     │ the Python version │         │           │          │ │
-│ │ docs/responses.md, │ is 3.14 or higher, │         │           │          │ │
-│ │ starlette/respons… │ which is logical   │         │           │          │ │
-│ │ tests/test_respon… │ because the        │         │           │          │ │
-│ │                    │ feature isn't      │         │           │          │ │
-│ │ Not shown          │ available in those │         │           │          │ │
-│ │ (non-code or over  │ versions. The test │         │           │          │ │
-│ │ budget; treat as   │ checks that        │         │           │          │ │
-│ │ unreviewed):       │ attempting to set  │         │           │          │ │
-│ │ docs/responses.md  │ a partitioned      │         │           │          │ │
-│ │ (1548 chars,       │ cookie in an       │         │           │          │ │
-│ │ non-code)          │ incompatible       │         │           │          │ │
-│ │                    │ version raises a   │         │           │          │ │
-│ │ Context around the │ ValueError. Also,  │         │           │          │ │
-│ │ change             │ there's an update  │         │           │          │ │
-│ │ (mechanically      │ in the existing    │         │           │          │ │
-│ │ extracted):        │ test_set_cookie to │         │           │          │ │
-│ │ Changed            │ conditionally      │         │           │          │ │
-│ │ definitions:       │ include the        │         │           │          │ │
-│ │ starlette/respons… │ 'Partitioned'      │         │           │          │ │
-│ │ starlette/respons… │ attribute based on │         │           │          │ │
-│ │ starlette/respons… │ the Python         │         │           │          │ │
-│ │ tests/test_respon… │ version.           │         │           │          │ │
-│ │ tests/test_respon… │                    │         │           │          │ │
-│ │ tests/test_respon… │ I need to check if │         │           │          │ │
-│ │ tests/test_respon… │ there are any      │         │           │          │ │
-│ │ tests/test_respon… │ issues here. The   │         │           │          │ │
-│ │ tests/test_respon… │ code seems to      │         │           │          │ │
-│ │ Recent history of  │ handle the Python  │         │           │          │ │
-│ │ starlette/respons… │ version check      │         │           │          │ │
-│ │   5cc4ddf          │ correctly. The     │         │           │          │ │
-│ │ 2025-02-22 Raise   │ test cases cover   │         │           │          │ │
-│ │ exception from     │ both the valid and │         │           │          │ │
-│ │ background task on │ invalid scenarios. │         │           │          │ │
-│ │ BaseHTTPMiddleware │ The new test is    │         │           │          │ │
-│ │ (#2812)            │ properly skipped   │         │           │          │ │
-│ │   a7d0b14          │ for versions where │         │           │          │ │
-│ │ 2025-02-02 Bump    │ partitioned        │         │           │          │ │
-│ │ the                │ cookies aren't     │         │           │          │ │
-│ │ python-packages    │ supported. The     │         │           │          │ │
-│ │ group with 5       │ error message in   │         │           │          │ │
-│ │ updates (#2860)    │ the code is clear, │         │           │          │ │
-│ │   e7605e1          │ and the test       │         │           │          │ │
-│ │ 2024-12-28 Drop    │ verifies that the  │         │           │          │ │
-│ │ Python 3.8 (#2823) │ exception is       │         │           │          │ │
-│ │ Recent history of  │ raised as          │         │           │          │ │
-│ │ tests/test_respon… │ expected.          │         │           │          │ │
-│ │   a7d0b14          │                    │         │           │          │ │
-│ │ 2025-02-02 Bump    │ I don't see any    │         │           │          │ │
-│ │ the                │ obvious defects.   │         │           │          │ │
-│ │ python-packages    │ The changes are    │         │           │          │ │
-│ │ group with 5       │ properly guarded   │         │           │          │ │
-│ │ updates (#2860)    │ against using new  │         │           │          │ │
-│ │   e7605e1          │ features in older  │         │           │          │ │
-│ │ 2024-12-28 Drop    │ Python versions.   │         │           │          │ │
-│ │ Python 3.8 (#2823) │ The tests ensure   │         │           │          │ │
-│ │   70a04ee          │ that the           │         │           │          │ │
-│ │ 2024-12-25 tests:  │ functionality      │         │           │          │ │
-│ │ branches coverage  │ works as intended  │         │           │          │ │
-│ │ in `responses.py`, │ and that errors    │         │           │          │ │
-│ │ `staticfiles.py`,  │ are correctly      │         │           │          │ │
-│ │ `templating.py`,   │ raised. The code   │         │           │          │ │
-│ │ `middleware/wsgi.… │ aligns with the    │         │           │          │ │
-│ │ and `endpoints.py` │ recent history of  │         │           │          │ │
-│ │ (#2804)            │ dropping Python    │         │           │          │ │
-│ │                    │ 3.8, so it's       │         │           │          │ │
-│ │ Diff:              │ likely that the    │         │           │          │ │
-│ │ ```diff            │ version checks are │         │           │          │ │
-│ │ diff --git         │ correctly          │         │           │          │ │
-│ │ a/starlette/respo… │ implemented.       │         │           │          │ │
-│ │ b/starlette/respo… │                    │         │           │          │ │
-│ │ index              │ Therefore, the     │         │           │          │ │
-│ │ 81e89fa..99e6456   │ decision should be │         │           │          │ │
-│ │ 100644             │ to approve the     │         │           │          │ │
-│ │ ---                │ changes. There's   │         │           │          │ │
-│ │ a/starlette/respo… │ no concrete defect │         │           │          │ │
-│ │ +++                │ in the code        │         │           │          │ │
-│ │ b/starlette/respo… │ provided, and the  │         │           │          │ │
-│ │ @@ -6,6 +6,7 @@    │ tests seem to      │         │           │          │ │
-│ │ import json        │ cover the          │         │           │          │ │
-│ │  import os         │ necessary cases.   │         │           │          │ │
-│ │  import re         │ </think>           │         │           │          │ │
-│ │  import stat       │                    │         │           │          │ │
-│ │ +import sys        │ {"decision":       │         │           │          │ │
-│ │  import typing     │ "approve",         │         │           │          │ │
-│ │  import warnings   │ "comments": []}    │         │           │          │ │
-│ │  from datetime     │                    │         │           │          │ │
-│ │ import datetime    │                    │         │           │          │ │
-│ │ @@ -97,6 +98,7 @@  │                    │         │           │          │ │
-│ │ class Response:    │                    │         │           │          │ │
-│ │          secure:   │                    │         │           │          │ │
-│ │ bool = False,      │                    │         │           │          │ │
-│ │          httponly: │                    │         │           │          │ │
-│ │ bool = False,      │                    │         │           │          │ │
-│ │          samesite: │                    │         │           │          │ │
-│ │ typing.Literal["l… │                    │         │           │          │ │
-│ │ "strict", "none"]  │                    │         │           │          │ │
-│ │ | None = "lax",    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ partitioned: bool  │                    │         │           │          │ │
-│ │ = False,           │                    │         │           │          │ │
-│ │      ) -> None:    │                    │         │           │          │ │
-│ │          cookie:   │                    │         │           │          │ │
-│ │ http.cookies.Base… │                    │         │           │          │ │
-│ │ =                  │                    │         │           │          │ │
-│ │ http.cookies.Simp… │                    │         │           │          │ │
-│ │          cookie[k… │                    │         │           │          │ │
-│ │ = value            │                    │         │           │          │ │
-│ │ @@ -122,6 +124,11  │                    │         │           │          │ │
-│ │ @@ class Response: │                    │         │           │          │ │
-│ │                  … │                    │         │           │          │ │
-│ │              ],    │                    │         │           │          │ │
-│ │ "samesite must be  │                    │         │           │          │ │
-│ │ either 'strict',   │                    │         │           │          │ │
-│ │ 'lax' or 'none'"   │                    │         │           │          │ │
-│ │              cook… │                    │         │           │          │ │
-│ │ = samesite         │                    │         │           │          │ │
-│ │ +        if        │                    │         │           │          │ │
-│ │ partitioned:       │                    │         │           │          │ │
-│ │ +            if    │                    │         │           │          │ │
-│ │ sys.version_info   │                    │         │           │          │ │
-│ │ <= (3, 14):        │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ raise              │                    │         │           │          │ │
-│ │ ValueError("Parti… │                    │         │           │          │ │
-│ │ cookies are only   │                    │         │           │          │ │
-│ │ supported in       │                    │         │           │          │ │
-│ │ Python 3.14 and    │                    │         │           │          │ │
-│ │ above.")  #        │                    │         │           │          │ │
-│ │ pragma: no cover   │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ cookie[key]["part… │                    │         │           │          │ │
-│ │ = True  # pragma:  │                    │         │           │          │ │
-│ │ no cover           │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │          cookie_v… │                    │         │           │          │ │
-│ │ =                  │                    │         │           │          │ │
-│ │ cookie.output(hea… │                    │         │           │          │ │
-│ │          self.raw… │                    │         │           │          │ │
-│ │ cookie_val.encode… │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
+│ │  fn                │                    │         │           │          │ │
+│ │ build_validator_i… │                    │         │           │          │ │
 │ │ diff --git         │                    │         │           │          │ │
-│ │ a/tests/test_resp… │                    │         │           │          │ │
-│ │ b/tests/test_resp… │                    │         │           │          │ │
+│ │ a/pydantic-core/t… │                    │         │           │          │ │
+│ │ b/pydantic-core/t… │                    │         │           │          │ │
 │ │ index              │                    │         │           │          │ │
-│ │ 0a00e93..baf7c98   │                    │         │           │          │ │
+│ │ cbedcf50..1dd48445 │                    │         │           │          │ │
 │ │ 100644             │                    │         │           │          │ │
 │ │ ---                │                    │         │           │          │ │
-│ │ a/tests/test_resp… │                    │         │           │          │ │
+│ │ a/pydantic-core/t… │                    │         │           │          │ │
 │ │ +++                │                    │         │           │          │ │
-│ │ b/tests/test_resp… │                    │         │           │          │ │
-│ │ @@ -1,6 +1,7 @@    │                    │         │           │          │ │
-│ │  from __future__   │                    │         │           │          │ │
-│ │ import annotations │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │  import datetime   │                    │         │           │          │ │
-│ │ as dt              │                    │         │           │          │ │
-│ │ +import sys        │                    │         │           │          │ │
-│ │  import time       │                    │         │           │          │ │
-│ │  from              │                    │         │           │          │ │
-│ │ collections.abc    │                    │         │           │          │ │
-│ │ import             │                    │         │           │          │ │
-│ │ AsyncGenerator,    │                    │         │           │          │ │
-│ │ AsyncIterator,     │                    │         │           │          │ │
-│ │ Iterator           │                    │         │           │          │ │
-│ │  from http.cookies │                    │         │           │          │ │
-│ │ import             │                    │         │           │          │ │
-│ │ SimpleCookie       │                    │         │           │          │ │
-│ │ @@ -370,18 +371,37 │                    │         │           │          │ │
+│ │ b/pydantic-core/t… │                    │         │           │          │ │
+│ │ @@ -169,3 +169,8   │                    │         │           │          │ │
 │ │ @@ def             │                    │         │           │          │ │
-│ │ test_set_cookie(t… │                    │         │           │          │ │
-│ │ TestClientFactory, │                    │         │           │          │ │
-│ │ monkeypatch:       │                    │         │           │          │ │
-│ │ pytest.            │                    │         │           │          │ │
-│ │              secu… │                    │         │           │          │ │
-│ │              http… │                    │         │           │          │ │
-│ │              same… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ partitioned=True   │                    │         │           │          │ │
-│ │ if                 │                    │         │           │          │ │
-│ │ sys.version_info   │                    │         │           │          │ │
-│ │ >= (3, 14) else    │                    │         │           │          │ │
-│ │ False,             │                    │         │           │          │ │
-│ │          )         │                    │         │           │          │ │
-│ │          await     │                    │         │           │          │ │
-│ │ response(scope,    │                    │         │           │          │ │
-│ │ receive, send)     │                    │         │           │          │ │
+│ │ test_float_inf_an… │                    │         │           │          │ │
+│ │ expected_json,     │                    │         │           │          │ │
+│ │ config):           │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ partitioned_text = │                    │         │           │          │ │
-│ │ "Partitioned; " if │                    │         │           │          │ │
-│ │ sys.version_info   │                    │         │           │          │ │
-│ │ >= (3, 14) else "" │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │      client =      │                    │         │           │          │ │
-│ │ test_client_facto… │                    │         │           │          │ │
-│ │      response =    │                    │         │           │          │ │
-│ │ client.get("/")    │                    │         │           │          │ │
+│ │      # Serialized  │                    │         │           │          │ │
+│ │ JSON value         │                    │         │           │          │ │
+│ │ respects the       │                    │         │           │          │ │
+│ │ ser_json_inf_nan   │                    │         │           │          │ │
+│ │ setting            │                    │         │           │          │ │
 │ │      assert        │                    │         │           │          │ │
-│ │ response.text ==   │                    │         │           │          │ │
-│ │ "Hello, world!"    │                    │         │           │          │ │
-│ │      assert (      │                    │         │           │          │ │
-│ │          response… │                    │         │           │          │ │
-│ │ ==                 │                    │         │           │          │ │
-│ │ "mycookie=myvalue; │                    │         │           │          │ │
-│ │ Domain=localhost;  │                    │         │           │          │ │
-│ │ expires=Thu, 22    │                    │         │           │          │ │
-│ │ Jan 2037 12:00:10  │                    │         │           │          │ │
-│ │ GMT; "             │                    │         │           │          │ │
-│ │ -                  │                    │         │           │          │ │
-│ │ "HttpOnly;         │                    │         │           │          │ │
-│ │ Max-Age=10;        │                    │         │           │          │ │
-│ │ Path=/;            │                    │         │           │          │ │
-│ │ SameSite=none;     │                    │         │           │          │ │
-│ │ Secure"            │                    │         │           │          │ │
+│ │ s.to_json(value).… │                    │         │           │          │ │
+│ │ == expected_json   │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ f"HttpOnly;        │                    │         │           │          │ │
-│ │ Max-Age=10;        │                    │         │           │          │ │
-│ │ {partitioned_text… │                    │         │           │          │ │
-│ │ SameSite=none;     │                    │         │           │          │ │
-│ │ Secure"            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_schema_seria… │                    │         │           │          │ │
+│ │ +    """Test that  │                    │         │           │          │ │
+│ │ SchemaSerializer   │                    │         │           │          │ │
+│ │ can be constructed │                    │         │           │          │ │
+│ │ with               │                    │         │           │          │ │
+│ │ _use_prebuilt=Fal… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ SchemaSerializer(… │                    │         │           │          │ │
+│ │ 'str'}, None,      │                    │         │           │          │ │
+│ │ _use_prebuilt=Fal… │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/pydantic-core/t… │                    │         │           │          │ │
+│ │ b/pydantic-core/t… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 38edc917..107124dc │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/pydantic-core/t… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/pydantic-core/t… │                    │         │           │          │ │
+│ │ @@ -49,7 +49,7 @@  │                    │         │           │          │ │
+│ │ mod tests {        │                    │         │           │          │ │
+│ │              }"    │                    │         │           │          │ │
+│ │              );    │                    │         │           │          │ │
+│ │              let   │                    │         │           │          │ │
+│ │ schema: Bound<'_,  │                    │         │           │          │ │
+│ │ PyDict> =          │                    │         │           │          │ │
+│ │ py.eval(code,      │                    │         │           │          │ │
+│ │ None,              │                    │         │           │          │ │
+│ │ None).unwrap().ex… │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ SchemaSerializer:… │                    │         │           │          │ │
+│ │ None).unwrap();    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ SchemaSerializer:… │                    │         │           │          │ │
+│ │ None,              │                    │         │           │          │ │
+│ │ true).unwrap();    │                    │         │           │          │ │
+│ │          });       │                    │         │           │          │ │
+│ │      }             │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ @@ -76,7 +76,7 @@  │                    │         │           │          │ │
+│ │ json_input =       │                    │         │           │          │ │
+│ │ '{"a":             │                    │         │           │          │ │
+│ │ "something"}'      │                    │         │           │          │ │
+│ │              py.r… │                    │         │           │          │ │
+│ │ None,              │                    │         │           │          │ │
+│ │ Some(&locals)).un… │                    │         │           │          │ │
+│ │              let   │                    │         │           │          │ │
+│ │ schema =           │                    │         │           │          │ │
+│ │ locals.get_item("… │                    │         │           │          │ │
+│ │              let   │                    │         │           │          │ │
+│ │ json_input =       │                    │         │           │          │ │
+│ │ locals.get_item("… │                    │         │           │          │ │
+│ │ -            let   │                    │         │           │          │ │
+│ │ binding =          │                    │         │           │          │ │
+│ │ SchemaValidator::… │                    │         │           │          │ │
+│ │ &schema, None)     │                    │         │           │          │ │
+│ │ +            let   │                    │         │           │          │ │
+│ │ binding =          │                    │         │           │          │ │
+│ │ SchemaValidator::… │                    │         │           │          │ │
+│ │ &schema, None,     │                    │         │           │          │ │
+│ │ true)              │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ &json_input, None, │                    │         │           │          │ │
+│ │ None, None, None,  │                    │         │           │          │ │
+│ │ false.into(),      │                    │         │           │          │ │
+│ │ None, None)        │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ @@ -137,7 +137,7   │                    │         │           │          │ │
+│ │ @@                 │                    │         │           │          │ │
+│ │ dump_json_input_2  │                    │         │           │          │ │
+│ │ = {'a':            │                    │         │           │          │ │
+│ │ 'something'}       │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │              let   │                    │         │           │          │ │
+│ │ dump_json_input_1  │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ locals.get_item("… │                    │         │           │          │ │
+│ │              let   │                    │         │           │          │ │
+│ │ dump_json_input_2  │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ locals.get_item("… │                    │         │           │          │ │
+│ │ -            let   │                    │         │           │          │ │
+│ │ serializer =       │                    │         │           │          │ │
+│ │ SchemaSerializer:… │                    │         │           │          │ │
+│ │ None).unwrap();    │                    │         │           │          │ │
+│ │ +            let   │                    │         │           │          │ │
+│ │ serializer =       │                    │         │           │          │ │
+│ │ SchemaSerializer:… │                    │         │           │          │ │
+│ │ None,              │                    │         │           │          │ │
+│ │ true).unwrap();    │                    │         │           │          │ │
+│ │              let   │                    │         │           │          │ │
+│ │ serialization_res… │                    │         │           │          │ │
+│ │ = serializer       │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/pydantic-core/t… │                    │         │           │          │ │
+│ │ b/pydantic-core/t… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ fbfdabe6..d57f3626 │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/pydantic-core/t… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/pydantic-core/t… │                    │         │           │          │ │
+│ │ @@ -76,3 +76,8 @@  │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ test_build_recurs… │                    │         │           │          │ │
+│ │ -> None:           │                    │         │           │          │ │
 │ │      )             │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ +@pytest.mark.ski… │                    │         │           │          │ │
-│ │ >= (3, 14),        │                    │         │           │          │ │
-│ │ reason="Only       │                    │         │           │          │ │
-│ │ relevant for       │                    │         │           │          │ │
-│ │ <3.14")            │                    │         │           │          │ │
+│ │      SchemaValida… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
 │ │ +def               │                    │         │           │          │ │
-│ │ test_set_cookie_r… │                    │         │           │          │ │
+│ │ test_schema_valid… │                    │         │           │          │ │
+│ │ +    """Test that  │                    │         │           │          │ │
+│ │ SchemaValidator    │                    │         │           │          │ │
+│ │ can be constructed │                    │         │           │          │ │
+│ │ with               │                    │         │           │          │ │
+│ │ _use_prebuilt=Fal… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ test_client_facto… │                    │         │           │          │ │
-│ │ TestClientFactory, │                    │         │           │          │ │
-│ │ +) -> None:  #     │                    │         │           │          │ │
-│ │ pragma: no cover   │                    │         │           │          │ │
-│ │ +    async def     │                    │         │           │          │ │
-│ │ app(scope: Scope,  │                    │         │           │          │ │
-│ │ receive: Receive,  │                    │         │           │          │ │
-│ │ send: Send) ->     │                    │         │           │          │ │
-│ │ None:              │                    │         │           │          │ │
-│ │ +        response  │                    │         │           │          │ │
-│ │ = Response("Hello, │                    │         │           │          │ │
-│ │ world!",           │                    │         │           │          │ │
-│ │ media_type="text/… │                    │         │           │          │ │
-│ │ +        with      │                    │         │           │          │ │
-│ │ pytest.raises(Val… │                    │         │           │          │ │
+│ │ SchemaValidator({… │                    │         │           │          │ │
+│ │ 'str'}, None,      │                    │         │           │          │ │
+│ │ _use_prebuilt=Fal… │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/pydantic/_inter… │                    │         │           │          │ │
+│ │ b/pydantic/_inter… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ de5a3e0d..e1fc68c9 │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/pydantic/_inter… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/pydantic/_inter… │                    │         │           │          │ │
+│ │ @@ -599,6 +599,7   │                    │         │           │          │ │
+│ │ @@ def             │                    │         │           │          │ │
+│ │ complete_model_cl… │                    │         │           │          │ │
+│ │      raise_errors: │                    │         │           │          │ │
+│ │ bool = True,       │                    │         │           │          │ │
+│ │      call_on_comp… │                    │         │           │          │ │
+│ │ bool = True,       │                    │         │           │          │ │
+│ │      create_model… │                    │         │           │          │ │
+│ │ str | None = None, │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ response.set_cook… │                    │         │           │          │ │
-│ │ "myvalue",         │                    │         │           │          │ │
-│ │ partitioned=True)  │                    │         │           │          │ │
-│ │ +        await     │                    │         │           │          │ │
-│ │ response(scope,    │                    │         │           │          │ │
-│ │ receive, send)     │                    │         │           │          │ │
+│ │ is_force_rebuild:  │                    │         │           │          │ │
+│ │ bool = True,       │                    │         │           │          │ │
+│ │  ) -> bool:        │                    │         │           │          │ │
+│ │      """Finish     │                    │         │           │          │ │
+│ │ building a model   │                    │         │           │          │ │
+│ │ class.             │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ @@ -612,6 +613,8   │                    │         │           │          │ │
+│ │ @@ def             │                    │         │           │          │ │
+│ │ complete_model_cl… │                    │         │           │          │ │
+│ │          raise_er… │                    │         │           │          │ │
+│ │ Whether to raise   │                    │         │           │          │ │
+│ │ errors.            │                    │         │           │          │ │
+│ │          call_on_… │                    │         │           │          │ │
+│ │ Whether to call    │                    │         │           │          │ │
+│ │ the                │                    │         │           │          │ │
+│ │ `__pydantic_on_co… │                    │         │           │          │ │
+│ │ hook.              │                    │         │           │          │ │
+│ │          create_m… │                    │         │           │          │ │
+│ │ The module of the  │                    │         │           │          │ │
+│ │ class to be        │                    │         │           │          │ │
+│ │ created, if        │                    │         │           │          │ │
+│ │ created by         │                    │         │           │          │ │
+│ │ `create_model`.    │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    client =      │                    │         │           │          │ │
-│ │ test_client_facto… │                    │         │           │          │ │
-│ │ +    response =    │                    │         │           │          │ │
-│ │ client.get("/")    │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ response.text ==   │                    │         │           │          │ │
-│ │ "Hello, world!"    │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ response.headers.… │                    │         │           │          │ │
-│ │ is None            │                    │         │           │          │ │
+│ │ is_force_rebuild:  │                    │         │           │          │ │
+│ │ Whether the model  │                    │         │           │          │ │
+│ │ is being           │                    │         │           │          │ │
+│ │ force-rebuilt (if  │                    │         │           │          │ │
+│ │ True, pre-built    │                    │         │           │          │ │
+│ │ serializers and    │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
+│ │ validators are not │                    │         │           │          │ │
+│ │ used, to avoid     │                    │         │           │          │ │
+│ │ stale references). │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      Returns:      │                    │         │           │          │ │
+│ │          `True` if │                    │         │           │          │ │
+│ │ the model is       │                    │         │           │          │ │
+│ │ successfully       │                    │         │           │          │ │
+│ │ completed, else    │                    │         │           │          │ │
+│ │ `False`.           │                    │         │           │          │ │
+│ │ @@ -686,8 +689,9   │                    │         │           │          │ │
+│ │ @@ def             │                    │         │           │          │ │
+│ │ complete_model_cl… │                    │         │           │          │ │
+│ │          'create_… │                    │         │           │          │ │
+│ │ if                 │                    │         │           │          │ │
+│ │ create_model_modu… │                    │         │           │          │ │
+│ │ else 'BaseModel',  │                    │         │           │          │ │
+│ │          core_con… │                    │         │           │          │ │
+│ │          config_w… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │  def               │                    │         │           │          │ │
-│ │ test_set_cookie_p… │                    │         │           │          │ │
-│ │ TestClientFactory) │                    │         │           │          │ │
-│ │ -> None:           │                    │         │           │          │ │
-│ │      async def     │                    │         │           │          │ │
-│ │ app(scope: Scope,  │                    │         │           │          │ │
-│ │ receive: Receive,  │                    │         │           │          │ │
-│ │ send: Send) ->     │                    │         │           │          │ │
-│ │ None:              │                    │         │           │          │ │
-│ │          response  │                    │         │           │          │ │
-│ │ = Response("Hello, │                    │         │           │          │ │
-│ │ world!",           │                    │         │           │          │ │
-│ │ media_type="text/… │                    │         │           │          │ │
+│ │ _use_prebuilt=not  │                    │         │           │          │ │
+│ │ is_force_rebuild,  │                    │         │           │          │ │
+│ │      )             │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ cls.__pydantic_se… │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ SchemaSerializer(… │                    │         │           │          │ │
+│ │ core_config)       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cls.__pydantic_se… │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ SchemaSerializer(… │                    │         │           │          │ │
+│ │ core_config,       │                    │         │           │          │ │
+│ │ _use_prebuilt=not  │                    │         │           │          │ │
+│ │ is_force_rebuild)  │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      # set         │                    │         │           │          │ │
+│ │ __signature__ attr │                    │         │           │          │ │
+│ │ only for model     │                    │         │           │          │ │
+│ │ class, but not for │                    │         │           │          │ │
+│ │ its instances      │                    │         │           │          │ │
+│ │      # (because    │                    │         │           │          │ │
+│ │ instances can      │                    │         │           │          │ │
+│ │ define `__call__`, │                    │         │           │          │ │
+│ │ and                │                    │         │           │          │ │
+│ │ `inspect.signatur… │                    │         │           │          │ │
+│ │ shouldn't          │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/pydantic/main.py │                    │         │           │          │ │
+│ │ b/pydantic/main.py │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ b4cd3f6f..1eb1ebf0 │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/pydantic/main.py │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/pydantic/main.py │                    │         │           │          │ │
+│ │ @@ -679,6 +679,7   │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ BaseModel(metacla… │                    │         │           │          │ │
+│ │              rais… │                    │         │           │          │ │
+│ │              # If  │                    │         │           │          │ │
+│ │ the model was      │                    │         │           │          │ │
+│ │ already complete,  │                    │         │           │          │ │
+│ │ we don't need to   │                    │         │           │          │ │
+│ │ call the hook      │                    │         │           │          │ │
+│ │ again.             │                    │         │           │          │ │
+│ │              call… │                    │         │           │          │ │
+│ │ already_complete,  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ is_force_rebuild=… │                    │         │           │          │ │
+│ │          )         │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      @classmethod  │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/pydantic/plugin… │                    │         │           │          │ │
+│ │ b/pydantic/plugin… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 83f2562b..0c75c29f │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/pydantic/plugin… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/pydantic/plugin… │                    │         │           │          │ │
+│ │ @@ -27,6 +27,7 @@  │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ create_schema_val… │                    │         │           │          │ │
+│ │      schema_kind:  │                    │         │           │          │ │
+│ │ SchemaKind,        │                    │         │           │          │ │
+│ │      config:       │                    │         │           │          │ │
+│ │ CoreConfig | None  │                    │         │           │          │ │
+│ │ = None,            │                    │         │           │          │ │
+│ │      plugin_setti… │                    │         │           │          │ │
+│ │ dict[str, Any] |   │                    │         │           │          │ │
+│ │ None = None,       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _use_prebuilt:     │                    │         │           │          │ │
+│ │ bool = True,       │                    │         │           │          │ │
+│ │  ) ->              │                    │         │           │          │ │
+│ │ SchemaValidator |  │                    │         │           │          │ │
+│ │ PluggableSchemaVa… │                    │         │           │          │ │
+│ │      """Create a   │                    │         │           │          │ │
+│ │ `SchemaValidator`  │                    │         │           │          │ │
+│ │ or                 │                    │         │           │          │ │
+│ │ `PluggableSchemaV… │                    │         │           │          │ │
+│ │ if plugins are     │                    │         │           │          │ │
+│ │ installed.         │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ @@ -46,9 +47,10 @@ │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ create_schema_val… │                    │         │           │          │ │
+│ │              conf… │                    │         │           │          │ │
+│ │              plug… │                    │         │           │          │ │
+│ │              plug… │                    │         │           │          │ │
+│ │ or {},             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _use_prebuilt=_us… │                    │         │           │          │ │
+│ │          )         │                    │         │           │          │ │
+│ │      else:         │                    │         │           │          │ │
+│ │ -        return    │                    │         │           │          │ │
+│ │ SchemaValidator(s… │                    │         │           │          │ │
+│ │ config)            │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ SchemaValidator(s… │                    │         │           │          │ │
+│ │ config,            │                    │         │           │          │ │
+│ │ _use_prebuilt=_us… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  class             │                    │         │           │          │ │
+│ │ PluggableSchemaVa… │                    │         │           │          │ │
+│ │ @@ -65,8 +67,9 @@  │                    │         │           │          │ │
+│ │ class              │                    │         │           │          │ │
+│ │ PluggableSchemaVa… │                    │         │           │          │ │
+│ │          config:   │                    │         │           │          │ │
+│ │ CoreConfig | None, │                    │         │           │          │ │
+│ │          plugins:  │                    │         │           │          │ │
+│ │ Iterable[Pydantic… │                    │         │           │          │ │
+│ │          plugin_s… │                    │         │           │          │ │
+│ │ dict[str, Any],    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _use_prebuilt:     │                    │         │           │          │ │
+│ │ bool = True,       │                    │         │           │          │ │
+│ │      ) -> None:    │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ self._schema_vali… │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ SchemaValidator(s… │                    │         │           │          │ │
+│ │ config)            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self._schema_vali… │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ SchemaValidator(s… │                    │         │           │          │ │
+│ │ config,            │                    │         │           │          │ │
+│ │ _use_prebuilt=_us… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │          python_e… │                    │         │           │          │ │
+│ │ list[BaseValidate… │                    │         │           │          │ │
+│ │ = []               │                    │         │           │          │ │
+│ │          json_eve… │                    │         │           │          │ │
+│ │ list[BaseValidate… │                    │         │           │          │ │
+│ │ = []               │                    │         │           │          │ │
 │ │ ```                │                    │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
