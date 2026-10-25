@@ -1,400 +1,400 @@
-│ │                    │ is NO_OP even if   │         │           │          │ │
-│ │                    │ frozen is True.    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ But according to   │         │           │          │ │
-│ │                    │ the diff, the code │         │           │          │ │
-│ │                    │ is:                │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Original line:     │         │           │          │ │
-│ │                    │ if frozen is True: │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ New line:          │         │           │          │ │
-│ │                    │ if frozen is True  │         │           │          │ │
-│ │                    │ or a.on_setattr is │         │           │          │ │
-│ │                    │ not setters.NO_OP: │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ So the code now    │         │           │          │ │
-│ │                    │ would raise an     │         │           │          │ │
-│ │                    │ error if either    │         │           │          │ │
-│ │                    │ frozen is True OR  │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ not NO_OP. Wait,   │         │           │          │ │
-│ │                    │ but that's not     │         │           │          │ │
-│ │                    │ correct. Because   │         │           │          │ │
-│ │                    │ if a.on_setattr is │         │           │          │ │
-│ │                    │ NO_OP, then the    │         │           │          │ │
-│ │                    │ condition becomes  │         │           │          │ │
-│ │                    │ frozen is True OR  │         │           │          │ │
-│ │                    │ False → frozen is  │         │           │          │ │
-│ │                    │ True. So the       │         │           │          │ │
-│ │                    │ condition is the   │         │           │          │ │
-│ │                    │ same as before.    │         │           │          │ │
-│ │                    │ But that's not     │         │           │          │ │
-│ │                    │ possible. Unless   │         │           │          │ │
-│ │                    │ there's a mistake  │         │           │          │ │
-│ │                    │ in the code.       │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Wait, maybe the    │         │           │          │ │
-│ │                    │ original code was  │         │           │          │ │
-│ │                    │ checking if        │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ not None and not   │         │           │          │ │
-│ │                    │ NO_OP, and then    │         │           │          │ │
-│ │                    │ checking frozen.   │         │           │          │ │
-│ │                    │ But the current    │         │           │          │ │
-│ │                    │ code is checking   │         │           │          │ │
-│ │                    │ if frozen or       │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ not NO_OP. So the  │         │           │          │ │
-│ │                    │ logic is           │         │           │          │ │
-│ │                    │ different.         │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Wait, let's think  │         │           │          │ │
-│ │                    │ of different       │         │           │          │ │
-│ │                    │ scenarios:         │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Original code: if  │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ not None and       │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ not NO_OP: then    │         │           │          │ │
-│ │                    │ check if frozen.   │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Now, the code is:  │         │           │          │ │
-│ │                    │ if a.on_setattr is │         │           │          │ │
-│ │                    │ not None: then     │         │           │          │ │
-│ │                    │ check if frozen OR │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ not NO_OP.         │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ So in the new      │         │           │          │ │
-│ │                    │ code, even if      │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ NO_OP, but frozen  │         │           │          │ │
-│ │                    │ is True, then the  │         │           │          │ │
-│ │                    │ condition is True, │         │           │          │ │
-│ │                    │ so error is        │         │           │          │ │
-│ │                    │ raised. Wait, but  │         │           │          │ │
-│ │                    │ in the original    │         │           │          │ │
-│ │                    │ code, if           │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ NO_OP, then        │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ not None and not   │         │           │          │ │
-│ │                    │ NO_OP would be     │         │           │          │ │
-│ │                    │ False, so the      │         │           │          │ │
-│ │                    │ check for frozen   │         │           │          │ │
-│ │                    │ would not be done. │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ So the original    │         │           │          │ │
-│ │                    │ code allowed NO_OP │         │           │          │ │
-│ │                    │ on frozen classes. │         │           │          │ │
-│ │                    │ Because if         │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ NO_OP, then the    │         │           │          │ │
-│ │                    │ condition to check │         │           │          │ │
-│ │                    │ frozen is not      │         │           │          │ │
-│ │                    │ triggered.         │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ But the new code,  │         │           │          │ │
-│ │                    │ if a.on_setattr is │         │           │          │ │
-│ │                    │ NO_OP, then        │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ not NO_OP is       │         │           │          │ │
-│ │                    │ False. So the      │         │           │          │ │
-│ │                    │ condition is       │         │           │          │ │
-│ │                    │ frozen is True OR  │         │           │          │ │
-│ │                    │ False → frozen is  │         │           │          │ │
-│ │                    │ True. So if the    │         │           │          │ │
-│ │                    │ class is frozen,   │         │           │          │ │
-│ │                    │ then the error is  │         │           │          │ │
-│ │                    │ raised.            │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Wait, this is the  │         │           │          │ │
-│ │                    │ opposite of what   │         │           │          │ │
-│ │                    │ the test case is   │         │           │          │ │
-│ │                    │ trying to do. The  │         │           │          │ │
-│ │                    │ test case added in │         │           │          │ │
-│ │                    │ test_setattr.py is │         │           │          │ │
-│ │                    │ for allowing NO_OP │         │           │          │ │
-│ │                    │ on frozen classes. │         │           │          │ │
-│ │                    │ So the new code    │         │           │          │ │
-│ │                    │ would not allow    │         │           │          │ │
-│ │                    │ that.              │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ But wait,          │         │           │          │ │
-│ │                    │ according to the   │         │           │          │ │
-│ │                    │ diff, the new code │         │           │          │ │
-│ │                    │ is changing the    │         │           │          │ │
-│ │                    │ condition to check │         │           │          │ │
-│ │                    │ if frozen is True  │         │           │          │ │
-│ │                    │ OR a.on_setattr is │         │           │          │ │
-│ │                    │ not NO_OP. So, if  │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ NO_OP, then the    │         │           │          │ │
-│ │                    │ condition becomes  │         │           │          │ │
-│ │                    │ frozen is True.    │         │           │          │ │
-│ │                    │ So, if the class   │         │           │          │ │
-│ │                    │ is frozen, then    │         │           │          │ │
-│ │                    │ the error is       │         │           │          │ │
-│ │                    │ raised. Which is   │         │           │          │ │
-│ │                    │ not what the test  │         │           │          │ │
-│ │                    │ case is expecting. │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ But the test case  │         │           │          │ │
-│ │                    │ in test_setattr.py │         │           │          │ │
-│ │                    │ is adding a test   │         │           │          │ │
-│ │                    │ where on_setattr   │         │           │          │ │
-│ │                    │ is NO_OP on a      │         │           │          │ │
-│ │                    │ frozen class, and  │         │           │          │ │
-│ │                    │ the test expects   │         │           │          │ │
-│ │                    │ it to work. So the │         │           │          │ │
-│ │                    │ new code would     │         │           │          │ │
-│ │                    │ actually block     │         │           │          │ │
-│ │                    │ this case.         │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ But according to   │         │           │          │ │
-│ │                    │ the diff, the code │         │           │          │ │
-│ │                    │ is allowing this   │         │           │          │ │
-│ │                    │ case. There's a    │         │           │          │ │
-│ │                    │ contradiction      │         │           │          │ │
-│ │                    │ here.              │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Wait, maybe I'm    │         │           │          │ │
-│ │                    │ misunderstanding   │         │           │          │ │
-│ │                    │ the code. Let me   │         │           │          │ │
-│ │                    │ re-express the     │         │           │          │ │
-│ │                    │ logic.             │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Original code:     │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ if a.on_setattr is │         │           │          │ │
-│ │                    │ not None:          │         │           │          │ │
-│ │                    │     if frozen is   │         │           │          │ │
-│ │                    │ True:              │         │           │          │ │
-│ │                    │         raise      │         │           │          │ │
-│ │                    │ error              │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ So, if             │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ not None, and the  │         │           │          │ │
-│ │                    │ class is frozen,   │         │           │          │ │
-│ │                    │ then raise error.  │         │           │          │ │
-│ │                    │ But if             │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ None (or NO_OP?),  │         │           │          │ │
-│ │                    │ then it's allowed. │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Wait, but in the   │         │           │          │ │
-│ │                    │ code, on_setattr   │         │           │          │ │
-│ │                    │ is a parameter     │         │           │          │ │
-│ │                    │ passed to attr.ib. │         │           │          │ │
-│ │                    │ The default is     │         │           │          │ │
-│ │                    │ None. So if        │         │           │          │ │
-│ │                    │ on_setattr is set  │         │           │          │ │
-│ │                    │ to NO_OP, then     │         │           │          │ │
-│ │                    │ it's not None.     │         │           │          │ │
+│ │ is the worst       │ code had a check   │         │           │          │ │
+│ │ outcome.           │ for if not         │         │           │          │ │
+│ │ Your final answer  │ sequence, then it  │         │           │          │ │
+│ │ must be exactly    │ yielded an empty   │         │           │          │ │
+│ │ one JSON object:   │ tuple and          │         │           │          │ │
+│ │ {"decision":       │ returned. Then, n  │         │           │          │ │
+│ │ "approve|block|es… │ was calculated as  │         │           │          │ │
+│ │ "comments": []}    │ comb(len(sequence) │         │           │          │ │
+│ │ For block, include │ + r -1, r). But in │         │           │          │ │
+│ │ exactly one        │ the modified code, │         │           │          │ │
+│ │ comment with file, │ they changed that  │         │           │          │ │
+│ │ line_start,        │ to n = comb(...)   │         │           │          │ │
+│ │ line_end and body; │ if sequence else 1 │         │           │          │ │
+│ │ limit body to 40   │ if r else 0.       │         │           │          │ │
+│ │ words explaining   │                    │         │           │          │ │
+│ │ the defect. For    │ Wait, the original │         │           │          │ │
+│ │ approve or         │ code's approach    │         │           │          │ │
+│ │ escalate, use an   │ for an empty       │         │           │          │ │
+│ │ empty comments     │ sequence was to    │         │           │          │ │
+│ │ array. Do not      │ yield an empty     │         │           │          │ │
+│ │ include proposed   │ tuple and return.  │         │           │          │ │
+│ │ tests or test      │ But the new code   │         │           │          │ │
+│ │ source.            │ removes that check │         │           │          │ │
+│ │                    │ and instead sets n │         │           │          │ │
+│ │ USER               │ to 1 if r is       │         │           │          │ │
+│ │ Repository:        │ non-zero, or 0 if  │         │           │          │ │
+│ │ more-itertools     │ r is zero. Hmm.    │         │           │          │ │
+│ │ Files changed:     │ Let's think about  │         │           │          │ │
+│ │ more_itertools/mo… │ what the function  │         │           │          │ │
+│ │                    │ is supposed to do. │         │           │          │ │
+│ │ Context around the │ The function is    │         │           │          │ │
+│ │ change             │ supposed to return │         │           │          │ │
+│ │ (mechanically      │ combinations with  │         │           │          │ │
+│ │ extracted):        │ replacement in a   │         │           │          │ │
+│ │ Changed            │ random order.      │         │           │          │ │
+│ │ definitions:       │                    │         │           │          │ │
+│ │ more_itertools/mo… │ If the input       │         │           │          │ │
+│ │ Recent history of  │ iterable is empty, │         │           │          │ │
+│ │ more_itertools/mo… │ then               │         │           │          │ │
+│ │   b8fe920          │ combinations_with… │         │           │          │ │
+│ │ 2026-01-03 Add     │ would normally be  │         │           │          │ │
+│ │ random ordered     │ empty. But the     │         │           │          │ │
+│ │ combinatoric       │ original code had  │         │           │          │ │
+│ │ functions          │ a check that, if   │         │           │          │ │
+│ │   ce676d2          │ the sequence is    │         │           │          │ │
+│ │ 2026-09-04 Do not  │ empty, it yields   │         │           │          │ │
+│ │ yield an empty     │ an empty tuple and │         │           │          │ │
+│ │ list for an empty  │ returns. However,  │         │           │          │ │
+│ │ iterable when      │ the new code       │         │           │          │ │
+│ │ maxsplit is 0      │ removes that check │         │           │          │ │
+│ │   7847d43          │ and instead        │         │           │          │ │
+│ │ 2026-09-03 Don't   │ calculates n based │         │           │          │ │
+│ │ mask TypeError     │ on sequence and r. │         │           │          │ │
+│ │ raised while       │                    │         │           │          │ │
+│ │ iterating in       │ Wait, the original │         │           │          │ │
+│ │ value_chain        │ code's 'sequence = │         │           │          │ │
+│ │                    │ tuple(iterable)',  │         │           │          │ │
+│ │ Diff:              │ then if not        │         │           │          │ │
+│ │ ```diff            │ sequence, yield () │         │           │          │ │
+│ │ diff --git         │ and return. But    │         │           │          │ │
+│ │ a/more_itertools/… │ the new code       │         │           │          │ │
+│ │ b/more_itertools/… │ changes that part. │         │           │          │ │
+│ │ index              │ The original       │         │           │          │ │
+│ │ edb94d1..3b5b26a   │ code's n was       │         │           │          │ │
+│ │ 100755             │ comb(len(sequence) │         │           │          │ │
+│ │ ---                │ + r -1, r). So for │         │           │          │ │
+│ │ a/more_itertools/… │ an empty sequence, │         │           │          │ │
+│ │ +++                │ len(sequence) is   │         │           │          │ │
+│ │ b/more_itertools/… │ zero, so comb(0 +  │         │           │          │ │
+│ │ @@ -5672,9 +5672,6 │ r -1, r). That     │         │           │          │ │
+│ │ @@ def             │ would be comb(r-1, │         │           │          │ │
+│ │ random_ordered_co… │ r), which is zero. │         │           │          │ │
+│ │ r):                │ But the original   │         │           │          │ │
+│ │  def               │ code then had a    │         │           │          │ │
+│ │ random_ordered_co… │ check that if the  │         │           │          │ │
+│ │ r):                │ sequence is empty, │         │           │          │ │
+│ │      "Return       │ it yields an empty │         │           │          │ │
+│ │ :func:`combinatio… │ tuple. But the new │         │           │          │ │
+│ │ tuples in randomly │ code's calculation │         │           │          │ │
+│ │ shuffled order."   │ for n when         │         │           │          │ │
+│ │      sequence =    │ sequence is empty  │         │           │          │ │
+│ │ tuple(iterable)    │ is 1 if r else 0.  │         │           │          │ │
+│ │ -    if not        │                    │         │           │          │ │
+│ │ sequence:          │ Wait, the new code │         │           │          │ │
+│ │ -        yield ()  │ says n = comb(...) │         │           │          │ │
+│ │ -        return    │ if sequence else 1 │         │           │          │ │
+│ │ -    n =           │ if r else 0. So,   │         │           │          │ │
+│ │ comb(len(sequence) │ if the sequence is │         │           │          │ │
+│ │ + r - 1, r)        │ empty, then it's 1 │         │           │          │ │
+│ │ +    n =           │ if r is not zero,  │         │           │          │ │
+│ │ comb(len(sequence) │ else 0. But for    │         │           │          │ │
+│ │ + r - 1, r) if     │ combinations_with… │         │           │          │ │
+│ │ sequence else 1 if │ when the iterable  │         │           │          │ │
+│ │ r else 0           │ is empty, the      │         │           │          │ │
+│ │      for index in  │ number of          │         │           │          │ │
+│ │ _random_ordered_i… │ combinations with  │         │           │          │ │
+│ │          yield     │ replacement is 0.  │         │           │          │ │
+│ │ nth_combination_w… │ So if r is zero,   │         │           │          │ │
+│ │ r, index)          │ the number of      │         │           │          │ │
+│ │ ```                │ combinations is 1  │         │           │          │ │
+│ │                    │ (empty             │         │           │          │ │
+│ │                    │ combination?), but │         │           │          │ │
+│ │                    │ that's a bit       │         │           │          │ │
+│ │                    │ unclear.           │         │           │          │ │
 │ │                    │                    │         │           │          │ │
 │ │                    │ Wait, the original │         │           │          │ │
-│ │                    │ code raises an     │         │           │          │ │
-│ │                    │ error if           │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ not None (i.e.,    │         │           │          │ │
-│ │                    │ it's set to        │         │           │          │ │
-│ │                    │ something, like    │         │           │          │ │
-│ │                    │ NO_OP) and the     │         │           │          │ │
-│ │                    │ class is frozen.   │         │           │          │ │
-│ │                    │ The new code       │         │           │          │ │
-│ │                    │ changes this to:   │         │           │          │ │
-│ │                    │ if frozen is True  │         │           │          │ │
-│ │                    │ OR a.on_setattr is │         │           │          │ │
-│ │                    │ not NO_OP.         │         │           │          │ │
+│ │                    │ code's approach    │         │           │          │ │
+│ │                    │ when the sequence  │         │           │          │ │
+│ │                    │ is empty was to    │         │           │          │ │
+│ │                    │ yield a single     │         │           │          │ │
+│ │                    │ empty tuple, but   │         │           │          │ │
+│ │                    │ the new code's     │         │           │          │ │
+│ │                    │ calculation for n  │         │           │          │ │
+│ │                    │ in that case is 1  │         │           │          │ │
+│ │                    │ if r is not zero.  │         │           │          │ │
+│ │                    │ Wait, but if the   │         │           │          │ │
+│ │                    │ sequence is empty, │         │           │          │ │
+│ │                    │ then the           │         │           │          │ │
+│ │                    │ combinations_with… │         │           │          │ │
+│ │                    │ would be empty.    │         │           │          │ │
+│ │                    │ However, the       │         │           │          │ │
+│ │                    │ function is        │         │           │          │ │
+│ │                    │ supposed to return │         │           │          │ │
+│ │                    │ combinations_with… │         │           │          │ │
+│ │                    │ in random order.   │         │           │          │ │
+│ │                    │ If the input is    │         │           │          │ │
+│ │                    │ empty, then the    │         │           │          │ │
+│ │                    │ combinations_with… │         │           │          │ │
+│ │                    │ would be empty.    │         │           │          │ │
+│ │                    │ But the original   │         │           │          │ │
+│ │                    │ code's check was   │         │           │          │ │
+│ │                    │ to yield an empty  │         │           │          │ │
+│ │                    │ tuple and return.  │         │           │          │ │
+│ │                    │ But in that case,  │         │           │          │ │
+│ │                    │ the function would │         │           │          │ │
+│ │                    │ yield one empty    │         │           │          │ │
+│ │                    │ tuple, but the     │         │           │          │ │
+│ │                    │ actual             │         │           │          │ │
+│ │                    │ combinations_with… │         │           │          │ │
+│ │                    │ for an empty       │         │           │          │ │
+│ │                    │ iterable would be  │         │           │          │ │
+│ │                    │ empty.             │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ So, for example,   │         │           │          │ │
-│ │                    │ if a.on_setattr is │         │           │          │ │
-│ │                    │ NO_OP and the      │         │           │          │ │
-│ │                    │ class is frozen,   │         │           │          │ │
-│ │                    │ then the condition │         │           │          │ │
-│ │                    │ is frozen (True)   │         │           │          │ │
-│ │                    │ OR (a.on_setattr   │         │           │          │ │
-│ │                    │ is not NO_OP →     │         │           │          │ │
-│ │                    │ False) → True. So  │         │           │          │ │
-│ │                    │ the error is       │         │           │          │ │
-│ │                    │ raised.            │         │           │          │ │
+│ │                    │ Wait, maybe the    │         │           │          │ │
+│ │                    │ original code had  │         │           │          │ │
+│ │                    │ a bug. Because if  │         │           │          │ │
+│ │                    │ the iterable is    │         │           │          │ │
+│ │                    │ empty, then        │         │           │          │ │
+│ │                    │ combinations_with… │         │           │          │ │
+│ │                    │ would have zero    │         │           │          │ │
+│ │                    │ elements. So the   │         │           │          │ │
+│ │                    │ original code's    │         │           │          │ │
+│ │                    │ check for if not   │         │           │          │ │
+│ │                    │ sequence: yield () │         │           │          │ │
+│ │                    │ and return would   │         │           │          │ │
+│ │                    │ be incorrect.      │         │           │          │ │
+│ │                    │ Because            │         │           │          │ │
+│ │                    │ combinations_with… │         │           │          │ │
+│ │                    │ of an empty        │         │           │          │ │
+│ │                    │ iterable with r=2  │         │           │          │ │
+│ │                    │ would be empty,    │         │           │          │ │
+│ │                    │ not a single empty │         │           │          │ │
+│ │                    │ tuple.             │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ But the test case  │         │           │          │ │
-│ │                    │ in test_setattr.py │         │           │          │ │
-│ │                    │ is testing that    │         │           │          │ │
-│ │                    │ on_setattr can be  │         │           │          │ │
-│ │                    │ NO_OP on frozen    │         │           │          │ │
-│ │                    │ classes. So this   │         │           │          │ │
-│ │                    │ would cause the    │         │           │          │ │
-│ │                    │ test to fail.      │         │           │          │ │
+│ │                    │ But the new code's │         │           │          │ │
+│ │                    │ logic for n when   │         │           │          │ │
+│ │                    │ the sequence is    │         │           │          │ │
+│ │                    │ empty is 1 if r    │         │           │          │ │
+│ │                    │ else 0. So for     │         │           │          │ │
+│ │                    │ example, if r is   │         │           │          │ │
+│ │                    │ 2, then n would be │         │           │          │ │
+│ │                    │ 1, which would     │         │           │          │ │
+│ │                    │ make the loop for  │         │           │          │ │
+│ │                    │ index in           │         │           │          │ │
+│ │                    │ _random_ordered_i… │         │           │          │ │
+│ │                    │ which would yield  │         │           │          │ │
+│ │                    │ one index (0),     │         │           │          │ │
+│ │                    │ then yield         │         │           │          │ │
+│ │                    │ nth_combination_w… │         │           │          │ │
+│ │                    │ r, index). But if  │         │           │          │ │
+│ │                    │ the sequence is    │         │           │          │ │
+│ │                    │ empty, then the    │         │           │          │ │
+│ │                    │ nth_combination_w… │         │           │          │ │
+│ │                    │ would not exist.   │         │           │          │ │
+│ │                    │ That's a problem.  │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ But the user says  │         │           │          │ │
-│ │                    │ that the test case │         │           │          │ │
-│ │                    │ is added. So       │         │           │          │ │
-│ │                    │ perhaps the code   │         │           │          │ │
-│ │                    │ change is allowing │         │           │          │ │
-│ │                    │ NO_OP on frozen    │         │           │          │ │
-│ │                    │ classes, but the   │         │           │          │ │
-│ │                    │ code as modified   │         │           │          │ │
-│ │                    │ actually blocks    │         │           │          │ │
-│ │                    │ it.                │         │           │          │ │
+│ │                    │ Wait, the function │         │           │          │ │
+│ │                    │ nth_combination_w… │         │           │          │ │
+│ │                    │ would require a    │         │           │          │ │
+│ │                    │ non-empty          │         │           │          │ │
+│ │                    │ sequence. So if    │         │           │          │ │
+│ │                    │ the sequence is    │         │           │          │ │
+│ │                    │ empty, and r is    │         │           │          │ │
+│ │                    │ non-zero, then the │         │           │          │ │
+│ │                    │ for loop would run │         │           │          │ │
+│ │                    │ once, but trying   │         │           │          │ │
+│ │                    │ to get a           │         │           │          │ │
+│ │                    │ combination with   │         │           │          │ │
+│ │                    │ replacement from   │         │           │          │ │
+│ │                    │ an empty sequence  │         │           │          │ │
+│ │                    │ would be invalid.  │         │           │          │ │
+│ │                    │ So the new code    │         │           │          │ │
+│ │                    │ might be           │         │           │          │ │
+│ │                    │ introducing an     │         │           │          │ │
+│ │                    │ error here.        │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │                    │ This suggests that │         │           │          │ │
-│ │                    │ there might be a   │         │           │          │ │
-│ │                    │ mistake in the     │         │           │          │ │
-│ │                    │ code change. The   │         │           │          │ │
-│ │                    │ original code      │         │           │          │ │
-│ │                    │ blocks on_setattr  │         │           │          │ │
-│ │                    │ (including NO_OP)  │         │           │          │ │
-│ │                    │ on frozen classes. │         │           │          │ │
-│ │                    │ The new code       │         │           │          │ │
-│ │                    │ allows it only if  │         │           │          │ │
-│ │                    │ the on_setattr is  │         │           │          │ │
-│ │                    │ not NO_OP and the  │         │           │          │ │
-│ │                    │ class is not       │         │           │          │ │
-│ │                    │ frozen.            │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Wait, this seems   │         │           │          │ │
-│ │                    │ like a logical     │         │           │          │ │
-│ │                    │ error. The code    │         │           │          │ │
-│ │                    │ change would       │         │           │          │ │
-│ │                    │ prevent using      │         │           │          │ │
-│ │                    │ NO_OP on frozen    │         │           │          │ │
-│ │                    │ classes, which     │         │           │          │ │
-│ │                    │ contradicts the    │         │           │          │ │
-│ │                    │ test case's        │         │           │          │ │
-│ │                    │ intention.         │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ But the test case  │         │           │          │ │
-│ │                    │ is added to verify │         │           │          │ │
-│ │                    │ that it's allowed. │         │           │          │ │
-│ │                    │ So the code change │         │           │          │ │
-│ │                    │ is incorrect.      │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Therefore, this is │         │           │          │ │
-│ │                    │ a defect. The code │         │           │          │ │
-│ │                    │ change             │         │           │          │ │
-│ │                    │ inadvertently      │         │           │          │ │
-│ │                    │ blocks the NO_OP   │         │           │          │ │
-│ │                    │ case on frozen     │         │           │          │ │
-│ │                    │ classes.           │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ So the block       │         │           │          │ │
-│ │                    │ decision is needed │         │           │          │ │
-│ │                    │ here, pointing out │         │           │          │ │
-│ │                    │ the logical error  │         │           │          │ │
-│ │                    │ in the condition.  │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ But wait, maybe    │         │           │          │ │
-│ │                    │ I'm                │         │           │          │ │
-│ │                    │ misunderstanding   │         │           │          │ │
-│ │                    │ the code. Let me   │         │           │          │ │
-│ │                    │ recheck.           │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Original code:     │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ if a.on_setattr is │         │           │          │ │
-│ │                    │ not None:          │         │           │          │ │
-│ │                    │     if frozen is   │         │           │          │ │
-│ │                    │ True:              │         │           │          │ │
-│ │                    │         raise      │         │           │          │ │
-│ │                    │ error              │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ So, if on_setattr  │         │           │          │ │
-│ │                    │ is not None (could │         │           │          │ │
-│ │                    │ be NO_OP, but      │         │           │          │ │
-│ │                    │ since NO_OP is not │         │           │          │ │
-│ │                    │ None), then check  │         │           │          │ │
-│ │                    │ if frozen.         │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Now, the new code: │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ if a.on_setattr is │         │           │          │ │
-│ │                    │ not None:          │         │           │          │ │
-│ │                    │     if frozen is   │         │           │          │ │
-│ │                    │ True or            │         │           │          │ │
-│ │                    │ a.on_setattr is    │         │           │          │ │
-│ │                    │ not setters.NO_OP: │         │           │          │ │
-│ │                    │         raise      │         │           │          │ │
-│ │                    │ error              │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ So, the new code   │         │           │          │ │
-│ │                    │ raises an error if │         │           │          │ │
-│ │                    │ either frozen is   │         │           │          │ │
-│ │                    │ True or if the     │         │           │          │ │
-│ │                    │ on_setattr is not  │         │           │          │ │
-│ │                    │ NO_OP.             │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ So, for example,   │         │           │          │ │
-│ │                    │ even if on_setattr │         │           │          │ │
-│ │                    │ is NO_OP, if the   │         │           │          │ │
-│ │                    │ class is frozen,   │         │           │          │ │
-│ │                    │ then the condition │         │           │          │ │
-│ │                    │ is True (frozen is │         │           │          │ │
-│ │                    │ True), so error is │         │           │          │ │
-│ │                    │ raised.            │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ But that's not     │         │           │          │ │
-│ │                    │ what the test case │         │           │          │ │
-│ │                    │ is trying to do.   │         │           │          │ │
-│ │                    │ The test case is   │         │           │          │ │
-│ │                    │ trying to allow    │         │           │          │ │
-│ │                    │ NO_OP on frozen    │         │           │          │ │
-│ │                    │ classes.           │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Thus, the code     │         │           │          │ │
-│ │                    │ change is          │         │           │          │ │
-│ │                    │ incorrect. The     │         │           │          │ │
-│ │                    │ condition is now   │         │           │          │ │
-│ │                    │ checking for       │         │           │          │ │
-│ │                    │ frozen or not      │         │           │          │ │
-│ │                    │ NO_OP, which would │         │           │          │ │
-│ │                    │ cause even NO_OP   │         │           │          │ │
-│ │                    │ on frozen classes  │         │           │          │ │
-│ │                    │ to raise an error. │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ Therefore, this is │         │           │          │ │
-│ │                    │ a bug. The code    │         │           │          │ │
-│ │                    │ change incorrectly │         │           │          │ │
-│ │                    │ blocks the use of  │         │           │          │ │
-│ │                    │ NO_OP on frozen    │         │           │          │ │
-│ │                    │ classes.           │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │ So the correct     │         │           │          │ │
-│ │                    │ decision is to     │         │           │          │ │
-│ │                    │ block this change, │         │           │          │ │
-│ │                    │ pointing out the   │         │           │          │ │
-│ │                    │ logical error in   │         │           │          │ │
-│ │                    │ the condition.     │         │           │          │ │
+│ │                    │ In the original    │         │           │          │ │
+│ │                    │ code, the check    │         │           │          │ │
+│ │                    │ for sequence being │         │           │          │ │
+│ │                    │ empty would yield  │         │           │          │ │
+│ │                    │ an empty tuple,    │         │           │          │ │
+│ │                    │ which might be     │         │           │          │ │
+│ │                    │ incorrect, but the │         │           │          │ │
+│ │                    │ new code's         │         │           │          │ │
+│ │                    │ approach of        │         │           │          │ │
+│ │                    │ calculating n as 1 │         │           │          │ │
+│ │                    │ when sequence is   │         │           │          │ │
+│ │                    │ empty and r is     │         │           │          │ │
+│ │                    │ non-zero would     │         │           │          │ │
+│ │                    │ lead to generating │         │           │          │ │
+│ │                    │ an index that's    │         │           │          │ │
+│ │                    │ invalid.           │         │           │          │ │
 │ │                    │                    │         │           │          │ │
 │ │                    │ Therefore, the     │         │           │          │ │
-│ │                    │ answer should be   │         │           │          │ │
-│ │                    │ block with a       │         │           │          │ │
-│ │                    │ comment indicating │         │           │          │ │
-│ │                    │ the issue in the   │         │           │          │ │
-│ │                    │ condition.         │         │           │          │ │
+│ │                    │ change might be    │         │           │          │ │
+│ │                    │ incorrect. The     │         │           │          │ │
+│ │                    │ original approach  │         │           │          │ │
+│ │                    │ of checking for    │         │           │          │ │
+│ │                    │ empty sequence and │         │           │          │ │
+│ │                    │ yielding a single  │         │           │          │ │
+│ │                    │ empty tuple might  │         │           │          │ │
+│ │                    │ be a bug, but the  │         │           │          │ │
+│ │                    │ new code's         │         │           │          │ │
+│ │                    │ handling of n      │         │           │          │ │
+│ │                    │ could be causing   │         │           │          │ │
+│ │                    │ issues.            │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Wait, the original │         │           │          │ │
+│ │                    │ code's line: if    │         │           │          │ │
+│ │                    │ not sequence:      │         │           │          │ │
+│ │                    │ yield () and       │         │           │          │ │
+│ │                    │ return. That would │         │           │          │ │
+│ │                    │ produce a single   │         │           │          │ │
+│ │                    │ empty tuple. But   │         │           │          │ │
+│ │                    │ combinations_with… │         │           │          │ │
+│ │                    │ for an empty       │         │           │          │ │
+│ │                    │ iterable is empty. │         │           │          │ │
+│ │                    │ So yielding a      │         │           │          │ │
+│ │                    │ single empty tuple │         │           │          │ │
+│ │                    │ would be           │         │           │          │ │
+│ │                    │ incorrect.         │         │           │          │ │
+│ │                    │ However, perhaps   │         │           │          │ │
+│ │                    │ the function was   │         │           │          │ │
+│ │                    │ supposed to yield  │         │           │          │ │
+│ │                    │ an empty tuple in  │         │           │          │ │
+│ │                    │ that case. But     │         │           │          │ │
+│ │                    │ maybe that's not   │         │           │          │ │
+│ │                    │ correct.           │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Alternatively,     │         │           │          │ │
+│ │                    │ maybe the function │         │           │          │ │
+│ │                    │ should not yield   │         │           │          │ │
+│ │                    │ anything when the  │         │           │          │ │
+│ │                    │ input is empty.    │         │           │          │ │
+│ │                    │ But the original   │         │           │          │ │
+│ │                    │ code yielded one   │         │           │          │ │
+│ │                    │ empty tuple. So    │         │           │          │ │
+│ │                    │ the new code's     │         │           │          │ │
+│ │                    │ calculation of n   │         │           │          │ │
+│ │                    │ as 1 in that case  │         │           │          │ │
+│ │                    │ would generate a   │         │           │          │ │
+│ │                    │ single element.    │         │           │          │ │
+│ │                    │ But when the       │         │           │          │ │
+│ │                    │ sequence is empty, │         │           │          │ │
+│ │                    │ the                │         │           │          │ │
+│ │                    │ nth_combination_w… │         │           │          │ │
+│ │                    │ would fail because │         │           │          │ │
+│ │                    │ it's being called  │         │           │          │ │
+│ │                    │ with an empty      │         │           │          │ │
+│ │                    │ sequence.          │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So the new code's  │         │           │          │ │
+│ │                    │ logic here is      │         │           │          │ │
+│ │                    │ incorrect. The     │         │           │          │ │
+│ │                    │ original code had  │         │           │          │ │
+│ │                    │ a check to handle  │         │           │          │ │
+│ │                    │ the empty sequence │         │           │          │ │
+│ │                    │ case, but the new  │         │           │          │ │
+│ │                    │ code removed that  │         │           │          │ │
+│ │                    │ check and relied   │         │           │          │ │
+│ │                    │ on the n           │         │           │          │ │
+│ │                    │ calculation.       │         │           │          │ │
+│ │                    │ However, when the  │         │           │          │ │
+│ │                    │ sequence is empty  │         │           │          │ │
+│ │                    │ and r is non-zero, │         │           │          │ │
+│ │                    │ the n calculation  │         │           │          │ │
+│ │                    │ is set to 1, which │         │           │          │ │
+│ │                    │ would result in an │         │           │          │ │
+│ │                    │ index that can't   │         │           │          │ │
+│ │                    │ be processed       │         │           │          │ │
+│ │                    │ because the        │         │           │          │ │
+│ │                    │ sequence is empty. │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Therefore, the     │         │           │          │ │
+│ │                    │ change is          │         │           │          │ │
+│ │                    │ incorrect. The new │         │           │          │ │
+│ │                    │ code would cause   │         │           │          │ │
+│ │                    │ an error when the  │         │           │          │ │
+│ │                    │ input is empty and │         │           │          │ │
+│ │                    │ r is non-zero. The │         │           │          │ │
+│ │                    │ original code's    │         │           │          │ │
+│ │                    │ check for empty    │         │           │          │ │
+│ │                    │ sequence would     │         │           │          │ │
+│ │                    │ have prevented     │         │           │          │ │
+│ │                    │ that.              │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So the defect is   │         │           │          │ │
+│ │                    │ in the new code's  │         │           │          │ │
+│ │                    │ handling of the n  │         │           │          │ │
+│ │                    │ calculation when   │         │           │          │ │
+│ │                    │ the sequence is    │         │           │          │ │
+│ │                    │ empty. The line n  │         │           │          │ │
+│ │                    │ = comb(...) if     │         │           │          │ │
+│ │                    │ sequence else 1 if │         │           │          │ │
+│ │                    │ r else 0.          │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So when the        │         │           │          │ │
+│ │                    │ sequence is empty, │         │           │          │ │
+│ │                    │ and r is non-zero, │         │           │          │ │
+│ │                    │ the code           │         │           │          │ │
+│ │                    │ calculates n as 1. │         │           │          │ │
+│ │                    │ Then, the loop for │         │           │          │ │
+│ │                    │ index in           │         │           │          │ │
+│ │                    │ _random_ordered_i… │         │           │          │ │
+│ │                    │ would generate one │         │           │          │ │
+│ │                    │ index, say 0.      │         │           │          │ │
+│ │                    │ Then, the function │         │           │          │ │
+│ │                    │ would call         │         │           │          │ │
+│ │                    │ nth_combination_w… │         │           │          │ │
+│ │                    │ with sequence      │         │           │          │ │
+│ │                    │ (empty), r, and    │         │           │          │ │
+│ │                    │ index 0. But that  │         │           │          │ │
+│ │                    │ function would     │         │           │          │ │
+│ │                    │ probably raise an  │         │           │          │ │
+│ │                    │ error because it's │         │           │          │ │
+│ │                    │ trying to generate │         │           │          │ │
+│ │                    │ a combination from │         │           │          │ │
+│ │                    │ an empty sequence. │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Therefore, the new │         │           │          │ │
+│ │                    │ code has a bug.    │         │           │          │ │
+│ │                    │ The original code  │         │           │          │ │
+│ │                    │ had a check that   │         │           │          │ │
+│ │                    │ if the sequence is │         │           │          │ │
+│ │                    │ empty, it yields   │         │           │          │ │
+│ │                    │ an empty tuple and │         │           │          │ │
+│ │                    │ returns, which is  │         │           │          │ │
+│ │                    │ incorrect, but the │         │           │          │ │
+│ │                    │ new code's logic   │         │           │          │ │
+│ │                    │ is even worse      │         │           │          │ │
+│ │                    │ because it causes  │         │           │          │ │
+│ │                    │ an error when the  │         │           │          │ │
+│ │                    │ sequence is empty  │         │           │          │ │
+│ │                    │ and r is non-zero. │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ So the correct     │         │           │          │ │
+│ │                    │ approach should be │         │           │          │ │
+│ │                    │ to handle the      │         │           │          │ │
+│ │                    │ empty sequence     │         │           │          │ │
+│ │                    │ case in a way that │         │           │          │ │
+│ │                    │ doesn't call       │         │           │          │ │
+│ │                    │ functions that     │         │           │          │ │
+│ │                    │ require a          │         │           │          │ │
+│ │                    │ non-empty          │         │           │          │ │
+│ │                    │ sequence.          │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Thus, the change   │         │           │          │ │
+│ │                    │ introduced a       │         │           │          │ │
+│ │                    │ defect. Therefore, │         │           │          │ │
+│ │                    │ the decision       │         │           │          │ │
+│ │                    │ should be to block │         │           │          │ │
+│ │                    │ the change.        │         │           │          │ │
 │ │                    │ </think>           │         │           │          │ │
 │ │                    │                    │         │           │          │ │
 │ │                    │ {"decision":       │         │           │          │ │
 │ │                    │ "block",           │         │           │          │ │
 │ │                    │ "comments":        │         │           │          │ │
 │ │                    │ [{"file":          │         │           │          │ │
-│ │                    │ "src/attr/_make.p… │         │           │          │ │
+│ │                    │ "more_itertools/m… │         │           │          │ │
 │ │                    │ "line_start":      │         │           │          │ │
-│ │                    │ 2022, "line_end":  │         │           │          │ │
-│ │                    │ 2022, "body":      │         │           │          │ │
-│ │                    │ "Incorrect logic   │         │           │          │ │
-│ │                    │ allows frozen      │         │           │          │ │
-│ │                    │ classes with       │         │           │          │ │
-│ │                    │ on_setattr=NO_OP.  │         │           │          │ │
-│ │                    │ Condition checks   │         │           │          │ │
-│ │                    │ frozen or          │         │           │          │ │
-│ │                    │ on_setattr≠NO_OP,  │         │           │          │ │
-│ │                    │ which blocks NO_OP │         │           │          │ │
-│ │                    │ on frozen          │         │           │          │ │
-│ │                    │ classes."}]}       │         │           │          │ │
+│ │                    │ 5672, "line_end":  │         │           │          │ │
+│ │                    │ 5672, "body":      │         │           │          │ │
+│ │                    │ "Calculates n as 1 │         │           │          │ │
+│ │                    │ for empty sequence │         │           │          │ │
+│ │                    │ and non-zero r,    │         │           │          │ │
+│ │                    │ leading to invalid │         │           │          │ │
+│ │                    │ nth_combination_w… │         │           │          │ │
+│ │                    │ call."}]}          │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
