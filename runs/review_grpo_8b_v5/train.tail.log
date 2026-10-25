@@ -1,400 +1,400 @@
-│ │ ---                │                    │         │           │          │ │
-│ │ a/tests/test_opti… │                    │         │           │          │ │
-│ │ +++                │                    │         │           │          │ │
-│ │ b/tests/test_opti… │                    │         │           │          │ │
-│ │ @@ -17,6 +17,7 @@  │                    │         │           │          │ │
-│ │ import click       │                    │         │           │          │ │
-│ │  from click import │                    │         │           │          │ │
-│ │ Option             │                    │         │           │          │ │
-│ │  from click import │                    │         │           │          │ │
-│ │ UNPROCESSED        │                    │         │           │          │ │
-│ │  from click._utils │                    │         │           │          │ │
-│ │ import UNSET       │                    │         │           │          │ │
-│ │ +from click.parser │                    │         │           │          │ │
-│ │ import _split_opt  │                    │         │           │          │ │
-│ │  from              │                    │         │           │          │ │
-│ │ click.testing      │                    │         │           │          │ │
-│ │ import CliRunner   │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ @@ -98,6 +99,34 @@ │                    │         │           │          │ │
-│ │ def                │                    │         │           │          │ │
-│ │ test_help_spec(pa… │                    │         │           │          │ │
-│ │ kwargs, hidden,    │                    │         │           │          │ │
-│ │ expected):         │                    │         │           │          │ │
-│ │          assert    │                    │         │           │          │ │
-│ │ opt.get_help_reco… │                    │         │           │          │ │
-│ │ == expected        │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ +@pytest.mark.par… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ ("param_decls",    │                    │         │           │          │ │
-│ │ "expected_spec",   │                    │         │           │          │ │
-│ │ "expected_name"),  │                    │         │           │          │ │
-│ │ +    [             │                    │         │           │          │ │
-│ │ +        (["-t",   │                    │         │           │          │ │
-│ │ "--times"],        │                    │         │           │          │ │
-│ │ "--times",         │                    │         │           │          │ │
-│ │ "times"),          │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ (["--times",       │                    │         │           │          │ │
-│ │ "-t"], "--times",  │                    │         │           │          │ │
-│ │ "times"),          │                    │         │           │          │ │
-│ │ +        (["-t"],  │                    │         │           │          │ │
-│ │ "-t", "t"),        │                    │         │           │          │ │
-│ │ +        (["-t",   │                    │         │           │          │ │
-│ │ "--times",         │                    │         │           │          │ │
-│ │ "--repeat"],       │                    │         │           │          │ │
-│ │ "--times",         │                    │         │           │          │ │
-│ │ "times"),          │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ (["--color/--no-c… │                    │         │           │          │ │
-│ │ "--color",         │                    │         │           │          │ │
-│ │ "color"),          │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ (["/debug;/no-deb… │                    │         │           │          │ │
-│ │ "/debug",          │                    │         │           │          │ │
-│ │ "debug"),          │                    │         │           │          │ │
-│ │ +    ],            │                    │         │           │          │ │
-│ │ +)                 │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_spec(param_d… │                    │         │           │          │ │
-│ │ expected_spec,     │                    │         │           │          │ │
-│ │ expected_name):    │                    │         │           │          │ │
-│ │ +    """The spec   │                    │         │           │          │ │
-│ │ is the declaration │                    │         │           │          │ │
-│ │ the name was       │                    │         │           │          │ │
-│ │ derived from, so   │                    │         │           │          │ │
-│ │ the longest        │                    │         │           │          │ │
-│ │ +    prefix wins   │                    │         │           │          │ │
-│ │ over declaration   │                    │         │           │          │ │
-│ │ order.             │                    │         │           │          │ │
-│ │ +    """           │                    │         │           │          │ │
-│ │ +    opt =         │                    │         │           │          │ │
-│ │ click.Option(para… │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ opt.spec ==        │                    │         │           │          │ │
-│ │ expected_spec      │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ opt.name ==        │                    │         │           │          │ │
-│ │ expected_name      │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ _split_opt(opt.sp… │                    │         │           │          │ │
-│ │ "_").lower() ==    │                    │         │           │          │ │
-│ │ opt.name           │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +def               │                    │         │           │          │ │
-│ │ test_spec_with_ex… │                    │         │           │          │ │
-│ │ +    """An         │                    │         │           │          │ │
-│ │ explicit name      │                    │         │           │          │ │
-│ │ declaration leaves │                    │         │           │          │ │
-│ │ the spec to the    │                    │         │           │          │ │
-│ │ remaining          │                    │         │           │          │ │
-│ │ flags."""          │                    │         │           │          │ │
-│ │ +    opt =         │                    │         │           │          │ │
-│ │ click.Option(["--… │                    │         │           │          │ │
-│ │ "repeat_count"])   │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ opt.spec ==        │                    │         │           │          │ │
-│ │ "--times"          │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ opt.name ==        │                    │         │           │          │ │
-│ │ "repeat_count"     │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │  @pytest.mark.par… │                    │         │           │          │ │
-│ │ [True, "USE B      │                    │         │           │          │ │
-│ │ INSTEAD"])         │                    │         │           │          │ │
-│ │  def               │                    │         │           │          │ │
-│ │ test_deprecated_w… │                    │         │           │          │ │
-│ │ deprecated):       │                    │         │           │          │ │
-│ │      @click.comma… │                    │         │           │          │ │
-│ │ @@ -114,7 +143,7   │                    │         │           │          │ │
-│ │ @@ def             │                    │         │           │          │ │
-│ │ test_deprecated_w… │                    │         │           │          │ │
-│ │ deprecated):       │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │      result =      │                    │         │           │          │ │
-│ │ runner.invoke(cli, │                    │         │           │          │ │
-│ │ ["--my-option",    │                    │         │           │          │ │
-│ │ "hello"])          │                    │         │           │          │ │
-│ │      assert        │                    │         │           │          │ │
-│ │ result.exit_code   │                    │         │           │          │ │
-│ │ == 0,              │                    │         │           │          │ │
-│ │ result.output      │                    │         │           │          │ │
-│ │ -    assert        │                    │         │           │          │ │
-│ │ "option            │                    │         │           │          │ │
-│ │ 'my_option' is     │                    │         │           │          │ │
-│ │ deprecated" in     │                    │         │           │          │ │
-│ │ result.output      │                    │         │           │          │ │
-│ │ +    assert        │                    │         │           │          │ │
-│ │ "option            │                    │         │           │          │ │
-│ │ '--my-option' is   │                    │         │           │          │ │
-│ │ deprecated" in     │                    │         │           │          │ │
-│ │ result.output      │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │      if            │                    │         │           │          │ │
-│ │ isinstance(deprec… │                    │         │           │          │ │
-│ │ str):              │                    │         │           │          │ │
-│ │          assert    │                    │         │           │          │ │
-│ │ deprecated in      │                    │         │           │          │ │
-│ │ result.output      │                    │         │           │          │ │
-│ │ ```                │                    │         │           │          │ │
+│ │                    │ 0."}]}             │         │           │          │ │
 │ ├────────────────────┼────────────────────┼─────────┼───────────┼──────────┤ │
-│ │ SYSTEM             │ ASSISTANT          │    1.00 │      0.00 │ approve  │ │
+│ │ SYSTEM             │ ASSISTANT          │   -5.00 │     -5.69 │ approve  │ │
 │ │ You are the code   │ <think>            │         │           │          │ │
 │ │ review gate for a  │ Okay, let's look   │         │           │          │ │
-│ │ production         │ at this code       │         │           │          │ │
-│ │ repository.        │ change. The user   │         │           │          │ │
-│ │ Approval merges    │ has modified the   │         │           │          │ │
-│ │ and deploys the    │ analyze_param      │         │           │          │ │
-│ │ change without     │ function in        │         │           │          │ │
-│ │ further human      │ utils.py and       │         │           │          │ │
-│ │ review.            │ updated several    │         │           │          │ │
-│ │   approve  - you   │ test cases in      │         │           │          │ │
-│ │ are confident the  │ test_invalid_sequ… │         │           │          │ │
-│ │ change is correct  │                    │         │           │          │ │
-│ │ and safe to ship.  │ First, in          │         │           │          │ │
-│ │   block    - you   │ utils.py, the      │         │           │          │ │
-│ │ found a concrete   │ analyze_param      │         │           │          │ │
-│ │ defect in the      │ function now       │         │           │          │ │
-│ │ change.            │ includes an error  │         │           │          │ │
-│ │   escalate - you   │ message when the   │         │           │          │ │
-│ │ cannot establish   │ parameter type     │         │           │          │ │
-│ │ safety from the    │ isn't supported.   │         │           │          │ │
-│ │ supplied evidence. │ The error message  │         │           │          │ │
-│ │ Approving a        │ is specific,       │         │           │          │ │
-│ │ defective change   │ mentioning the     │         │           │          │ │
-│ │ is the worst       │ parameter name.    │         │           │          │ │
-│ │ outcome.           │ The test cases in  │         │           │          │ │
-│ │ Your final answer  │ the tests file     │         │           │          │ │
-│ │ must be exactly    │ have been updated  │         │           │          │ │
-│ │ one JSON object:   │ to expect this     │         │           │          │ │
-│ │ {"decision":       │ exact error        │         │           │          │ │
-│ │ "approve|block|es… │ message.           │         │           │          │ │
-│ │ "comments": []}    │                    │         │           │          │ │
-│ │ For block, include │ I need to check if │         │           │          │ │
-│ │ exactly one        │ the change is      │         │           │          │ │
-│ │ comment with file, │ correct. The       │         │           │          │ │
-│ │ line_start,        │ original code      │         │           │          │ │
-│ │ line_end and body; │ probably raised an │         │           │          │ │
-│ │ limit body to 40   │ AssertionError     │         │           │          │ │
-│ │ words explaining   │ without a specific │         │           │          │ │
-│ │ the defect. For    │ message. Now, the  │         │           │          │ │
-│ │ approve or         │ error message is   │         │           │          │ │
-│ │ escalate, use an   │ more informative,  │         │           │          │ │
-│ │ empty comments     │ which is a good    │         │           │          │ │
-│ │ array. Do not      │ improvement. The   │         │           │          │ │
-│ │ include proposed   │ tests have been    │         │           │          │ │
-│ │ tests or test      │ adjusted to match  │         │           │          │ │
-│ │ source.            │ this new message.  │         │           │          │ │
+│ │ production         │ at the changes     │         │           │          │ │
+│ │ repository.        │ here. The user is  │         │           │          │ │
+│ │ Approval merges    │ working on the     │         │           │          │ │
+│ │ and deploys the    │ more-itertools     │         │           │          │ │
+│ │ change without     │ repository,        │         │           │          │ │
+│ │ further human      │ specifically       │         │           │          │ │
+│ │ review.            │ modifying the      │         │           │          │ │
+│ │   approve  - you   │ chunked function   │         │           │          │ │
+│ │ are confident the  │ and adding tests   │         │           │          │ │
+│ │ change is correct  │ for it. The diff   │         │           │          │ │
+│ │ and safe to ship.  │ shows that in      │         │           │          │ │
+│ │   block    - you   │ more.py, they      │         │           │          │ │
+│ │ found a concrete   │ added a check for  │         │           │          │ │
+│ │ defect in the      │ n being <= 0,      │         │           │          │ │
+│ │ change.            │ raising a          │         │           │          │ │
+│ │   escalate - you   │ ValueError. Then   │         │           │          │ │
+│ │ cannot establish   │ in the             │         │           │          │ │
+│ │ safety from the    │ tests/test_more.p… │         │           │          │ │
+│ │ supplied evidence. │ they added a       │         │           │          │ │
+│ │ Approving a        │ test_negative      │         │           │          │ │
+│ │ defective change   │ method to check    │         │           │          │ │
+│ │ is the worst       │ that a negative n  │         │           │          │ │
+│ │ outcome.           │ raises the correct │         │           │          │ │
+│ │ Your final answer  │ error.             │         │           │          │ │
+│ │ must be exactly    │                    │         │           │          │ │
+│ │ one JSON object:   │ First, I need to   │         │           │          │ │
+│ │ {"decision":       │ check if the code  │         │           │          │ │
+│ │ "approve|block|es… │ change is correct. │         │           │          │ │
+│ │ "comments": []}    │ The chunked        │         │           │          │ │
+│ │ For block, include │ function now has a │         │           │          │ │
+│ │ exactly one        │ validation for n.  │         │           │          │ │
+│ │ comment with file, │ The original code  │         │           │          │ │
+│ │ line_start,        │ might not have had │         │           │          │ │
+│ │ line_end and body; │ this check. The    │         │           │          │ │
+│ │ limit body to 40   │ added line says if │         │           │          │ │
+│ │ words explaining   │ n is not None and  │         │           │          │ │
+│ │ the defect. For    │ n <= 0, raise      │         │           │          │ │
+│ │ approve or         │ ValueError. Wait,  │         │           │          │ │
+│ │ escalate, use an   │ but in the code,   │         │           │          │ │
+│ │ empty comments     │ the parameter is   │         │           │          │ │
+│ │ array. Do not      │ 'n' and the        │         │           │          │ │
+│ │ include proposed   │ function is called │         │           │          │ │
+│ │ tests or test      │ with n. But        │         │           │          │ │
+│ │ source.            │ looking at the     │         │           │          │ │
+│ │                    │ diff, the line is  │         │           │          │ │
+│ │ USER               │ inside the chunked │         │           │          │ │
+│ │ Repository:        │ function. Let me   │         │           │          │ │
+│ │ more-itertools     │ think: the         │         │           │          │ │
+│ │ Files changed:     │ function's         │         │           │          │ │
+│ │ more_itertools/mo… │ parameters are     │         │           │          │ │
+│ │ tests/test_more.py │ (iterable, n,      │         │           │          │ │
+│ │                    │ strict=False). So, │         │           │          │ │
+│ │ Context around the │ the check is for n │         │           │          │ │
+│ │ change             │ being <= 0.        │         │           │          │ │
+│ │ (mechanically      │ However, in the    │         │           │          │ │
+│ │ extracted):        │ code, the check is │         │           │          │ │
+│ │ Changed            │ if n is not None   │         │           │          │ │
+│ │ definitions:       │ and n <= 0. But    │         │           │          │ │
+│ │ more_itertools/mo… │ wait, what if n is │         │           │          │ │
+│ │ tests/test_more.p… │ None? Because in   │         │           │          │ │
+│ │ tests/test_more.p… │ the function, if   │         │           │          │ │
+│ │ tests/test_more.p… │ strict is True,    │         │           │          │ │
+│ │ tests/test_more.p… │ then the code      │         │           │          │ │
+│ │ Recent history of  │ checks if n is     │         │           │          │ │
+│ │ more_itertools/mo… │ None. Hmm, maybe   │         │           │          │ │
+│ │   069b300          │ there's a problem  │         │           │          │ │
+│ │ 2026-07-16 Issue   │ here. Let me       │         │           │          │ │
+│ │ 1214: Update       │ think: the chunked │         │           │          │ │
+│ │ __eq__ and         │ function's         │         │           │          │ │
+│ │ __hash__ for       │ parameters have n  │         │           │          │ │
+│ │ numeric_range      │ as a parameter.    │         │           │          │ │
+│ │   07eb790          │ The original code  │         │           │          │ │
+│ │ 2026-07-12 Add     │ might have allowed │         │           │          │ │
+│ │ threading to       │ n to be None, but  │         │           │          │ │
+│ │ lazy_modules.      │ now they are       │         │           │          │ │
+│ │ Revert c6b640      │ adding a check for │         │           │          │ │
+│ │   4a02e36          │ n <= 0. But if n   │         │           │          │ │
+│ │ 2026-07-10 Sort    │ is None, the check │         │           │          │ │
+│ │ `__all__`          │ would be skipped.  │         │           │          │ │
+│ │ Recent history of  │ Wait, the line is: │         │           │          │ │
+│ │ tests/test_more.p… │ if n is not None   │         │           │          │ │
+│ │   069b300          │ and n <= 0: raise  │         │           │          │ │
+│ │ 2026-07-16 Issue   │ ValueError. So if  │         │           │          │ │
+│ │ 1214: Update       │ n is None, this    │         │           │          │ │
+│ │ __eq__ and         │ check is not done. │         │           │          │ │
+│ │ __hash__ for       │ But in the         │         │           │          │ │
+│ │ numeric_range      │ function, if       │         │           │          │ │
+│ │   d992be0          │ strict is True,    │         │           │          │ │
+│ │ 2026-07-12 Fix     │ and n is None,     │         │           │          │ │
+│ │ stability in       │ then the code      │         │           │          │ │
+│ │ running_min and    │ proceeds. Wait,    │         │           │          │ │
+│ │ running_max        │ maybe the          │         │           │          │ │
+│ │   958990e          │ function's n is    │         │           │          │ │
+│ │ 2026-07-02 Raise   │ supposed to be a   │         │           │          │ │
+│ │ for negative slice │ positive integer,  │         │           │          │ │
+│ │ sizes in sliced()  │ but allowing None? │         │           │          │ │
+│ │                    │ Or is n supposed   │         │           │          │ │
+│ │ Diff:              │ to be an integer?  │         │           │          │ │
+│ │ ```diff            │ Let me think about │         │           │          │ │
+│ │ diff --git         │ the function's     │         │           │          │ │
+│ │ a/more_itertools/… │ purpose. The       │         │           │          │ │
+│ │ b/more_itertools/… │ chunked function   │         │           │          │ │
+│ │ index              │ is supposed to     │         │           │          │ │
+│ │ 7c3670a..ef4940d   │ split an iterable  │         │           │          │ │
+│ │ 100755             │ into chunks of     │         │           │          │ │
+│ │ ---                │ size n. If n is    │         │           │          │ │
+│ │ a/more_itertools/… │ None, perhaps it's │         │           │          │ │
+│ │ +++                │ handled            │         │           │          │ │
+│ │ b/more_itertools/… │ differently, maybe │         │           │          │ │
+│ │ @@ -230,6 +230,9   │ as a dynamic size? │         │           │          │ │
+│ │ @@ def             │ But in the code,   │         │           │          │ │
+│ │ chunked(iterable,  │ the check is for n │         │           │          │ │
+│ │ n, strict=False):  │ being <= 0. So if  │         │           │          │ │
+│ │      list is       │ n is 0, it would   │         │           │          │ │
+│ │ yielded.           │ raise an error.    │         │           │          │ │
+│ │                    │ But if n is None,  │         │           │          │ │
+│ │      """           │ then the check is  │         │           │          │ │
+│ │ +    if n is not   │ skipped. But in    │         │           │          │ │
+│ │ None and n <= 0:   │ the test_negative, │         │           │          │ │
+│ │ +        raise     │ they are passing   │         │           │          │ │
+│ │ ValueError('n must │ -1 as n, which is  │         │           │          │ │
+│ │ be at least 0')    │ not None, so the   │         │           │          │ │
+│ │ +                  │ check would        │         │           │          │ │
+│ │      iterator =    │ trigger. But what  │         │           │          │ │
+│ │ iter(partial(take, │ about when n is    │         │           │          │ │
+│ │ n,                 │ None? Let me check │         │           │          │ │
+│ │ iter(iterable)),   │ the code again.    │         │           │          │ │
+│ │ [])                │ The function's     │         │           │          │ │
+│ │      if strict:    │ parameters are     │         │           │          │ │
+│ │          if n is   │ (iterable, n,      │         │           │          │ │
+│ │ None:              │ strict=False). So  │         │           │          │ │
+│ │ diff --git         │ n can be None. But │         │           │          │ │
+│ │ a/tests/test_more… │ in the code, the   │         │           │          │ │
+│ │ b/tests/test_more… │ check is if n is   │         │           │          │ │
+│ │ index              │ not None and n <=  │         │           │          │ │
+│ │ 1f8d10c..3a562e2   │ 0. So if n is      │         │           │          │ │
+│ │ 100644             │ None, the check is │         │           │          │ │
+│ │ ---                │ skipped. But then, │         │           │          │ │
+│ │ a/tests/test_more… │ if n is None, the  │         │           │          │ │
+│ │ +++                │ code proceeds.     │         │           │          │ │
+│ │ b/tests/test_more… │ However, in the    │         │           │          │ │
+│ │ @@ -70,6 +70,15 @@ │ function's code,   │         │           │          │ │
+│ │ class              │ if strict is True, │         │           │          │ │
+│ │ ChunkedTests(Test… │ and n is None,     │         │           │          │ │
+│ │              list… │ then the code      │         │           │          │ │
+│ │ None)), [['A',     │ proceeds. Wait,    │         │           │          │ │
+│ │ 'B', 'C', 'D',     │ the code after the │         │           │          │ │
+│ │ 'E']]              │ check is: if       │         │           │          │ │
+│ │          )         │ strict: if n is    │         │           │          │ │
+│ │                    │ None: ... So maybe │         │           │          │ │
+│ │ +    def           │ the function is    │         │           │          │ │
+│ │ test_negative(sel… │ designed to handle │         │           │          │ │
+│ │ +        """Test   │ n as None, but in  │         │           │          │ │
+│ │ that a negative    │ that case, the     │         │           │          │ │
+│ │ ``n`` raises a     │ check for n <= 0   │         │           │          │ │
+│ │ clear              │ would not be done. │         │           │          │ │
+│ │ ``ValueError``,    │ So the code seems  │         │           │          │ │
+│ │ matching           │ correct in that if │         │           │          │ │
+│ │ +        the       │ n is None, it's    │         │           │          │ │
+│ │ behavior of        │ allowed, but if n  │         │           │          │ │
+│ │ :func:`sliced`.""" │ is a non-None      │         │           │          │ │
+│ │ +                  │ value and <=0, it  │         │           │          │ │
+│ │ self.assertRaises… │ raises an error.   │         │           │          │ │
+│ │ +                  │ However, the       │         │           │          │ │
+│ │ ValueError,        │ test_negative is   │         │           │          │ │
+│ │ +            "n    │ passing -1 as n,   │         │           │          │ │
+│ │ must be at least   │ which is not None, │         │           │          │ │
+│ │ 0",                │ so the check would │         │           │          │ │
+│ │ +                  │ trigger. So the    │         │           │          │ │
+│ │ lambda:            │ test is correct.   │         │           │          │ │
+│ │ list(mi.chunked('… │ The test_negative  │         │           │          │ │
+│ │ -1)),              │ is checking that a │         │           │          │ │
+│ │ +        )         │ negative n raises  │         │           │          │ │
+│ │ +                  │ the right error.   │         │           │          │ │
+│ │      def           │                    │         │           │          │ │
+│ │ test_strict_false… │ But wait, perhaps  │         │           │          │ │
+│ │          """Test   │ the code in        │         │           │          │ │
+│ │ when ``n`` does    │ chunked is         │         │           │          │ │
+│ │ not divide evenly  │ incorrect. Let me  │         │           │          │ │
+│ │ into the length of │ think: the code in │         │           │          │ │
+│ │ the                │ chunked has the    │         │           │          │ │
+│ │          iterable  │ line 'if n is not  │         │           │          │ │
+│ │ and strict is      │ None and n <= 0:   │         │           │          │ │
+│ │ false.             │ raise ValueError'. │         │           │          │ │
+│ │ ```                │ But what if n is   │         │           │          │ │
+│ │                    │ None? The code     │         │           │          │ │
+│ │                    │ allows that. But   │         │           │          │ │
+│ │                    │ in the test, when  │         │           │          │ │
+│ │                    │ n is None, perhaps │         │           │          │ │
+│ │                    │ the function is    │         │           │          │ │
+│ │                    │ supposed to handle │         │           │          │ │
+│ │                    │ it. However, in    │         │           │          │ │
+│ │                    │ the code, the code │         │           │          │ │
+│ │                    │ for handling n is  │         │           │          │ │
+│ │                    │ not None. So maybe │         │           │          │ │
+│ │                    │ the function's n   │         │           │          │ │
+│ │                    │ is supposed to be  │         │           │          │ │
+│ │                    │ a positive         │         │           │          │ │
+│ │                    │ integer, and None  │         │           │          │ │
+│ │                    │ is not allowed.    │         │           │          │ │
+│ │                    │ Wait, looking at   │         │           │          │ │
+│ │                    │ the test code,     │         │           │          │ │
+│ │                    │ there's a test     │         │           │          │ │
+│ │                    │ called test_none,  │         │           │          │ │
+│ │                    │ which is part of   │         │           │          │ │
+│ │                    │ the ChunkedTests.  │         │           │          │ │
+│ │                    │ The diff shows     │         │           │          │ │
+│ │                    │ that test_none is  │         │           │          │ │
+│ │                    │ present. Let me    │         │           │          │ │
+│ │                    │ check the test     │         │           │          │ │
+│ │                    │ code. The          │         │           │          │ │
+│ │                    │ test_none is       │         │           │          │ │
+│ │                    │ probably testing   │         │           │          │ │
+│ │                    │ the case when n is │         │           │          │ │
+│ │                    │ None. But the code │         │           │          │ │
+│ │                    │ in more.py, the    │         │           │          │ │
+│ │                    │ chunked function   │         │           │          │ │
+│ │                    │ allows n to be     │         │           │          │ │
+│ │                    │ None, but the      │         │           │          │ │
+│ │                    │ check is only for  │         │           │          │ │
+│ │                    │ non-None n. So     │         │           │          │ │
+│ │                    │ when n is None,    │         │           │          │ │
+│ │                    │ the code proceeds. │         │           │          │ │
+│ │                    │ But in that case,  │         │           │          │ │
+│ │                    │ the code may not   │         │           │          │ │
+│ │                    │ have proper        │         │           │          │ │
+│ │                    │ handling for n     │         │           │          │ │
+│ │                    │ being None. Wait,  │         │           │          │ │
+│ │                    │ but in the         │         │           │          │ │
+│ │                    │ function, the code │         │           │          │ │
+│ │                    │ uses 'n' as the    │         │           │          │ │
+│ │                    │ parameter. Let me  │         │           │          │ │
+│ │                    │ look at the code   │         │           │          │ │
+│ │                    │ again. The chunked │         │           │          │ │
+│ │                    │ function's code:   │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ USER               │ Looking at the     │         │           │          │ │
-│ │ Repository:        │ diff, the error    │         │           │          │ │
-│ │ fastapi            │ message in         │         │           │          │ │
-│ │ Files changed:     │ analyze_param is   │         │           │          │ │
-│ │ fastapi/dependenc… │ added with f"Query │         │           │          │ │
-│ │ tests/test_invali… │ parameter          │         │           │          │ │
-│ │                    │ {param_name!r}     │         │           │          │ │
-│ │ Context around the │ must be one of the │         │           │          │ │
-│ │ change             │ supported types".  │         │           │          │ │
-│ │ (mechanically      │ The tests now use  │         │           │          │ │
-│ │ extracted):        │ match to verify    │         │           │          │ │
-│ │ Changed            │ this message.      │         │           │          │ │
-│ │ definitions:       │                    │         │           │          │ │
-│ │ fastapi/dependenc… │ I should verify    │         │           │          │ │
-│ │ tests/test_invali… │ that the error     │         │           │          │ │
-│ │ tests/test_invali… │ message in the     │         │           │          │ │
-│ │ tests/test_invali… │ code matches what  │         │           │          │ │
-│ │ tests/test_invali… │ the tests are      │         │           │          │ │
-│ │ tests/test_invali… │ expecting. The     │         │           │          │ │
-│ │ tests/test_invali… │ tests are using    │         │           │          │ │
-│ │ tests/test_invali… │ 'q' as the         │         │           │          │ │
-│ │ tests/test_invali… │ parameter name,    │         │           │          │ │
-│ │ Callers elsewhere  │ which is correct   │         │           │          │ │
-│ │ (file:line):       │ based on the test  │         │           │          │ │
-│ │   tests/test_open… │ code. The message  │         │           │          │ │
-│ │ SubItem(BaseModel… │ in the code uses   │         │           │          │ │
-│ │   tests/test_open… │ param_name, which  │         │           │          │ │
-│ │ sub=SubItem(subna… │ in the test cases  │         │           │          │ │
-│ │ Recent history of  │ is 'q'.            │         │           │          │ │
-│ │ fastapi/dependenc… │                    │         │           │          │ │
-│ │   f3f498100        │ No obvious defects │         │           │          │ │
-│ │ 2026-02-03 👷 Run  │ here. The change   │         │           │          │ │
-│ │ mypy by pre-commit │ seems to improve   │         │           │          │ │
-│ │ (#14806)           │ error messaging,   │         │           │          │ │
-│ │   e30063055        │ and the tests are  │         │           │          │ │
-│ │ 2025-12-27 ➖ Dro… │ updated            │         │           │          │ │
-│ │ support for        │ accordingly. The   │         │           │          │ │
-│ │ `pydantic.v1`      │ code is handling   │         │           │          │ │
-│ │ (#14609)           │ the parameter      │         │           │          │ │
-│ │   535b5daa3        │ validation         │         │           │          │ │
-│ │ 2025-12-26 🔊 Add  │ correctly.         │         │           │          │ │
-│ │ a custom           │                    │         │           │          │ │
-│ │ `FastAPIDeprecati… │ I don't see any    │         │           │          │ │
-│ │ (#14605)           │ concrete defects.  │         │           │          │ │
-│ │ Recent history of  │ The error message  │         │           │          │ │
-│ │ tests/test_invali… │ is specific, and   │         │           │          │ │
-│ │   1c4fc96c9        │ the tests are      │         │           │          │ │
-│ │ 2025-12-17 ♻️      │ checking for it.   │         │           │          │ │
-│ │ Upgrade internal   │ The function's     │         │           │          │ │
-│ │ syntax to Python   │ logic remains the  │         │           │          │ │
-│ │ 3.9+ 🎉 (#14564)   │ same, just with    │         │           │          │ │
-│ │   9262fa836        │ better error       │         │           │          │ │
-│ │ 2022-05-13 ✨ Add  │ handling.          │         │           │          │ │
-│ │ support for not    │                    │         │           │          │ │
-│ │ needing `...` as   │ Therefore, the     │         │           │          │ │
-│ │ default value in   │ decision should be │         │           │          │ │
-│ │ required Query(),  │ to approve the     │         │           │          │ │
-│ │ Path(), Header(),  │ change.            │         │           │          │ │
-│ │ etc. (#4906)       │ </think>           │         │           │          │ │
-│ │   1f01ce961        │                    │         │           │          │ │
-│ │ 2020-06-28 📝 Use  │ {"decision":       │         │           │          │ │
-│ │ Optional in docs   │ "approve",         │         │           │          │ │
-│ │ (#1644)            │ "comments": []}    │         │           │          │ │
+│ │                    │ def                │         │           │          │ │
+│ │                    │ chunked(iterable,  │         │           │          │ │
+│ │                    │ n, strict=False):  │         │           │          │ │
+│ │                    │     ...            │         │           │          │ │
+│ │                    │     if n is not    │         │           │          │ │
+│ │                    │ None and n <= 0:   │         │           │          │ │
+│ │                    │         raise      │         │           │          │ │
+│ │                    │ ValueError('n must │         │           │          │ │
+│ │                    │ be at least 0')    │         │           │          │ │
+│ │                    │     ...            │         │           │          │ │
+│ │                    │     if strict:     │         │           │          │ │
+│ │                    │         if n is    │         │           │          │ │
+│ │                    │ None:              │         │           │          │ │
+│ │                    │             ...    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ Diff:              │                    │         │           │          │ │
-│ │ ```diff            │                    │         │           │          │ │
-│ │ diff --git         │                    │         │           │          │ │
-│ │ a/fastapi/depende… │                    │         │           │          │ │
-│ │ b/fastapi/depende… │                    │         │           │          │ │
-│ │ index              │                    │         │           │          │ │
-│ │ 2afc734ba..b64781… │                    │         │           │          │ │
-│ │ 100644             │                    │         │           │          │ │
-│ │ ---                │                    │         │           │          │ │
-│ │ a/fastapi/depende… │                    │         │           │          │ │
-│ │ +++                │                    │         │           │          │ │
-│ │ b/fastapi/depende… │                    │         │           │          │ │
-│ │ @@ -519,7 +519,7   │                    │         │           │          │ │
-│ │ @@ def             │                    │         │           │          │ │
-│ │ analyze_param(     │                    │         │           │          │ │
-│ │                  … │                    │         │           │          │ │
-│ │ For Pydantic v1    │                    │         │           │          │ │
-│ │                  … │                    │         │           │          │ │
-│ │ getattr(field,     │                    │         │           │          │ │
-│ │ "shape", 1) == 1   │                    │         │           │          │ │
-│ │                  ) │                    │         │           │          │ │
-│ │ -            )     │                    │         │           │          │ │
-│ │ +            ),    │                    │         │           │          │ │
-│ │ f"Query parameter  │                    │         │           │          │ │
-│ │ {param_name!r}     │                    │         │           │          │ │
-│ │ must be one of the │                    │         │           │          │ │
-│ │ supported types"   │                    │         │           │          │ │
+│ │                    │ Wait, the code     │         │           │          │ │
+│ │                    │ after the check    │         │           │          │ │
+│ │                    │ is: if strict: if  │         │           │          │ │
+│ │                    │ n is None: ... So  │         │           │          │ │
+│ │                    │ if n is None, and  │         │           │          │ │
+│ │                    │ strict is True,    │         │           │          │ │
+│ │                    │ then some code is  │         │           │          │ │
+│ │                    │ executed. But in   │         │           │          │ │
+│ │                    │ this case, when n  │         │           │          │ │
+│ │                    │ is None, the code  │         │           │          │ │
+│ │                    │ is allowed. But    │         │           │          │ │
+│ │                    │ what if n is None  │         │           │          │ │
+│ │                    │ and strict is      │         │           │          │ │
+│ │                    │ False? Then, the   │         │           │          │ │
+│ │                    │ code would not     │         │           │          │ │
+│ │                    │ raise an error.    │         │           │          │ │
+│ │                    │ However, the       │         │           │          │ │
+│ │                    │ function's         │         │           │          │ │
+│ │                    │ parameters suggest │         │           │          │ │
+│ │                    │ that n can be      │         │           │          │ │
+│ │                    │ None, but the      │         │           │          │ │
+│ │                    │ check is only for  │         │           │          │ │
+│ │                    │ n <=0. So the code │         │           │          │ │
+│ │                    │ allows n to be     │         │           │          │ │
+│ │                    │ None, but when n   │         │           │          │ │
+│ │                    │ is not None and    │         │           │          │ │
+│ │                    │ <=0, it raises an  │         │           │          │ │
+│ │                    │ error.             │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │      return        │                    │         │           │          │ │
-│ │ ParamDetails(type… │                    │         │           │          │ │
-│ │ depends=depends,   │                    │         │           │          │ │
-│ │ field=field)       │                    │         │           │          │ │
+│ │                    │ But maybe the      │         │           │          │ │
+│ │                    │ function is        │         │           │          │ │
+│ │                    │ designed to have n │         │           │          │ │
+│ │                    │ as a positive      │         │           │          │ │
+│ │                    │ integer, and       │         │           │          │ │
+│ │                    │ allowing None as a │         │           │          │ │
+│ │                    │ special case.      │         │           │          │ │
+│ │                    │ However, in the    │         │           │          │ │
+│ │                    │ test_negative,     │         │           │          │ │
+│ │                    │ they are passing   │         │           │          │ │
+│ │                    │ -1, which is not   │         │           │          │ │
+│ │                    │ None, so the check │         │           │          │ │
+│ │                    │ would trigger. So  │         │           │          │ │
+│ │                    │ the test_negative  │         │           │          │ │
+│ │                    │ is correct. The    │         │           │          │ │
+│ │                    │ code in chunked    │         │           │          │ │
+│ │                    │ now checks for n   │         │           │          │ │
+│ │                    │ being non-None and │         │           │          │ │
+│ │                    │ <=0, which is      │         │           │          │ │
+│ │                    │ correct. The       │         │           │          │ │
+│ │                    │ test_negative      │         │           │          │ │
+│ │                    │ checks that a      │         │           │          │ │
+│ │                    │ negative n raises  │         │           │          │ │
+│ │                    │ the correct error. │         │           │          │ │
+│ │                    │ Also, the          │         │           │          │ │
+│ │                    │ test_strict_false  │         │           │          │ │
+│ │                    │ is present, which  │         │           │          │ │
+│ │                    │ tests when strict  │         │           │          │ │
+│ │                    │ is False.          │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ diff --git         │                    │         │           │          │ │
-│ │ a/tests/test_inva… │                    │         │           │          │ │
-│ │ b/tests/test_inva… │                    │         │           │          │ │
-│ │ index              │                    │         │           │          │ │
-│ │ 2b8fd059e..369534… │                    │         │           │          │ │
-│ │ 100644             │                    │         │           │          │ │
-│ │ ---                │                    │         │           │          │ │
-│ │ a/tests/test_inva… │                    │         │           │          │ │
-│ │ +++                │                    │         │           │          │ │
-│ │ b/tests/test_inva… │                    │         │           │          │ │
-│ │ @@ -6,7 +6,10 @@   │                    │         │           │          │ │
-│ │ from pydantic      │                    │         │           │          │ │
-│ │ import BaseModel   │                    │         │           │          │ │
+│ │                    │ So the code        │         │           │          │ │
+│ │                    │ changes seem       │         │           │          │ │
+│ │                    │ correct. The added │         │           │          │ │
+│ │                    │ validation for n   │         │           │          │ │
+│ │                    │ being <=0 when not │         │           │          │ │
+│ │                    │ None is correct,   │         │           │          │ │
+│ │                    │ and the tests are  │         │           │          │ │
+│ │                    │ covering the       │         │           │          │ │
+│ │                    │ negative case.     │         │           │          │ │
+│ │                    │ There's also a     │         │           │          │ │
+│ │                    │ test_none, which   │         │           │          │ │
+│ │                    │ might be testing   │         │           │          │ │
+│ │                    │ the case when n is │         │           │          │ │
+│ │                    │ None. But the code │         │           │          │ │
+│ │                    │ doesn't have a     │         │           │          │ │
+│ │                    │ check for n being  │         │           │          │ │
+│ │                    │ None, so that's    │         │           │          │ │
+│ │                    │ allowed. However,  │         │           │          │ │
+│ │                    │ perhaps the        │         │           │          │ │
+│ │                    │ function's         │         │           │          │ │
+│ │                    │ parameters should  │         │           │          │ │
+│ │                    │ have n as a        │         │           │          │ │
+│ │                    │ positive integer,  │         │           │          │ │
+│ │                    │ and None is not    │         │           │          │ │
+│ │                    │ allowed. But the   │         │           │          │ │
+│ │                    │ code allows n to   │         │           │          │ │
+│ │                    │ be None, which is  │         │           │          │ │
+│ │                    │ handled in the     │         │           │          │ │
+│ │                    │ strict condition.  │         │           │          │ │
 │ │                    │                    │         │           │          │ │
+│ │                    │ Wait, looking at   │         │           │          │ │
+│ │                    │ the code, the line │         │           │          │ │
+│ │                    │ after the check    │         │           │          │ │
+│ │                    │ is:                │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │  def               │                    │         │           │          │ │
-│ │ test_invalid_sequ… │                    │         │           │          │ │
-│ │ -    with          │                    │         │           │          │ │
-│ │ pytest.raises(Ass… │                    │         │           │          │ │
-│ │ +    with          │                    │         │           │          │ │
-│ │ pytest.raises(     │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ AssertionError,    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ match="Query       │                    │         │           │          │ │
-│ │ parameter 'q' must │                    │         │           │          │ │
-│ │ be one of the      │                    │         │           │          │ │
-│ │ supported types",  │                    │         │           │          │ │
-│ │ +    ):            │                    │         │           │          │ │
-│ │          app =     │                    │         │           │          │ │
-│ │ FastAPI()          │                    │         │           │          │ │
+│ │                    │ if strict:         │         │           │          │ │
+│ │                    │     if n is None:  │         │           │          │ │
+│ │                    │         ...        │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │          class     │                    │         │           │          │ │
-│ │ Item(BaseModel):   │                    │         │           │          │ │
-│ │ @@ -18,7 +21,10 @@ │                    │         │           │          │ │
-│ │ def                │                    │         │           │          │ │
-│ │ test_invalid_sequ… │                    │         │           │          │ │
+│ │                    │ So if strict is    │         │           │          │ │
+│ │                    │ True and n is      │         │           │          │ │
+│ │                    │ None, then the     │         │           │          │ │
+│ │                    │ code proceeds. But │         │           │          │ │
+│ │                    │ what does that     │         │           │          │ │
+│ │                    │ code do? The       │         │           │          │ │
+│ │                    │ original code      │         │           │          │ │
+│ │                    │ might have         │         │           │          │ │
+│ │                    │ different          │         │           │          │ │
+│ │                    │ behavior. But the  │         │           │          │ │
+│ │                    │ user hasn't        │         │           │          │ │
+│ │                    │ provided the full  │         │           │          │ │
+│ │                    │ code.              │         │           │          │ │
 │ │                    │                    │         │           │          │ │
+│ │                    │ However, the main  │         │           │          │ │
+│ │                    │ point is that the  │         │           │          │ │
+│ │                    │ code change adds a │         │           │          │ │
+│ │                    │ check for n <=0    │         │           │          │ │
+│ │                    │ when not None,     │         │           │          │ │
+│ │                    │ which is correct.  │         │           │          │ │
+│ │                    │ The test_negative  │         │           │          │ │
+│ │                    │ is testing that    │         │           │          │ │
+│ │                    │ negative n raises  │         │           │          │ │
+│ │                    │ the correct error. │         │           │          │ │
+│ │                    │ The code in        │         │           │          │ │
+│ │                    │ more.py now raises │         │           │          │ │
+│ │                    │ ValueError for n   │         │           │          │ │
+│ │                    │ <=0 when not None, │         │           │          │ │
+│ │                    │ which aligns with  │         │           │          │ │
+│ │                    │ the test.          │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │  def               │                    │         │           │          │ │
-│ │ test_invalid_tupl… │                    │         │           │          │ │
-│ │ -    with          │                    │         │           │          │ │
-│ │ pytest.raises(Ass… │                    │         │           │          │ │
-│ │ +    with          │                    │         │           │          │ │
-│ │ pytest.raises(     │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ AssertionError,    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ match="Query       │                    │         │           │          │ │
-│ │ parameter 'q' must │                    │         │           │          │ │
-│ │ be one of the      │                    │         │           │          │ │
-│ │ supported types",  │                    │         │           │          │ │
-│ │ +    ):            │                    │         │           │          │ │
-│ │          app =     │                    │         │           │          │ │
-│ │ FastAPI()          │                    │         │           │          │ │
+│ │                    │ Therefore, the     │         │           │          │ │
+│ │                    │ changes seem       │         │           │          │ │
+│ │                    │ correct. The code  │         │           │          │ │
+│ │                    │ is validated, and  │         │           │          │ │
+│ │                    │ the tests are in   │         │           │          │ │
+│ │                    │ place. So the      │         │           │          │ │
+│ │                    │ decision should be │         │           │          │ │
+│ │                    │ approve.           │         │           │          │ │
+│ │                    │ </think>           │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │          class     │                    │         │           │          │ │
-│ │ Item(BaseModel):   │                    │         │           │          │ │
-│ │ @@ -30,7 +36,10 @@ │                    │         │           │          │ │
-│ │ def                │                    │         │           │          │ │
-│ │ test_invalid_tupl… │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │  def               │                    │         │           │          │ │
-│ │ test_invalid_dict… │                    │         │           │          │ │
-│ │ -    with          │                    │         │           │          │ │
-│ │ pytest.raises(Ass… │                    │         │           │          │ │
-│ │ +    with          │                    │         │           │          │ │
-│ │ pytest.raises(     │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ AssertionError,    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ match="Query       │                    │         │           │          │ │
-│ │ parameter 'q' must │                    │         │           │          │ │
-│ │ be one of the      │                    │         │           │          │ │
-│ │ supported types",  │                    │         │           │          │ │
-│ │ +    ):            │                    │         │           │          │ │
-│ │          app =     │                    │         │           │          │ │
-│ │ FastAPI()          │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │          class     │                    │         │           │          │ │
-│ │ Item(BaseModel):   │                    │         │           │          │ │
-│ │ @@ -42,7 +51,10 @@ │                    │         │           │          │ │
-│ │ def                │                    │         │           │          │ │
-│ │ test_invalid_dict… │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │  def               │                    │         │           │          │ │
-│ │ test_invalid_simp… │                    │         │           │          │ │
-│ │ -    with          │                    │         │           │          │ │
-│ │ pytest.raises(Ass… │                    │         │           │          │ │
-│ │ +    with          │                    │         │           │          │ │
-│ │ pytest.raises(     │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ AssertionError,    │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ match="Query       │                    │         │           │          │ │
-│ │ parameter 'q' must │                    │         │           │          │ │
-│ │ be one of the      │                    │         │           │          │ │
-│ │ supported types",  │                    │         │           │          │ │
-│ │ +    ):            │                    │         │           │          │ │
-│ │          app =     │                    │         │           │          │ │
-│ │ FastAPI()          │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │          class     │                    │         │           │          │ │
-│ │ Item(BaseModel):   │                    │         │           │          │ │
-│ │                    │                    │         │           │          │ │
-│ │ ```                │                    │         │           │          │ │
+│ │                    │ {"decision":       │         │           │          │ │
+│ │                    │ "approve",         │         │           │          │ │
+│ │                    │ "comments": []}    │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
