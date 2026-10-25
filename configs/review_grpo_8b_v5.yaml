@@ -2,7 +2,7 @@
 # prompt, 4096-token cap. Untrained under this protocol (T 0.6 / top_p 0.95 / top_k 20, 3 seeds): bug approve
 # 17.7/35, valid blocks 17/35, clean approve 22.3/26, 0 invalid, PR-weighted paired correct 9.8 ±1.4 /26 —
 # the first start that discriminates (docs/phase3b/measure/TABLE.txt). The 4B stalled at ~6/26 however prompted.
-# Reward v4 (unparsable -3, free tokens 1200), raw advantages, G 16, lr 1e-5, beta 0.02, 50 steps, eval every 10
+# Reward v5 (unparsable -3, free tokens 2500, escalate 0), raw advantages, G 16, lr 1e-5, beta 0.02, 50 steps, eval every 10
 # on the same decode settings (step 0 included). ~3-4 min/step on an H100 -> ~3 h, ~$9.
 extends: base.yaml
 name: review_grpo_8b_v5
@@ -16,7 +16,7 @@ data:
     tasks: [review/bench/public_tasks.jsonl]
     condition: diff+graph
     eval_every: 10
-rewards: [review_gate_v4]
+rewards: [review_gate_v5]       # free tokens 2500, escalate 0 (audit)
 grpo:
   learning_rate: 1.0e-5
   num_generations: 16
@@ -29,5 +29,6 @@ grpo:
   temperature: 1.0
   beta: 0.02
   scale_rewards: none
+  mask_truncated_completions: true   # a 4k-capped sample gets no gradient instead of a -3 it could not avoid
   save_steps: 10
   save_total_limit: 2

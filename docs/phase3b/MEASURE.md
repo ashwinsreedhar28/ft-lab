@@ -32,3 +32,22 @@ Bench issues the audit found (not fixed; eval stays frozen, report around them):
 duplicate under two sources (`mut__click__c69643b6__508__{false_true,llm}`), two more in train; 33 synthetic
 eval bugs come from 26 PRs → weight by PR; `real__fastapi__6ac12207` has boundary=error (bisected introduction,
 not a demonstrated pass→fail regression); all 7 eval repos also appear in train.
+
+## Result (Oct 25, 4B a/b/c, 8B b/c, 8B b@4k; `measure/TABLE.txt`) and second audit
+- Compact prompt: invalid 9 → 4 on 4B, bug approvals unchanged; keep it.
+- Thinking: −5 bug approvals on 4B (all seeds), paired ≈ same (5.9 vs 5.3). 4B paired ceiling ≈ 6/26 however prompted.
+- 8B thinking @2k: paired 6.8, 5–10 truncated. **@4k: paired 9.8 ±1.4, 0 invalid, 0 truncated, bug approve 17.7, clean
+  approve 22.3.** Every non-truncated @2k output is identical @4k — the gain is the 22 truncated outputs finishing.
+- Audit (Codex, partial — ran out of budget before its report): table reproduced exactly; PR-cluster bootstrap 8B@4k vs 4B B
+  = +3.8 paired, 95 % CI ≈ 0–8 (direction real, magnitude borderline); rationales mixed — some explain the mutation,
+  some earn paired credit for unrelated claims (the duplicate click pair, `concurrent_tee`); reward v4 would have
+  penalized 22/51 correct 8B blocks for length (>1200 tokens); escalate had no optimal region. Fixed in reward v5
+  (free tokens 2500, escalate 0) + `mask_truncated_completions`.
+
+## v5 (8B) pre-registered reading rule — `configs/review_grpo_8b_v5.yaml`, ~$9
+Eval at steps 0, 10, …, 50 on the training path (strict parser, T 0.6 / top_p 0.95 / top_k 20 / seed 0, cap 4096).
+Step 0 must land near the measurement job (bug approve ~18, clean approve ~22, paired ~10); if it doesn't, the
+training path differs from the eval path and the run is void. Success = paired rising by ≥ 4 over step 0 at any
+checkpoint with bug approvals not higher than step 0 and clean approvals ≥ 20, holding for two consecutive
+checkpoints. Failure = bug approvals ↓ only via clean approvals ↓ (block drift), or invalid/capped rising, or kl
+> 0.3 with paired flat. One run is one seed; a success is a reason to replicate, not a result.

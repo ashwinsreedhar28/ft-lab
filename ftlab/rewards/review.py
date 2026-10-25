@@ -20,6 +20,11 @@ W = {"approve_bug": -5.0, "correct": 1.0, "block_clean": -0.5, "escalate": -0.2,
 
 W_V3 = {**W, "unparsable": -3.0}   # v2 drifted into single-quoted dicts at -1: format drift must never be a wash
 W_V4 = {**W_V3, "free_tokens": 1200}   # thinking mode: a ~150-word rationale is free, padding past ~1200 tokens is not
+# v5 (Oct 25 audit of the measurement job): 22 of the 51 correct 8B bug blocks ran past 1200 tokens, so v4 would have
+# penalized most correct answers; escalate at -0.2 had no region where it beats both approve and block, so it was never
+# chosen. At 0 it is optimal for posterior bug probability in (1/6, 1/3) -- a real abstention zone, still bounded by
+# block-all's expected +0.26.
+W_V5 = {**W_V4, "free_tokens": 2500, "escalate": 0.0}
 
 
 def gate(completions, kind, gold_hunks, completion_ids=None, log_metric=None, log_extra=None, W=W, **_):
@@ -59,3 +64,7 @@ def gate_v3(completions, kind, gold_hunks, **kw):
 
 def gate_v4(completions, kind, gold_hunks, **kw):
     return gate(completions, kind, gold_hunks, W=W_V4, **kw)
+
+
+def gate_v5(completions, kind, gold_hunks, **kw):
+    return gate(completions, kind, gold_hunks, W=W_V5, **kw)

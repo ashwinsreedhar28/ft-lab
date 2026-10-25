@@ -34,15 +34,16 @@ class PeriodicEval(TrainerCallback):
         vg = self.trainer.vllm_generation
         tok = self.trainer.processing_class
         t0 = time.time()
-        saved = (vg.temperature, vg.top_p, vg.top_k)
-        # same sampling as ftlab.eval's defaults, so the curve and the standalone evals are one experiment
+        saved = (vg.temperature, vg.top_p, vg.top_k, dict(vg.generation_kwargs))
+        # same sampling as ftlab.eval's defaults (and a fixed seed), so the curve and the standalone evals are one experiment
         vg.temperature, vg.top_p, vg.top_k = (0.6, 0.95, 20) if self.cfg.enable_thinking else (0.0, 1.0, 0)
+        vg.generation_kwargs = {**vg.generation_kwargs, "seed": 0}
         try:
             vg.sync_weights()
             self.trainer._last_loaded_step = self.trainer.state.global_step
             _, completion_ids, _, _ = vg.generate(prompts=self.prompt_ids, images=None, num_generations=1)
         finally:
-            vg.temperature, vg.top_p, vg.top_k = saved
+            vg.temperature, vg.top_p, vg.top_k, vg.generation_kwargs = saved
         texts = [tok.decode(ids, skip_special_tokens=True) for ids in completion_ids]
         scores = [self.task.score(t, r) for t, r in zip(texts, self.rows)]
         cap = int(self.trainer.args.max_completion_length or 0)
@@ -55,6 +56,8 @@ class PeriodicEval(TrainerCallback):
                          "out_tokens": len(ids), "finish_reason": "length" if cap and len(ids) >= cap else "stop",
                          "completion": t})
         rec = {"step": step, "n": len(scores), "acc": round(sum(scores) / max(len(scores), 1), 4),
+               "sampling": {"temperature": vg.temperature if False else (0.6 if self.cfg.enable_thinking else 0.0), "top_p": 0.95 if self.cfg.enable_thinking else 1.0,
+                            "top_k": 20 if self.cfg.enable_thinking else 0, "seed": 0, "max_tokens": cap},
                "decisions": dict(sorted(by.items())), "invalid": sum(not x["parsed"] for x in recs),
                "length_capped": sum(x["finish_reason"] == "length" for x in recs), "wall_s": round(time.time() - t0, 1)}
         out_dir = Path(self.trainer.args.output_dir)
