@@ -11332,3 +11332,1931 @@ train rows: 126  columns: ['prompt', 'kind', 'gold_hunks', 'task_id']
 │ │ ```                │                    │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
+ 18%|█▊        | 9/50 [17:35<1:24:27, 123.59s/it]step 9  reward=0.845  reward_std=0.493  kl=0.001  mean_length=971.688  clipped_ratio=0.000  step_time=152.478  loss=-0.012  gate_v5=0.845
+                                                  18%|█▊        | 9/50 [17:35<1:24:27, 123.59s/it]{'loss': '-0.01192', 'grad_norm': '0.02631', 'learning_rate': '8e-06', 'num_tokens': '1.053e+06', 'completions/mean_length': '971.7', 'completions/min_length': '318', 'completions/max_length': '3594', 'completions/clipped_ratio': '0', 'completions/mean_terminated_length': '971.7', 'completions/min_terminated_length': '318', 'completions/max_terminated_length': '3594', 'rewards/gate_v5/mean': '0.8451', 'rewards/gate_v5/std': '0.4931', 'reward': '0.8451', 'reward_std': '0.4931', 'frac_reward_zero_std': '0.5', 'review/approve_bug_frac': '0', 'review/escalate_frac': '0', 'review/mean_tokens': '971.7', 'review/unparsable_frac': '0', 'sampling/sampling_logp_difference/mean': '0.0196', 'sampling/sampling_logp_difference/max': '1.107', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.4081', 'sampling/importance_sampling_ratio/max': '1.595', 'kl': '0.00147', 'entropy': '0.2657', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '152.5', 'epoch': '0.1429'}
+╭─────────────────────────────────── Step 9 ───────────────────────────────────╮
+│ ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓ │
+│ ┃ Prompt             ┃ Completion         ┃ gate_v5 ┃ Advantage ┃ decision ┃ │
+│ ┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━┩ │
+│ │ SYSTEM             │ ASSISTANT          │    1.00 │      0.00 │ approve  │ │
+│ │ You are the code   │ <think>            │         │           │          │ │
+│ │ review gate for a  │ Okay, let's see.   │         │           │          │ │
+│ │ production         │ The user has made  │         │           │          │ │
+│ │ repository.        │ changes to the     │         │           │          │ │
+│ │ Approval merges    │ Click repository,  │         │           │          │ │
+│ │ and deploys the    │ specifically in    │         │           │          │ │
+│ │ change without     │ the _textwrap.py,  │         │           │          │ │
+│ │ further human      │ formatting.py, and │         │           │          │ │
+│ │ review.            │ test_formatting.py │         │           │          │ │
+│ │   approve  - you   │ files. The main    │         │           │          │ │
+│ │ are confident the  │ change seems to be │         │           │          │ │
+│ │ change is correct  │ introducing a new  │         │           │          │ │
+│ │ and safe to ship.  │ _truncate_visible  │         │           │          │ │
+│ │   block    - you   │ function and       │         │           │          │ │
+│ │ found a concrete   │ modifying the      │         │           │          │ │
+│ │ defect in the      │ TextWrapper class  │         │           │          │ │
+│ │ change.            │ to use visible     │         │           │          │ │
+│ │   escalate - you   │ character counts   │         │           │          │ │
+│ │ cannot establish   │ instead of raw     │         │           │          │ │
+│ │ safety from the    │ lengths. There are │         │           │          │ │
+│ │ supplied evidence. │ also new tests     │         │           │          │ │
+│ │ Approving a        │ added to ensure    │         │           │          │ │
+│ │ defective change   │ that ANSI escape   │         │           │          │ │
+│ │ is the worst       │ sequences are      │         │           │          │ │
+│ │ outcome.           │ handled correctly. │         │           │          │ │
+│ │ Your final answer  │                    │         │           │          │ │
+│ │ must be exactly    │ First, I need to   │         │           │          │ │
+│ │ one JSON object:   │ check if the       │         │           │          │ │
+│ │ {"decision":       │ changes introduce  │         │           │          │ │
+│ │ "approve|block|es… │ any defects. The   │         │           │          │ │
+│ │ "comments": []}    │ _truncate_visible  │         │           │          │ │
+│ │ For block, include │ function is        │         │           │          │ │
+│ │ exactly one        │ supposed to count  │         │           │          │ │
+│ │ comment with file, │ visible            │         │           │          │ │
+│ │ line_start,        │ characters,        │         │           │          │ │
+│ │ line_end and body; │ ignoring ANSI      │         │           │          │ │
+│ │ limit body to 40   │ codes. The         │         │           │          │ │
+│ │ words explaining   │ TextWrapper's      │         │           │          │ │
+│ │ the defect. For    │ _wrap_chunks       │         │           │          │ │
+│ │ approve or         │ method now uses    │         │           │          │ │
+│ │ escalate, use an   │ term_len instead   │         │           │          │ │
+│ │ empty comments     │ of len, which      │         │           │          │ │
+│ │ array. Do not      │ should account for │         │           │          │ │
+│ │ include proposed   │ visible            │         │           │          │ │
+│ │ tests or test      │ characters. The    │         │           │          │ │
+│ │ source.            │ tests added check  │         │           │          │ │
+│ │                    │ that styled text   │         │           │          │ │
+│ │ USER               │ wraps correctly    │         │           │          │ │
+│ │ Repository: click  │ based on visible   │         │           │          │ │
+│ │ Files changed:     │ width, not raw     │         │           │          │ │
+│ │ CHANGES.rst,       │ bytes.             │         │           │          │ │
+│ │ src/click/_textwr… │                    │         │           │          │ │
+│ │ src/click/formatt… │ Looking at the     │         │           │          │ │
+│ │ tests/test_format… │ code, the          │         │           │          │ │
+│ │                    │ _truncate_visible  │         │           │          │ │
+│ │ Not shown          │ function seems to  │         │           │          │ │
+│ │ (non-code or over  │ correctly process  │         │           │          │ │
+│ │ budget; treat as   │ ANSI sequences by  │         │           │          │ │
+│ │ unreviewed):       │ skipping over      │         │           │          │ │
+│ │ CHANGES.rst (476   │ them. The          │         │           │          │ │
+│ │ chars, non-code)   │ TextWrapper's      │         │           │          │ │
+│ │                    │ _wrap_chunks uses  │         │           │          │ │
+│ │ Context around the │ term_len on each   │         │           │          │ │
+│ │ change             │ chunk, which       │         │           │          │ │
+│ │ (mechanically      │ should measure the │         │           │          │ │
+│ │ extracted):        │ visible width. The │         │           │          │ │
+│ │ Changed            │ new tests compare  │         │           │          │ │
+│ │ definitions:       │ styled and plain   │         │           │          │ │
+│ │ src/click/_textwr… │ text outputs to    │         │           │          │ │
+│ │ src/click/_textwr… │ ensure they match  │         │           │          │ │
+│ │ src/click/_textwr… │ after stripping    │         │           │          │ │
+│ │ src/click/_textwr… │ ANSI, which makes  │         │           │          │ │
+│ │ src/click/_textwr… │ sense.             │         │           │          │ │
+│ │ src/click/formatt… │                    │         │           │          │ │
+│ │ tests/test_format… │ I don't see any    │         │           │          │ │
+│ │ tests/test_format… │ obvious bugs here. │         │           │          │ │
+│ │ tests/test_format… │ The changes seem   │         │           │          │ │
+│ │ tests/test_format… │ to align with the  │         │           │          │ │
+│ │ Recent history of  │ documentation      │         │           │          │ │
+│ │ src/click/_textwr… │ comments           │         │           │          │ │
+│ │   ec258fe          │ explaining that    │         │           │          │ │
+│ │ 2023-08-20 use     │ ANSI sequences are │         │           │          │ │
+│ │ modern typing      │ excluded from      │         │           │          │ │
+│ │ features           │ width              │         │           │          │ │
+│ │   ecdeb0c          │ calculations. The  │         │           │          │ │
+│ │ 2022-05-02 enable  │ tests are designed │         │           │          │ │
+│ │ deferred           │ to catch           │         │           │          │ │
+│ │ evaluation of      │ regressions where  │         │           │          │ │
+│ │ annotations        │ ANSI sequences     │         │           │          │ │
+│ │   0103c95          │ might have been    │         │           │          │ │
+│ │ 2021-04-23 add     │ counted            │         │           │          │ │
+│ │ typing annotations │ incorrectly. Since │         │           │          │ │
+│ │ Recent history of  │ the code and tests │         │           │          │ │
+│ │ src/click/formatt… │ are consistent,    │         │           │          │ │
+│ │   5b9630f          │ and the changes    │         │           │          │ │
+│ │ 2026-05-08         │ are in line with   │         │           │          │ │
+│ │ Localisation of    │ the stated goals,  │         │           │          │ │
+│ │ more strings       │ it's probably safe │         │           │          │ │
+│ │ (#2902)            │ to approve. Unless │         │           │          │ │
+│ │   a352c6e          │ there's a specific │         │           │          │ │
+│ │ 2025-07-31         │ edge case I'm      │         │           │          │ │
+│ │ Properly lazily    │ missing, but given │         │           │          │ │
+│ │ import shutil      │ the test coverage, │         │           │          │ │
+│ │   f14b750          │ it's likely        │         │           │          │ │
+│ │ 2025-05-10 update  │ handled.           │         │           │          │ │
+│ │ dev dependencies   │ </think>           │         │           │          │ │
+│ │ Recent history of  │                    │         │           │          │ │
+│ │ tests/test_format… │ {"decision":       │         │           │          │ │
+│ │   1241aba          │ "approve",         │         │           │          │ │
+│ │ 2026-04-21 Use     │ "comments": []}    │         │           │          │ │
+│ │ non-shadowed help  │                    │         │           │          │ │
+│ │ option name in     │                    │         │           │          │ │
+│ │ error hint         │                    │         │           │          │ │
+│ │   4ece17a          │                    │         │           │          │ │
+│ │ 2025-01-12 Expand  │                    │         │           │          │ │
+│ │ `Choice` token     │                    │         │           │          │ │
+│ │ normalization +    │                    │         │           │          │ │
+│ │ make generic       │                    │         │           │          │ │
+│ │ (#2796)            │                    │         │           │          │ │
+│ │   589ca31          │                    │         │           │          │ │
+│ │ 2022-10-05 avoid   │                    │         │           │          │ │
+│ │ empty lines if     │                    │         │           │          │ │
+│ │ help text is empty │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ Diff:              │                    │         │           │          │ │
+│ │ ```diff            │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/src/click/_text… │                    │         │           │          │ │
+│ │ b/src/click/_text… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 97fbee3..82840f2   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/click/_text… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/click/_text… │                    │         │           │          │ │
+│ │ @@ -4,8 +4,47 @@   │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ collections.abc as │                    │         │           │          │ │
+│ │ cabc               │                    │         │           │          │ │
+│ │  import textwrap   │                    │         │           │          │ │
+│ │  from contextlib   │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ contextmanager     │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +from ._compat     │                    │         │           │          │ │
+│ │ import _ansi_re    │                    │         │           │          │ │
+│ │ +from ._compat     │                    │         │           │          │ │
+│ │ import term_len    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ _truncate_visible… │                    │         │           │          │ │
+│ │ str, n: int) ->    │                    │         │           │          │ │
+│ │ str:               │                    │         │           │          │ │
+│ │ +    """Return the │                    │         │           │          │ │
+│ │ longest prefix of  │                    │         │           │          │ │
+│ │ ``text``           │                    │         │           │          │ │
+│ │ containing at most │                    │         │           │          │ │
+│ │ ``n`` visible      │                    │         │           │          │ │
+│ │ +    characters.   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    ANSI escape   │                    │         │           │          │ │
+│ │ sequences inside   │                    │         │           │          │ │
+│ │ the prefix are     │                    │         │           │          │ │
+│ │ kept intact and do │                    │         │           │          │ │
+│ │ not count          │                    │         │           │          │ │
+│ │ +    toward the    │                    │         │           │          │ │
+│ │ visible width. A   │                    │         │           │          │ │
+│ │ cut is never       │                    │         │           │          │ │
+│ │ placed inside an   │                    │         │           │          │ │
+│ │ escape sequence.   │                    │         │           │          │ │
+│ │ +    """           │                    │         │           │          │ │
+│ │ +    if n <= 0:    │                    │         │           │          │ │
+│ │ +        return "" │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    visible = 0   │                    │         │           │          │ │
+│ │ +    i = 0         │                    │         │           │          │ │
+│ │ +    cut = 0       │                    │         │           │          │ │
+│ │ +    end =         │                    │         │           │          │ │
+│ │ len(text)          │                    │         │           │          │ │
+│ │ +    while i <     │                    │         │           │          │ │
+│ │ end:               │                    │         │           │          │ │
+│ │ +        m =       │                    │         │           │          │ │
+│ │ _ansi_re.match(te… │                    │         │           │          │ │
+│ │ i)                 │                    │         │           │          │ │
+│ │ +        if m is   │                    │         │           │          │ │
+│ │ not None:          │                    │         │           │          │ │
+│ │ +            i =   │                    │         │           │          │ │
+│ │ m.end()            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ continue           │                    │         │           │          │ │
+│ │ +        visible   │                    │         │           │          │ │
+│ │ += 1               │                    │         │           │          │ │
+│ │ +        i += 1    │                    │         │           │          │ │
+│ │ +        cut = i   │                    │         │           │          │ │
+│ │ +        if        │                    │         │           │          │ │
+│ │ visible >= n:      │                    │         │           │          │ │
+│ │ +            break │                    │         │           │          │ │
+│ │ +    return        │                    │         │           │          │ │
+│ │ text[:cut]         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  class             │                    │         │           │          │ │
+│ │ TextWrapper(textw… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ """``textwrap.Tex… │                    │         │           │          │ │
+│ │ variant that       │                    │         │           │          │ │
+│ │ measures widths by │                    │         │           │          │ │
+│ │ visible            │                    │         │           │          │ │
+│ │ +    character     │                    │         │           │          │ │
+│ │ count.             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    ANSI escape   │                    │         │           │          │ │
+│ │ sequences embedded │                    │         │           │          │ │
+│ │ in chunks,         │                    │         │           │          │ │
+│ │ indents, or the    │                    │         │           │          │ │
+│ │ placeholder are    │                    │         │           │          │ │
+│ │ +    excluded from │                    │         │           │          │ │
+│ │ the width budget.  │                    │         │           │          │ │
+│ │ Without this,      │                    │         │           │          │ │
+│ │ styled help text   │                    │         │           │          │ │
+│ │ (a styled          │                    │         │           │          │ │
+│ │ +    ``Usage:``    │                    │         │           │          │ │
+│ │ prefix, a          │                    │         │           │          │ │
+│ │ colorized option   │                    │         │           │          │ │
+│ │ name, ...) would   │                    │         │           │          │ │
+│ │ be wrapped earlier │                    │         │           │          │ │
+│ │ +    than its      │                    │         │           │          │ │
+│ │ visible length     │                    │         │           │          │ │
+│ │ warrants and       │                    │         │           │          │ │
+│ │ tokens would split │                    │         │           │          │ │
+│ │ mid-word.          │                    │         │           │          │ │
+│ │ +    """           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      def           │                    │         │           │          │ │
+│ │ _handle_long_word( │                    │         │           │          │ │
+│ │          self,     │                    │         │           │          │ │
+│ │          reversed… │                    │         │           │          │ │
+│ │ list[str],         │                    │         │           │          │ │
+│ │ @@ -17,13 +56,111  │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ TextWrapper(textw… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │          if        │                    │         │           │          │ │
+│ │ self.break_long_w… │                    │         │           │          │ │
+│ │              last  │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ reversed_chunks[-… │                    │         │           │          │ │
+│ │ -            cut = │                    │         │           │          │ │
+│ │ last[:space_left]  │                    │         │           │          │ │
+│ │ -            res = │                    │         │           │          │ │
+│ │ last[space_left:]  │                    │         │           │          │ │
+│ │ +            cut = │                    │         │           │          │ │
+│ │ _truncate_visible… │                    │         │           │          │ │
+│ │ space_left)        │                    │         │           │          │ │
+│ │ +            res = │                    │         │           │          │ │
+│ │ last[len(cut) :]   │                    │         │           │          │ │
+│ │              cur_… │                    │         │           │          │ │
+│ │              reve… │                    │         │           │          │ │
+│ │ = res              │                    │         │           │          │ │
+│ │          elif not  │                    │         │           │          │ │
+│ │ cur_line:          │                    │         │           │          │ │
+│ │              cur_… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ _wrap_chunks(self, │                    │         │           │          │ │
+│ │ chunks: list[str]) │                    │         │           │          │ │
+│ │ -> list[str]:      │                    │         │           │          │ │
+│ │ +        """Wrap   │                    │         │           │          │ │
+│ │ chunks counting    │                    │         │           │          │ │
+│ │ widths in visible  │                    │         │           │          │ │
+│ │ characters.        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        Mirrors   │                    │         │           │          │ │
+│ │ the algorithm of   │                    │         │           │          │ │
+│ │ :meth:`textwrap.T… │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ every width        │                    │         │           │          │ │
+│ │ measurement routed │                    │         │           │          │ │
+│ │ through            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ :func:`click._com… │                    │         │           │          │ │
+│ │ instead of         │                    │         │           │          │ │
+│ │ :func:`len`, so    │                    │         │           │          │ │
+│ │ ANSI escape        │                    │         │           │          │ │
+│ │ +        bytes in  │                    │         │           │          │ │
+│ │ chunks, indents,   │                    │         │           │          │ │
+│ │ or the placeholder │                    │         │           │          │ │
+│ │ do not inflate the │                    │         │           │          │ │
+│ │ count.             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        ..        │                    │         │           │          │ │
+│ │ seealso::          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ :class:`textwrap.… │                    │         │           │          │ │
+│ │ in the Python      │                    │         │           │          │ │
+│ │ standard library   │                    │         │           │          │ │
+│ │ documentation:     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ https://docs.pyth… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ Reference          │                    │         │           │          │ │
+│ │ implementation in  │                    │         │           │          │ │
+│ │ CPython:           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ https://github.co… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        lines:    │                    │         │           │          │ │
+│ │ list[str] = []     │                    │         │           │          │ │
+│ │ +        if        │                    │         │           │          │ │
+│ │ self.width <= 0:   │                    │         │           │          │ │
+│ │ +            raise │                    │         │           │          │ │
+│ │ ValueError(f"inva… │                    │         │           │          │ │
+│ │ width              │                    │         │           │          │ │
+│ │ {self.width!r}     │                    │         │           │          │ │
+│ │ (must be > 0)")    │                    │         │           │          │ │
+│ │ +        if        │                    │         │           │          │ │
+│ │ self.max_lines is  │                    │         │           │          │ │
+│ │ not None:          │                    │         │           │          │ │
+│ │ +            if    │                    │         │           │          │ │
+│ │ self.max_lines >   │                    │         │           │          │ │
+│ │ 1:                 │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ indent =           │                    │         │           │          │ │
+│ │ self.subsequent_i… │                    │         │           │          │ │
+│ │ +            else: │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ indent =           │                    │         │           │          │ │
+│ │ self.initial_inde… │                    │         │           │          │ │
+│ │ +            if    │                    │         │           │          │ │
+│ │ term_len(indent) + │                    │         │           │          │ │
+│ │ term_len(self.pla… │                    │         │           │          │ │
+│ │ > self.width:      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ raise              │                    │         │           │          │ │
+│ │ ValueError("place… │                    │         │           │          │ │
+│ │ too large for max  │                    │         │           │          │ │
+│ │ width")            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ chunks.reverse()   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        while     │                    │         │           │          │ │
+│ │ chunks:            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cur_line:          │                    │         │           │          │ │
+│ │ list[str] = []     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cur_len = 0        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +            if    │                    │         │           │          │ │
+│ │ lines:             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ indent =           │                    │         │           │          │ │
+│ │ self.subsequent_i… │                    │         │           │          │ │
+│ │ +            else: │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ indent =           │                    │         │           │          │ │
+│ │ self.initial_inde… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +            width │                    │         │           │          │ │
+│ │ = self.width -     │                    │         │           │          │ │
+│ │ term_len(indent)   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +            if    │                    │         │           │          │ │
+│ │ self.drop_whitesp… │                    │         │           │          │ │
+│ │ and                │                    │         │           │          │ │
+│ │ chunks[-1].strip() │                    │         │           │          │ │
+│ │ == "" and lines:   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ del chunks[-1]     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +            while │                    │         │           │          │ │
+│ │ chunks:            │                    │         │           │          │ │
+│ │ +                n │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ term_len(chunks[-… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ if cur_len + n <=  │                    │         │           │          │ │
+│ │ width:             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cur_line.append(c… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cur_len += n       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ else:              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ break              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +            if    │                    │         │           │          │ │
+│ │ chunks and         │                    │         │           │          │ │
+│ │ term_len(chunks[-… │                    │         │           │          │ │
+│ │ > width:           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self._handle_long… │                    │         │           │          │ │
+│ │ cur_line, cur_len, │                    │         │           │          │ │
+│ │ width)             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cur_len =          │                    │         │           │          │ │
+│ │ sum(map(term_len,  │                    │         │           │          │ │
+│ │ cur_line))         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +            if    │                    │         │           │          │ │
+│ │ self.drop_whitesp… │                    │         │           │          │ │
+│ │ and cur_line and   │                    │         │           │          │ │
+│ │ cur_line[-1].stri… │                    │         │           │          │ │
+│ │ == "":             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cur_len -=         │                    │         │           │          │ │
+│ │ term_len(cur_line… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ del cur_line[-1]   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +            if    │                    │         │           │          │ │
+│ │ cur_line:          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ if (               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.max_lines is  │                    │         │           │          │ │
+│ │ None               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ or len(lines) + 1  │                    │         │           │          │ │
+│ │ < self.max_lines   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ or (               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ not chunks         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ or                 │                    │         │           │          │ │
+│ │ self.drop_whitesp… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ and len(chunks) == │                    │         │           │          │ │
+│ │ 1                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ and not            │                    │         │           │          │ │
+│ │ chunks[0].strip()  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ )                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ and cur_len <=     │                    │         │           │          │ │
+│ │ width              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ ):                 │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ lines.append(inde… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "".join(cur_line)) │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ else:              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ while cur_line:    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ if (               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cur_line[-1].stri… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ and cur_len +      │                    │         │           │          │ │
+│ │ term_len(self.pla… │                    │         │           │          │ │
+│ │ <= width           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ ):                 │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cur_line.append(s… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ lines.append(inde… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "".join(cur_line)) │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ break              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cur_len -=         │                    │         │           │          │ │
+│ │ term_len(cur_line… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ del cur_line[-1]   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ else:              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ if lines:          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ prev_line =        │                    │         │           │          │ │
+│ │ lines[-1].rstrip() │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ if (               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ term_len(prev_lin… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ term_len(self.pla… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ <= self.width      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ ):                 │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ lines[-1] =        │                    │         │           │          │ │
+│ │ prev_line +        │                    │         │           │          │ │
+│ │ self.placeholder   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ break              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ lines.append(inde… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ self.placeholder.… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ break              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        return    │                    │         │           │          │ │
+│ │ lines              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      @contextmana… │                    │         │           │          │ │
+│ │      def           │                    │         │           │          │ │
+│ │ extra_indent(self, │                    │         │           │          │ │
+│ │ indent: str) ->    │                    │         │           │          │ │
+│ │ cabc.Iterator[Non… │                    │         │           │          │ │
+│ │          old_init… │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ self.initial_inde… │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/src/click/forma… │                    │         │           │          │ │
+│ │ b/src/click/forma… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ de2ca47..d9075ca   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/click/forma… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/click/forma… │                    │         │           │          │ │
+│ │ @@ -52,6 +52,12 @@ │                    │         │           │          │ │
+│ │ def wrap_text(     │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ consecutive line.  │                    │         │           │          │ │
+│ │      :param        │                    │         │           │          │ │
+│ │ preserve_paragrap… │                    │         │           │          │ │
+│ │ if this flag is    │                    │         │           │          │ │
+│ │ set then the       │                    │         │           │          │ │
+│ │ wrapping will      │                    │         │           │          │ │
+│ │                  … │                    │         │           │          │ │
+│ │ handle paragraphs. │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    ..            │                    │         │           │          │ │
+│ │ versionchanged::   │                    │         │           │          │ │
+│ │ 8.4                │                    │         │           │          │ │
+│ │ +        Width is  │                    │         │           │          │ │
+│ │ measured in        │                    │         │           │          │ │
+│ │ visible            │                    │         │           │          │ │
+│ │ characters. ANSI   │                    │         │           │          │ │
+│ │ escape sequences   │                    │         │           │          │ │
+│ │ in                 │                    │         │           │          │ │
+│ │ +        ``text``, │                    │         │           │          │ │
+│ │ ``initial_indent`… │                    │         │           │          │ │
+│ │ or                 │                    │         │           │          │ │
+│ │ ``subsequent_inde… │                    │         │           │          │ │
+│ │ no longer          │                    │         │           │          │ │
+│ │ +        count     │                    │         │           │          │ │
+│ │ toward the width   │                    │         │           │          │ │
+│ │ budget, so styled  │                    │         │           │          │ │
+│ │ input wraps based  │                    │         │           │          │ │
+│ │ on what            │                    │         │           │          │ │
+│ │ +        the user  │                    │         │           │          │ │
+│ │ sees instead of    │                    │         │           │          │ │
+│ │ raw byte length.   │                    │         │           │          │ │
+│ │      """           │                    │         │           │          │ │
+│ │      from          │                    │         │           │          │ │
+│ │ ._textwrap import  │                    │         │           │          │ │
+│ │ TextWrapper        │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_form… │                    │         │           │          │ │
+│ │ b/tests/test_form… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ c74b53a..3e85688   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_form… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_form… │                    │         │           │          │ │
+│ │ @@ -1,6 +1,7 @@    │                    │         │           │          │ │
+│ │  import pytest     │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  import click      │                    │         │           │          │ │
+│ │ +from              │                    │         │           │          │ │
+│ │ click._compat      │                    │         │           │          │ │
+│ │ import strip_ansi  │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  def               │                    │         │           │          │ │
+│ │ test_basic_functi… │                    │         │           │          │ │
+│ │ @@ -433,3 +434,68  │                    │         │           │          │ │
+│ │ @@ def             │                    │         │           │          │ │
+│ │ test_help_formatt… │                    │         │           │          │ │
+│ │      actual =      │                    │         │           │          │ │
+│ │ formatter.getvalu… │                    │         │           │          │ │
+│ │      expected = "  │                    │         │           │          │ │
+│ │ Lorem ipsum dolor  │                    │         │           │          │ │
+│ │ sit amet,\n        │                    │         │           │          │ │
+│ │ consectetur        │                    │         │           │          │ │
+│ │ adipiscing elit\n" │                    │         │           │          │ │
+│ │      assert actual │                    │         │           │          │ │
+│ │ == expected        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +@pytest.mark.par… │                    │         │           │          │ │
+│ │ +    ("body",      │                    │         │           │          │ │
+│ │ "width",           │                    │         │           │          │ │
+│ │ "initial_indent"), │                    │         │           │          │ │
+│ │ +    [             │                    │         │           │          │ │
+│ │ +        # Styled  │                    │         │           │          │ │
+│ │ ``initial_indent`` │                    │         │           │          │ │
+│ │ must be measured   │                    │         │           │          │ │
+│ │ by visible width,  │                    │         │           │          │ │
+│ │ so the             │                    │         │           │          │ │
+│ │ +        #         │                    │         │           │          │ │
+│ │ ``Usage:`` prefix  │                    │         │           │          │ │
+│ │ shouldn't push     │                    │         │           │          │ │
+│ │ ``[OPTIONS]`` to   │                    │         │           │          │ │
+│ │ the second line.   │                    │         │           │          │ │
+│ │ +        #         │                    │         │           │          │ │
+│ │ Regression for the │                    │         │           │          │ │
+│ │ asymmetry between  │                    │         │           │          │ │
+│ │ ``HelpFormatter.w… │                    │         │           │          │ │
+│ │ +        # (which  │                    │         │           │          │ │
+│ │ sized the prefix   │                    │         │           │          │ │
+│ │ with ``term_len``) │                    │         │           │          │ │
+│ │ and ``wrap_text``  │                    │         │           │          │ │
+│ │ +        # (which  │                    │         │           │          │ │
+│ │ previously used    │                    │         │           │          │ │
+│ │ raw ``len``).      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ pytest.param(      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "[OPTIONS]",       │                    │         │           │          │ │
+│ │ +            30,   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "\x1b[38;2;38;139… │                    │         │           │          │ │
+│ │ ",                 │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ id="styled-initia… │                    │         │           │          │ │
+│ │ +        ),        │                    │         │           │          │ │
+│ │ +        # Styled  │                    │         │           │          │ │
+│ │ chunks in the body │                    │         │           │          │ │
+│ │ itself wrap on     │                    │         │           │          │ │
+│ │ visible width.     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ pytest.param(      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "\x1b[31malpha\x1… │                    │         │           │          │ │
+│ │ \x1b[31mbeta\x1b[… │                    │         │           │          │ │
+│ │ +            "     │                    │         │           │          │ │
+│ │ \x1b[31mgamma\x1b… │                    │         │           │          │ │
+│ │ \x1b[31mdelta\x1b… │                    │         │           │          │ │
+│ │ +            15,   │                    │         │           │          │ │
+│ │ +            "",   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ id="styled-body-w… │                    │         │           │          │ │
+│ │ +        ),        │                    │         │           │          │ │
+│ │ +        #         │                    │         │           │          │ │
+│ │ ``_handle_long_wo… │                    │         │           │          │ │
+│ │ cuts a styled      │                    │         │           │          │ │
+│ │ token between      │                    │         │           │          │ │
+│ │ visible            │                    │         │           │          │ │
+│ │ +        #         │                    │         │           │          │ │
+│ │ characters; the    │                    │         │           │          │ │
+│ │ ANSI escape        │                    │         │           │          │ │
+│ │ sequence must not  │                    │         │           │          │ │
+│ │ be split.          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ pytest.param(      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ "\x1b[31mabcdefgh… │                    │         │           │          │ │
+│ │ +            5,    │                    │         │           │          │ │
+│ │ +            "",   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ id="styled-long-w… │                    │         │           │          │ │
+│ │ +        ),        │                    │         │           │          │ │
+│ │ +    ],            │                    │         │           │          │ │
+│ │ +)                 │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_wrap_text_vi… │                    │         │           │          │ │
+│ │ width,             │                    │         │           │          │ │
+│ │ initial_indent):   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ """``wrap_text``   │                    │         │           │          │ │
+│ │ of styled input    │                    │         │           │          │ │
+│ │ produces the same  │                    │         │           │          │ │
+│ │ line layout as     │                    │         │           │          │ │
+│ │ +    ``wrap_text`` │                    │         │           │          │ │
+│ │ of the             │                    │         │           │          │ │
+│ │ ANSI-stripped      │                    │         │           │          │ │
+│ │ input.             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    ANSI escape   │                    │         │           │          │ │
+│ │ bytes must not     │                    │         │           │          │ │
+│ │ count toward the   │                    │         │           │          │ │
+│ │ width budget,      │                    │         │           │          │ │
+│ │ regardless         │                    │         │           │          │ │
+│ │ +    of whether    │                    │         │           │          │ │
+│ │ they appear in the │                    │         │           │          │ │
+│ │ body, in           │                    │         │           │          │ │
+│ │ ``initial_indent`… │                    │         │           │          │ │
+│ │ or when a          │                    │         │           │          │ │
+│ │ +    styled token  │                    │         │           │          │ │
+│ │ has to be broken   │                    │         │           │          │ │
+│ │ in the middle.     │                    │         │           │          │ │
+│ │ +    """           │                    │         │           │          │ │
+│ │ +    styled =      │                    │         │           │          │ │
+│ │ click.formatting.… │                    │         │           │          │ │
+│ │ +        body,     │                    │         │           │          │ │
+│ │ width=width,       │                    │         │           │          │ │
+│ │ initial_indent=in… │                    │         │           │          │ │
+│ │ +    )             │                    │         │           │          │ │
+│ │ +    plain =       │                    │         │           │          │ │
+│ │ click.formatting.… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ strip_ansi(body),  │                    │         │           │          │ │
+│ │ width=width,       │                    │         │           │          │ │
+│ │ initial_indent=st… │                    │         │           │          │ │
+│ │ +    )             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ styled_visible =   │                    │         │           │          │ │
+│ │ [strip_ansi(line)  │                    │         │           │          │ │
+│ │ for line in        │                    │         │           │          │ │
+│ │ styled.splitlines… │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ styled_visible ==  │                    │         │           │          │ │
+│ │ plain.splitlines() │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ test_write_usage_… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ """End-to-end: a   │                    │         │           │          │ │
+│ │ downstream-styled  │                    │         │           │          │ │
+│ │ ``Usage:`` prefix  │                    │         │           │          │ │
+│ │ should not split   │                    │         │           │          │ │
+│ │ +    ``[OPTIONS]`` │                    │         │           │          │ │
+│ │ across two lines.  │                    │         │           │          │ │
+│ │ +    """           │                    │         │           │          │ │
+│ │ +    styled_prefix │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ "\x1b[38;2;38;139… │                    │         │           │          │ │
+│ │ "                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    formatter =   │                    │         │           │          │ │
+│ │ click.HelpFormatt… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ formatter.write_u… │                    │         │           │          │ │
+│ │ "[OPTIONS]",       │                    │         │           │          │ │
+│ │ prefix=styled_pre… │                    │         │           │          │ │
+│ │ +    rendered =    │                    │         │           │          │ │
+│ │ formatter.getvalu… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    visible =     │                    │         │           │          │ │
+│ │ strip_ansi(render… │                    │         │           │          │ │
+│ │ +    assert        │                    │         │           │          │ │
+│ │ visible == "Usage: │                    │         │           │          │ │
+│ │ cli [OPTIONS]\n"   │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ ```                │                    │         │           │          │ │
+│ ├────────────────────┼────────────────────┼─────────┼───────────┼──────────┤ │
+│ │ SYSTEM             │ ASSISTANT          │    1.00 │      0.31 │ approve  │ │
+│ │ You are the code   │ <think>            │         │           │          │ │
+│ │ review gate for a  │ Okay, let's go     │         │           │          │ │
+│ │ production         │ through this code  │         │           │          │ │
+│ │ repository.        │ change step by     │         │           │          │ │
+│ │ Approval merges    │ step. The user has │         │           │          │ │
+│ │ and deploys the    │ made several       │         │           │          │ │
+│ │ change without     │ modifications      │         │           │          │ │
+│ │ further human      │ across different   │         │           │          │ │
+│ │ review.            │ files in the attrs │         │           │          │ │
+│ │   approve  - you   │ repository. My job │         │           │          │ │
+│ │ are confident the  │ is to review these │         │           │          │ │
+│ │ change is correct  │ changes and decide │         │           │          │ │
+│ │ and safe to ship.  │ whether to         │         │           │          │ │
+│ │   block    - you   │ approve, block, or │         │           │          │ │
+│ │ found a concrete   │ escalate the       │         │           │          │ │
+│ │ defect in the      │ change.            │         │           │          │ │
+│ │ change.            │                    │         │           │          │ │
+│ │   escalate - you   │ First, looking at  │         │           │          │ │
+│ │ cannot establish   │ the files changed: │         │           │          │ │
+│ │ safety from the    │ _compat.py,        │         │           │          │ │
+│ │ supplied evidence. │ _make.py,          │         │           │          │ │
+│ │ Approving a        │ _next_gen.py,      │         │           │          │ │
+│ │ defective change   │ setters.py,        │         │           │          │ │
+│ │ is the worst       │ test_compat.py,    │         │           │          │ │
+│ │ outcome.           │ test_setattr.py,   │         │           │          │ │
+│ │ Your final answer  │ and baseline.py.   │         │           │          │ │
+│ │ must be exactly    │ The main focus     │         │           │          │ │
+│ │ one JSON object:   │ seems to be on     │         │           │          │ │
+│ │ {"decision":       │ adding support for │         │           │          │ │
+│ │ "approve|block|es… │ generator          │         │           │          │ │
+│ │ "comments": []}    │ functions as       │         │           │          │ │
+│ │ For block, include │ on_setattr hooks.  │         │           │          │ │
+│ │ exactly one        │                    │         │           │          │ │
+│ │ comment with file, │ In _compat.py,     │         │           │          │ │
+│ │ line_start,        │ there's a new      │         │           │          │ │
+│ │ line_end and body; │ function           │         │           │          │ │
+│ │ limit body to 40   │ _lazy_is_generator │         │           │          │ │
+│ │ words explaining   │ that caches        │         │           │          │ │
+│ │ the defect. For    │ whether a function │         │           │          │ │
+│ │ approve or         │ is a generator.    │         │           │          │ │
+│ │ escalate, use an   │ This is used to    │         │           │          │ │
+│ │ empty comments     │ check if the       │         │           │          │ │
+│ │ array. Do not      │ on_setattr hook is │         │           │          │ │
+│ │ include proposed   │ a generator. The   │         │           │          │ │
+│ │ tests or test      │ tests in           │         │           │          │ │
+│ │ source.            │ test_compat.py now │         │           │          │ │
+│ │                    │ include cases for  │         │           │          │ │
+│ │ USER               │ testing this       │         │           │          │ │
+│ │ Repository: attrs  │ function, which is │         │           │          │ │
+│ │ Files changed:     │ good for verifying │         │           │          │ │
+│ │ changelog.d/1592.… │ correctness.       │         │           │          │ │
+│ │ docs/examples.md,  │                    │         │           │          │ │
+│ │ docs/init.md,      │ In _make.py, the   │         │           │          │ │
+│ │ src/attr/_compat.… │ _ClassBuilder      │         │           │          │ │
+│ │ src/attr/_make.py, │ class now stores   │         │           │          │ │
+│ │ src/attr/_next_ge… │ the result of      │         │           │          │ │
+│ │ src/attr/setters.… │ _lazy_is_generator │         │           │          │ │
+│ │ src/attrs/__init_… │ for each           │         │           │          │ │
+│ │ tests/test_compat… │ on_setattr hook.   │         │           │          │ │
+│ │ tests/test_setatt… │ The __setattr__    │         │           │          │ │
+│ │ typing-examples/b… │ method in          │         │           │          │ │
+│ │                    │ _ClassBuilder is   │         │           │          │ │
+│ │ Not shown          │ updated to handle  │         │           │          │ │
+│ │ (non-code or over  │ generator hooks.   │         │           │          │ │
+│ │ budget; treat as   │ The logic here     │         │           │          │ │
+│ │ unreviewed):       │ seems to call the  │         │           │          │ │
+│ │ changelog.d/1592.… │ generator, capture │         │           │          │ │
+│ │ (357 chars,        │ the yielded value, │         │           │          │ │
+│ │ non-code),         │ and set it on the  │         │           │          │ │
+│ │ docs/examples.md   │ instance. There's  │         │           │          │ │
+│ │ (1002 chars,       │ also error         │         │           │          │ │
+│ │ non-code),         │ handling if the    │         │           │          │ │
+│ │ docs/init.md (310  │ generator yields   │         │           │          │ │
+│ │ chars, non-code),  │ more than once,    │         │           │          │ │
+│ │ src/attrs/__init_… │ which is important │         │           │          │ │
+│ │ (886 chars,        │ to prevent         │         │           │          │ │
+│ │ non-code)          │ unexpected         │         │           │          │ │
+│ │                    │ behavior.          │         │           │          │ │
+│ │ Context around the │                    │         │           │          │ │
+│ │ change             │ In _next_gen.py,   │         │           │          │ │
+│ │ (mechanically      │ the define and     │         │           │          │ │
+│ │ extracted):        │ field functions    │         │           │          │ │
+│ │ Changed            │ now mention that   │         │           │          │ │
+│ │ definitions:       │ on_setattr can be  │         │           │          │ │
+│ │ src/attr/_compat.… │ generator          │         │           │          │ │
+│ │ src/attr/_compat.… │ functions. This    │         │           │          │ │
+│ │ src/attr/_compat.… │ updates the        │         │           │          │ │
+│ │ src/attr/_make.py… │ documentation to   │         │           │          │ │
+│ │ src/attr/_make.py… │ reflect the new    │         │           │          │ │
+│ │ src/attr/_make.py… │ feature, which is  │         │           │          │ │
+│ │ src/attr/_make.py… │ necessary for      │         │           │          │ │
+│ │ src/attr/_next_ge… │ users to           │         │           │          │ │
+│ │ src/attr/_next_ge… │ understand the     │         │           │          │ │
+│ │ src/attr/setters.… │ changes.           │         │           │          │ │
+│ │ src/attr/setters.… │                    │         │           │          │ │
+│ │ tests/test_compat… │ In setters.py, the │         │           │          │ │
+│ │ tests/test_compat… │ pipe function now  │         │           │          │ │
+│ │ tests/test_compat… │ has a warning that │         │           │          │ │
+│ │ tests/test_compat… │ generator          │         │           │          │ │
+│ │ tests/test_compat… │ functions aren't   │         │           │          │ │
+│ │ tests/test_compat… │ allowed. This is a │         │           │          │ │
+│ │ tests/test_compat… │ safety measure to  │         │           │          │ │
+│ │ tests/test_compat… │ prevent misuse, as │         │           │          │ │
+│ │ tests/test_compat… │ generators can't   │         │           │          │ │
+│ │ Recent history of  │ be easily composed │         │           │          │ │
+│ │ src/attr/_compat.… │ with pipe.         │         │           │          │ │
+│ │   6851ab5          │                    │         │           │          │ │
+│ │ 2026-07-31 Defer   │ The test cases in  │         │           │          │ │
+│ │ imports on the     │ test_setattr.py    │         │           │          │ │
+│ │ cold import path   │ cover various      │         │           │          │ │
+│ │ (#1600)            │ scenarios,         │         │           │          │ │
+│ │   61e8179          │ including          │         │           │          │ │
+│ │ 2025-07-30 Allow   │ generator hooks    │         │           │          │ │
+│ │ forward-references │ yielding values,   │         │           │          │ │
+│ │ on 3.14 (#1451)    │ exceptions during  │         │           │          │ │
+│ │   00f6ac4          │ yielding, and      │         │           │          │ │
+│ │ 2025-05-19 Use a   │ ensuring that the  │         │           │          │ │
+│ │ fully locked test  │ generator is       │         │           │          │ │
+│ │ environment        │ properly closed.   │         │           │          │ │
+│ │ (#1349)            │ These tests seem   │         │           │          │ │
+│ │ Recent history of  │ comprehensive and  │         │           │          │ │
+│ │ src/attr/_make.py: │ should catch most  │         │           │          │ │
+│ │   d3a98cf          │ issues related to  │         │           │          │ │
+│ │ 2026-08-01 Fix     │ generator hooks.   │         │           │          │ │
+│ │ docstring          │                    │         │           │          │ │
+│ │   97f8d17          │ Looking at the     │         │           │          │ │
+│ │ 2026-07-31 Fix     │ diff, I notice     │         │           │          │ │
+│ │ ClassVar forward   │ that in _make.py's │         │           │          │ │
+│ │ reference          │ __setattr__        │         │           │          │ │
+│ │ detection (#1593)  │ method, after      │         │           │          │ │
+│ │   6851ab5          │ calling the        │         │           │          │ │
+│ │ 2026-07-31 Defer   │ generator, there's │         │           │          │ │
+│ │ imports on the     │ a check for the    │         │           │          │ │
+│ │ cold import path   │ number of yields.  │         │           │          │ │
+│ │ (#1600)            │ If the generator   │         │           │          │ │
+│ │ Recent history of  │ yields more than   │         │           │          │ │
+│ │ src/attr/_next_ge… │ once, it raises a  │         │           │          │ │
+│ │   45de9be          │ RuntimeError. This │         │           │          │ │
+│ │ 2026-07-05 docs:   │ is crucial because │         │           │          │ │
+│ │ move               │ generators can     │         │           │          │ │
+│ │ collect_by_mro to  │ only yield once    │         │           │          │ │
+│ │ attr.s docstring   │ unless they're     │         │           │          │ │
+│ │   112dd1d          │ used in a specific │         │           │          │ │
+│ │ 2025-09-30 Expose  │ way. The code also │         │           │          │ │
+│ │ effective class    │ attempts to close  │         │           │          │ │
+│ │ construction       │ the generator      │         │           │          │ │
+│ │ properties (#1454) │ after the first    │         │           │          │ │
+│ │   6e3786c          │ yield, which is    │         │           │          │ │
+│ │ 2025-08-03 Make    │ correct.           │         │           │          │ │
+│ │ `kw_only=True`     │                    │         │           │          │ │
+│ │ behavior           │ However, I need to │         │           │          │ │
+│ │ consistent with    │ check if there's   │         │           │          │ │
+│ │ dataclasses        │ any potential      │         │           │          │ │
+│ │ (#1457)            │ issue with the     │         │           │          │ │
+│ │ Recent history of  │ logic. For         │         │           │          │ │
+│ │ src/attr/setters.… │ example, when the  │         │           │          │ │
+│ │   ae73409          │ generator yields   │         │           │          │ │
+│ │ 2024-08-16 Cull    │ once, the code     │         │           │          │ │
+│ │ Ruff ignores       │ captures the value │         │           │          │ │
+│ │   6fda0a4          │ and sets it on the │         │           │          │ │
+│ │ 2024-08-06 Make    │ instance. Then, it │         │           │          │ │
+│ │ Converter a kind   │ tries to call      │         │           │          │ │
+│ │ of adapter, fix    │ next(gen) again.   │         │           │          │ │
+│ │ converters.pipe    │ If the generator   │         │           │          │ │
+│ │ (#1328)            │ has more values,   │         │           │          │ │
+│ │   d812e92          │ this would cause   │         │           │          │ │
+│ │ 2024-03-17 Explain │ an error, but the  │         │           │          │ │
+│ │ what autodata      │ code expects       │         │           │          │ │
+│ │ Recent history of  │ exactly one yield. │         │           │          │ │
+│ │ tests/test_compat… │ The error message  │         │           │          │ │
+│ │   a8e24b0          │ clearly states     │         │           │          │ │
+│ │ 2024-08-29 Drop    │ that yielding more │         │           │          │ │
+│ │ Python 3.7 (#1340) │ than once is an    │         │           │          │ │
+│ │   75d54c2          │ error, which is    │         │           │          │ │
+│ │ 2024-01-26 Black   │ correct.           │         │           │          │ │
+│ │ 24                 │                    │         │           │          │ │
+│ │   c824bbe          │ Another thing to   │         │           │          │ │
+│ │ 2023-08-06 Allow   │ consider is thread │         │           │          │ │
+│ │ subclassing of     │ safety. The        │         │           │          │ │
+│ │ AttrsInstance and  │ _lazy_is_generator │         │           │          │ │
+│ │ Protocol at once   │ function uses a    │         │           │          │ │
+│ │ (#1172)            │ global cache       │         │           │          │ │
+│ │ Recent history of  │ (_IS_GENERATOR_RE… │         │           │          │ │
+│ │ tests/test_setatt… │ which might not be │         │           │          │ │
+│ │   a572c3a          │ thread-safe.       │         │           │          │ │
+│ │ 2026-03-14 Allow   │ However, the       │         │           │          │ │
+│ │ field(on_setattr=… │ comment mentions   │         │           │          │ │
+│ │ on frozen classes  │ it's not           │         │           │          │ │
+│ │   4e2c89c          │ thread-safe but    │         │           │          │ │
+│ │ 2025-09-21 Update  │ doesn't matter.    │         │           │          │ │
+│ │ dev (#1473)        │ That's acceptable  │         │           │          │ │
+│ │   6fda0a4          │ if the library     │         │           │          │ │
+│ │ 2024-08-06 Make    │ doesn't expect     │         │           │          │ │
+│ │ Converter a kind   │ concurrent access  │         │           │          │ │
+│ │ of adapter, fix    │ to this            │         │           │          │ │
+│ │ converters.pipe    │ functionality.     │         │           │          │ │
+│ │ (#1328)            │                    │         │           │          │ │
+│ │                    │ In the test cases, │         │           │          │ │
+│ │ Diff:              │ the                │         │           │          │ │
+│ │ ```diff            │ test_generator_yi… │         │           │          │ │
+│ │ diff --git         │ checks that        │         │           │          │ │
+│ │ a/src/attr/_compa… │ yielding more than │         │           │          │ │
+│ │ b/src/attr/_compa… │ once raises an     │         │           │          │ │
+│ │ index              │ error, which       │         │           │          │ │
+│ │ 37e7148..52a3f24   │ aligns with the    │         │           │          │ │
+│ │ 100644             │ code's behavior.   │         │           │          │ │
+│ │ ---                │ The                │         │           │          │ │
+│ │ a/src/attr/_compa… │ test_generator_ho… │         │           │          │ │
+│ │ +++                │ and others ensure  │         │           │          │ │
+│ │ b/src/attr/_compa… │ that the new       │         │           │          │ │
+│ │ @@ -4,7 +4,7 @@    │ feature works with │         │           │          │ │
+│ │ import sys         │ both attr.s and    │         │           │          │ │
+│ │  import threading  │ attrs.define,      │         │           │          │ │
+│ │                    │ which is good.     │         │           │          │ │
+│ │  from              │                    │         │           │          │ │
+│ │ collections.abc    │ The baseline.py    │         │           │          │ │
+│ │ import Mapping,    │ example includes a │         │           │          │ │
+│ │ Sequence  # noqa:  │ generator hook     │         │           │          │ │
+│ │ F401               │ function, which    │         │           │          │ │
+│ │ -from typing       │ demonstrates how   │         │           │          │ │
+│ │ import             │ to use the new     │         │           │          │ │
+│ │ _GenericAlias      │ feature. This      │         │           │          │ │
+│ │ +from typing       │ helps users        │         │           │          │ │
+│ │ import Callable,   │ understand the     │         │           │          │ │
+│ │ _GenericAlias      │ implementation.    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │ Potential issues I │         │           │          │ │
+│ │  PYPY =            │ can think of: What │         │           │          │ │
+│ │ sys.implementatio… │ if the generator   │         │           │          │ │
+│ │ == "pypy"          │ hook is not        │         │           │          │ │
+│ │ @@ -101,3 +101,28  │ properly closed?   │         │           │          │ │
+│ │ @@ def             │ The code calls     │         │           │          │ │
+│ │ get_generic_base(… │ gen.close() after  │         │           │          │ │
+│ │      if            │ the first yield,   │         │           │          │ │
+│ │ cl.__class__ is    │ which is correct.  │         │           │          │ │
+│ │ _GenericAlias:     │ Also, the code     │         │           │          │ │
+│ │          return    │ handles exceptions │         │           │          │ │
+│ │ cl.__origin__      │ during the         │         │           │          │ │
+│ │      return None   │ generator's        │         │           │          │ │
+│ │ +                  │ execution, which   │         │           │          │ │
+│ │ +                  │ is good.           │         │           │          │ │
+│ │ +_IS_GENERATOR_RE… │                    │         │           │          │ │
+│ │ = {}               │ Another point is   │         │           │          │ │
+│ │ +                  │ that the           │         │           │          │ │
+│ │ +                  │ _lazy_is_generator │         │           │          │ │
+│ │ +def               │ function might not │         │           │          │ │
+│ │ _lazy_is_generato… │ handle all cases   │         │           │          │ │
+│ │ Callable) ->       │ correctly,         │         │           │          │ │
+│ │ Callable[[],       │ especially with    │         │           │          │ │
+│ │ bool]:             │ non-hashable       │         │           │          │ │
+│ │ +    """           │ functions.         │         │           │          │ │
+│ │ +    Return a      │ However, the       │         │           │          │ │
+│ │ caching closure    │ test_not_hashable  │         │           │          │ │
+│ │ over callable f    │ case in            │         │           │          │ │
+│ │ that returns       │ test_compat.py     │         │           │          │ │
+│ │ whether f is a     │ checks this        │         │           │          │ │
+│ │ +    generator     │ scenario and       │         │           │          │ │
+│ │ function.          │ ensures that even  │         │           │          │ │
+│ │ +                  │ non-hashable       │         │           │          │ │
+│ │ +    Not           │ functions are      │         │           │          │ │
+│ │ thread-safe but    │ handled correctly. │         │           │          │ │
+│ │ doesn't matter.    │                    │         │           │          │ │
+│ │ +    """           │ Overall, the       │         │           │          │ │
+│ │ +                  │ changes seem       │         │           │          │ │
+│ │ +    def is_gen()  │ well-structured,   │         │           │          │ │
+│ │ -> bool:           │ with proper        │         │           │          │ │
+│ │ +        import    │ documentation,     │         │           │          │ │
+│ │ inspect            │ tests, and error   │         │           │          │ │
+│ │ +                  │ handling. The new  │         │           │          │ │
+│ │ +        try:      │ feature for        │         │           │          │ │
+│ │ +            if f  │ generator hooks in │         │           │          │ │
+│ │ not in             │ on_setattr is      │         │           │          │ │
+│ │ _IS_GENERATOR_RES… │ implemented        │         │           │          │ │
+│ │ +                  │ correctly, and the │         │           │          │ │
+│ │ _IS_GENERATOR_RES… │ associated tests   │         │           │          │ │
+│ │ =                  │ cover various edge │         │           │          │ │
+│ │ inspect.isgenerat… │ cases. I don't see │         │           │          │ │
+│ │ +        except    │ any obvious        │         │           │          │ │
+│ │ TypeError:  # f is │ defects that would │         │           │          │ │
+│ │ not hashable       │ block the change.  │         │           │          │ │
+│ │ +                  │ The code is safe   │         │           │          │ │
+│ │ return             │ to ship, so the    │         │           │          │ │
+│ │ inspect.isgenerat… │ decision should be │         │           │          │ │
+│ │ +                  │ to approve.        │         │           │          │ │
+│ │ +        return    │ </think>           │         │           │          │ │
+│ │ _IS_GENERATOR_RES… │                    │         │           │          │ │
+│ │ +                  │ {"decision":       │         │           │          │ │
+│ │ +    return is_gen │ "approve",         │         │           │          │ │
+│ │ diff --git         │ "comments": []}    │         │           │          │ │
+│ │ a/src/attr/_make.… │                    │         │           │          │ │
+│ │ b/src/attr/_make.… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 9580834..300a99c   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/attr/_make.… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/attr/_make.… │                    │         │           │          │ │
+│ │ @@ -25,6 +25,7 @@  │                    │         │           │          │ │
+│ │ from ._compat      │                    │         │           │          │ │
+│ │ import (           │                    │         │           │          │ │
+│ │      PY_3_13_PLUS, │                    │         │           │          │ │
+│ │      _AnnotationE… │                    │         │           │          │ │
+│ │      _get_annotat… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _lazy_is_generato… │                    │         │           │          │ │
+│ │      get_generic_… │                    │         │           │          │ │
+│ │  )                 │                    │         │           │          │ │
+│ │  from .exceptions  │                    │         │           │          │ │
+│ │ import (           │                    │         │           │          │ │
+│ │ @@ -158,6 +159,9   │                    │         │           │          │ │
+│ │ @@ def attrib(     │                    │         │           │          │ │
+│ │      ..            │                    │         │           │          │ │
+│ │ versionchanged::   │                    │         │           │          │ │
+│ │ 25.4.0             │                    │         │           │          │ │
+│ │         *kw_only*  │                    │         │           │          │ │
+│ │ can now be None,   │                    │         │           │          │ │
+│ │ and its default is │                    │         │           │          │ │
+│ │ also changed from  │                    │         │           │          │ │
+│ │ False to           │                    │         │           │          │ │
+│ │         None.      │                    │         │           │          │ │
+│ │ +    ..            │                    │         │           │          │ │
+│ │ versionchanged::   │                    │         │           │          │ │
+│ │ 26.2.0             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ *on_setattr* hooks │                    │         │           │          │ │
+│ │ can now be         │                    │         │           │          │ │
+│ │ generator          │                    │         │           │          │ │
+│ │ functions to run   │                    │         │           │          │ │
+│ │ code before and    │                    │         │           │          │ │
+│ │ +       after an   │                    │         │           │          │ │
+│ │ attribute is set.  │                    │         │           │          │ │
+│ │      """           │                    │         │           │          │ │
+│ │      eq, eq_key,   │                    │         │           │          │ │
+│ │ order, order_key = │                    │         │           │          │ │
+│ │ _determine_attrib… │                    │         │           │          │ │
+│ │          cmp, eq,  │                    │         │           │          │ │
+│ │ order, True        │                    │         │           │          │ │
+│ │ @@ -1171,7         │                    │         │           │          │ │
+│ │ +1175,11 @@ class  │                    │         │           │          │ │
+│ │ _ClassBuilder:     │                    │         │           │          │ │
+│ │          for a in  │                    │         │           │          │ │
+│ │ self._attrs:       │                    │         │           │          │ │
+│ │              on_s… │                    │         │           │          │ │
+│ │ = a.on_setattr or  │                    │         │           │          │ │
+│ │ self._on_setattr   │                    │         │           │          │ │
+│ │              if    │                    │         │           │          │ │
+│ │ on_setattr and     │                    │         │           │          │ │
+│ │ on_setattr is not  │                    │         │           │          │ │
+│ │ setters.NO_OP:     │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ sa_attrs[a.name] = │                    │         │           │          │ │
+│ │ a, on_setattr      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ sa_attrs[a.name] = │                    │         │           │          │ │
+│ │ (                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ a,                 │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ on_setattr,        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _lazy_is_generato… │                    │         │           │          │ │
+│ │ +                ) │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │          if not    │                    │         │           │          │ │
+│ │ sa_attrs:          │                    │         │           │          │ │
+│ │              retu… │                    │         │           │          │ │
+│ │ self               │                    │         │           │          │ │
+│ │ @@ -1184,14        │                    │         │           │          │ │
+│ │ +1192,30 @@ class  │                    │         │           │          │ │
+│ │ _ClassBuilder:     │                    │         │           │          │ │
+│ │          #         │                    │         │           │          │ │
+│ │ docstring comes    │                    │         │           │          │ │
+│ │ from               │                    │         │           │          │ │
+│ │ _add_method_dunde… │                    │         │           │          │ │
+│ │          def       │                    │         │           │          │ │
+│ │ __setattr__(self,  │                    │         │           │          │ │
+│ │ name, val):        │                    │         │           │          │ │
+│ │              try:  │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ a, hook =          │                    │         │           │          │ │
+│ │ sa_attrs[name]     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ a, hook, is_gen =  │                    │         │           │          │ │
+│ │ sa_attrs[name]     │                    │         │           │          │ │
+│ │              exce… │                    │         │           │          │ │
+│ │ KeyError:          │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ nval = val         │                    │         │           │          │ │
+│ │ -            else: │                    │         │           │          │ │
+│ │ -                  │                    │         │           │          │ │
+│ │ nval = hook(self,  │                    │         │           │          │ │
+│ │ a, val)            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _OBJ_SETATTR(self, │                    │         │           │          │ │
+│ │ name, val)         │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ return             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +            if    │                    │         │           │          │ │
+│ │ is_gen():          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ gen = hook(self,   │                    │         │           │          │ │
+│ │ a, val)            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ nval = next(gen)   │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ _OBJ_SETATTR(self, │                    │         │           │          │ │
+│ │ name, nval)        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ try:               │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ next(gen)          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ except             │                    │         │           │          │ │
+│ │ StopIteration:     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ return             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ gen.close()        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ msg = "Generator   │                    │         │           │          │ │
+│ │ on_setattr hook    │                    │         │           │          │ │
+│ │ yielded more than  │                    │         │           │          │ │
+│ │ once."             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ raise              │                    │         │           │          │ │
+│ │ RuntimeError(msg)  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +            nval  │                    │         │           │          │ │
+│ │ = hook(self, a,    │                    │         │           │          │ │
+│ │ val)               │                    │         │           │          │ │
+│ │              _OBJ… │                    │         │           │          │ │
+│ │ name, nval)        │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ return             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │          self._cl… │                    │         │           │          │ │
+│ │ = True             │                    │         │           │          │ │
+│ │          self._cl… │                    │         │           │          │ │
+│ │ =                  │                    │         │           │          │ │
+│ │ self._add_method_… │                    │         │           │          │ │
+│ │          self._wr… │                    │         │           │          │ │
+│ │ = True             │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/src/attr/_next_… │                    │         │           │          │ │
+│ │ b/src/attr/_next_… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ db386ac..a3a8438   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/attr/_next_… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/attr/_next_… │                    │         │           │          │ │
+│ │ @@ -108,6 +108,10  │                    │         │           │          │ │
+│ │ @@ def define(     │                    │         │           │          │ │
+│ │              If no │                    │         │           │          │ │
+│ │ exception is       │                    │         │           │          │ │
+│ │ raised, the        │                    │         │           │          │ │
+│ │ attribute is set   │                    │         │           │          │ │
+│ │ to the return      │                    │         │           │          │ │
+│ │ value              │                    │         │           │          │ │
+│ │              of    │                    │         │           │          │ │
+│ │ the callable.      │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +            If    │                    │         │           │          │ │
+│ │ the callable is a  │                    │         │           │          │ │
+│ │ generator, it may  │                    │         │           │          │ │
+│ │ yield exactly once │                    │         │           │          │ │
+│ │ and runs           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ before and after   │                    │         │           │          │ │
+│ │ the assignment and │                    │         │           │          │ │
+│ │ its yield value is │                    │         │           │          │ │
+│ │ used as the        │                    │         │           │          │ │
+│ │ +            new   │                    │         │           │          │ │
+│ │ value.             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │              If a  │                    │         │           │          │ │
+│ │ list of callables  │                    │         │           │          │ │
+│ │ is passed, they're │                    │         │           │          │ │
+│ │ automatically      │                    │         │           │          │ │
+│ │ wrapped in         │                    │         │           │          │ │
+│ │              an    │                    │         │           │          │ │
+│ │ `attrs.setters.pi… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ @@ -329,6 +333,9   │                    │         │           │          │ │
+│ │ @@ def define(     │                    │         │           │          │ │
+│ │         and        │                    │         │           │          │ │
+│ │ respects           │                    │         │           │          │ │
+│ │ attribute-level    │                    │         │           │          │ │
+│ │ ``kw_only=False``  │                    │         │           │          │ │
+│ │ settings.          │                    │         │           │          │ │
+│ │      ..            │                    │         │           │          │ │
+│ │ versionadded::     │                    │         │           │          │ │
+│ │ 25.4.0             │                    │         │           │          │ │
+│ │         Added      │                    │         │           │          │ │
+│ │ *force_kw_only* to │                    │         │           │          │ │
+│ │ go back to the     │                    │         │           │          │ │
+│ │ previous *kw_only* │                    │         │           │          │ │
+│ │ behavior.          │                    │         │           │          │ │
+│ │ +    ..            │                    │         │           │          │ │
+│ │ versionchanged::   │                    │         │           │          │ │
+│ │ 26.2.0             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ *on_setattr* hooks │                    │         │           │          │ │
+│ │ can now be         │                    │         │           │          │ │
+│ │ generator          │                    │         │           │          │ │
+│ │ functions that     │                    │         │           │          │ │
+│ │ yield exactly      │                    │         │           │          │ │
+│ │ +       once.      │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      .. note::     │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ @@ -569,10 +576,14 │                    │         │           │          │ │
+│ │ @@ def field(      │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │          on_setat… │                    │         │           │          │ │
+│ │ (~typing.Callable  │                    │         │           │          │ │
+│ │ |                  │                    │         │           │          │ │
+│ │ list[~typing.Call… │                    │         │           │          │ │
+│ │ | None |           │                    │         │           │          │ │
+│ │ ~typing.Literal[a… │                    │         │           │          │ │
+│ │              Allo… │                    │         │           │          │ │
+│ │ to overwrite the   │                    │         │           │          │ │
+│ │ *on_setattr*       │                    │         │           │          │ │
+│ │ setting from       │                    │         │           │          │ │
+│ │ `attr.s`. If left  │                    │         │           │          │ │
+│ │ -            None, │                    │         │           │          │ │
+│ │ the *on_setattr*   │                    │         │           │          │ │
+│ │ value from         │                    │         │           │          │ │
+│ │ `attr.s` is used.  │                    │         │           │          │ │
+│ │ Set to             │                    │         │           │          │ │
+│ │ +            None, │                    │         │           │          │ │
+│ │ the *on_setattr*   │                    │         │           │          │ │
+│ │ value from         │                    │         │           │          │ │
+│ │ `attrs.define` is  │                    │         │           │          │ │
+│ │ used. Set to       │                    │         │           │          │ │
+│ │              `att… │                    │         │           │          │ │
+│ │ to run **no**      │                    │         │           │          │ │
+│ │ `setattr` hooks    │                    │         │           │          │ │
+│ │ for this           │                    │         │           │          │ │
+│ │              attr… │                    │         │           │          │ │
+│ │ -- regardless of   │                    │         │           │          │ │
+│ │ the setting in     │                    │         │           │          │ │
+│ │ `define()`.        │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +            May   │                    │         │           │          │ │
+│ │ be a generator     │                    │         │           │          │ │
+│ │ function that      │                    │         │           │          │ │
+│ │ yields exactly     │                    │         │           │          │ │
+│ │ once and runs      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ before and after   │                    │         │           │          │ │
+│ │ the assignment and │                    │         │           │          │ │
+│ │ its yield value is │                    │         │           │          │ │
+│ │ used as the        │                    │         │           │          │ │
+│ │ +            new   │                    │         │           │          │ │
+│ │ value.             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │          alias     │                    │         │           │          │ │
+│ │ (str | None):      │                    │         │           │          │ │
+│ │              Over… │                    │         │           │          │ │
+│ │ this attribute's   │                    │         │           │          │ │
+│ │ parameter name in  │                    │         │           │          │ │
+│ │ the generated      │                    │         │           │          │ │
+│ │              ``__… │                    │         │           │          │ │
+│ │ method. If left    │                    │         │           │          │ │
+│ │ None, default to   │                    │         │           │          │ │
+│ │ ``name`` stripped  │                    │         │           │          │ │
+│ │ @@ -588,6 +599,9   │                    │         │           │          │ │
+│ │ @@ def field(      │                    │         │           │          │ │
+│ │      ..            │                    │         │           │          │ │
+│ │ versionchanged::   │                    │         │           │          │ │
+│ │ 25.4.0             │                    │         │           │          │ │
+│ │         *kw_only*  │                    │         │           │          │ │
+│ │ can now be None,   │                    │         │           │          │ │
+│ │ and its default is │                    │         │           │          │ │
+│ │ also changed from  │                    │         │           │          │ │
+│ │ False to           │                    │         │           │          │ │
+│ │         None.      │                    │         │           │          │ │
+│ │ +    ..            │                    │         │           │          │ │
+│ │ versionchanged::   │                    │         │           │          │ │
+│ │ 26.2.0             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ *on_setattr* hooks │                    │         │           │          │ │
+│ │ can now be         │                    │         │           │          │ │
+│ │ generator          │                    │         │           │          │ │
+│ │ functions that     │                    │         │           │          │ │
+│ │ yield exactly      │                    │         │           │          │ │
+│ │ +       once.      │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      .. seealso::  │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/src/attr/setter… │                    │         │           │          │ │
+│ │ b/src/attr/setter… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 78b0839..cff8432   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/src/attr/setter… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/src/attr/setter… │                    │         │           │          │ │
+│ │ @@ -12,6 +12,9 @@  │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ pipe(*setters):    │                    │         │           │          │ │
+│ │      """           │                    │         │           │          │ │
+│ │      Run all       │                    │         │           │          │ │
+│ │ *setters* and      │                    │         │           │          │ │
+│ │ return the return  │                    │         │           │          │ │
+│ │ value of the last  │                    │         │           │          │ │
+│ │ one.               │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +    .. warning::  │                    │         │           │          │ │
+│ │ +       Generator  │                    │         │           │          │ │
+│ │ functions are not  │                    │         │           │          │ │
+│ │ allowed in         │                    │         │           │          │ │
+│ │ ``pipe()``.        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      ..            │                    │         │           │          │ │
+│ │ versionadded::     │                    │         │           │          │ │
+│ │ 20.1.0             │                    │         │           │          │ │
+│ │      """           │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_comp… │                    │         │           │          │ │
+│ │ b/tests/test_comp… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ a7cbf3e..f24da35   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_comp… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_comp… │                    │         │           │          │ │
+│ │ @@ -8,6 +8,8 @@    │                    │         │           │          │ │
+│ │ import pytest      │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  import attr       │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +from attr._compat │                    │         │           │          │ │
+│ │ import             │                    │         │           │          │ │
+│ │ _IS_GENERATOR_RES… │                    │         │           │          │ │
+│ │ _lazy_is_generator │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  @pytest.fixture(… │                    │         │           │          │ │
+│ │  def _mp():        │                    │         │           │          │ │
+│ │ @@ -63,3 +65,36 @@ │                    │         │           │          │ │
+│ │ def                │                    │         │           │          │ │
+│ │ test_attrsinstanc… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │      class         │                    │         │           │          │ │
+│ │ Foo(attr.AttrsIns… │                    │         │           │          │ │
+│ │ Protocol):         │                    │         │           │          │ │
+│ │          def       │                    │         │           │          │ │
+│ │ attribute(self) -> │                    │         │           │          │ │
+│ │ int: ...           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +class             │                    │         │           │          │ │
+│ │ TestLazyIsGenerat… │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_is_generator… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        Returns   │                    │         │           │          │ │
+│ │ True for generator │                    │         │           │          │ │
+│ │ functions and      │                    │         │           │          │ │
+│ │ caches the result. │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ gen():             │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ 1                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ _lazy_is_generato… │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ _IS_GENERATOR_RES… │                    │         │           │          │ │
+│ │ is True            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_is_not_gener… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        Returns   │                    │         │           │          │ │
+│ │ False for          │                    │         │           │          │ │
+│ │ non-generator      │                    │         │           │          │ │
+│ │ functions and      │                    │         │           │          │ │
+│ │ caches the result. │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ non_gen():         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ return 1           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ not                │                    │         │           │          │ │
+│ │ _lazy_is_generato… │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ _IS_GENERATOR_RES… │                    │         │           │          │ │
+│ │ is False           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_not_hashable… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        If the    │                    │         │           │          │ │
+│ │ user somehow       │                    │         │           │          │ │
+│ │ manages to create  │                    │         │           │          │ │
+│ │ a non-hashable     │                    │         │           │          │ │
+│ │ function,          │                    │         │           │          │ │
+│ │ +        the       │                    │         │           │          │ │
+│ │ result is not      │                    │         │           │          │ │
+│ │ hashed but the     │                    │         │           │          │ │
+│ │ result is correct. │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ non_hashable = {}  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ not                │                    │         │           │          │ │
+│ │ _lazy_is_generato… │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/tests/test_seta… │                    │         │           │          │ │
+│ │ b/tests/test_seta… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ f44abf6..eba4078   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/tests/test_seta… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/tests/test_seta… │                    │         │           │          │ │
+│ │ @@ -48,6 +48,51 @@ │                    │         │           │          │ │
+│ │ class TestSetAttr: │                    │         │           │          │ │
+│ │          assert    │                    │         │           │          │ │
+│ │ "yyy" == h.y       │                    │         │           │          │ │
+│ │          assert    │                    │         │           │          │ │
+│ │ "hooked!" == h.x   │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_change_with_… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        The value │                    │         │           │          │ │
+│ │ yielded by a       │                    │         │           │          │ │
+│ │ generator hook     │                    │         │           │          │ │
+│ │ overwrites the     │                    │         │           │          │ │
+│ │ value.             │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ "yielded!"         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        @attr.s   │                    │         │           │          │ │
+│ │ +        class     │                    │         │           │          │ │
+│ │ Hooked:            │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib(on_setatt… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        h =       │                    │         │           │          │ │
+│ │ Hooked("x")        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "x" == h.x         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        h.x =     │                    │         │           │          │ │
+│ │ "xxx"              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "yielded!" == h.x  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_ho… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        Generator │                    │         │           │          │ │
+│ │ post-yield code    │                    │         │           │          │ │
+│ │ runs after the     │                    │         │           │          │ │
+│ │ value is set on    │                    │         │           │          │ │
+│ │ the instance.      │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        calls =   │                    │         │           │          │ │
+│ │ []                 │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ calls.append(("pr… │                    │         │           │          │ │
+│ │ instance.x))       │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ value              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ calls.append(("po… │                    │         │           │          │ │
+│ │ instance.x))       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        @attr.s   │                    │         │           │          │ │
+│ │ +        class     │                    │         │           │          │ │
+│ │ Hooked:            │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib(on_setatt… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        h =       │                    │         │           │          │ │
+│ │ Hooked("x")        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "x" == h.x         │                    │         │           │          │ │
+│ │ +        assert [] │                    │         │           │          │ │
+│ │ == calls           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        h.x =     │                    │         │           │          │ │
+│ │ "xxx"              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ [("pre", "x"),     │                    │         │           │          │ │
+│ │ ("post", "xxx")]   │                    │         │           │          │ │
+│ │ == calls           │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "xxx" == h.x       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      def           │                    │         │           │          │ │
+│ │ test_frozen_attri… │                    │         │           │          │ │
+│ │          """       │                    │         │           │          │ │
+│ │          Frozen    │                    │         │           │          │ │
+│ │ attributes raise   │                    │         │           │          │ │
+│ │ FrozenAttributeEr… │                    │         │           │          │ │
+│ │ others are not     │                    │         │           │          │ │
+│ │ affected.          │                    │         │           │          │ │
+│ │ @@ -146,6 +191,145 │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ TestSetAttr:       │                    │         │           │          │ │
+│ │          assert 42 │                    │         │           │          │ │
+│ │ == p.x1            │                    │         │           │          │ │
+│ │          assert 23 │                    │         │           │          │ │
+│ │ == p.x2            │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_ho… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        Generator │                    │         │           │          │ │
+│ │ hooks are not      │                    │         │           │          │ │
+│ │ invoked during     │                    │         │           │          │ │
+│ │ __init__, same as  │                    │         │           │          │ │
+│ │ regular hooks.     │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ "hooked"           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        @attr.s   │                    │         │           │          │ │
+│ │ +        class     │                    │         │           │          │ │
+│ │ Hooked:            │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib(on_setatt… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        h =       │                    │         │           │          │ │
+│ │ Hooked("x")        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "x" == h.x         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        h.x =     │                    │         │           │          │ │
+│ │ "xxx"              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "hooked" == h.x    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_ho… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        Generator │                    │         │           │          │ │
+│ │ hooks work with    │                    │         │           │          │ │
+│ │ attrs.define.      │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ value.upper()      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ @attr.define       │                    │         │           │          │ │
+│ │ +        class C:  │                    │         │           │          │ │
+│ │ +            x:    │                    │         │           │          │ │
+│ │ str =              │                    │         │           │          │ │
+│ │ attr.field(on_set… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c =       │                    │         │           │          │ │
+│ │ C("hello")         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "hello" == c.x     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c.x =     │                    │         │           │          │ │
+│ │ "world"            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "WORLD" == c.x     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_ho… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        Generator │                    │         │           │          │ │
+│ │ hooks work as      │                    │         │           │          │ │
+│ │ class-level        │                    │         │           │          │ │
+│ │ on_setattr.        │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ call_count = 0     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ nonlocal           │                    │         │           │          │ │
+│ │ call_count         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ call_count += 1    │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ value              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ @attr.s(on_setatt… │                    │         │           │          │ │
+│ │ +        class C:  │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib()          │                    │         │           │          │ │
+│ │ +            y =   │                    │         │           │          │ │
+│ │ attr.ib()          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c = C(1,  │                    │         │           │          │ │
+│ │ 2)                 │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert 1  │                    │         │           │          │ │
+│ │ == c.x             │                    │         │           │          │ │
+│ │ +        assert 2  │                    │         │           │          │ │
+│ │ == c.y             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c.x = 10  │                    │         │           │          │ │
+│ │ +        assert 1  │                    │         │           │          │ │
+│ │ == call_count      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c.y = 20  │                    │         │           │          │ │
+│ │ +        assert 2  │                    │         │           │          │ │
+│ │ == call_count      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_pr… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        If a      │                    │         │           │          │ │
+│ │ generator raises   │                    │         │           │          │ │
+│ │ before yielding,   │                    │         │           │          │ │
+│ │ the value is not   │                    │         │           │          │ │
+│ │ set.               │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +            raise │                    │         │           │          │ │
+│ │ ValueError("bad    │                    │         │           │          │ │
+│ │ value")            │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        @attr.s   │                    │         │           │          │ │
+│ │ +        class C:  │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib(on_setatt… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c =       │                    │         │           │          │ │
+│ │ C("original")      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ pytest.raises(Val… │                    │         │           │          │ │
+│ │ match="bad         │                    │         │           │          │ │
+│ │ value"):           │                    │         │           │          │ │
+│ │ +            c.x = │                    │         │           │          │ │
+│ │ "new"              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "original" == c.x  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_po… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        If a      │                    │         │           │          │ │
+│ │ generator raises   │                    │         │           │          │ │
+│ │ after yielding,    │                    │         │           │          │ │
+│ │ the value is       │                    │         │           │          │ │
+│ │ already set and    │                    │         │           │          │ │
+│ │ +        the       │                    │         │           │          │ │
+│ │ exception          │                    │         │           │          │ │
+│ │ propagates.        │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ value              │                    │         │           │          │ │
+│ │ +            raise │                    │         │           │          │ │
+│ │ RuntimeError("pos… │                    │         │           │          │ │
+│ │ failure")          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        @attr.s   │                    │         │           │          │ │
+│ │ +        class C:  │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib(on_setatt… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c =       │                    │         │           │          │ │
+│ │ C("original")      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ pytest.raises(Run… │                    │         │           │          │ │
+│ │ match="post-yield  │                    │         │           │          │ │
+│ │ failure"):         │                    │         │           │          │ │
+│ │ +            c.x = │                    │         │           │          │ │
+│ │ "new"              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "new" == c.x       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_yi… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        Yielding  │                    │         │           │          │ │
+│ │ more than once     │                    │         │           │          │ │
+│ │ raises an error    │                    │         │           │          │ │
+│ │ and closes the     │                    │         │           │          │ │
+│ │ generator.         │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cleaned_up = False │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ nonlocal           │                    │         │           │          │ │
+│ │ cleaned_up         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +            try:  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ yield "first"      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ yield "second"     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ finally:           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cleaned_up = True  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        @attr.s   │                    │         │           │          │ │
+│ │ +        class C:  │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib(on_setatt… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c =       │                    │         │           │          │ │
+│ │ C("old")           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ pytest.raises(     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ RuntimeError,      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ match="Generator   │                    │         │           │          │ │
+│ │ on_setattr hook    │                    │         │           │          │ │
+│ │ yielded more than  │                    │         │           │          │ │
+│ │ once",             │                    │         │           │          │ │
+│ │ +        ):        │                    │         │           │          │ │
+│ │ +            c.x = │                    │         │           │          │ │
+│ │ "new"              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "first" == c.x     │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ cleaned_up is True │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      def           │                    │         │           │          │ │
+│ │ test_make_class(s… │                    │         │           │          │ │
+│ │          """       │                    │         │           │          │ │
+│ │          on_setat… │                    │         │           │          │ │
+│ │ of make_class gets │                    │         │           │          │ │
+│ │ forwarded.         │                    │         │           │          │ │
+│ │ diff --git         │                    │         │           │          │ │
+│ │ a/typing-examples… │                    │         │           │          │ │
+│ │ b/typing-examples… │                    │         │           │          │ │
+│ │ index              │                    │         │           │          │ │
+│ │ 15542ca..ae5207a   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/typing-examples… │                    │         │           │          │ │
+│ │ +++                │                    │         │           │          │ │
+│ │ b/typing-examples… │                    │         │           │          │ │
+│ │ @@ -7,7 +7,7 @@    │                    │         │           │          │ │
+│ │ Baseline features  │                    │         │           │          │ │
+│ │ that should be     │                    │         │           │          │ │
+│ │ supported by all   │                    │         │           │          │ │
+│ │ type checkers.     │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  from __future__   │                    │         │           │          │ │
+│ │ import annotations │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ -from typing       │                    │         │           │          │ │
+│ │ import Any         │                    │         │           │          │ │
+│ │ +from typing       │                    │         │           │          │ │
+│ │ import Any,        │                    │         │           │          │ │
+│ │ Generator          │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  import attrs      │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ @@ -130,6 +130,12  │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ WithCustomRepr:    │                    │         │           │          │ │
+│ │      d: bool =     │                    │         │           │          │ │
+│ │ attrs.field(repr=… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ +def               │                    │         │           │          │ │
+│ │ gen_on_setattr_ho… │                    │         │           │          │ │
+│ │ +    instance:     │                    │         │           │          │ │
+│ │ Any, attribute:    │                    │         │           │          │ │
+│ │ attrs.Attribute[A… │                    │         │           │          │ │
+│ │ new_value: Any     │                    │         │           │          │ │
+│ │ +) ->              │                    │         │           │          │ │
+│ │ Generator[int]:    │                    │         │           │          │ │
+│ │ +    yield 42      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │  @attrs.define(on… │                    │         │           │          │ │
+│ │  class             │                    │         │           │          │ │
+│ │ ValidatedSetter2:  │                    │         │           │          │ │
+│ │      a: int        │                    │         │           │          │ │
+│ │ @@ -143,6 +149,7   │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ ValidatedSetter2:  │                    │         │           │          │ │
+│ │              attr… │                    │         │           │          │ │
+│ │ attrs.setters.val… │                    │         │           │          │ │
+│ │          )         │                    │         │           │          │ │
+│ │      )             │                    │         │           │          │ │
+│ │ +    f: int =      │                    │         │           │          │ │
+│ │ attrs.field(on_se… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  @attrs.define(eq… │                    │         │           │          │ │
+│ │ order=True)        │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ ```                │                    │         │           │          │ │
+│ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
+╰──────────────────────────────────────────────────────────────────────────────╯

@@ -1,400 +1,400 @@
-│ │ updates (#2632)    │ message matches    │         │           │          │ │
-│ │   6bfe9fe          │ the expected one.  │         │           │          │ │
-│ │ 2024-01-20 Use     │                    │         │           │          │ │
-│ │ `__future__.annot… │ Now, looking at    │         │           │          │ │
-│ │ (#2433)            │ the recent         │         │           │          │ │
-│ │ Recent history of  │ history, there was │         │           │          │ │
-│ │ tests/test_status… │ a commit that      │         │           │          │ │
-│ │   b133ab4          │ removed            │         │           │          │ │
-│ │ 2024-12-28 Remove  │ `WS_1004_NO_STATU… │         │           │          │ │
-│ │ deprecated         │ and                │         │           │          │ │
-│ │ `WS_1004_NO_STATU… │ `WS_1005_ABNORMAL… │         │           │          │ │
-│ │ and                │ in December 2024.  │         │           │          │ │
-│ │ `WS_1005_ABNORMAL… │ The current change │         │           │          │ │
-│ │ (#2827)            │ seems to be        │         │           │          │ │
-│ │   b9db010          │ deprecating some   │         │           │          │ │
-│ │ 2024-09-01 Set     │ HTTP status codes  │         │           │          │ │
-│ │ `line-length` to   │ and adding the     │         │           │          │ │
-│ │ 120 on Ruff        │ `__getattr__` and  │         │           │          │ │
-│ │ (#2679)            │ `__dir__`          │         │           │          │ │
-│ │   9329160          │ functions to       │         │           │          │ │
-│ │ 2022-04-22         │ handle them. The   │         │           │          │ │
-│ │ Deprecate          │ test is supposed   │         │           │          │ │
-│ │ `WS_1004_NO_STATU… │ to verify that     │         │           │          │ │
-│ │ and                │ these deprecations │         │           │          │ │
-│ │ `WS_1005_ABNORMAL… │ are correctly      │         │           │          │ │
-│ │ (#1580)            │ flagged.           │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        @attr.s   │                    │         │           │          │ │
+│ │ +        class     │                    │         │           │          │ │
+│ │ Hooked:            │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib(on_setatt… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        h =       │                    │         │           │          │ │
+│ │ Hooked("x")        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "x" == h.x         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        h.x =     │                    │         │           │          │ │
+│ │ "xxx"              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "yielded!" == h.x  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_ho… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        Generator │                    │         │           │          │ │
+│ │ post-yield code    │                    │         │           │          │ │
+│ │ runs after the     │                    │         │           │          │ │
+│ │ value is set on    │                    │         │           │          │ │
+│ │ the instance.      │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        calls =   │                    │         │           │          │ │
+│ │ []                 │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ calls.append(("pr… │                    │         │           │          │ │
+│ │ instance.x))       │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ value              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ calls.append(("po… │                    │         │           │          │ │
+│ │ instance.x))       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        @attr.s   │                    │         │           │          │ │
+│ │ +        class     │                    │         │           │          │ │
+│ │ Hooked:            │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib(on_setatt… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        h =       │                    │         │           │          │ │
+│ │ Hooked("x")        │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "x" == h.x         │                    │         │           │          │ │
+│ │ +        assert [] │                    │         │           │          │ │
+│ │ == calls           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        h.x =     │                    │         │           │          │ │
+│ │ "xxx"              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ [("pre", "x"),     │                    │         │           │          │ │
+│ │ ("post", "xxx")]   │                    │         │           │          │ │
+│ │ == calls           │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "xxx" == h.x       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      def           │                    │         │           │          │ │
+│ │ test_frozen_attri… │                    │         │           │          │ │
+│ │          """       │                    │         │           │          │ │
+│ │          Frozen    │                    │         │           │          │ │
+│ │ attributes raise   │                    │         │           │          │ │
+│ │ FrozenAttributeEr… │                    │         │           │          │ │
+│ │ others are not     │                    │         │           │          │ │
+│ │ affected.          │                    │         │           │          │ │
+│ │ @@ -146,6 +191,145 │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ TestSetAttr:       │                    │         │           │          │ │
+│ │          assert 42 │                    │         │           │          │ │
+│ │ == p.x1            │                    │         │           │          │ │
+│ │          assert 23 │                    │         │           │          │ │
+│ │ == p.x2            │                    │         │           │          │ │
 │ │                    │                    │         │           │          │ │
-│ │ Diff:              │ I need to check if │         │           │          │ │
-│ │ ```diff            │ there are any      │         │           │          │ │
-│ │ diff --git         │ issues here. The   │         │           │          │ │
-│ │ a/starlette/statu… │ main points to     │         │           │          │ │
-│ │ b/starlette/statu… │ consider are:      │         │           │          │ │
-│ │ index              │                    │         │           │          │ │
-│ │ 54c1fb7..7cf5ade   │ 1. Are the         │         │           │          │ │
-│ │ 100644             │ deprecated names   │         │           │          │ │
-│ │ ---                │ correctly mapped   │         │           │          │ │
-│ │ a/starlette/statu… │ to their new       │         │           │          │ │
-│ │ +++                │ counterparts?      │         │           │          │ │
-│ │ b/starlette/statu… │ 2. Does the        │         │           │          │ │
-│ │ @@ -3,11 +3,94 @@  │ `__getattr__`      │         │           │          │ │
-│ │ HTTP codes         │ function properly  │         │           │          │ │
-│ │  See HTTP Status   │ raise the warning  │         │           │          │ │
-│ │ Code Registry:     │ and return the     │         │           │          │ │
-│ │  https://www.iana… │ correct value?     │         │           │          │ │
-│ │                    │ 3. Does the test   │         │           │          │ │
-│ │ -And RFC 2324 -    │ cover the          │         │           │          │ │
-│ │ https://tools.iet… │ necessary cases?   │         │           │          │ │
-│ │ +And RFC 9110 -    │ 4. Are there any   │         │           │          │ │
-│ │ https://www.rfc-e… │ missing or         │         │           │          │ │
-│ │  """               │ incorrect          │         │           │          │ │
-│ │                    │ deprecations?      │         │           │          │ │
-│ │  from __future__   │                    │         │           │          │ │
-│ │ import annotations │ Looking at the     │         │           │          │ │
-│ │                    │ `__deprecated__`   │         │           │          │ │
-│ │ +import warnings   │ dictionary, the    │         │           │          │ │
-│ │ +                  │ old names are      │         │           │          │ │
-│ │ +__all__ = [       │ mapped to the new  │         │           │          │ │
-│ │ +                  │ ones. For example, │         │           │          │ │
-│ │ "HTTP_100_CONTINU… │ `HTTP_413_REQUEST… │         │           │          │ │
-│ │ +                  │ is mapped to       │         │           │          │ │
-│ │ "HTTP_101_SWITCHI… │ `HTTP_413_CONTENT… │         │           │          │ │
-│ │ +                  │ The `__getattr__`  │         │           │          │ │
-│ │ "HTTP_102_PROCESS… │ function checks if │         │           │          │ │
-│ │ +                  │ the name is in     │         │           │          │ │
-│ │ "HTTP_103_EARLY_H… │ `__deprecated__`,  │         │           │          │ │
-│ │ +                  │ issues a warning,  │         │           │          │ │
-│ │ "HTTP_200_OK",     │ and returns None.  │         │           │          │ │
-│ │ +                  │ Wait, but the      │         │           │          │ │
-│ │ "HTTP_201_CREATED… │ deprecation        │         │           │          │ │
-│ │ +                  │ message says to    │         │           │          │ │
-│ │ "HTTP_202_ACCEPTE… │ use the new name,  │         │           │          │ │
-│ │ +                  │ but the function   │         │           │          │ │
-│ │ "HTTP_203_NON_AUT… │ returns None. That │         │           │          │ │
-│ │ +                  │ might be a         │         │           │          │ │
-│ │ "HTTP_204_NO_CONT… │ problem. If a user │         │           │          │ │
-│ │ +                  │ accesses the       │         │           │          │ │
-│ │ "HTTP_205_RESET_C… │ deprecated name,   │         │           │          │ │
-│ │ +                  │ they get None, but │         │           │          │ │
-│ │ "HTTP_206_PARTIAL… │ perhaps they       │         │           │          │ │
-│ │ +                  │ should get the new │         │           │          │ │
-│ │ "HTTP_207_MULTI_S… │ value instead. Or  │         │           │          │ │
-│ │ +                  │ maybe the          │         │           │          │ │
-│ │ "HTTP_208_ALREADY… │ intention is to    │         │           │          │ │
-│ │ +                  │ have the old name  │         │           │          │ │
-│ │ "HTTP_226_IM_USED… │ resolve to the new │         │           │          │ │
-│ │ +                  │ one, but with a    │         │           │          │ │
-│ │ "HTTP_300_MULTIPL… │ deprecation        │         │           │          │ │
-│ │ +                  │ warning.           │         │           │          │ │
-│ │ "HTTP_301_MOVED_P… │                    │         │           │          │ │
-│ │ +                  │ Wait, looking at   │         │           │          │ │
-│ │ "HTTP_302_FOUND",  │ the                │         │           │          │ │
-│ │ +                  │ `deprecation_chan… │         │           │          │ │
-│ │ "HTTP_303_SEE_OTH… │ dictionary in      │         │           │          │ │
-│ │ +                  │ `__getattr__`, it  │         │           │          │ │
-│ │ "HTTP_304_NOT_MOD… │ maps the old name  │         │           │          │ │
-│ │ +                  │ to the new name.   │         │           │          │ │
-│ │ "HTTP_305_USE_PRO… │ But the code       │         │           │          │ │
-│ │ +                  │ returns None, not  │         │           │          │ │
-│ │ "HTTP_306_RESERVE… │ the new value.     │         │           │          │ │
-│ │ +                  │ That seems like a  │         │           │          │ │
-│ │ "HTTP_307_TEMPORA… │ mistake. Because   │         │           │          │ │
-│ │ +                  │ if the user        │         │           │          │ │
-│ │ "HTTP_308_PERMANE… │ accesses           │         │           │          │ │
-│ │ +                  │ `HTTP_413_REQUEST… │         │           │          │ │
-│ │ "HTTP_400_BAD_REQ… │ the code should    │         │           │          │ │
-│ │ +                  │ return the value   │         │           │          │ │
-│ │ "HTTP_401_UNAUTHO… │ of the new name,   │         │           │          │ │
-│ │ +                  │ `HTTP_413_CONTENT… │         │           │          │ │
-│ │ "HTTP_402_PAYMENT… │ but instead it     │         │           │          │ │
-│ │ +                  │ returns None. That │         │           │          │ │
-│ │ "HTTP_403_FORBIDD… │ would cause the    │         │           │          │ │
-│ │ +                  │ attribute to be    │         │           │          │ │
-│ │ "HTTP_404_NOT_FOU… │ None, which is not │         │           │          │ │
-│ │ +                  │ correct. The       │         │           │          │ │
-│ │ "HTTP_405_METHOD_… │ warning is there,  │         │           │          │ │
-│ │ +                  │ but the actual     │         │           │          │ │
-│ │ "HTTP_406_NOT_ACC… │ value is not being │         │           │          │ │
-│ │ +                  │ redirected. So     │         │           │          │ │
-│ │ "HTTP_407_PROXY_A… │ this is a defect.  │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_ho… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        Generator │                    │         │           │          │ │
+│ │ hooks are not      │                    │         │           │          │ │
+│ │ invoked during     │                    │         │           │          │ │
+│ │ __init__, same as  │                    │         │           │          │ │
+│ │ regular hooks.     │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ "HTTP_408_REQUEST… │ Wait, but looking  │         │           │          │ │
-│ │ +                  │ at the code in     │         │           │          │ │
-│ │ "HTTP_409_CONFLIC… │ `status.py`, the   │         │           │          │ │
-│ │ +                  │ `__getattr__`      │         │           │          │ │
-│ │ "HTTP_410_GONE",   │ function is        │         │           │          │ │
-│ │ +                  │ supposed to handle │         │           │          │ │
-│ │ "HTTP_411_LENGTH_… │ the deprecated     │         │           │          │ │
-│ │ +                  │ names. Let me      │         │           │          │ │
-│ │ "HTTP_412_PRECOND… │ check the code     │         │           │          │ │
-│ │ +                  │ again:             │         │           │          │ │
-│ │ "HTTP_413_CONTENT… │                    │         │           │          │ │
-│ │ +                  │ In the             │         │           │          │ │
-│ │ "HTTP_414_URI_TOO… │ `__getattr__`      │         │           │          │ │
-│ │ +                  │ function, they     │         │           │          │ │
-│ │ "HTTP_415_UNSUPPO… │ check if the name  │         │           │          │ │
-│ │ +                  │ is in              │         │           │          │ │
-│ │ "HTTP_416_RANGE_N… │ `__deprecated__`,  │         │           │          │ │
-│ │ +                  │ then issue a       │         │           │          │ │
-│ │ "HTTP_417_EXPECTA… │ warning and return │         │           │          │ │
-│ │ +                  │ None. But the      │         │           │          │ │
-│ │ "HTTP_418_IM_A_TE… │ `deprecation_chan… │         │           │          │ │
-│ │ +                  │ dictionary maps    │         │           │          │ │
-│ │ "HTTP_421_MISDIRE… │ the old name to    │         │           │          │ │
-│ │ +                  │ the new name.      │         │           │          │ │
-│ │ "HTTP_422_UNPROCE… │ However, the code  │         │           │          │ │
-│ │ +                  │ doesn't use that   │         │           │          │ │
-│ │ "HTTP_423_LOCKED", │ mapping. Instead,  │         │           │          │ │
-│ │ +                  │ it's just checking │         │           │          │ │
-│ │ "HTTP_424_FAILED_… │ if the name is in  │         │           │          │ │
-│ │ +                  │ `__deprecated__`,  │         │           │          │ │
-│ │ "HTTP_425_TOO_EAR… │ which is a         │         │           │          │ │
-│ │ +                  │ dictionary that    │         │           │          │ │
-│ │ "HTTP_426_UPGRADE… │ has the old name   │         │           │          │ │
-│ │ +                  │ as the key and the │         │           │          │ │
-│ │ "HTTP_428_PRECOND… │ value as the code  │         │           │          │ │
-│ │ +                  │ number. Wait, no.  │         │           │          │ │
-│ │ "HTTP_429_TOO_MAN… │ Wait, the          │         │           │          │ │
-│ │ +                  │ `__deprecated__`   │         │           │          │ │
-│ │ "HTTP_431_REQUEST… │ is a dictionary    │         │           │          │ │
-│ │ +                  │ where the keys are │         │           │          │ │
-│ │ "HTTP_451_UNAVAIL… │ the old names and  │         │           │          │ │
-│ │ +                  │ the values are the │         │           │          │ │
-│ │ "HTTP_500_INTERNA… │ code numbers. For  │         │           │          │ │
-│ │ +                  │ example,           │         │           │          │ │
-│ │ "HTTP_501_NOT_IMP… │ `HTTP_413_REQUEST… │         │           │          │ │
-│ │ +                  │ is a key, and the  │         │           │          │ │
-│ │ "HTTP_502_BAD_GAT… │ value is 413. But  │         │           │          │ │
-│ │ +                  │ in the             │         │           │          │ │
-│ │ "HTTP_503_SERVICE… │ `__getattr__`      │         │           │          │ │
-│ │ +                  │ function, when the │         │           │          │ │
-│ │ "HTTP_504_GATEWAY… │ name is found in   │         │           │          │ │
-│ │ +                  │ `__deprecated__`,  │         │           │          │ │
-│ │ "HTTP_505_HTTP_VE… │ it raises a        │         │           │          │ │
-│ │ +                  │ warning and        │         │           │          │ │
-│ │ "HTTP_506_VARIANT… │ returns None. But  │         │           │          │ │
-│ │ +                  │ the                │         │           │          │ │
-│ │ "HTTP_507_INSUFFI… │ `deprecation_chan… │         │           │          │ │
-│ │ +                  │ mapping is         │         │           │          │ │
-│ │ "HTTP_508_LOOP_DE… │ supposed to point  │         │           │          │ │
-│ │ +                  │ to the new name,   │         │           │          │ │
-│ │ "HTTP_510_NOT_EXT… │ but the code isn't │         │           │          │ │
-│ │ +                  │ using that.        │         │           │          │ │
-│ │ "HTTP_511_NETWORK… │ Instead, it's just │         │           │          │ │
-│ │ +                  │ returning None,    │         │           │          │ │
-│ │ "WS_1000_NORMAL_C… │ which is not the   │         │           │          │ │
-│ │ +                  │ correct value.     │         │           │          │ │
-│ │ "WS_1001_GOING_AW… │                    │         │           │          │ │
-│ │ +                  │ Wait, this seems   │         │           │          │ │
-│ │ "WS_1002_PROTOCOL… │ like a mistake.    │         │           │          │ │
-│ │ +                  │ The intention is   │         │           │          │ │
-│ │ "WS_1003_UNSUPPOR… │ that when a        │         │           │          │ │
-│ │ +                  │ deprecated name is │         │           │          │ │
-│ │ "WS_1005_NO_STATU… │ accessed, it       │         │           │          │ │
-│ │ +                  │ should return the  │         │           │          │ │
-│ │ "WS_1006_ABNORMAL… │ new name's value.  │         │           │          │ │
-│ │ +                  │ However, the       │         │           │          │ │
-│ │ "WS_1007_INVALID_… │ current code       │         │           │          │ │
-│ │ +                  │ returns None,      │         │           │          │ │
-│ │ "WS_1008_POLICY_V… │ which would make   │         │           │          │ │
-│ │ +                  │ the attribute      │         │           │          │ │
-│ │ "WS_1009_MESSAGE_… │ inaccessible. So   │         │           │          │ │
-│ │ +                  │ the code is        │         │           │          │ │
-│ │ "WS_1010_MANDATOR… │ incorrect here.    │         │           │          │ │
-│ │ +                  │ The `__getattr__`  │         │           │          │ │
-│ │ "WS_1011_INTERNAL… │ function should    │         │           │          │ │
-│ │ +                  │ return the value   │         │           │          │ │
-│ │ "WS_1012_SERVICE_… │ of the new name,   │         │           │          │ │
-│ │ +                  │ not None.          │         │           │          │ │
-│ │ "WS_1013_TRY_AGAI… │                    │         │           │          │ │
-│ │ +                  │ For example, when  │         │           │          │ │
-│ │ "WS_1014_BAD_GATE… │ someone accesses   │         │           │          │ │
-│ │ +                  │ `HTTP_413_REQUEST… │         │           │          │ │
-│ │ "WS_1015_TLS_HAND… │ the code should    │         │           │          │ │
-│ │ +]                 │ return the value   │         │           │          │ │
-│ │ +                  │ of                 │         │           │          │ │
-│ │  HTTP_100_CONTINUE │ `HTTP_413_CONTENT… │         │           │          │ │
-│ │ = 100              │ which is 413, but  │         │           │          │ │
-│ │  HTTP_101_SWITCHI… │ instead, it's      │         │           │          │ │
-│ │ = 101              │ returning None.    │         │           │          │ │
-│ │  HTTP_102_PROCESS… │ That's a problem   │         │           │          │ │
-│ │ = 102              │ because the user   │         │           │          │ │
-│ │ @@ -44,14 +127,14  │ would get None     │         │           │          │ │
-│ │ @@                 │ instead of the     │         │           │          │ │
-│ │ HTTP_409_CONFLICT  │ correct value. So  │         │           │          │ │
-│ │ = 409              │ this is a concrete │         │           │          │ │
-│ │  HTTP_410_GONE =   │ defect.            │         │           │          │ │
-│ │ 410                │                    │         │           │          │ │
-│ │  HTTP_411_LENGTH_… │ Looking at the     │         │           │          │ │
-│ │ = 411              │ test case,         │         │           │          │ │
-│ │  HTTP_412_PRECOND… │ `test_deprecated_… │         │           │          │ │
-│ │ = 412              │ checks that a      │         │           │          │ │
-│ │ -HTTP_413_REQUEST… │ DeprecationWarning │         │           │          │ │
-│ │ = 413              │ is raised when     │         │           │          │ │
-│ │ -HTTP_414_REQUEST… │ accessing the      │         │           │          │ │
-│ │ = 414              │ deprecated         │         │           │          │ │
-│ │ +HTTP_413_CONTENT… │ constant, which is │         │           │          │ │
-│ │ = 413              │ correct. However,  │         │           │          │ │
-│ │ +HTTP_414_URI_TOO… │ the test doesn't   │         │           │          │ │
-│ │ = 414              │ check that the     │         │           │          │ │
-│ │  HTTP_415_UNSUPPO… │ value is actually  │         │           │          │ │
-│ │ = 415              │ the new one. But   │         │           │          │ │
-│ │ -HTTP_416_REQUEST… │ the test's message │         │           │          │ │
-│ │ = 416              │ is correct, and    │         │           │          │ │
-│ │ +HTTP_416_RANGE_N… │ the warning is     │         │           │          │ │
-│ │ = 416              │ raised. However,   │         │           │          │ │
-│ │  HTTP_417_EXPECTA… │ the actual value   │         │           │          │ │
-│ │ = 417              │ is None, which is  │         │           │          │ │
-│ │  HTTP_418_IM_A_TE… │ wrong.             │         │           │          │ │
-│ │ = 418              │                    │         │           │          │ │
-│ │  HTTP_421_MISDIRE… │ Therefore, the     │         │           │          │ │
-│ │ = 421              │ `__getattr__`      │         │           │          │ │
-│ │ -HTTP_422_UNPROCE… │ function is        │         │           │          │ │
-│ │ = 422              │ incorrectly        │         │           │          │ │
-│ │ +HTTP_422_UNPROCE… │ returning None     │         │           │          │ │
-│ │ = 422              │ instead of the new │         │           │          │ │
-│ │  HTTP_423_LOCKED = │ value. The code    │         │           │          │ │
-│ │ 423                │ should instead     │         │           │          │ │
-│ │  HTTP_424_FAILED_… │ return the value   │         │           │          │ │
-│ │ = 424              │ from the new name. │         │           │          │ │
-│ │  HTTP_425_TOO_EAR… │ For example, in    │         │           │          │ │
-│ │ = 425              │ `deprecation_chan… │         │           │          │ │
-│ │ @@ -93,3 +176,34   │ the old name maps  │         │           │          │ │
-│ │ @@                 │ to the new name,   │         │           │          │ │
-│ │ WS_1012_SERVICE_R… │ so the code should │         │           │          │ │
-│ │ = 1012             │ retrieve the value │         │           │          │ │
-│ │  WS_1013_TRY_AGAI… │ from the new name. │         │           │          │ │
-│ │ = 1013             │ But in the current │         │           │          │ │
-│ │  WS_1014_BAD_GATE… │ code, it's not     │         │           │          │ │
-│ │ = 1014             │ doing that.        │         │           │          │ │
-│ │  WS_1015_TLS_HAND… │                    │         │           │          │ │
-│ │ = 1015             │ So, the defect     │         │           │          │ │
-│ │ +                  │ here is that the   │         │           │          │ │
-│ │ +__deprecated__ =  │ `__getattr__`      │         │           │          │ │
-│ │ {                  │ function returns   │         │           │          │ │
-│ │ +                  │ None for           │         │           │          │ │
-│ │ "HTTP_413_REQUEST… │ deprecated names,  │         │           │          │ │
-│ │ 413,               │ but it should      │         │           │          │ │
-│ │ +                  │ return the value   │         │           │          │ │
-│ │ "HTTP_414_REQUEST… │ of the new name.   │         │           │          │ │
-│ │ 414,               │ Therefore, the     │         │           │          │ │
-│ │ +                  │ code is incorrect  │         │           │          │ │
-│ │ "HTTP_416_REQUEST… │ and needs to be    │         │           │          │ │
-│ │ 416,               │ fixed.             │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ "hooked"           │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ "HTTP_422_UNPROCE… │ In the test, the   │         │           │          │ │
-│ │ 422,               │ test only checks   │         │           │          │ │
-│ │ +}                 │ the warning        │         │           │          │ │
-│ │ +                  │ message, but       │         │           │          │ │
-│ │ +                  │ doesn't check the  │         │           │          │ │
-│ │ +def               │ value. However,    │         │           │          │ │
-│ │ __getattr__(name:  │ the test might not │         │           │          │ │
-│ │ str) -> int:       │ be sufficient. But │         │           │          │ │
-│ │ +                  │ the main issue is  │         │           │          │ │
-│ │ deprecation_chang… │ in the code        │         │           │          │ │
-│ │ = {                │ itself.            │         │           │          │ │
+│ │ +        @attr.s   │                    │         │           │          │ │
+│ │ +        class     │                    │         │           │          │ │
+│ │ Hooked:            │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib(on_setatt… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ "HTTP_413_REQUEST… │ So, this is a      │         │           │          │ │
-│ │ "HTTP_413_CONTENT… │ concrete defect.   │         │           │          │ │
-│ │ +                  │ Therefore, the     │         │           │          │ │
-│ │ "HTTP_414_REQUEST… │ correct decision   │         │           │          │ │
-│ │ "HTTP_414_URI_TOO… │ is to block the    │         │           │          │ │
-│ │ +                  │ change, pointing   │         │           │          │ │
-│ │ "HTTP_416_REQUEST… │ out that the       │         │           │          │ │
-│ │ "HTTP_416_RANGE_N… │ `__getattr__`      │         │           │          │ │
-│ │ +                  │ function returns   │         │           │          │ │
-│ │ "HTTP_422_UNPROCE… │ None instead of    │         │           │          │ │
-│ │ "HTTP_422_UNPROCE… │ the new value.     │         │           │          │ │
-│ │ +    }             │ </think>           │         │           │          │ │
+│ │ +        h =       │                    │         │           │          │ │
+│ │ Hooked("x")        │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    deprecated =  │ {"decision":       │         │           │          │ │
-│ │ __deprecated__.ge… │ "block",           │         │           │          │ │
-│ │ +    if            │ "comments":        │         │           │          │ │
-│ │ deprecated:        │ [{"file":          │         │           │          │ │
-│ │ +                  │ "starlette/status… │         │           │          │ │
-│ │ warnings.warn(     │ "line_start": 127, │         │           │          │ │
-│ │ +                  │ "line_end": 134,   │         │           │          │ │
-│ │ f"'{name}' is      │ "body":            │         │           │          │ │
-│ │ deprecated. Use    │ "Deprecated        │         │           │          │ │
-│ │ '{deprecation_cha… │ attribute          │         │           │          │ │
-│ │ instead.",         │ resolution returns │         │           │          │ │
-│ │ +                  │ None instead of    │         │           │          │ │
-│ │ category=Deprecat… │ the new value.     │         │           │          │ │
-│ │ +                  │ Should return      │         │           │          │ │
-│ │ stacklevel=3,      │ deprecation_chang… │         │           │          │ │
-│ │ +        )         │ to maintain        │         │           │          │ │
-│ │ +        return    │ backward           │         │           │          │ │
-│ │ None               │ compatibility."}]} │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "x" == h.x         │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +    raise         │                    │         │           │          │ │
-│ │ AttributeError(f"… │                    │         │           │          │ │
-│ │ 'starlette.status' │                    │         │           │          │ │
-│ │ has no attribute   │                    │         │           │          │ │
-│ │ '{name}'")         │                    │         │           │          │ │
+│ │ +        h.x =     │                    │         │           │          │ │
+│ │ "xxx"              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "hooked" == h.x    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_ho… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        Generator │                    │         │           │          │ │
+│ │ hooks work with    │                    │         │           │          │ │
+│ │ attrs.define.      │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ value.upper()      │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ +def __dir__() ->  │                    │         │           │          │ │
-│ │ list[str]:         │                    │         │           │          │ │
-│ │ +    return        │                    │         │           │          │ │
-│ │ sorted(list(__all… │                    │         │           │          │ │
+│ │ @attr.define       │                    │         │           │          │ │
+│ │ +        class C:  │                    │         │           │          │ │
+│ │ +            x:    │                    │         │           │          │ │
+│ │ str =              │                    │         │           │          │ │
+│ │ attr.field(on_set… │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ list(__deprecated… │                    │         │           │          │ │
-│ │ # pragma: no cover │                    │         │           │          │ │
+│ │ +        c =       │                    │         │           │          │ │
+│ │ C("hello")         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "hello" == c.x     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c.x =     │                    │         │           │          │ │
+│ │ "world"            │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "WORLD" == c.x     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_ho… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        Generator │                    │         │           │          │ │
+│ │ hooks work as      │                    │         │           │          │ │
+│ │ class-level        │                    │         │           │          │ │
+│ │ on_setattr.        │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ call_count = 0     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ nonlocal           │                    │         │           │          │ │
+│ │ call_count         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ call_count += 1    │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ value              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ @attr.s(on_setatt… │                    │         │           │          │ │
+│ │ +        class C:  │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib()          │                    │         │           │          │ │
+│ │ +            y =   │                    │         │           │          │ │
+│ │ attr.ib()          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c = C(1,  │                    │         │           │          │ │
+│ │ 2)                 │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert 1  │                    │         │           │          │ │
+│ │ == c.x             │                    │         │           │          │ │
+│ │ +        assert 2  │                    │         │           │          │ │
+│ │ == c.y             │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c.x = 10  │                    │         │           │          │ │
+│ │ +        assert 1  │                    │         │           │          │ │
+│ │ == call_count      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c.y = 20  │                    │         │           │          │ │
+│ │ +        assert 2  │                    │         │           │          │ │
+│ │ == call_count      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_pr… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        If a      │                    │         │           │          │ │
+│ │ generator raises   │                    │         │           │          │ │
+│ │ before yielding,   │                    │         │           │          │ │
+│ │ the value is not   │                    │         │           │          │ │
+│ │ set.               │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +            raise │                    │         │           │          │ │
+│ │ ValueError("bad    │                    │         │           │          │ │
+│ │ value")            │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        @attr.s   │                    │         │           │          │ │
+│ │ +        class C:  │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib(on_setatt… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c =       │                    │         │           │          │ │
+│ │ C("original")      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ pytest.raises(Val… │                    │         │           │          │ │
+│ │ match="bad         │                    │         │           │          │ │
+│ │ value"):           │                    │         │           │          │ │
+│ │ +            c.x = │                    │         │           │          │ │
+│ │ "new"              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "original" == c.x  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_po… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        If a      │                    │         │           │          │ │
+│ │ generator raises   │                    │         │           │          │ │
+│ │ after yielding,    │                    │         │           │          │ │
+│ │ the value is       │                    │         │           │          │ │
+│ │ already set and    │                    │         │           │          │ │
+│ │ +        the       │                    │         │           │          │ │
+│ │ exception          │                    │         │           │          │ │
+│ │ propagates.        │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +            yield │                    │         │           │          │ │
+│ │ value              │                    │         │           │          │ │
+│ │ +            raise │                    │         │           │          │ │
+│ │ RuntimeError("pos… │                    │         │           │          │ │
+│ │ failure")          │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        @attr.s   │                    │         │           │          │ │
+│ │ +        class C:  │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib(on_setatt… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c =       │                    │         │           │          │ │
+│ │ C("original")      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ pytest.raises(Run… │                    │         │           │          │ │
+│ │ match="post-yield  │                    │         │           │          │ │
+│ │ failure"):         │                    │         │           │          │ │
+│ │ +            c.x = │                    │         │           │          │ │
+│ │ "new"              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "new" == c.x       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +    def           │                    │         │           │          │ │
+│ │ test_generator_yi… │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +        Yielding  │                    │         │           │          │ │
+│ │ more than once     │                    │         │           │          │ │
+│ │ raises an error    │                    │         │           │          │ │
+│ │ and closes the     │                    │         │           │          │ │
+│ │ generator.         │                    │         │           │          │ │
+│ │ +        """       │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cleaned_up = False │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        def       │                    │         │           │          │ │
+│ │ hook(instance,     │                    │         │           │          │ │
+│ │ attrib, value):    │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ nonlocal           │                    │         │           │          │ │
+│ │ cleaned_up         │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +            try:  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ yield "first"      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ yield "second"     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ finally:           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ cleaned_up = True  │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        @attr.s   │                    │         │           │          │ │
+│ │ +        class C:  │                    │         │           │          │ │
+│ │ +            x =   │                    │         │           │          │ │
+│ │ attr.ib(on_setatt… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        c =       │                    │         │           │          │ │
+│ │ C("old")           │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        with      │                    │         │           │          │ │
+│ │ pytest.raises(     │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ RuntimeError,      │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ match="Generator   │                    │         │           │          │ │
+│ │ on_setattr hook    │                    │         │           │          │ │
+│ │ yielded more than  │                    │         │           │          │ │
+│ │ once",             │                    │         │           │          │ │
+│ │ +        ):        │                    │         │           │          │ │
+│ │ +            c.x = │                    │         │           │          │ │
+│ │ "new"              │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ "first" == c.x     │                    │         │           │          │ │
+│ │ +        assert    │                    │         │           │          │ │
+│ │ cleaned_up is True │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │      def           │                    │         │           │          │ │
+│ │ test_make_class(s… │                    │         │           │          │ │
+│ │          """       │                    │         │           │          │ │
+│ │          on_setat… │                    │         │           │          │ │
+│ │ of make_class gets │                    │         │           │          │ │
+│ │ forwarded.         │                    │         │           │          │ │
 │ │ diff --git         │                    │         │           │          │ │
-│ │ a/tests/test_stat… │                    │         │           │          │ │
-│ │ b/tests/test_stat… │                    │         │           │          │ │
-│ │ new file mode      │                    │         │           │          │ │
-│ │ 100644             │                    │         │           │          │ │
+│ │ a/typing-examples… │                    │         │           │          │ │
+│ │ b/typing-examples… │                    │         │           │          │ │
 │ │ index              │                    │         │           │          │ │
-│ │ 0000000..52b0a25   │                    │         │           │          │ │
-│ │ --- /dev/null      │                    │         │           │          │ │
+│ │ 15542ca..ae5207a   │                    │         │           │          │ │
+│ │ 100644             │                    │         │           │          │ │
+│ │ ---                │                    │         │           │          │ │
+│ │ a/typing-examples… │                    │         │           │          │ │
 │ │ +++                │                    │         │           │          │ │
-│ │ b/tests/test_stat… │                    │         │           │          │ │
-│ │ @@ -0,0 +1,23 @@   │                    │         │           │          │ │
-│ │ +import importlib  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +import pytest     │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ +@pytest.mark.par… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ "constant,msg",    │                    │         │           │          │ │
-│ │ +    (             │                    │         │           │          │ │
-│ │ +        (         │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ "HTTP_413_REQUEST… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ "'HTTP_413_REQUES… │                    │         │           │          │ │
-│ │ is deprecated. Use │                    │         │           │          │ │
-│ │ 'HTTP_413_CONTENT… │                    │         │           │          │ │
-│ │ instead.",         │                    │         │           │          │ │
-│ │ +        ),        │                    │         │           │          │ │
-│ │ +        (         │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ "HTTP_414_REQUEST… │                    │         │           │          │ │
-│ │ +                  │                    │         │           │          │ │
-│ │ "'HTTP_414_REQUES… │                    │         │           │          │ │
-│ │ is deprecated. Use │                    │         │           │          │ │
-│ │ 'HTTP_414_URI_TOO… │                    │         │           │          │ │
-│ │ instead.",         │                    │         │           │          │ │
-│ │ +        ),        │                    │         │           │          │ │
-│ │ +    ),            │                    │         │           │          │ │
-│ │ +)                 │                    │         │           │          │ │
+│ │ b/typing-examples… │                    │         │           │          │ │
+│ │ @@ -7,7 +7,7 @@    │                    │         │           │          │ │
+│ │ Baseline features  │                    │         │           │          │ │
+│ │ that should be     │                    │         │           │          │ │
+│ │ supported by all   │                    │         │           │          │ │
+│ │ type checkers.     │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  from __future__   │                    │         │           │          │ │
+│ │ import annotations │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ -from typing       │                    │         │           │          │ │
+│ │ import Any         │                    │         │           │          │ │
+│ │ +from typing       │                    │         │           │          │ │
+│ │ import Any,        │                    │         │           │          │ │
+│ │ Generator          │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  import attrs      │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │ @@ -130,6 +130,12  │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ WithCustomRepr:    │                    │         │           │          │ │
+│ │      d: bool =     │                    │         │           │          │ │
+│ │ attrs.field(repr=… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
 │ │ +def               │                    │         │           │          │ │
-│ │ test_deprecated_t… │                    │         │           │          │ │
-│ │ str, msg: str) ->  │                    │         │           │          │ │
-│ │ None:              │                    │         │           │          │ │
-│ │ +    with          │                    │         │           │          │ │
-│ │ pytest.warns(Depr… │                    │         │           │          │ │
-│ │ as record:         │                    │         │           │          │ │
+│ │ gen_on_setattr_ho… │                    │         │           │          │ │
+│ │ +    instance:     │                    │         │           │          │ │
+│ │ Any, attribute:    │                    │         │           │          │ │
+│ │ attrs.Attribute[A… │                    │         │           │          │ │
+│ │ new_value: Any     │                    │         │           │          │ │
+│ │ +) ->              │                    │         │           │          │ │
+│ │ Generator[int]:    │                    │         │           │          │ │
+│ │ +    yield 42      │                    │         │           │          │ │
 │ │ +                  │                    │         │           │          │ │
-│ │ getattr(importlib… │                    │         │           │          │ │
-│ │ constant)          │                    │         │           │          │ │
-│ │ +        assert    │                    │         │           │          │ │
-│ │ len(record) == 1   │                    │         │           │          │ │
-│ │ +        assert    │                    │         │           │          │ │
-│ │ msg in             │                    │         │           │          │ │
-│ │ str(record.list[0… │                    │         │           │          │ │
+│ │ +                  │                    │         │           │          │ │
+│ │  @attrs.define(on… │                    │         │           │          │ │
+│ │  class             │                    │         │           │          │ │
+│ │ ValidatedSetter2:  │                    │         │           │          │ │
+│ │      a: int        │                    │         │           │          │ │
+│ │ @@ -143,6 +149,7   │                    │         │           │          │ │
+│ │ @@ class           │                    │         │           │          │ │
+│ │ ValidatedSetter2:  │                    │         │           │          │ │
+│ │              attr… │                    │         │           │          │ │
+│ │ attrs.setters.val… │                    │         │           │          │ │
+│ │          )         │                    │         │           │          │ │
+│ │      )             │                    │         │           │          │ │
+│ │ +    f: int =      │                    │         │           │          │ │
+│ │ attrs.field(on_se… │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
+│ │  @attrs.define(eq… │                    │         │           │          │ │
+│ │ order=True)        │                    │         │           │          │ │
+│ │                    │                    │         │           │          │ │
 │ │ ```                │                    │         │           │          │ │
 │ └────────────────────┴────────────────────┴─────────┴───────────┴──────────┘ │
 ╰──────────────────────────────────────────────────────────────────────────────╯
