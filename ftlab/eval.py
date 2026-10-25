@@ -11,7 +11,9 @@ Backends: vllm (local HF path or hub id) and anthropic (ANTHROPIC_API_KEY from e
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import subprocess
 import math
 import re
 import os
@@ -32,14 +34,26 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     return c - h, c + h
 
 
-def gen_vllm(model: str, prompts: list[str], max_tokens: int, gpu_mem: float, max_model_len: int, temperature: float = 0.0, seed: int = 0) -> list[str]:
+def _git_rev() -> str | None:
+    try:
+        return subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip() or None
+    except Exception:
+        return None
+
+
+def gen_vllm(model: str, prompts: list[str], max_tokens: int, gpu_mem: float, max_model_len: int, temperature: float = 0.0,
+             seed: int = 0, top_p: float = 1.0, top_k: int = -1) -> list[dict]:
+    """One dict per prompt: text, finish_reason ('stop' | 'length'), out_tokens. Sampling is explicit so a
+    standalone eval and the GRPO periodic eval can be made the same experiment (Oct 25 audit)."""
     from vllm import LLM, SamplingParams
 
     llm = LLM(model=model, dtype="bfloat16", gpu_memory_utilization=gpu_mem,
               max_model_len=max_model_len, enable_prefix_caching=True)
-    sp = SamplingParams(temperature=temperature, top_p=0.95 if temperature > 0 else 1.0, max_tokens=max_tokens, seed=seed)
+    sp = SamplingParams(temperature=temperature, top_p=top_p if temperature > 0 else 1.0,
+                        top_k=top_k if temperature > 0 else -1, max_tokens=max_tokens, seed=seed)
     outs = llm.generate(prompts, sp)
-    return [o.outputs[0].text for o in outs]
+    return [{"text": o.outputs[0].text, "finish_reason": o.outputs[0].finish_reason, "out_tokens": len(o.outputs[0].token_ids)}
+            for o in outs]
 
 
 def gen_anthropic(model: str, messages_list: list[list[dict]], max_tokens: int, workers: int = 8) -> list[str]:
@@ -68,7 +82,8 @@ def gen_anthropic(model: str, messages_list: list[list[dict]], max_tokens: int, 
 
 
 def run_eval(cfg_path: str, label: str, model: str | None, backend: str, max_tokens: int,
-             gpu_mem: float, max_model_len: int, overrides: list[str], temperature: float = 0.0):
+             gpu_mem: float, max_model_len: int, overrides: list[str], temperature: float = 0.0,
+             seed: int = 0, top_p: float = 0.95, top_k: int = 20):
     cfg = load_config(cfg_path, overrides)
     task = get_task(cfg.data.task)
     ds = task.load_eval(cfg.data, cfg.system_prompt)
@@ -88,9 +103,13 @@ def run_eval(cfg_path: str, label: str, model: str | None, backend: str, max_tok
 
         tok = AutoTokenizer.from_pretrained(model)
         prompts = [render(tok, r["prompt"], cfg.enable_thinking) for r in rows]
-        texts = gen_vllm(model, prompts, max_tokens, gpu_mem, max_model_len, temperature)
+        gens = gen_vllm(model, prompts, max_tokens, gpu_mem, max_model_len, temperature, seed, top_p, top_k)
+        texts = [g["text"] for g in gens]
+        prompt_hash = hashlib.sha256("\n".join(prompts).encode()).hexdigest()[:16]
     elif backend == "anthropic":
         texts = gen_anthropic(model, [r["prompt"] for r in rows], max_tokens)
+        gens = [{"finish_reason": None, "out_tokens": None} for _ in texts]
+        prompt_hash = None
     else:
         raise ValueError(backend)
     wall = time.time() - t0
@@ -98,14 +117,20 @@ def run_eval(cfg_path: str, label: str, model: str | None, backend: str, max_tok
     scores = [task.score(t, r) for t, r in zip(texts, rows)]
     k, n = int(sum(scores)), len(scores)
     lo, hi = wilson(k, n)
+    decisions = [getattr(task, "decision_of", lambda t: (None, None))(t) for t in texts]   # (Review, parsed_ok) for review
     out = {
         "label": label, "model": model, "backend": backend, "task": cfg.data.task,
         "n": n, "correct": k, "acc": k / n, "ci95": [lo, hi], "wall_s": round(wall, 1),
-        "max_tokens": max_tokens, "temperature": temperature,
+        "max_tokens": max_tokens, "temperature": temperature, "seed": seed, "top_p": top_p, "top_k": top_k,
+        "enable_thinking": cfg.enable_thinking, "system_prompt_sha": hashlib.sha256((cfg.system_prompt or "").encode()).hexdigest()[:16],
+        "prompt_hash": prompt_hash, "git": _git_rev(),
         "no_answer_line": sum(1 for t in texts if "####" not in t),
         "rows": [
-            {k2: v for k2, v in r.items() if k2 != "prompt"} | {"completion": t, "score": s}
-            for r, t, s in zip(rows, texts, scores)
+            {k2: v for k2, v in r.items() if k2 != "prompt"}
+            | {"completion": t, "score": s, "finish_reason": g["finish_reason"], "out_tokens": g["out_tokens"],
+               "parsed": bool(d[1]) if d[1] is not None else None,
+               "decision": (d[0].decision if d[1] else "invalid") if d[1] is not None else None}
+            for r, t, s, g, d in zip(rows, texts, scores, gens, decisions)
         ],
     }
     out_dir = cfg.resolved_output_dir()
@@ -153,6 +178,9 @@ def main():
     ap.add_argument("--max-tokens", type=int, default=None, help="default: config max_completion_length")
     ap.add_argument("--gpu-mem", type=float, default=0.85)
     ap.add_argument("--max-model-len", type=int, default=None, help="default: config vllm_max_model_length")
+    ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--top-p", type=float, default=0.95)
+    ap.add_argument("--top-k", type=int, default=20, help="Qwen3 recommends 20; -1 disables")
     ap.add_argument("--temperature", type=float, default=0.0, help="0 = greedy; Qwen3 recommends 0.6")
     ap.add_argument("--table", nargs="*", help="print a comparison table from eval json files")
     ap.add_argument("--set", nargs="*", default=[], help="config overrides key=value")
@@ -161,7 +189,8 @@ def main():
         return table(a.table)
     if not a.config:
         ap.error("config required")
-    run_eval(a.config, a.label, a.model, a.backend, a.max_tokens, a.gpu_mem, a.max_model_len, a.set, a.temperature)
+    run_eval(a.config, a.label, a.model, a.backend, a.max_tokens, a.gpu_mem, a.max_model_len, a.set, a.temperature,
+             a.seed, a.top_p, a.top_k)
 
 
 if __name__ == "__main__":

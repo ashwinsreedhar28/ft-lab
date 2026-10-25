@@ -249,12 +249,12 @@ from a block-everything policy; every group of 8 samples then carried the same r
 zero, and 120 steps moved nothing (kl 0.001). v2 started from a policy that varied, and the reward signal
 was visibly correct in training (`review/approve_bug_frac` logged every step; the −5s show up exactly
 where it rises), but the policy slid toward approve anyway: 0.09 → 0.3–0.5 approve-on-bug over 300
-steps, unparsable 0.2–0.56 throughout, reward never above −0.4. The reward is sparse in the one
+steps, unparsable 0.2–0.56 throughout, mean reward negative in most steps (10 of 300 positive, max +0.79). The reward is sparse in the one
 direction that matters: switching the decision token and writing a localized comment is a two-part
 move, block samples get rare once the policy tilts, and within a group of 8 the comparison is mostly
 approve-vs-approve. At lr 5e-5 with β 0.01 nothing pulled it back; the single-quote drift (−1 each)
-is the same failure in miniature. Importance-sampling ratio 0.7–1.08 all run, so this is the policy
-learning the wrong thing, not a sampler mismatch.
+is the same failure in miniature. Importance-sampling ratio mostly 0.9–1.08 but dipping to 0.53 around step 62, so the sampler is not
+fully excluded as a contributor; the decision drift is the policy's.
 
 **Infra lessons (one pod-day lost):** the Runpod template now exports `PYTHONPATH` to its dist-packages,
 which outranks a venv; `pip --ignore-installed` leaves stale `*.dist-info` so importlib.metadata reports
@@ -279,9 +279,14 @@ survive the suite, so it is empty on every positive by construction.
 
 v4 tried thinking mode. Untrained Qwen3-4B with thinking on, decoded at T 0.6 (greedy loops in thinking mode,
 per Qwen's own docs): bugs 9 blocked / 22 approved / 4 truncated, clean 2 blocked / 23 approved —
-**P(block | bug) 0.29 vs P(block | clean) 0.08, the first student start that discriminates**. SFT on 50
+block *intent* 9/35 vs 2/26; under the strict parser (valid JSON only) 4/35 vs 2/26 — bug approvals
+32 → 22 with clean approvals 26 → 23 is the operationally real change (Oct 25 audit correction). SFT on 50
 Sonnet rationales (balanced; `review/analysis/rationales.py`, 42 of 128 tasks refused by the API) made it
 worse on every column (5 / 20 / 9 and 3 / 15 / 8; 18 never close the think block). GRPO was not run.
 
 **v5 (ready, not run):** GRPO straight from the thinking base, no SFT, reward v4, raw advantages, 75 steps,
 T 0.6 eval every 25. `configs/review_grpo_4b_v5.yaml`; `V=_v5 bash -s phase3`. ~2 h, ~$6.
+
+**Oct 25 audit (external).** Decision counts above for v1–v4 came from a regex that accepted malformed JSON; the
+scorer's parser does not. Strict recounts, bench caveats and the pre-registered measurement job that now
+precedes any further training are in `docs/phase3b/MEASURE.md`; artifacts in `docs/phase3b/`.

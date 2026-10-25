@@ -45,6 +45,9 @@ def _split(spec: DataSpec, rows):
 def _ds(rows, spec: DataSpec, system_prompt):
     cond = spec.extra.get("condition", DEFAULT_CONDITION)
     sp = system_prompt if system_prompt is not None else SYSTEM
+    if sp == "compact":
+        from review.agent.run import SYSTEM_COMPACT
+        sp = SYSTEM_COMPACT
     return Dataset.from_list([
         {"prompt": make_messages(build_prompt(r, cond, None), sp), "kind": r["kind"],
          "gold_hunks": json.dumps(r.get("gold_hunks", [])), "task_id": r["id"]}

@@ -9,14 +9,10 @@ from __future__ import annotations
 
 import collections
 import json
-import re
 import time
 from pathlib import Path
 
 from transformers import TrainerCallback
-
-_DEC = re.compile(r'"decision"\s*:\s*"(\w+)"')
-
 
 class PeriodicEval(TrainerCallback):
     def __init__(self, cfg, task, every: int, limit: int = 0):
@@ -38,27 +34,43 @@ class PeriodicEval(TrainerCallback):
         vg = self.trainer.vllm_generation
         tok = self.trainer.processing_class
         t0 = time.time()
-        saved = vg.temperature
-        vg.temperature = 0.6 if self.cfg.enable_thinking else 0.0   # greedy loops in thinking mode (Qwen3 docs)
+        saved = (vg.temperature, vg.top_p, vg.top_k)
+        # same sampling as ftlab.eval's defaults, so the curve and the standalone evals are one experiment
+        vg.temperature, vg.top_p, vg.top_k = (0.6, 0.95, 20) if self.cfg.enable_thinking else (0.0, 1.0, 0)
         try:
             vg.sync_weights()
             self.trainer._last_loaded_step = self.trainer.state.global_step
             _, completion_ids, _, _ = vg.generate(prompts=self.prompt_ids, images=None, num_generations=1)
         finally:
-            vg.temperature = saved
+            vg.temperature, vg.top_p, vg.top_k = saved
         texts = [tok.decode(ids, skip_special_tokens=True) for ids in completion_ids]
         scores = [self.task.score(t, r) for t, r in zip(texts, self.rows)]
-        by = collections.Counter()
-        for t, r in zip(texts, self.rows):
-            m = _DEC.search(t)
-            by[f"{r.get('kind')}->{m.group(1) if m else 'unparsable'}"] += 1
+        cap = int(self.trainer.args.max_completion_length or 0)
+        by, recs = collections.Counter(), []
+        for t, r, ids, sc in zip(texts, self.rows, completion_ids, scores):
+            rev, ok = self.task.decision_of(t)          # the scorer's parser, not a regex (Oct 25 audit)
+            dec = rev.decision if ok else "invalid"
+            by[f"{r.get('kind')}->{dec}"] += 1
+            recs.append({"task_id": r.get("task_id"), "kind": r.get("kind"), "decision": dec, "parsed": ok, "score": sc,
+                         "out_tokens": len(ids), "finish_reason": "length" if cap and len(ids) >= cap else "stop",
+                         "completion": t})
         rec = {"step": step, "n": len(scores), "acc": round(sum(scores) / max(len(scores), 1), 4),
-               "decisions": dict(sorted(by.items())), "wall_s": round(time.time() - t0, 1)}
-        out = Path(self.trainer.args.output_dir) / "eval_curve.jsonl"
-        with out.open("a") as fh:
+               "decisions": dict(sorted(by.items())), "invalid": sum(not x["parsed"] for x in recs),
+               "length_capped": sum(x["finish_reason"] == "length" for x in recs), "wall_s": round(time.time() - t0, 1)}
+        out_dir = Path(self.trainer.args.output_dir)
+        with (out_dir / "eval_curve.jsonl").open("a") as fh:
             fh.write(json.dumps(rec) + "\n")
-        print(f"=== eval@{step}: acc={rec['acc']}  {rec['decisions']}  ({rec['wall_s']}s)", flush=True)
+        (out_dir / "eval_curve").mkdir(exist_ok=True)
+        (out_dir / "eval_curve" / f"step{step:04d}.json").write_text(json.dumps({**rec, "rows": recs}, indent=1))
+        print(f"=== eval@{step}: acc={rec['acc']}  {rec['decisions']}  invalid={rec['invalid']} capped={rec['length_capped']}  ({rec['wall_s']}s)", flush=True)
         return rec
+
+    def on_train_begin(self, args, state, control, **kw):
+        if self.every and state.global_step == 0:
+            try:
+                self.run(0)
+            except Exception as e:
+                print(f"=== eval@0 FAILED: {type(e).__name__}: {e}", flush=True)
 
     def on_step_end(self, args, state, control, **kw):
         if self.every and state.global_step % self.every == 0 and state.global_step > 0:

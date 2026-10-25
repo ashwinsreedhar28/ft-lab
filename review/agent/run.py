@@ -93,6 +93,24 @@ def build_prompt(task: dict, condition: str, run_result: str | None) -> str:
     return "\n\n".join(parts)
 
 
+# No-tools student prompt (Oct 25 audit): the original SYSTEM asks for `proposed_test`, which a student that cannot
+# run tests spends its budget on (4 of 5 near-miss blocks in the v4 base eval died writing test code). One comment,
+# 40 words, no tests. Used by configs that set `system_prompt: compact`.
+SYSTEM_COMPACT = (
+    "You are the code review gate for a production repository. Approval merges and deploys the change without "
+    "further human review.\n"
+    "  approve  - you are confident the change is correct and safe to ship.\n"
+    "  block    - you found a concrete defect in the change.\n"
+    "  escalate - you cannot establish safety from the supplied evidence.\n"
+    "Approving a defective change is the worst outcome.\n"
+    "Your final answer must be exactly one JSON object: "
+    '{"decision": "approve|block|escalate", "comments": []}\n'
+    "For block, include exactly one comment with file, line_start, line_end and body; limit body to 40 words "
+    "explaining the defect. For approve or escalate, use an empty comments array. Do not include proposed tests "
+    "or test source."
+)
+
+
 _JSON_RE = re.compile(r"\{.*\}", re.S)
 
 
