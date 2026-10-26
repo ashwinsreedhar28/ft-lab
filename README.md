@@ -10,9 +10,9 @@ own repos (shwin-bench), then a small model fine-tuned into the roles where it h
 |---|---|---|---|
 | 0 | GRPO mechanics: GSM8K, Qwen3-1.7B, 1×H100 | answer match | done Oct 17; lessons below |
 | 1 | review-bench from shwin-bench: bisected bug PRs + matched clean PRs, 4 context conditions, frontier baselines | bugs approved (target 0), auto-ship rate | v0 built: 4 bug + 4 clean; see below |
-| 2 | the review agent: neighborhood → run suite → probe test → decision | same scorer | frozen at v4b; Sonnet 7/22, Haiku 0/22 on the public eval (below) |
-| 3a | public bench: mined fix commits → validate → bisect (real positives, eval); mutation-injected bugs on clean PRs with a probe guard (training volume) | same scorer | 97 tasks (56 mutants + 2 real + 39 clean); leakage AUROC 0.55 |
-| 3b | SFT warm-start on frontier review traces (TEMP-selected); GRPO a 4B/8B LoRA into the triage gate with variance-guided rollouts (VIGOR) | asymmetric decision reward | recipe written; waits on 3a |
+| 2 | the review agent: neighborhood → run suite → probe test → decision | same scorer | frozen at harness v5 (suite delta); Sonnet 2/35, Haiku 0/35 bugs approved on the bench v4 eval (below) |
+| 3a | public bench: mined fix commits → validate → bisect (real positives, eval); mutation-injected bugs on clean PRs with a probe guard (training volume) | same scorer | bench v4 frozen Oct 20: 189 tasks (100 mutants + 2 real + 87 clean), eval 61 / train 128; 9 % label noise on hand review |
+| 3b | SFT warm-start on frontier review traces (TEMP-selected); GRPO a 4B/8B LoRA into the triage gate with variance-guided rollouts (VIGOR) | asymmetric decision reward | run Oct 20–25 (~$46): no GRPO run beat its start. 4B: approve-all, then block-all once advantages were unscaled; 8B thinking (v5): null, kl 0.002. Single-seed eval noise ±2–4 paired (below) |
 | 4 | topology: 1-colocate / 2-server / 4-colocate | $/1k completions | configs ready |
 | backlog | Spider / BIRD / lakehouse text-to-SQL | execution match | adapters kept |
 
@@ -283,9 +283,6 @@ block *intent* 9/35 vs 2/26; under the strict parser (valid JSON only) 4/35 vs 2
 32 → 22 with clean approvals 26 → 23 is the operationally real change (Oct 25 audit correction). SFT on 50
 Sonnet rationales (balanced; `review/analysis/rationales.py`, 42 of 128 tasks refused by the API) made it
 worse on every column (5 / 20 / 9 and 3 / 15 / 8; 18 never close the think block). GRPO was not run.
-
-**v5 (ready, not run):** GRPO straight from the thinking base, no SFT, reward v4, raw advantages, 75 steps,
-T 0.6 eval every 25. `configs/review_grpo_4b_v5.yaml`; `V=_v5 bash -s phase3`. ~2 h, ~$6.
 
 **Oct 25 audit (external).** Decision counts above for v1–v4 came from a regex that accepted malformed JSON; the
 scorer's parser does not. Strict recounts, bench caveats and the pre-registered measurement job that now
