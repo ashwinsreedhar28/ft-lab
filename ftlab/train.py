@@ -125,7 +125,8 @@ def main(argv=None):
     pe = None
     if every and cfg.grpo.get("use_vllm", True) and cfg.grpo.get("vllm_mode", "colocate") == "colocate":
         from ftlab.periodic_eval import PeriodicEval
-        pe = PeriodicEval(cfg, task, every, int(cfg.data.extra.get("eval_limit") or 0))
+        pe = PeriodicEval(cfg, task, every, int(cfg.data.extra.get("eval_limit") or 0),
+                          seeds=cfg.data.extra.get("eval_seeds") or (0,))
         callbacks.append(pe)
 
     trainer = GRPOTrainer(

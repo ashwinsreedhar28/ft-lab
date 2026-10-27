@@ -1,0 +1,19 @@
+# Phase 3b v6 (Oct 27). v5 (lr 1e-5, 50 steps) left the 8B thinking policy at kl 0.002 and the single-seed eval
+# could not resolve +-2-4 paired. Three changes, each forced by that run: lr 3e-5; 3 seeds per checkpoint
+# (data.extra.eval_seeds); train set grown with mutation run 5 (assemble.py --freeze-eval keeps the 61 verbatim).
+# Plus DAPO's clip-higher (epsilon_high 0.28): lets the rare "block" tokens grow on prompts the policy mostly approves.
+# Same start as v5: Qwen3-8B, thinking, compact prompt, 4k cap, reward v5, raw advantages, G 16.
+extends: review_grpo_8b_v5.yaml
+name: review_grpo_8b_v6
+data:
+  task: review
+  extra:
+    tasks: [review/bench/public_tasks.jsonl]
+    condition: diff+graph
+    eval_every: 10
+    eval_seeds: [0, 1, 2]
+grpo:
+  learning_rate: 3.0e-5
+  epsilon_high: 0.28
+  max_steps: 60
+  save_steps: 20

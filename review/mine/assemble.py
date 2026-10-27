@@ -96,6 +96,9 @@ def main():
                     help="extra unpaired clean PRs (train only) whose added lines contain the tokens the leakage probe ranked highest; "
                          "token-matched negatives, so `or`/`>=`/`!=` stop predicting the label")
     ap.add_argument("--decoy-tokens", default="or,>=,<=,!=,True,None,not")
+    ap.add_argument("--freeze-eval", default=None,
+                    help="path to the frozen public_eval.jsonl: its task ids stay the eval set exactly; every other task on one "
+                         "of its PRs is dropped (no leak into train), every other task goes to train. Grows train without touching eval.")
     a = ap.parse_args()
     cfg = repos(); eval_repos = set(a.eval_repos.split(","))
 
@@ -154,6 +157,29 @@ def main():
                       "gold_hunks": gold_hunks(repo, intro, p["sha"]), "neighborhood": neighborhood(repo, intro),
                       "fix_sha": p["sha"], "source": "real", "operator": "", "uncovered": [], "covered_frac": None, **hf,
                       "bug_age_commits": p.get("bug_age_commits"), "boundary": p.get("boundary")})
+
+    if a.freeze_eval:
+        frozen = [json.loads(l) for l in Path(a.freeze_eval).read_text().splitlines() if l.strip()]
+        frozen_ids = {t["id"] for t in frozen}
+        frozen_by_id = {t["id"]: t for t in frozen}
+        def pr_key(t):
+            if t["kind"] == "clean":
+                return t["head_sha"]
+            return t["fix_sha"] if t.get("source") != "real" else t["id"]
+        frozen_prs = {pr_key(t) for t in frozen}
+        kept, leaked = [], 0
+        for t in tasks:
+            if t["id"] in frozen_ids:
+                kept.append(frozen_by_id[t["id"]])   # verbatim: the frozen row, not a regenerated one
+            elif pr_key(t) in frozen_prs:
+                leaked += 1                      # a new mutant of an eval PR: neither side may have it
+            else:
+                t["split"] = "train"; kept.append(t)
+        tasks = kept
+        got = {t["id"] for t in tasks if t["split"] == "eval"}
+        missing = frozen_ids - got
+        assert not missing, f"frozen eval tasks not reproduced by this assemble: {sorted(missing)[:5]}"
+        print(f"freeze-eval: {len(frozen_ids)} eval tasks kept verbatim, {leaked} new tasks on eval PRs dropped")
 
     rng = random.Random(a.seed)
     # operator cap (train only): the leakage probe reached AUROC 0.68 on operator mutants at n=415 because a few
