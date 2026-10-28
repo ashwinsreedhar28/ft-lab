@@ -234,6 +234,9 @@ def main():
                 print(f"    {r.tool} did not run: {r.note[:160]}", flush=True)
     stats = tool_stats(per_task, tasks)
     print_tool_stats(stats)
+    usd = sum(r.usd for rs in per_task.values() for r in rs)
+    if usd:
+        print(f"tool API cost this run (cached runs count again): ${usd:.3f}")
     if a.tools_only:
         RESULTS.mkdir(exist_ok=True)
         p = RESULTS / f"{label}.json"
