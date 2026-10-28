@@ -134,7 +134,8 @@ def probe_is_specific(source: str, task: dict) -> bool:
 
 
 def docker_run(image: str, script: str, files: dict[str, str] | None = None, timeout: int = 1200, network: str = "none",
-               mounts: list[str] | None = None) -> tuple[int, str]:
+               mounts: list[str] | None = None, keep: int | None = 6000) -> tuple[int, str]:
+    """keep: return only the last `keep` chars of output (None = all; the static tool parses whole JSON blobs)."""
     name = f"rb-{int(time.time() * 1000) % 10**9}"
     vols = [x for m in (mounts or []) for x in ("-v", m)]
     subprocess.run(["docker", "create", "--name", name, "--network", network, "--cpus=2", "--memory=4g", *vols,
@@ -146,7 +147,8 @@ def docker_run(image: str, script: str, files: dict[str, str] | None = None, tim
                 f.write(text); f.flush()
             subprocess.run(["docker", "cp", f.name, f"{name}:{path}"], check=True, capture_output=True)
         p = subprocess.run(["docker", "start", "-a", name], capture_output=True, text=True, timeout=timeout)
-        return p.returncode, (p.stdout + p.stderr)[-6000:]
+        out = p.stdout + p.stderr
+        return p.returncode, out if keep is None else out[-keep:]
     except subprocess.TimeoutExpired:
         subprocess.run(["docker", "kill", name], capture_output=True)
         return 124, "TIMEOUT"

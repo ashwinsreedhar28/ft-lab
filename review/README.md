@@ -42,6 +42,9 @@ and run it → decide. Frontier model first (Sonnet), iterate the harness until
 bugs_approved = 0 with the highest auto_ship_rate; then Haiku; then (phase 3) a tuned
 Qwen3-4B/8B in the triage-gate role: approve only what is provably safe, escalate the rest.
 
+Harness v6 (`review/agent/harness.py` + `review/tools/`): the same gate reading cached findings from review tools
+(static, test-suite delta, AI reviewer) under evidence policies. See the top-level README.
+
 ## Phase 3 reward (GRPO, ftlab/rewards/review.py)
 -5.0 approve a bug PR · +1.0 correct approve or block · -0.5 block a clean PR ·
 -0.2 escalate anything · +0.5 when a block's comment lands on a gold hunk.

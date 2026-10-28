@@ -63,3 +63,15 @@ rescore:         ## RESULTS="..." re-score saved runs against the current review
 	python -m review.analysis.rescore $(RESULTS)
 gate-table:      ## EVALS="runs/review_grpo_4b/eval_*.json": score local-model evals as a gate next to the frontier rows
 	python -m review.analysis.gate_table $(EVALS)
+
+# ---- harness v6 (Oct 28): gate model x review tools. Tools need Docker (Mac); gate rows need an API key or MLX.
+TOOLS  ?= static,tests
+GATE   ?= claude-sonnet-5-5
+POLICY ?= free
+harness-images:  ## docker: build <image>-static (ruff + pyright baked in) for every image in TASKS
+	python -m review.tools.static --build $(or $(TASKS),review/bench/tasks.jsonl)
+harness-tools:   ## docker, no API: run TOOLS on TASKS, cache findings in review/tools/findings.json, print per-tool rates
+	python -m review.agent.harness --tools-only --tools $(TOOLS) $(if $(TASKS),--tasks $(TASKS),) $(if $(LABEL),--label $(LABEL),)
+harness:         ## one gate row: GATE=... TOOLS=... POLICY=free|block-needs-finding,... PROBES=0 (reads cached findings)
+	python -m review.agent.harness --gate $(GATE) --tools $(TOOLS) --policy $(POLICY) --probes $(or $(PROBES),0) \
+	  $(if $(TASKS),--tasks $(TASKS),) $(if $(LABEL),--label $(LABEL),) $(if $(ONLY),--only $(ONLY),) $(if $(REPEAT),--repeat $(REPEAT),)

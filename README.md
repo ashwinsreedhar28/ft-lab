@@ -13,12 +13,13 @@ own repos (shwin-bench), then a small model fine-tuned into the roles where it h
 | 2 | the review agent: neighborhood → run suite → probe test → decision | same scorer | frozen at harness v5 (suite delta); Sonnet 2/35, Haiku 0/35 bugs approved on the bench v4 eval (below) |
 | 3a | public bench: mined fix commits → validate → bisect (real positives, eval); mutation-injected bugs on clean PRs with a probe guard (training volume) | same scorer | bench v4 frozen Oct 20: 189 tasks (100 mutants + 2 real + 87 clean), eval 61 / train 128; 9 % label noise on hand review |
 | 3b | SFT warm-start on frontier review traces (TEMP-selected); GRPO a 4B/8B LoRA into the triage gate with variance-guided rollouts (VIGOR) | asymmetric decision reward | run Oct 20–25 (~$46): no GRPO run beat its start. 4B: approve-all, then block-all once advantages were unscaled; 8B thinking (v5): null, kl 0.002. Single-seed eval noise ±2–4 paired (below) |
+| 5 | harness v6: gate model × review tools (static, test-suite delta, AI reviewer) with evidence policies | same scorer + per-tool hit rates | wk1 tools layer Oct 28 (below) |
 | 4 | topology: 1-colocate / 2-server / 4-colocate | $/1k completions | configs ready |
 | backlog | Spider / BIRD / lakehouse text-to-SQL | execution match | adapters kept |
 
 ```
 pip install -r requirements.txt          # or bash pod/setup.sh on a pod
-make test                                # 46 pure-python tests
+make test                                # 69 pure-python tests
 python -m ftlab.train configs/gsm8k_h100.yaml
 python -m ftlab.eval  configs/gsm8k_h100.yaml --label tuned --model runs/gsm8k_h100/final
 python -m ftlab.plot  runs/gsm8k_h100
@@ -301,3 +302,39 @@ Details and the pre-registered rules: `docs/phase3b/MEASURE.md`.
 15–18 and clean approvals 20–23 across all seven checkpoints, kl ≤ 0.007. Six GRPO runs, each diagnosed, none beat its
 start. Direction after the Oct 27 check-in: a review **harness** (model × the repo's review tool) evaluated on the same
 benches, with fine-tuning as a lever inside it — `docs/phase3b/MEASURE.md` has the v6 curve and the plan pointer.
+
+## Harness v6: gate model × review tools (Oct 28–, Mac + Docker + API, no GPU)
+
+Six GRPO runs left the gate where they found it; prompt, decode settings, token cap and model size are what moved it.
+Production repos usually already run review tooling (linters, type checkers, CI, an AI reviewer), so the question
+becomes the harness: which model, reading which tool output, under which rules, makes a gate that never approves a
+bug and still ships clean PRs. Fine-tuning stays a lever inside the harness, used only if the gate model is the
+bottleneck once the tools are in.
+
+- `review/tools/`: every tool emits `Finding(tool, severity, file, lines, message, rule)`, so a real repo's tool is one
+  more adapter. Three stand-ins:
+  - `static`: ruff (`F,E9,B,PLE`, isolated config) + pyright (basic, missing-import rules off). Keeps only findings
+    on lines the PR added that are not already reported at the parent. Runs in `<image>-static`.
+  - `tests`: suite delta vs the parent. passed→failed and added-and-failing are high; pre-existing failures go in the
+    note as not evidence (5 of 7 false blocks in the v4b failure sheet came from those).
+  - `reviewer`: Haiku 5.5 lists defects as JSON and never decides.
+- Findings are cached per tool + version + task + head sha (`review/tools/findings.json`). Every gate in a matrix
+  reads identical findings; failed tool runs are retried rather than cached.
+- Each tool is measured before any gate reads it: fires on bug PRs, fires on clean PRs, gold-hunk hit.
+- `review/agent/harness.py`: the gate sees findings as F1..Fn and cites them in `evidence`. Evidence policies
+  (`free`, `block-needs-finding`, `approve-needs-clean-tools`, `approve-needs-probe`) bounce a decision that breaks a
+  rule once, then escalate it. Probe tests from the v5 loop are off by default (`--probes N`).
+
+Checks so far. On a planted undefined name in a tenacity PR, static returns 3 findings: pyright
+`reportUndefinedVariable`, ruff F821, ruff B006. It reports 0 at the parent and takes 1.6 s. On 6 real upstream
+tenacity commits it returns 0 findings (10–15 diagnostics at head, all pre-existing or on unchanged lines). Known
+limit: mutants were selected to survive the suite, so `tests` is empty on every synthetic bug by construction.
+
+```
+make harness-images                       # docker, once per task image
+make harness-tools                        # docker, no API: per-tool table on shwin-bench
+make harness GATE=claude-sonnet-5-5 TOOLS=static,tests POLICY=block-needs-finding
+```
+
+Next: reviewer smoke and a local Qwen3-8B gate on MLX (measurement-job decode settings), the gate × tools matrix on
+shwin-bench, then on the 61-task eval, then the evidence-policy ablation.
