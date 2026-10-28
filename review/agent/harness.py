@@ -190,6 +190,20 @@ def review_one(task: dict, gate: str, runs: list[ToolRun], tools: list[str], pol
     return rev, ok, text, probes, audit
 
 
+def sample_twins(tasks: list[dict], n: int, seed: int = 0) -> list[dict]:
+    """Pure: n random (mutant, clean twin) pairs, at most one mutant per clean twin, in a stable order."""
+    import random
+    from review.tools.calibrate import twin_of
+    by_id = {t["id"]: t for t in tasks}
+    pairs, used = [], set()
+    for t in sorted(tasks, key=lambda x: x["id"]):
+        tw = twin_of(t["id"])
+        if tw in by_id and tw not in used:
+            pairs.append((t["id"], tw)); used.add(tw)
+    pick = random.Random(seed).sample(pairs, min(n, len(pairs)))
+    return [by_id[i] for pair in sorted(pick) for i in pair]
+
+
 def parse_list(s: str, allowed=None) -> list[str]:
     out = [x.strip() for x in (s or "").split(",") if x.strip() and x.strip() != "none"]
     if allowed:
@@ -213,6 +227,9 @@ def main():
     ap.add_argument("--only", default=None, help="comma list of task ids (smoke runs)")
     ap.add_argument("--tools-only", action="store_true", help="run tools and report per-tool stats; no gate calls")
     ap.add_argument("--refresh-tools", action="store_true", help="ignore the findings cache")
+    ap.add_argument("--sample-twins", type=int, default=0,
+                    help="keep N random mutant / clean-twin pairs (calibration on train at lower API cost)")
+    ap.add_argument("--seed", type=int, default=0)
     a = ap.parse_args()
     tools = parse_list(a.tools, ("static", "tests", "reviewer"))
     policy = parse_list(a.policy, POLICIES) or ["free"]
@@ -221,6 +238,9 @@ def main():
     if a.only:
         keep = set(parse_list(a.only))
         tasks = [t for t in tasks if t["id"] in keep]
+    if a.sample_twins:
+        tasks = sample_twins(tasks, a.sample_twins, a.seed)
+        print(f"sampled {len(tasks) // 2} mutant/twin pairs (seed {a.seed})")
     label = a.label or (f"tools_{'+'.join(tools) or 'none'}" if a.tools_only
                         else f"h6_{a.gate.split('-')[1] if a.gate.startswith('claude') else a.gate}_{'+'.join(tools) or 'none'}_{'+'.join(policy)}")
 

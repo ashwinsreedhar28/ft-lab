@@ -344,3 +344,13 @@ def test_gold_chance_and_lr():
            "c": [ToolRun("static", "v", [])]}
     s = tool_stats(per, tasks)["static"]
     assert s["lr"] == float("inf") and s["gold_hit"] == 1 and s["gold_chance"] == 0.3
+
+
+def test_sample_twins_pairs_and_determinism():
+    ts = [{"id": i} for i in ("mut__r__a__1__x", "mut__r__a__2__y", "clean__r__a", "mut__r__b__1__x", "clean__r__b",
+                              "mut__r__c__1__x", "clean__r__z")]
+    s1 = harness.sample_twins(ts, 5, seed=0)
+    ids = [t["id"] for t in s1]
+    assert len(ids) == 4 and "clean__r__a" in ids and "clean__r__b" in ids and "mut__r__c__1__x" not in ids
+    assert ids == [t["id"] for t in harness.sample_twins(ts, 5, seed=0)]
+    assert len(harness.sample_twins(ts, 1, seed=3)) == 2

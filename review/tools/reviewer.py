@@ -15,6 +15,7 @@ from review.tools import Finding, ToolRun
 
 DEFAULT_MODEL = "claude-haiku-5-5"
 PROMPT_VERSION = "v1"
+MAX_TOKENS = 16000
 
 SYSTEM = (
     "You are an automated code review tool that comments on pull requests. List concrete defects this change "
@@ -66,8 +67,10 @@ def run(task: dict, opts: dict | None = None) -> ToolRun:
     from review.agent.run import build_prompt
     model = (opts or {}).get("model", DEFAULT_MODEL)
     prompt = build_prompt(task, "diff+graph", None)
-    text, (ti, to), usd = call(model, SYSTEM, [{"role": "user", "content": prompt}], 8000)
+    # 16k: adaptive thinking on a 900-line diff used all of an 8k budget and left no text (shwin f1943a4, Oct 28)
+    text, (ti, to), usd = call(model, SYSTEM, [{"role": "user", "content": prompt}], MAX_TOKENS)
     findings = parse(text)
     if findings is None:
-        return ToolRun("reviewer", version(opts), [], f"reviewer output unparsable: {text[:120]!r}", ok=False, usd=usd)
+        why = "no text (thinking used the whole token budget?)" if not text.strip() else f"unparsable: {text[:120]!r}"
+        return ToolRun("reviewer", version(opts), [], f"reviewer output {why} out_tokens={to}", ok=False, usd=usd)
     return ToolRun("reviewer", version(opts), findings, "", usd=usd)
