@@ -354,3 +354,26 @@ def test_sample_twins_pairs_and_determinism():
     assert len(ids) == 4 and "clean__r__a" in ids and "clean__r__b" in ids and "mut__r__c__1__x" not in ids
     assert ids == [t["id"] for t in harness.sample_twins(ts, 5, seed=0)]
     assert len(harness.sample_twins(ts, 1, seed=3)) == 2
+
+
+def test_mlx_gate_pure_parts():
+    from review.agent import mlx_gate
+    assert mlx_gate.strip_think('<think>a\nb</think>\n{"decision": "block"}') == '{"decision": "block"}'
+    assert mlx_gate.strip_think("<think>never closed because of the cap") == ""
+    assert mlx_gate.chat("S", [{"role": "user", "content": "u"}])[0] == {"role": "system", "content": "S"}
+    assert harness.gate_short("mlx:mlx-community/Qwen3-8B-4bit") == "mlx-Qwen3-8B-4bit"
+    assert harness.gate_short("claude-sonnet-5-5") == "sonnet"
+
+
+def test_review_one_routes_mlx_and_records_finish(monkeypatch):
+    from review.agent import mlx_gate
+    calls = []
+
+    def fake(repo, system, messages, max_tokens=None):
+        calls.append((repo, max_tokens))
+        mlx_gate._last.update(finish_reason="stop")
+        return '{"decision": "approve", "evidence": [], "comments": []}', (900, 300), 0.0
+    monkeypatch.setattr(mlx_gate, "call", fake)
+    rev, ok, text, probes, audit = harness.review_one(_shwin_task(), "mlx:mlx-community/Qwen3-8B-4bit", [], [], ["free"], 0, None)
+    assert calls == [("mlx-community/Qwen3-8B-4bit", None)] and rev.decision == "approve"
+    assert audit["rounds"][0]["finish"] == "stop" and audit["rounds"][0]["out_tokens"] == 300

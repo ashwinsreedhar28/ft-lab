@@ -112,7 +112,8 @@ def gate_call(gate: str, system: str, messages: list[dict], max_tokens: int):
     if gate.startswith("claude"):
         return call(gate, system, messages, max_tokens)
     if gate.startswith("mlx:"):
-        raise NotImplementedError("MLX gate lands week of Nov 3 (review/agent/mlx_gate.py)")
+        from review.agent import mlx_gate
+        return mlx_gate.call(gate[4:], system, messages, None if max_tokens is None else max_tokens)
     raise ValueError(f"unknown gate {gate!r}")
 
 
@@ -150,7 +151,8 @@ def review_one(task: dict, gate: str, runs: list[ToolRun], tools: list[str], pol
         decision = obj.get("decision")
         probe = obj.get("probe") if max_probes else None
         runnable = image_ok and isinstance(probe, dict) and "source" in probe and len(probes) < max_probes and not final
-        rounds.append({"round": r, "decision": decision, "probe": bool(runnable), "parsed": bool(obj)})
+        rounds.append({"round": r, "decision": decision, "probe": bool(runnable), "parsed": bool(obj), "out_tokens": to,
+                       **({"finish": _mlx_last().get("finish_reason")} if gate.startswith("mlx:") else {})})
         if decision is None and not runnable:
             if not final and not format_retried:
                 format_retried = True
@@ -221,7 +223,7 @@ def main():
     ap.add_argument("--reviewer-model", default=None)
     ap.add_argument("--policy", default="free", help=f"comma list of {','.join(POLICIES)}")
     ap.add_argument("--probes", type=int, default=0)
-    ap.add_argument("--max-tokens", type=int, default=14000)
+    ap.add_argument("--max-tokens", type=int, default=None, help="default 14000 for claude-*, 4096 for mlx:")
     ap.add_argument("--label", default=None)
     ap.add_argument("--repeat", type=int, default=1)
     ap.add_argument("--only", default=None, help="comma list of task ids (smoke runs)")
@@ -241,8 +243,10 @@ def main():
     if a.sample_twins:
         tasks = sample_twins(tasks, a.sample_twins, a.seed)
         print(f"sampled {len(tasks) // 2} mutant/twin pairs (seed {a.seed})")
+    if a.max_tokens is None and a.gate.startswith("claude"):
+        a.max_tokens = 14000
     label = a.label or (f"tools_{'+'.join(tools) or 'none'}" if a.tools_only
-                        else f"h6_{a.gate.split('-')[1] if a.gate.startswith('claude') else a.gate}_{'+'.join(tools) or 'none'}_{'+'.join(policy)}")
+                        else f"h6_{gate_short(a.gate)}_{'+'.join(tools) or 'none'}_{'+'.join(policy)}")
 
     per_task, t0 = {}, time.time()
     for t in tasks:
@@ -268,7 +272,31 @@ def main():
         print(f"-> {p}")
         return
     for rep in range(a.repeat):
+        if a.gate.startswith("mlx:"):
+            from review.agent import mlx_gate
+            mlx_gate.seed(a.seed + rep)
         run_gate(a, tasks, per_task, tools, policy, stats, label if a.repeat == 1 else f"{label}_r{rep}")
+
+
+def gate_short(gate: str) -> str:
+    """Pure: a filename-safe short name. claude-sonnet-5-5 -> sonnet; mlx:mlx-community/Qwen3-8B-4bit -> mlx-Qwen3-8B-4bit."""
+    if gate.startswith("claude"):
+        return gate.split("-")[1]
+    if gate.startswith("mlx:"):
+        return "mlx-" + gate[4:].rstrip("/").split("/")[-1]
+    return re.sub(r"[^A-Za-z0-9.-]+", "-", gate)
+
+
+def _mlx_last() -> dict:
+    from review.agent import mlx_gate
+    return mlx_gate._last
+
+
+def _decode(a) -> dict:
+    if a.gate.startswith("mlx:"):
+        from review.agent import mlx_gate
+        return {**mlx_gate.DECODE, **({"max_tokens": a.max_tokens} if a.max_tokens else {}), "seed": a.seed}
+    return {"max_tokens": a.max_tokens}
 
 
 def _calibration() -> str:
@@ -300,11 +328,12 @@ def run_gate(a, tasks, per_task, tools, policy, stats, label):
         rows.append({"task_id": t["id"], "kind": t["kind"], "decision": rev.decision, "usd": rev.usd, "probes": probes,
                      **audit, "comments": [c.__dict__ for c in rev.comments], "parsed": ok, "raw": raw[:4000]})
         b = f" bounced={len(audit['bounces'])}" if audit["bounces"] else ""
-        print(f"{t['id']:45s} {t['kind']:5s} {rev.decision:9s} cites={','.join(audit['cited']) or '-'}{b} ${rev.usd:.3f}", flush=True)
+        print(f"{t['id']:45s} {t['kind']:5s} {rev.decision:9s} cites={','.join(audit['cited']) or '-'}{b} ${rev.usd:.3f} "
+              f"{audit['api_s']:.0f}s", flush=True)
     scores = by_split(load_tasks(a.tasks) if not a.only else [x for x in load_tasks(a.tasks) if x.id in reviews], reviews, strong)
     RESULTS.mkdir(exist_ok=True)
     p = RESULTS / f"{label}.json"
-    p.write_text(json.dumps({"label": label, "model": a.gate, "harness_version": HARNESS_VERSION, "calibration": _calibration(),
+    p.write_text(json.dumps({"label": label, "model": a.gate, "decode": _decode(a), "harness_version": HARNESS_VERSION, "calibration": _calibration(),
                              "condition": "+".join(tools) or "none", "tools": tools, "policy": policy, "probes": a.probes,
                              "n": len(tasks), "provenance": provenance(a.tasks, {t.get("image") for t in tasks if t.get("image")}),
                              "unparsable": sum(1 for r in rows if not r["parsed"]), "wall_s": round(time.time() - t0, 1),
