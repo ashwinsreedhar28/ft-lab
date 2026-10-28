@@ -152,7 +152,8 @@ def review_one(task: dict, gate: str, runs: list[ToolRun], tools: list[str], pol
         probe = obj.get("probe") if max_probes else None
         runnable = image_ok and isinstance(probe, dict) and "source" in probe and len(probes) < max_probes and not final
         rounds.append({"round": r, "decision": decision, "probe": bool(runnable), "parsed": bool(obj), "out_tokens": to,
-                       **({"finish": _mlx_last().get("finish_reason")} if gate.startswith("mlx:") else {})})
+                       **({"finish": _mlx_last().get("finish_reason"), "tps": _mlx_last().get("generation_tps"),
+                          "peak_gb": _mlx_last().get("peak_memory_gb")} if gate.startswith("mlx:") else {})})
         if decision is None and not runnable:
             if not final and not format_retried:
                 format_retried = True
