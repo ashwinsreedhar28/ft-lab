@@ -1,0 +1,2389 @@
+{
+ "label": "tools_train_twins40",
+ "harness_version": 6,
+ "calibration": "train-cal v1: 223 train PRs, min 3 bug PRs, LR >= 2 (Oct 28)",
+ "tools": [
+  "static",
+  "reviewer"
+ ],
+ "n": 80,
+ "provenance": {
+  "tasks_file": "review/bench/public_train.jsonl",
+  "tasks_sha256": "4bfcec39c2f71983",
+  "ft_lab_commit": "1a3fbe5",
+  "image_ids": {}
+ },
+ "tool_stats": {
+  "reviewer": {
+   "n_bug": 40,
+   "n_clean": 40,
+   "fired_bug": 37,
+   "fired_clean": 15,
+   "gold_hit": 37,
+   "gold_chance": 7.9,
+   "did_not_run": 0,
+   "findings": 90,
+   "wall_s": 624.7,
+   "lr": 2.47
+  },
+  "static": {
+   "n_bug": 40,
+   "n_clean": 40,
+   "fired_bug": 2,
+   "fired_clean": 1,
+   "gold_hit": 3,
+   "gold_chance": 0.4,
+   "did_not_run": 0,
+   "findings": 15,
+   "wall_s": 496.5,
+   "lr": 2.0
+  }
+ },
+ "wall_s": 625.9,
+ "per_task": {
+  "mut__attrs__4b5b295b__124__return_none": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "7 changed .py file(s); 100 diagnostics at head, 2 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "src/attr/_compat.py",
+      "line_start": 124,
+      "line_end": 124,
+      "message": "Type \"None\" is not assignable to return type \"bool\" \"None\" is not assignable to \"bool\"",
+      "rule": "pyright reportReturnType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_compat.py",
+      "line_start": 100,
+      "line_end": 100,
+      "message": "Argument of type \"dict[Unknown, Unknown]\" cannot be assigned to parameter \"f\" of type \"(...) -> Unknown\" in function \"_lazy_is_generator\" Type \"dict[Unknown, Unknown]\" is not assignable to type \"(...) -> Unknown\"",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/attr/_compat.py",
+      "line_start": 124,
+      "line_end": 124,
+      "message": "For an unhashable callable, `is_gen()` returns `None` instead of a bool, so `__setattr__` treats a generator hook as a plain hook: it is never advanced, and the attribute is set to an unrun generator object.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/attr/_compat.py",
+      "line_start": 121,
+      "line_end": 122,
+      "message": "The module-level `_IS_GENERATOR_RESULTS` dict holds strong references to every hook function forever, so dynamically created hooks (e.g. lambdas or closures in factories) are never garbage-collected.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/attr/_compat.py",
+      "line_start": 122,
+      "line_end": 122,
+      "message": "`inspect.isgeneratorfunction` is False for callable objects whose `__call__` is a generator method, so such hooks are called as plain functions, returning an unrun generator that gets assigned as the attribute value.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "src/attr/_make.py",
+      "line_start": 1202,
+      "line_end": 1202,
+      "message": "If a generator hook finishes without yielding, `next(gen)` raises a bare StopIteration that escapes `__setattr__` instead of a clear error.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__attrs__4b5b295b": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "7 changed .py file(s); 99 diagnostics at head, 1 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_compat.py",
+      "line_start": 100,
+      "line_end": 100,
+      "message": "Argument of type \"dict[Unknown, Unknown]\" cannot be assigned to parameter \"f\" of type \"(...) -> Unknown\" in function \"_lazy_is_generator\" Type \"dict[Unknown, Unknown]\" is not assignable to type \"(...) -> Unknown\"",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/attr/_make.py",
+      "line_start": 1203,
+      "line_end": 1203,
+      "message": "If a generator on_setattr hook returns without yielding, the bare `next(gen)` raises StopIteration out of `__setattr__` before any handling, so the caller sees a confusing StopIteration instead of a clear error or a no-op.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__click__051725fa__142__return_none": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 5 diagnostics at head, 1 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "src/click/__init__.py",
+      "line_start": 135,
+      "line_end": 135,
+      "message": "`.utils._get_text_stream` imported but unused",
+      "rule": "ruff F401",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/__init__.py",
+      "line_start": 142,
+      "line_end": 142,
+      "message": "`click.get_text_stream` now returns `None` instead of `_get_text_stream`, so any caller of this deprecated but still-public name gets `None` and fails with an unrelated error, while the test only checks for the warning and does not catch it.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__click__051725fa": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 4 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__click__44c2bea5__2418__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 4 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/core.py",
+      "line_start": 2418,
+      "line_end": 2419,
+      "message": "The list-envvar loop now checks `rv is not None`, so an set-but-empty variable (e.g. `FOO=\"\"`) is returned instead of falling through to the next name, which breaks the 'first non-empty value' behavior the comment describes and the original `if rv:` check preserved.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__click__44c2bea5": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 4 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__click__9f0bcdf0__123__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 22 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/core.py",
+      "line_start": 118,
+      "line_end": 126,
+      "message": "The skip condition is inverted: `module in skip` returns at the first non-Click frame that is in `skip`, and with the default `skip=()` it never returns inside the loop, so every existing `_outside_click_stacklevel()` caller gets the wrong stacklevel. It should be `module not in skip`.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__click__9f0bcdf0": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 22 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__click__ba770cbc__93__false_true": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 6 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/core.py",
+      "line_start": 93,
+      "line_end": 93,
+      "message": "With `strict=True`, `zip` raises ValueError whenever the iterable length is not a multiple of `batch_size`, because the final partial batch leaves the repeated iterators unevenly exhausted, so `batch()` now crashes on any input with a trailing partial group instead of returning it.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__click__ba770cbc": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 6 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__fastapi__41352de2__522__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 4 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "fastapi/dependencies/utils.py",
+      "line_start": 521,
+      "line_end": 521,
+      "message": "The assertion message hardcodes \"Path parameter\" regardless of the actual parameter kind, so the query-parameter failures in the updated tests will not match the expected \"Query parameter 'q' must be...\" text and pytest.raises(match=...) will fail, and users get a misleading error for non-path param",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "tests/test_invalid_sequence_param.py",
+      "line_start": 12,
+      "line_end": 12,
+      "message": "The match string expects \"Query parameter 'q'\" but the implementation produces \"Path parameter {param_name!r}\", so this test (and the three sibling tests with the same match) would fail on the AssertionError message check.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__fastapi__41352de2": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 4 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "fastapi/dependencies/utils.py",
+      "line_start": 522,
+      "line_end": 522,
+      "message": "The new assertion message hardcodes \"Query parameter\", but this check can also run for Path, Header, or Cookie parameters, so those would get a misleading error message that names the wrong parameter kind.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__fastapi__48e98357__29__bool_or_and": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "5 changed .py file(s); 0 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "pyproject.toml",
+      "line_start": 105,
+      "line_end": 108,
+      "message": "Removing ujson and orjson from the `all` extra means `pip install fastapi[all]` no longer installs them, so `UJSONResponse` and `ORJSONResponse` fail at render time with `AttributeError: 'NoneType' object has no attribute 'dumps'`, because `responses.py` sets the missing module to `None` instead of ",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__fastapi__48e98357": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "5 changed .py file(s); 0 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pyproject.toml",
+      "line_start": 150,
+      "line_end": 153,
+      "message": "Moving ujson and orjson out of the `all` extra means `pip install fastapi[all]` no longer installs them, so existing apps that use UJSONResponse or ORJSONResponse will fail at render time with `ujson`/`orjson` set to None.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__more-itertools__0e6acdf9__233__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 146 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "more_itertools/more.py",
+      "line_start": 233,
+      "line_end": 234,
+      "message": "The guard `n <= 0` also rejects `n == 0`, which previously returned an empty iterator without error, so this is a silent behavior change for existing callers, and the message 'n must be at least 0' contradicts the check because 0 is rejected.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__more-itertools__0e6acdf9": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 146 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__more-itertools__1c85ece4__5380__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 29 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "more_itertools/more.py",
+      "line_start": 5380,
+      "line_end": 5380,
+      "message": "`__init__` now stores the raw iterable instead of `iter(iterable)`, so `__next__` on a non-iterator iterable such as a list raises TypeError, breaking `serialize([1, 2, 3])`.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5377,
+      "line_end": 5377,
+      "message": "Renaming the `iterator` and `lock` slots to `_iterator` and `_lock` breaks any code that reads the previously public `serialize.iterator` or `serialize.lock` attributes.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__more-itertools__1c85ece4": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 29 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "more_itertools/more.py",
+      "line_start": 5377,
+      "line_end": 5377,
+      "message": "The public attributes `iterator` and `lock` were renamed to `_iterator` and `_lock` without a compatibility alias, so any code that reads or relies on `serialize(...).iterator` or `.lock` will now raise AttributeError.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5397,
+      "line_end": 5402,
+      "message": "`send`, `throw`, and `close` hold the non-reentrant `Lock` while calling into the wrapped generator, so if the generator's body calls `next()` or another method on this same `serialize` object, the thread deadlocks.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__more-itertools__bca98065__1123__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 10 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "more_itertools/recipes.py",
+      "line_start": 1126,
+      "line_end": 1126,
+      "message": "Passing `iterable` twice to `_sumprod` drops the `tee` that made two independent iterators, so a one-shot iterator (e.g. a generator) is consumed by the first pass and the second sees nothing, or the same iterator is zipped with itself, giving wrong sums.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "more_itertools/recipes.py",
+      "line_start": 1115,
+      "line_end": 1115,
+      "message": "Renaming the parameter from `it` to `iterable` breaks any caller that passes the argument by keyword as `it=`.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__more-itertools__bca98065": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 10 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "more_itertools/recipes.py",
+      "line_start": 1115,
+      "line_end": 1115,
+      "message": "Renaming the public parameter from `it` to `iterable` breaks any caller that passes `it=` as a keyword argument, with a TypeError at runtime, and the change is not reflected in any compatibility shim or deprecation path.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__more-itertools__d63a26e5__5230__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 53 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "more_itertools/more.py",
+      "line_start": 5230,
+      "line_end": 5230,
+      "message": "The `pred=is_prime` argument was dropped, so `first_true` falls back to truthiness and `nth_prime` returns the first odd integer near the midpoint without checking primality, giving wrong results.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "more_itertools/recipes.py",
+      "line_start": 560,
+      "line_end": 560,
+      "message": "Renaming the public keyword `pred` to `predicate` breaks every existing caller that passes `pred=` to `first_true`, raising TypeError; any such callers not updated in this diff will fail at runtime.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__more-itertools__d63a26e5": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 52 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "more_itertools/recipes.py",
+      "line_start": 560,
+      "line_end": 560,
+      "message": "Renaming the public keyword argument `pred` to `predicate` breaks every existing caller that passes `pred=`, which now raises TypeError at runtime, and no backward-compatible alias is kept.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "more_itertools/recipes.pyi",
+      "line_start": 1,
+      "line_end": 1,
+      "message": "The stub file is listed as changed but the diff does not show it being updated, so if its first_true signature still declares `pred`, type checkers will accept calls that fail at runtime and reject the new `predicate` keyword.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__more-itertools__dc2664b4__2337__return_none": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 148 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 2337,
+      "line_end": 2337,
+      "message": "`__contains__` now returns `None` for a missing element instead of `False`, so the method no longer returns a bool as the containment protocol expects, even though `in` still evaluates it as falsy.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "more_itertools/more.py",
+      "line_start": 2424,
+      "line_end": 2425,
+      "message": "The unbounded `while self._before_stop(n): n += 1` loop never terminates when the step is too small to move `start + n*step` past `stop` (e.g. a huge start with a tiny step), so `len()` hangs.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__more-itertools__dc2664b4": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 148 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "more_itertools/more.py",
+      "line_start": 2448,
+      "line_end": 2450,
+      "message": "`_index_near` compares against `self._len` without calling it, but `_len` is defined as a method (the function containing `_before_stop`), so the bound method is compared with an int and raises TypeError, breaking `index()` and `__contains__` for in-range values.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__more-itertools__dee22c93__5675__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 30 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "more_itertools/more.py",
+      "line_start": 5675,
+      "line_end": 5675,
+      "message": "For an empty iterable with r=0, the conditional `1 if r else 0` gives n=0, so nothing is yielded, while combinations_with_replacement([], 0) yields one empty tuple and the removed early return handled this case.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "more_itertools/more.py",
+      "line_start": 5675,
+      "line_end": 5677,
+      "message": "For an empty iterable with r>0, n is set to 1, so the loop calls nth_combination_with_replacement on an empty pool, which raises ValueError instead of yielding nothing as combinations_with_replacement does.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__more-itertools__dee22c93": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 30 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__pydantic__027b5c71__109__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 177 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/_internal/_mock_val_ser.py",
+      "line_start": 107,
+      "line_end": 109,
+      "message": "`MockValSer.rebuild` now accepts `parent_namespace_depth` but never uses it, calling `self._attempt_rebuild()` with no arguments, so the `parent_namespace_depth=0` passed from Rust in `get_pydantic_serializer` is ignored and the caller's frame namespace is still used for annotation resolution.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic-core/src/serializers/polymorphism_trampoline.rs",
+      "line_start": 53,
+      "line_end": 53,
+      "message": "The old `if let Ok(serializer)` silently fell back to normal serialization on any failure, but now `get_pydantic_serializer(value)?` propagates any error (including a failing `rebuild()` call), changing behavior for polymorphic serialization of objects that previously fell through.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "pydantic-core/src/serializers/infer.rs",
+      "line_start": 683,
+      "line_end": 688,
+      "message": "When `rebuild()` returns None, the code falls through to `cast_into_exact()` on the still-mock object, producing a confusing cast error instead of the meaningful 'not fully defined' error the rebuild path is meant to surface.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__027b5c71": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 177 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "pydantic-core/src/serializers/infer.rs",
+      "line_start": 686,
+      "line_end": 689,
+      "message": "If `rebuild()` returns None, the code falls through to `cast_into_exact()` on the still-mock placeholder, which fails with a confusing downcast error instead of a meaningful pydantic error.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__pydantic__04fd6395__286__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 31 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/v1/main.py",
+      "line_start": 285,
+      "line_end": 288,
+      "message": "`getattr(cls, '__annotations__', {})` returns an inherited parent `__annotations__` when the subclass defines none (common before Python 3.10), so `.clear()` wipes the base class's annotations and corrupts later type-hint resolution for that parent.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__04fd6395": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 31 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__pydantic__07c180b2__2712__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 62 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/json_schema.py",
+      "line_start": 2712,
+      "line_end": 2712,
+      "message": "The condition is inverted: when `self.mode` equals `handler.mode` the override is skipped and `handler(core_schema)` returns the base schema, while the override is applied for mismatched modes, so `WithJsonSchema(mode=...)` applies to the wrong schema generation mode (the original `mode != handler.m",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__07c180b2": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 62 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__pydantic__34095c75__592__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 333 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/_internal/_generate_schema.py",
+      "line_start": 572,
+      "line_end": 572,
+      "message": "Passing `strict=False` explicitly to `dict_schema` overrides the inherited config, so `strict=True` no longer applies to mapping keys and values for `dict[...]`, `Mapping[...]` and the other mapping types, where previously `strict` was left unset and inherited.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/_internal/_generate_schema.py",
+      "line_start": 592,
+      "line_end": 592,
+      "message": "The strict path now chains the lax conversion before the instance check, so the `is_instance` check runs on the already-converted output and always passes, and strict mode no longer rejects non-instance inputs that were previously distinguished by the union's instance-first check.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__34095c75": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 333 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/_internal/_generate_schema.py",
+      "line_start": 592,
+      "line_end": 592,
+      "message": "Switching the strict branch from union_schema to chain_schema requires the is_instance check to pass before the lax schema runs, so plain dict inputs (and other non-instances) are rejected under strict validation even though the previous union accepted them.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/_internal/_generate_schema.py",
+      "line_start": 572,
+      "line_end": 572,
+      "message": "Passing strict=False explicitly to dict_schema overrides the config's strict setting, so keys and values are coerced in strict mode (e.g. '1' becomes int under a strict TypeAdapter) instead of being validated strictly.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "pydantic/_internal/_generate_schema.py",
+      "line_start": 574,
+      "line_end": 575,
+      "message": "When the origin maps to dict, the schema is a bare dict_schema that accepts only real dict instances in python mode, rejecting other Mapping inputs that the previous lax path accepted for the abstract Mapping types.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__pydantic__5cca2176__489__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 3 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/main.py",
+      "line_start": 489,
+      "line_end": 489,
+      "message": "The return annotation of `model_dump` is changed from `dict[str, Any]` to `str`, but the method returns a dict, so type checkers will reject the body and every caller will get a wrong inferred type.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/main.py",
+      "line_start": 295,
+      "line_end": 295,
+      "message": "The annotations now use `Dict`, `Dict[str, Any] | None` and similar forms without any import added in this diff; if `typing.Dict` is not already imported in this module, type checkers and any runtime annotation evaluation will fail with a NameError.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__5cca2176": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 2 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/main.py",
+      "line_start": 294,
+      "line_end": 294,
+      "message": "`Dict` is used in place of the built-in `dict` across many annotations, and nothing in this diff imports `typing.Dict`, so any evaluation of these annotations (e.g. `typing.get_type_hints` or signature introspection) raises `NameError`.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/main.py",
+      "line_start": 315,
+      "line_end": 315,
+      "message": "The annotation `Dict[str, Any] | None` uses `|` on a `typing` generic, which raises `TypeError` when evaluated on Python 3.9, so `get_type_hints` on `model_extra` breaks on supported versions.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__pydantic__7c973b85__297__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 37 diagnostics at head, 1 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "pydantic/v1/main.py",
+      "line_start": 193,
+      "line_end": 193,
+      "message": "Local variable `raw_annotations` is assigned to but never used",
+      "rule": "ruff F841",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/v1/generics.py",
+      "line_start": 297,
+      "line_end": 297,
+      "message": "`functools.reduce(operator.or_, resolved_type_args[1:])` skips the first resolved argument, so `list | str` becomes just `str`, and it raises TypeError when only one argument remains; it should reduce over all of `resolved_type_args`.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/v1/main.py",
+      "line_start": 195,
+      "line_end": 195,
+      "message": "The new Python 3.14 `raw_annotations` computation is never used because `resolve_annotations` is still called on `namespace.get('__annotations__', {})`, so on 3.14 classes whose annotations are lazily provided get no fields.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "pydantic/v1/typing.py",
+      "line_start": 90,
+      "line_end": 96,
+      "message": "The 3.14 branch calls `typing.evaluate_forward_ref` with a private `_recursive_guard` keyword that may not exist in that public API, which could raise TypeError when forward references are evaluated.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__7c973b85": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 37 diagnostics at head, 1 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "pydantic/v1/main.py",
+      "line_start": 193,
+      "line_end": 193,
+      "message": "Local variable `raw_annotations` is assigned to but never used",
+      "rule": "ruff F841",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/v1/main.py",
+      "line_start": 195,
+      "line_end": 195,
+      "message": "On Python 3.14+, `raw_annotations` is computed from the annotate function or namespace but never used; line 195 still reads `namespace.get('__annotations__', {})`, so models without a namespace `__annotations__` (the non-`__future__` case) get no annotations and their fields are silently dropped.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/v1/generics.py",
+      "line_start": 297,
+      "line_end": 297,
+      "message": "`functools.reduce(operator.or_, resolved_type_args)` raises TypeError when a resolved argument is a string or ForwardRef (e.g. `'Foo'`), where the previous `_UnionGenericAlias` construction accepted it, so generic PEP-604 unions with forward references now fail during parametrization.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__pydantic__9a842970__460__one_zero": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 169 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/_internal/_discriminated_union.py",
+      "line_start": 460,
+      "line_end": 460,
+      "message": "The rewritten match branch uses `schema_type.split('-')[0]`, which yields 'function' instead of the mode ('before'/'wrap'/'plain') that the original `split('-')[1]` produced, so the error text now reads `mode='function'` and misreports the offending validator mode.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__9a842970": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 169 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "pydantic/_internal/_discriminated_union.py",
+      "line_start": 445,
+      "line_end": 445,
+      "message": "The `root_model` check changed from truthiness (`schema.get('root_model')`) to an exact `True` literal pattern, so a truthy non-bool `root_model` value that previously matched now falls through to the `discriminator-needs-literal` error.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__pydantic__a20c0ee2__324__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "7 changed .py file(s); 25 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/_internal/_generate_schema.py",
+      "line_start": 324,
+      "line_end": 324,
+      "message": "The f-string prefix was dropped, so the deprecation warning will show the literal text `{version_short()}` in the URL instead of the version, producing a broken link for every user hitting `json_encoders`.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__a20c0ee2": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "7 changed .py file(s); 24 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "pydantic/_migration.py",
+      "line_start": 298,
+      "line_end": 299,
+      "message": "The two concatenated string literals have no separating space, so the warning reads \"...instead.See the migration guide...\" at runtime.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__pydantic__c449cae8__602__false_true": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "5 changed .py file(s); 14 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/_internal/_model_construction.py",
+      "line_start": 602,
+      "line_end": 602,
+      "message": "The new `is_force_rebuild` parameter defaults to `True`, so every caller that omits it, including first-time class creation, now builds with `_use_prebuilt=False` and loses prebuilt validator/serializer reuse; the default should be `False`.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "pydantic-core/src/definitions.rs",
+      "line_start": 140,
+      "line_end": 141,
+      "message": "`DefinitionsBuilder::new` now takes a required `use_prebuilt` argument; any remaining zero-argument `DefinitionsBuilder::new()` call sites outside the changed files will fail to compile.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__c449cae8": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "5 changed .py file(s); 14 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__pydantic__cb9f5a07__503__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 58 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/main.py",
+      "line_start": 503,
+      "line_end": 503,
+      "message": "`model_dump_json` hardcodes `fallback=None` instead of forwarding its `fallback` parameter, so a caller-supplied fallback is silently ignored and unknown values raise instead of being handled.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__cb9f5a07": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 58 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__pydantic__e354fd43__196__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 2 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/_internal/_config.py",
+      "line_start": 196,
+      "line_end": 196,
+      "message": "The `str_min_length` entry reads `config.get('str_max_length')` instead of `config.get('str_min_length')`, so a user's `str_min_length` is silently dropped and any `str_max_length` value is copied into the min-length constraint, causing valid strings to be rejected.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__e354fd43": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 2 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__requests__3816cfa1__23__true_false": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 5 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/requests/_types.py",
+      "line_start": 23,
+      "line_end": 23,
+      "message": "`_KT_co` is declared with `covariant=False` despite its `_co` suffix, and `SupportsItems` uses it only in covariant positions, so `SupportsItems[str, X]` will not be accepted where `SupportsItems[str | bytes, X]` is expected, causing false type errors for callers that pass a typed object through `Pa",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__requests__3816cfa1": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 5 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__requests__5691f596__148__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 0 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/requests/_types.py",
+      "line_start": 148,
+      "line_end": 148,
+      "message": "`Mapping[int, \"JsonType\"]` uses integer keys, but JSON object keys are always strings, so valid JSON objects like `{\"a\": 1}` no longer satisfy `JsonType` and type checkers will reject them. It should be `Mapping[str, \"JsonType\"]`, as the original `dict[str, \"JsonType\"]` was.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__requests__5691f596": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 0 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "src/requests/_types.py",
+      "line_start": 142,
+      "line_end": 150,
+      "message": "`Sequence[\"JsonType\"]` also matches `bytes` (a `Sequence[int]`) and `bytearray`, which `json.dumps` rejects, so the alias now admits values that are not valid JSON and type checkers will not flag them.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__requests__661970d1__120__bool_or_and": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "9 changed .py file(s); 80 diagnostics at head, 4 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "src/requests/__init__.py",
+      "line_start": 114,
+      "line_end": 114,
+      "message": "\"__version__\" is not exported from module \"urllib3\"",
+      "rule": "pyright reportPrivateImportUsage",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "src/requests/__init__.py",
+      "line_start": 120,
+      "line_end": 120,
+      "message": "\"__version__\" is not exported from module \"urllib3\"",
+      "rule": "pyright reportPrivateImportUsage",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "src/requests/compat.py",
+      "line_start": 22,
+      "line_end": 22,
+      "message": "\"__version__\" is not exported from module \"urllib3\"",
+      "rule": "pyright reportPrivateImportUsage",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "src/requests/help.py",
+      "line_start": 81,
+      "line_end": 81,
+      "message": "\"__version__\" is not exported from module \"urllib3\"",
+      "rule": "pyright reportPrivateImportUsage",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "src/requests/__init__.py",
+      "line_start": 117,
+      "line_end": 117,
+      "message": "The warning text changed from \"or chardet\" to \"and chardet\", so it now reads as if all components must mismatch, even though the check fires when any one of them is incompatible. This also makes the message differ from what existing users or log filters may match on.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__requests__661970d1": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "9 changed .py file(s); 80 diagnostics at head, 4 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "src/requests/__init__.py",
+      "line_start": 114,
+      "line_end": 114,
+      "message": "\"__version__\" is not exported from module \"urllib3\"",
+      "rule": "pyright reportPrivateImportUsage",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "src/requests/__init__.py",
+      "line_start": 120,
+      "line_end": 120,
+      "message": "\"__version__\" is not exported from module \"urllib3\"",
+      "rule": "pyright reportPrivateImportUsage",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "src/requests/compat.py",
+      "line_start": 22,
+      "line_end": 22,
+      "message": "\"__version__\" is not exported from module \"urllib3\"",
+      "rule": "pyright reportPrivateImportUsage",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "src/requests/help.py",
+      "line_start": 81,
+      "line_end": 81,
+      "message": "\"__version__\" is not exported from module \"urllib3\"",
+      "rule": "pyright reportPrivateImportUsage",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__requests__b7b549b5__9__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 0 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/requests/__version__.py",
+      "line_start": 9,
+      "line_end": 9,
+      "message": "`__build__ = 0x023410` encodes 2.34.16, not 2.34.1 (the version-to-build scheme gives 0x023401), so any code comparing `__build__` against the version will see a mismatched value.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__requests__b7b549b5": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 0 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__rich__230fdacb__75__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 0 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "rich/_unicode_data/__init__.py",
+      "line_start": 79,
+      "line_end": 79,
+      "message": "The three-way unpack `major, minor, patch = version_numbers` sits outside the try block, so a two-component input such as \"15.1\" (which the old code accepted via bisect) or a four-component input now raises an unhandled ValueError instead of resolving to a table.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "rich/_unicode_data/__init__.py",
+      "line_start": 74,
+      "line_end": 75,
+      "message": "Any unparseable version string is silently replaced with VERSIONS[0], the oldest Unicode table, so typos or invalid input now produce wrong width data with no error, where the old code raised.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__rich__230fdacb": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 0 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "rich/_unicode_data/__init__.py",
+      "line_start": 77,
+      "line_end": 77,
+      "message": "The unpacking `major, minor, patch = version_numbers` sits outside the try block, so any input that parses to a tuple of length other than 3 (for example \"15.1\" or \"15\") raises an unhandled ValueError instead of falling back or matching a version.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "rich/_unicode_data/__init__.py",
+      "line_start": 72,
+      "line_end": 74,
+      "message": "Malformed version strings now silently fall back to the latest Unicode version, where previously they surfaced an error, so callers passing a bad version get wrong-width data without any indication.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "rich/_unicode_data/__init__.py",
+      "line_start": 84,
+      "line_end": 85,
+      "message": "The `if TYPE_CHECKING:` guard raises NameError at runtime if TYPE_CHECKING is not imported in this module, and the assert it guards no longer executes at runtime at all.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__rich__47da97e4__70__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 2 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "rich/traceback.py",
+      "line_start": 70,
+      "line_end": 70,
+      "message": "For the last line of a multi-line span, the third tuple element is now column1 instead of column2, so the end column is wrong and the caller receives column1 == the start column rather than 0, which breaks the `column1 == 0` check and the highlighted range on that line.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "rich/traceback.py",
+      "line_start": 784,
+      "line_end": 784,
+      "message": "The removed `lines = code.splitlines()` line is not replaced; if any later code in this method still references `lines`, it will raise NameError at runtime.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__rich__47da97e4": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 2 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__rich__9ac7e797__688__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 10 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "rich/style.py",
+      "line_start": 688,
+      "line_end": 688,
+      "message": "In update_link, the link_id condition was changed from `if link` to `if self._link`, so setting a new link on a style that had none gets an empty link_id, which breaks hyperlink identity/grouping for the newly linked text.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__rich__9ac7e797": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 10 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__rich__d5f08704__638__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "rich/syntax.py",
+      "line_start": 638,
+      "line_end": 638,
+      "message": "`all(self.padding)` requires every padding side to be nonzero, so a padding like (1, 0, 0, 0) or (0, 2, 0, 0) now skips the Padding wrapper that the previous truthiness check applied, dropping the padding and its background style.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__rich__d5f08704": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__starlette__49e22755__58__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "9 changed .py file(s); 12 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "starlette/_utils.py",
+      "line_start": 58,
+      "line_end": 58,
+      "message": "`ParsedHost.is_valid_port` uses `< 65535`, so the valid port 65535 is rejected; `URL` then silently falls back to the server-derived netloc instead of using the Host header's port.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__starlette__49e22755": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "9 changed .py file(s); 12 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "starlette/middleware/httpsredirect.py",
+      "line_start": 17,
+      "line_end": 17,
+      "message": "For an IPv6 server with a default port, `url.hostname` returns the address without brackets (e.g. `::1`), so `url.replace(netloc=...)` builds an invalid Location like `https://::1/` instead of `https://[::1]/`, which the new test expects.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__starlette__764dab0d__25__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 10 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "starlette/datastructures.py",
+      "line_start": 49,
+      "line_end": 49,
+      "message": "`_HOST_RE` has no hyphen or underscore in its hostname character class (`[a-z0-9.]`), so valid Host headers such as `my-app.example.com` or `my_host:8000` now fail the fullmatch and silently fall back to the server tuple, changing the URL's scheme, host, and port for ordinary requests.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__starlette__764dab0d": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 10 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "starlette/datastructures.py",
+      "line_start": 49,
+      "line_end": 49,
+      "message": "`_HOST_RE` character class `[a-z0-9.-]` rejects underscores, so Host headers such as `my_service:8000` (common in internal and container networks) now silently fall back to the server tuple, changing the URL that `URL(scope=...)` produces for them.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__starlette__dee5bb38__27__false_true": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 0 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "starlette/middleware/sessions.py",
+      "line_start": 39,
+      "line_end": 40,
+      "message": "Because `partitioned` defaults to True and is appended regardless of `https_only`, cookies on plain-HTTP deployments get `Partitioned` without `Secure`, which browsers reject, so sessions silently stop working for existing users who did not opt in.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__starlette__dee5bb38": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 0 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "starlette/middleware/sessions.py",
+      "line_start": 39,
+      "line_end": 40,
+      "message": "`partitioned=True` appends `; partitioned` even when `https_only` is False, so the middleware emits a Partitioned cookie without `Secure`, which browsers reject, and the cookie is silently dropped.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__starlette__e3f97222__37__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "starlette/endpoints.py",
+      "line_start": 37,
+      "line_end": 38,
+      "message": "`self._allowed_methods` is not defined on `HTTPEndpoint` in the shown code, so every HTTP request reaching `dispatch` will raise AttributeError instead of routing to a handler or returning 405.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__starlette__e3f97222": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "starlette/endpoints.py",
+      "line_start": 37,
+      "line_end": 38,
+      "message": "The new check reads `self._allowed_methods`, which this diff never defines, so unless it is set elsewhere in the class every request raises AttributeError before dispatch reaches a handler.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__starlette__e4bd5981__25__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "7 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "starlette/endpoints.py",
+      "line_start": 25,
+      "line_end": 25,
+      "message": "The `_allowed_methods` tuple drops \"DELETE\" while adding \"QUERY\", so `HTTPEndpoint` no longer dispatches DELETE requests and returns 405 for any `delete()` handler.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__starlette__e4bd5981": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "7 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__structlog__2a317b73__94__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 2 diagnostics at head, 1 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "src/structlog/stdlib.py",
+      "line_start": 94,
+      "line_end": 94,
+      "message": "Argument of type \"list[type[PositionalArgumentsFormatter] | ((logger: WrappedLogger, method_name: str, event_dict: EventDict) -> EventDict) | ((logger: Logger, method_name: str, event_dict: EventDict) -> EventDict) | StackInfoRenderer | Pro",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/structlog/stdlib.py",
+      "line_start": 94,
+      "line_end": 94,
+      "message": "`PositionalArgumentsFormatter` is added to the processor list as a class rather than an instance, so structlog calls it as `processor(logger, method_name, event_dict)`, which invokes `__init__` with those values as configuration arguments and returns a formatter object instead of the event dict, bre",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__structlog__2a317b73": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__structlog__f0b24870__502__bool_and_or": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 44 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "src/structlog/dev.py",
+      "line_start": 512,
+      "line_end": 518,
+      "message": "The module-level `warnings.warn(..., stacklevel=2)` runs during import, so stacklevel=2 points at importlib's bootstrap frame rather than the user's import statement, which misattributes the warning location and can hide it from default filters.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/structlog/dev.py",
+      "line_start": 497,
+      "line_end": 504,
+      "message": "`better_traceback` now emits a DeprecationWarning on every exception it renders, and it is the default formatter whenever better-exceptions is installed without Rich, so each logged exception triggers a warning, reversing the earlier #790 fix that stopped warnings on rendered exceptions.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__structlog__f0b24870": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 44 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/structlog/dev.py",
+      "line_start": 514,
+      "line_end": 519,
+      "message": "The DeprecationWarning is emitted at module import time whenever better-exceptions is installed without Rich, so merely importing structlog.dev warns (and fails under `-W error`), while `stacklevel=2` points at importlib internals rather than user code.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__tenacity__1106b9a1__264__bool_and_or": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "tenacity/wait.py",
+      "line_start": 260,
+      "line_end": 276,
+      "message": "The `self.initial` attribute is no longer set, so any code that reads `wait.initial` on an instance (including external callers) now gets an AttributeError, and the deprecated path stores the value only under `multiplier`.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__tenacity__1106b9a1": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "tenacity/wait.py",
+      "line_start": 260,
+      "line_end": 268,
+      "message": "The conflict check compares against the default value (`multiplier != 1`), so `wait_exponential_jitter(initial=5, multiplier=1)` is silently accepted, the deprecated `initial` overwrites the explicit `multiplier`, and the user gets no error for conflicting arguments.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "tenacity/wait.py",
+      "line_start": 260,
+      "line_end": 277,
+      "message": "Using `initial != 1` as the \"was passed\" signal means an explicit `initial=1` never triggers the DeprecationWarning, so callers passing `initial=1` are not told the parameter is deprecated.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "tenacity/wait.py",
+      "line_start": 270,
+      "line_end": 271,
+      "message": "The `self.initial` attribute is no longer set, so any existing code or subclass that reads `wait_exponential_jitter.initial` will now raise AttributeError.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ]
+ }
+}
