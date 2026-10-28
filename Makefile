@@ -78,3 +78,9 @@ harness:         ## one gate row: GATE=... TOOLS=... POLICY=free|block-needs-fin
 	  $(if $(SEED),--seed $(SEED),) $(if $(MAXTOK),--max-tokens $(MAXTOK),) $(if $(NOTES),--tool-notes $(NOTES),)
 harness-calibrate: ## no docker: per-rule fire rates / LR on a TRAIN tools-only run -> CALIBRATED_MEDIUM for static.py
 	python -m review.tools.calibrate $(or $(RESULTS),review/agent/results/tools_static_train.json)
+harness-matrix:  ## the 5 pre-registered gate rows: GATE=... NAME=sonnet TASKS=review/bench/public_eval.jsonl SUFFIX=eval
+	$(MAKE) harness GATE=$(GATE) TOOLS=none LABEL=h6_$(NAME)_none_free_$(SUFFIX)
+	$(MAKE) harness GATE=$(GATE) TOOLS=static,tests LABEL=h6_$(NAME)_st_free_$(SUFFIX)
+	$(MAKE) harness GATE=$(GATE) TOOLS=static,tests,reviewer LABEL=h6_$(NAME)_all_free_$(SUFFIX)
+	$(MAKE) harness GATE=$(GATE) TOOLS=static,tests,reviewer NOTES=calibrated LABEL=h6_$(NAME)_all_free_notes_$(SUFFIX)
+	$(MAKE) harness GATE=$(GATE) TOOLS=static,tests,reviewer POLICY=approve-needs-reviewer-silence LABEL=h6_$(NAME)_all_revsil_$(SUFFIX)
