@@ -11,7 +11,7 @@
  "provenance": {
   "tasks_file": "review/bench/public_eval.jsonl",
   "tasks_sha256": "474408747597df89",
-  "ft_lab_commit": "6992ead",
+  "ft_lab_commit": "71cc9e6",
   "image_ids": {}
  },
  "tool_stats": {
@@ -40,19 +40,19 @@
    "lr": 1.19
   },
   "tests": {
-   "n_bug": 27,
-   "n_clean": 18,
-   "fired_bug": 2,
-   "fired_clean": 1,
+   "n_bug": 35,
+   "n_clean": 26,
+   "fired_bug": 5,
+   "fired_clean": 4,
    "gold_hit": 0,
    "gold_chance": 0.0,
-   "did_not_run": 16,
-   "findings": 287,
-   "wall_s": 959.2,
-   "lr": 1.33
+   "did_not_run": 0,
+   "findings": 327,
+   "wall_s": 1657.9,
+   "lr": 0.93
   }
  },
- "wall_s": 1947.9,
+ "wall_s": 785.9,
  "per_task": {
   "mut__tenacity__815c34fe__690__llm": [
    {
@@ -191,9 +191,65 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11539 passed, 35 failing, of which 31 also fail at the parent (environment or pre-existing, not evidence about this PR); 186 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/test_errors.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.pydantic_core.test_errors::test_all_errors_covered",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_docs.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_docs::test_validation_error_codes",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/test_errors.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.test_errors::test_error_type[string_not_ascii-String should contain only ASCII characters-None]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_types.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.test_types::test_string_constraints_ascii_only",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "183 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaaaf5d1cbe0,\\n        ),\\n        serializer: PolymorphismTrampoline(\\n            PolymorphismTrampoline {\\n                class: Py(\\n                    0x0000aaaaf5d1cbe0,\\n                ),\\n                serializer: Model(\\n                    ModelSerializer {\\n                        class: Py(\\n                            0x0000aaaaf5d1cbe0,\\n                        ),\\n                        serializer: Fields(\\n                            GeneralFieldsSerializer {\\n                                fields: {\\n                                    \"a\": SerField {\\n                                        key: \"a\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                    \"b\": SerField {\\n                                        key: \"b\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                },\\n                                computed_fields: None,\\n                                mode: SimpleDict,\\n                                extra_serializer: None,\\n                                filter: SchemaFilter {\\n                                    include: None,\\n                                    exclude: None,\\n                                },\\n                                required_fields: 2,\\n                            },\\n                        ),\\n                        has_extra: false,\\n                        root_model: false,\\n                        name: \"MyModel\",\\n                    },\\n                ),\\n                enabled_from_config: false,\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-270af682-4c87-4777-be8c-8fd9d185b3d8-270af682-4c87-4777-be8c-8fd9d185b3d8-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-270af682-4c87-4777-be8c-8fd9d185b3d8-270af682-4c87-4777-be8c-8fd9d185b3d8-True], tests.pydantic_core.test_errors::test_error_type[assertion_error-Assertion failed, foobar-context64], tests.pydantic_core.test_errors::test_error_type[bytes_invalid_encoding-Data should be valid base64: Invalid byte 1, offset 1-context61], tests.pydantic_core.test_errors::test_error_type[bytes_invalid_encoding-Data should be valid hex: Odd number of digits-context62], tests.pydantic_core.test_errors::test_error_type[bytes_too_long-Data should have at most 1 byte-context60], tests.pydantic_core.test_errors::test_error_type[bytes_too_long-Data should have at most 42 bytes-context59]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -288,9 +344,21 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11538 passed, 31 failing, of which 31 also fail at the parent (environment or pre-existing, not evidence about this PR); 98 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "95 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaab07f77e00,\\n        ),\\n        serializer: PolymorphismTrampoline(\\n            PolymorphismTrampoline {\\n                class: Py(\\n                    0x0000aaab07f77e00,\\n                ),\\n                serializer: Model(\\n                    ModelSerializer {\\n                        class: Py(\\n                            0x0000aaab07f77e00,\\n                        ),\\n                        serializer: Fields(\\n                            GeneralFieldsSerializer {\\n                                fields: {\\n                                    \"a\": SerField {\\n                                        key: \"a\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                    \"b\": SerField {\\n                                        key: \"b\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                },\\n                                computed_fields: None,\\n                                mode: SimpleDict,\\n                                extra_serializer: None,\\n                                filter: SchemaFilter {\\n                                    include: None,\\n                                    exclude: None,\\n                                },\\n                                required_fields: 2,\\n                            },\\n                        ),\\n                        has_extra: false,\\n                        root_model: false,\\n                        name: \"MyModel\",\\n                    },\\n                ),\\n                enabled_from_config: false,\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_any::test_any_python[{1, '2', b'3'}-{1, '2', b'3'}-IsList(1, '2', '3', check_order=False)], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-a3af9b49-78db-403c-b524-f9e442118019-a3af9b49-78db-403c-b524-f9e442118019-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-a3af9b49-78db-403c-b524-f9e442118019-a3af9b49-78db-403c-b524-f9e442118019-True], tests.pydantic_core.test_schema_functions::test_schema_functions[call_schema-({'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}, <function val_function at 0xffff90988860>)-{'type': 'call', 'function': <function val_function at 0xffff90988860>, 'arguments_schema': {'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_default_schema-({'type': 'int'}, default_factory=<function make_5 at 0xffff90988040>)-{'type': 'default', 'schema': {'type': 'int'}, 'default_factory': <function make_5 at 0xffff90988040>}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_after_validator_function-(<function val_function at 0xffff90988860>, {'type': 'int'})-{'type': 'function-after', 'function': {'type': 'with-info', 'function': <function val_function at 0xffff90988860>}, 'schema': {'type': 'int'}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_before_validator_function-(<function val_function at 0xffff90988860>, {'type': 'int'})-{'type': 'function-before', 'function': {'type': 'with-info', 'function': <function val_function at 0xffff90988860>}, 'schema': {'type': 'int'}}]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -418,9 +486,87 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11328 passed, 94 failing, of which 88 also fail at the parent (environment or pre-existing, not evidence about this PR); 54 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_complex.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithComplex object at 0xffff7d9ad3a0>-(5+0j)]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_complex.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithComplex object at 0xffff7d9af230>-(3.14+0j)]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_complex.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithFloat object at 0xffff7d9ad400>-(7+0j)]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_complex.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithFloat object at 0xffff7d9ad7f0>-(2.5+0j)]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_complex.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithIndex object at 0xffff7d9ad310>-(42+0j)]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_complex.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithIndex object at 0xffff7d9ad610>-(10+0j)]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "52 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=Model(\\n    ModelSerializer {\\n        class: Py(\\n            0x0000aaaac0989f70,\\n        ),\\n        serializer: Fields(\\n            GeneralFieldsSerializer {\\n                fields: {\\n                    \"b\": SerField {\\n                        key_py: Py(\\n                            0x0000ffffbac3da38,\\n                        ),\\n                        alias: None,\\n                        alias_py: None,\\n                        serializer: Some(\\n                            Any(\\n                                AnySerializer,\\n                            ),\\n                        ),\\n                        required: true,\\n                        serialize_by_alias: None,\\n                        serialization_exclude_if: None,\\n                    },\\n                    \"a\": SerField {\\n                        key_py: Py(\\n                            0x0000ffffbac3da08,\\n                        ),\\n                        alias: None,\\n                        alias_py: None,\\n                        serializer: Some(\\n                            Any(\\n                                AnySerializer,\\n                            ),\\n                        ),\\n                        required: true,\\n                        serialize_by_alias: None,\\n                        serialization_exclude_if: None,\\n                    },\\n                },\\n                computed_fields: None,\\n                mode: SimpleDict,\\n                extra_serializer: None,\\n                filter: SchemaFilter {\\n                    include: None,\\n                    exclude: None,\\n                },\\n                required_fields: 2,\\n            },\\n        ),\\n        has_extra: false,\\n        root_model: false,\\n        name: \"MyModel\",\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_any::test_any_python[{1, '2', b'3'}-{1, '2', b'3'}-IsList(1, '2', '3', check_order=False)], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-4d95c162-6b8b-49fd-888e-b8ec44d307ed-4d95c162-6b8b-49fd-888e-b8ec44d307ed-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-4d95c162-6b8b-49fd-888e-b8ec44d307ed-4d95c162-6b8b-49fd-888e-b8ec44d307ed-True], tests.pydantic_core.test_schema_functions::test_schema_functions[call_schema-({'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}, <function val_function at 0xffffb6054860>)-{'type': 'call', 'function': <function val_function at 0xffffb6054860>, 'arguments_schema': {'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_default_schema-({'type': 'int'}, default_factory=<function make_5 at 0xffffb6054040>)-{'type': 'default', 'schema': {'type': 'int'}, 'default_factory': <function make_5 at 0xffffb6054040>}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_after_validator_function-(<function val_function at 0xffffb6054860>, {'type': 'int'})-{'type': 'function-after', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffb6054860>}, 'schema': {'type': 'int'}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_before_validator_function-(<function val_function at 0xffffb6054860>, {'type': 'int'})-{'type': 'function-before', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffb6054860>}, 'schema': {'type': 'int'}}]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -593,9 +739,21 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11538 passed, 31 failing, of which 31 also fail at the parent (environment or pre-existing, not evidence about this PR); 114 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "111 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaab07f77e00,\\n        ),\\n        serializer: PolymorphismTrampoline(\\n            PolymorphismTrampoline {\\n                class: Py(\\n                    0x0000aaab07f77e00,\\n                ),\\n                serializer: Model(\\n                    ModelSerializer {\\n                        class: Py(\\n                            0x0000aaab07f77e00,\\n                        ),\\n                        serializer: Fields(\\n                            GeneralFieldsSerializer {\\n                                fields: {\\n                                    \"a\": SerField {\\n                                        key: \"a\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                    \"b\": SerField {\\n                                        key: \"b\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                },\\n                                computed_fields: None,\\n                                mode: SimpleDict,\\n                                extra_serializer: None,\\n                                filter: SchemaFilter {\\n                                    include: None,\\n                                    exclude: None,\\n                                },\\n                                required_fields: 2,\\n                            },\\n                        ),\\n                        has_extra: false,\\n                        root_model: false,\\n                        name: \"MyModel\",\\n                    },\\n                ),\\n                enabled_from_config: false,\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_any::test_any_python[{1, '2', b'3'}-{1, '2', b'3'}-IsList(1, '2', '3', check_order=False)], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-a3af9b49-78db-403c-b524-f9e442118019-a3af9b49-78db-403c-b524-f9e442118019-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-a3af9b49-78db-403c-b524-f9e442118019-a3af9b49-78db-403c-b524-f9e442118019-True], tests.pydantic_core.test_schema_functions::test_schema_functions[call_schema-({'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}, <function val_function at 0xffff90988860>)-{'type': 'call', 'function': <function val_function at 0xffff90988860>, 'arguments_schema': {'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_default_schema-({'type': 'int'}, default_factory=<function make_5 at 0xffff90988040>)-{'type': 'default', 'schema': {'type': 'int'}, 'default_factory': <function make_5 at 0xffff90988040>}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_after_validator_function-(<function val_function at 0xffff90988860>, {'type': 'int'})-{'type': 'function-after', 'function': {'type': 'with-info', 'function': <function val_function at 0xffff90988860>}, 'schema': {'type': 'int'}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_before_validator_function-(<function val_function at 0xffff90988860>, {'type': 'int'})-{'type': 'function-before', 'function': {'type': 'with-info', 'function': <function val_function at 0xffff90988860>}, 'schema': {'type': 'int'}}]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -2180,9 +2338,43 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11931 passed, 149 failing, of which 147 also fail at the parent (environment or pre-existing, not evidence about this PR); 50 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_counter.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_counter::test_counter_cases[<tests.pydantic_core.validators.test_counter.Foobar object at 0xffffa06fbbf0>-Err('Input should be a valid Counter [type=counter_type,')]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_ordered_dict.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_ordered_dict::test_ordered_dict_cases[<tests.pydantic_core.validators.test_ordered_dict.Foobar object at 0xffff9fa188f0>-Err('Input should be a valid OrderedDict [type=ordered_dict_type,')]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "48 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaab225d72f0,\\n        ),\\n        serializer: Model(\\n            ModelSerializer {\\n                class: Py(\\n                    0x0000aaab225d72f0,\\n                ),\\n                serializer: Fields(\\n                    GeneralFieldsSerializer {\\n                        fields: {\\n                            \"b\": SerField {\\n                                key: \"b\",\\n                                alias: None,\\n                                serializer: Some(\\n                                    Any(\\n                                        AnySerializer,\\n                                    ),\\n                                ),\\n                                required: true,\\n                                serialize_by_alias: None,\\n                                serialization_exclude_if: None,\\n                            },\\n                            \"a\": SerField {\\n                                key: \"a\",\\n                                alias: None,\\n                                serializer: Some(\\n                                    Any(\\n                                        AnySerializer,\\n                                    ),\\n                                ),\\n                                required: true,\\n                                serialize_by_alias: None,\\n                                serialization_exclude_if: None,\\n                            },\\n                        },\\n                        computed_fields: None,\\n                        mode: SimpleDict,\\n                        extra_serializer: None,\\n                        filter: SchemaFilter {\\n                            include: None,\\n                            exclude: None,\\n                        },\\n                        required_fields: 2,\\n                    },\\n                ),\\n                has_extra: false,\\n                root_model: false,\\n                name: \"MyModel\",\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_any::test_any_python[{1, '2', b'3'}-{1, '2', b'3'}-IsList(1, '2', '3', check_order=False)], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-8d08548f-157e-4261-beca-67cda42b0485-8d08548f-157e-4261-beca-67cda42b0485-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-8d08548f-157e-4261-beca-67cda42b0485-8d08548f-157e-4261-beca-67cda42b0485-True], tests.pydantic_core.validators.test_complex::test_complex_cases[<tests.pydantic_core.validators.test_complex.Foobar object at 0xffffb254a8a0>-Err('Input should be a valid python complex object, a number, or a valid complex string following the rules at https://docs.python.org/3/library/functions.html#complex')], tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithComplex object at 0xffffb2549c40>-(3.14+0j)], tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithComplex object at 0xffffb254b2c0>-(5+0j)], tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithFloat object at 0xffffb254b140>-(2.5+0j)]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -2362,9 +2554,21 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11541 passed, 34 failing, of which 34 also fail at the parent (environment or pre-existing, not evidence about this PR); 40 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "39 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaab015af7c0,\\n        ),\\n        serializer: PolymorphismTrampoline(\\n            PolymorphismTrampoline {\\n                class: Py(\\n                    0x0000aaab015af7c0,\\n                ),\\n                serializer: Model(\\n                    ModelSerializer {\\n                        class: Py(\\n                            0x0000aaab015af7c0,\\n                        ),\\n                        serializer: Fields(\\n                            GeneralFieldsSerializer {\\n                                fields: {\\n                                    \"a\": SerField {\\n                                        key: \"a\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                    \"b\": SerField {\\n                                        key: \"b\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                },\\n                                computed_fields: None,\\n                                mode: SimpleDict,\\n                                extra_serializer: None,\\n                                filter: SchemaFilter {\\n                                    include: None,\\n                                    exclude: None,\\n                                },\\n                                required_fields: 2,\\n                            },\\n                        ),\\n                        has_extra: false,\\n                        root_model: false,\\n                        name: \"MyModel\",\\n                    },\\n                ),\\n                enabled_from_config: false,\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_any::test_any_python[{b'3', 1, '2'}-{b'3', 1, '2'}-IsList(1, '2', '3', check_order=False)], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-1731e69e-532c-47e7-a8e6-bb3342478fc9-1731e69e-532c-47e7-a8e6-bb3342478fc9-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-1731e69e-532c-47e7-a8e6-bb3342478fc9-1731e69e-532c-47e7-a8e6-bb3342478fc9-True], tests.pydantic_core.test_schema_functions::test_schema_functions[call_schema-({'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}, <function val_function at 0xffff7fd02340>)-{'type': 'call', 'function': <function val_function at 0xffff7fd02340>, 'arguments_schema': {'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_default_schema-({'type': 'int'}, default_factory=<function make_5 at 0xffff7fd01ee0>)-{'type': 'default', 'schema': {'type': 'int'}, 'default_factory': <function make_5 at 0xffff7fd01ee0>}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_after_validator_function-(<function val_function at 0xffff7fd02340>, {'type': 'int'})-{'type': 'function-after', 'function': {'type': 'with-info', 'function': <function val_function at 0xffff7fd02340>}, 'schema': {'type': 'int'}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_before_validator_function-(<function val_function at 0xffff7fd02340>, {'type': 'int'})-{'type': 'function-before', 'function': {'type': 'with-info', 'function': <function val_function at 0xffff7fd02340>}, 'schema': {'type': 'int'}}]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -2515,9 +2719,21 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11427 passed, 126 failing, of which 126 also fail at the parent (environment or pre-existing, not evidence about this PR); 45 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "44 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaaad51376c0,\\n        ),\\n        serializer: PolymorphismTrampoline(\\n            PolymorphismTrampoline {\\n                class: Py(\\n                    0x0000aaaad51376c0,\\n                ),\\n                serializer: Model(\\n                    ModelSerializer {\\n                        class: Py(\\n                            0x0000aaaad51376c0,\\n                        ),\\n                        serializer: Fields(\\n                            GeneralFieldsSerializer {\\n                                fields: {\\n                                    \"a\": SerField {\\n                                        key: \"a\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                    \"b\": SerField {\\n                                        key: \"b\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                },\\n                                computed_fields: None,\\n                                mode: SimpleDict,\\n                                extra_serializer: None,\\n                                filter: SchemaFilter {\\n                                    include: None,\\n                                    exclude: None,\\n                                },\\n                                required_fields: 2,\\n                            },\\n                        ),\\n                        has_extra: false,\\n                        root_model: false,\\n                        name: \"MyModel\",\\n                    },\\n                ),\\n                enabled_from_config: false,\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_any::test_any_python[{1, b'3', '2'}-{1, b'3', '2'}-IsList(1, '2', '3', check_order=False)], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-bd877ff2-544f-42f1-8888-10856068ee96-bd877ff2-544f-42f1-8888-10856068ee96-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-bd877ff2-544f-42f1-8888-10856068ee96-bd877ff2-544f-42f1-8888-10856068ee96-True], tests.pydantic_core.validators.test_complex::test_complex_cases[<tests.pydantic_core.validators.test_complex.Foobar object at 0xffff92baaae0>-Err('Input should be a valid python complex object, a number, or a valid complex string following the rules at https://docs.python.org/3/library/functions.html#complex')], tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithComplex object at 0xffff92baab10>-(5+0j)], tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithComplex object at 0xffff92baac60>-(3.14+0j)], tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithFloat object at 0xffff92baa5a0>-(2.5+0j)]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -2547,9 +2763,43 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11931 passed, 149 failing, of which 147 also fail at the parent (environment or pre-existing, not evidence about this PR); 47 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_counter.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_counter::test_counter_cases[<tests.pydantic_core.validators.test_counter.Foobar object at 0xffffb2117230>-Err('Input should be a valid Counter [type=counter_type,')]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_ordered_dict.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_ordered_dict::test_ordered_dict_cases[<tests.pydantic_core.validators.test_ordered_dict.Foobar object at 0xffffb1763c50>-Err('Input should be a valid OrderedDict [type=ordered_dict_type,')]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "45 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaab225d72f0,\\n        ),\\n        serializer: Model(\\n            ModelSerializer {\\n                class: Py(\\n                    0x0000aaab225d72f0,\\n                ),\\n                serializer: Fields(\\n                    GeneralFieldsSerializer {\\n                        fields: {\\n                            \"b\": SerField {\\n                                key: \"b\",\\n                                alias: None,\\n                                serializer: Some(\\n                                    Any(\\n                                        AnySerializer,\\n                                    ),\\n                                ),\\n                                required: true,\\n                                serialize_by_alias: None,\\n                                serialization_exclude_if: None,\\n                            },\\n                            \"a\": SerField {\\n                                key: \"a\",\\n                                alias: None,\\n                                serializer: Some(\\n                                    Any(\\n                                        AnySerializer,\\n                                    ),\\n                                ),\\n                                required: true,\\n                                serialize_by_alias: None,\\n                                serialization_exclude_if: None,\\n                            },\\n                        },\\n                        computed_fields: None,\\n                        mode: SimpleDict,\\n                        extra_serializer: None,\\n                        filter: SchemaFilter {\\n                            include: None,\\n                            exclude: None,\\n                        },\\n                        required_fields: 2,\\n                    },\\n                ),\\n                has_extra: false,\\n                root_model: false,\\n                name: \"MyModel\",\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_any::test_any_python[{1, '2', b'3'}-{1, '2', b'3'}-IsList(1, '2', '3', check_order=False)], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-8d08548f-157e-4261-beca-67cda42b0485-8d08548f-157e-4261-beca-67cda42b0485-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-8d08548f-157e-4261-beca-67cda42b0485-8d08548f-157e-4261-beca-67cda42b0485-True], tests.pydantic_core.validators.test_complex::test_complex_cases[<tests.pydantic_core.validators.test_complex.Foobar object at 0xffffb254a8a0>-Err('Input should be a valid python complex object, a number, or a valid complex string following the rules at https://docs.python.org/3/library/functions.html#complex')], tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithComplex object at 0xffffb2549c40>-(3.14+0j)], tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithComplex object at 0xffffb254b2c0>-(5+0j)], tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithFloat object at 0xffffb254b140>-(2.5+0j)]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -2567,9 +2817,65 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11539 passed, 35 failing, of which 31 also fail at the parent (environment or pre-existing, not evidence about this PR); 187 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/test_errors.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.pydantic_core.test_errors::test_all_errors_covered",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_docs.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_docs::test_validation_error_codes",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/test_errors.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.test_errors::test_error_type[string_not_ascii-String should contain only ASCII characters-None]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_types.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.test_types::test_string_constraints_ascii_only",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "184 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaaaf5d1cbe0,\\n        ),\\n        serializer: PolymorphismTrampoline(\\n            PolymorphismTrampoline {\\n                class: Py(\\n                    0x0000aaaaf5d1cbe0,\\n                ),\\n                serializer: Model(\\n                    ModelSerializer {\\n                        class: Py(\\n                            0x0000aaaaf5d1cbe0,\\n                        ),\\n                        serializer: Fields(\\n                            GeneralFieldsSerializer {\\n                                fields: {\\n                                    \"a\": SerField {\\n                                        key: \"a\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                    \"b\": SerField {\\n                                        key: \"b\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                },\\n                                computed_fields: None,\\n                                mode: SimpleDict,\\n                                extra_serializer: None,\\n                                filter: SchemaFilter {\\n                                    include: None,\\n                                    exclude: None,\\n                                },\\n                                required_fields: 2,\\n                            },\\n                        ),\\n                        has_extra: false,\\n                        root_model: false,\\n                        name: \"MyModel\",\\n                    },\\n                ),\\n                enabled_from_config: false,\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_any::test_any_python[{1, '2', b'3'}-{1, '2', b'3'}-IsList(1, '2', '3', check_order=False)], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-270af682-4c87-4777-be8c-8fd9d185b3d8-270af682-4c87-4777-be8c-8fd9d185b3d8-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-270af682-4c87-4777-be8c-8fd9d185b3d8-270af682-4c87-4777-be8c-8fd9d185b3d8-True], tests.pydantic_core.test_errors::test_error_type[assertion_error-Assertion failed, foobar-context64], tests.pydantic_core.test_errors::test_error_type[bytes_invalid_encoding-Data should be valid base64: Invalid byte 1, offset 1-context61], tests.pydantic_core.test_errors::test_error_type[bytes_invalid_encoding-Data should be valid hex: Odd number of digits-context62], tests.pydantic_core.test_errors::test_error_type[bytes_too_long-Data should have at most 1 byte-context60]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -2587,9 +2893,21 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11541 passed, 34 failing, of which 34 also fail at the parent (environment or pre-existing, not evidence about this PR); 59 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "58 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaab015af7c0,\\n        ),\\n        serializer: PolymorphismTrampoline(\\n            PolymorphismTrampoline {\\n                class: Py(\\n                    0x0000aaab015af7c0,\\n                ),\\n                serializer: Model(\\n                    ModelSerializer {\\n                        class: Py(\\n                            0x0000aaab015af7c0,\\n                        ),\\n                        serializer: Fields(\\n                            GeneralFieldsSerializer {\\n                                fields: {\\n                                    \"a\": SerField {\\n                                        key: \"a\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                    \"b\": SerField {\\n                                        key: \"b\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                },\\n                                computed_fields: None,\\n                                mode: SimpleDict,\\n                                extra_serializer: None,\\n                                filter: SchemaFilter {\\n                                    include: None,\\n                                    exclude: None,\\n                                },\\n                                required_fields: 2,\\n                            },\\n                        ),\\n                        has_extra: false,\\n                        root_model: false,\\n                        name: \"MyModel\",\\n                    },\\n                ),\\n                enabled_from_config: false,\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_any::test_any_python[{b'3', 1, '2'}-{b'3', 1, '2'}-IsList(1, '2', '3', check_order=False)], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-1731e69e-532c-47e7-a8e6-bb3342478fc9-1731e69e-532c-47e7-a8e6-bb3342478fc9-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-1731e69e-532c-47e7-a8e6-bb3342478fc9-1731e69e-532c-47e7-a8e6-bb3342478fc9-True], tests.pydantic_core.test_schema_functions::test_schema_functions[call_schema-({'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}, <function val_function at 0xffff7fd02340>)-{'type': 'call', 'function': <function val_function at 0xffff7fd02340>, 'arguments_schema': {'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_default_schema-({'type': 'int'}, default_factory=<function make_5 at 0xffff7fd01ee0>)-{'type': 'default', 'schema': {'type': 'int'}, 'default_factory': <function make_5 at 0xffff7fd01ee0>}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_after_validator_function-(<function val_function at 0xffff7fd02340>, {'type': 'int'})-{'type': 'function-after', 'function': {'type': 'with-info', 'function': <function val_function at 0xffff7fd02340>}, 'schema': {'type': 'int'}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_before_validator_function-(<function val_function at 0xffff7fd02340>, {'type': 'int'})-{'type': 'function-before', 'function': {'type': 'with-info', 'function': <function val_function at 0xffff7fd02340>}, 'schema': {'type': 'int'}}]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -5183,9 +5501,21 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11696 passed, 31 failing, of which 31 also fail at the parent (environment or pre-existing, not evidence about this PR); 59 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "57 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaab0c8aa820,\\n        ),\\n        serializer: Model(\\n            ModelSerializer {\\n                class: Py(\\n                    0x0000aaab0c8aa820,\\n                ),\\n                serializer: Fields(\\n                    GeneralFieldsSerializer {\\n                        fields: {\\n                            \"a\": SerField {\\n                                key: \"a\",\\n                                alias: None,\\n                                serializer: Some(\\n                                    Any(\\n                                        AnySerializer,\\n                                    ),\\n                                ),\\n                                required: true,\\n                                serialize_by_alias: None,\\n                                serialization_exclude_if: None,\\n                            },\\n                            \"b\": SerField {\\n                                key: \"b\",\\n                                alias: None,\\n                                serializer: Some(\\n                                    Any(\\n                                        AnySerializer,\\n                                    ),\\n                                ),\\n                                required: true,\\n                                serialize_by_alias: None,\\n                                serialization_exclude_if: None,\\n                            },\\n                        },\\n                        computed_fields: None,\\n                        mode: SimpleDict,\\n                        extra_serializer: None,\\n                        filter: SchemaFilter {\\n                            include: None,\\n                            exclude: None,\\n                        },\\n                        required_fields: 2,\\n                    },\\n                ),\\n                has_extra: false,\\n                root_model: false,\\n                name: \"MyModel\",\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_any::test_any_python[{'2', 1, b'3'}-{'2', 1, b'3'}-IsList(1, '2', '3', check_order=False)], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-5a566022-d90a-450e-8925-3812d3bde0ac-5a566022-d90a-450e-8925-3812d3bde0ac-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-5a566022-d90a-450e-8925-3812d3bde0ac-5a566022-d90a-450e-8925-3812d3bde0ac-True], tests.pydantic_core.test_schema_functions::test_schema_functions[call_schema-({'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}, <function val_function at 0xffffa82e7740>)-{'type': 'call', 'function': <function val_function at 0xffffa82e7740>, 'arguments_schema': {'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_default_schema-({'type': 'int'}, default_factory=<function make_5 at 0xffffa82e7880>)-{'type': 'default', 'schema': {'type': 'int'}, 'default_factory': <function make_5 at 0xffffa82e7880>}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_after_validator_function-(<function val_function at 0xffffa82e7740>, {'type': 'int'})-{'type': 'function-after', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffa82e7740>}, 'schema': {'type': 'int'}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_before_validator_function-(<function val_function at 0xffffa82e7740>, {'type': 'int'})-{'type': 'function-before', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffa82e7740>}, 'schema': {'type': 'int'}}]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -5238,9 +5568,21 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11540 passed, 31 failing, of which 31 also fail at the parent (environment or pre-existing, not evidence about this PR); 51 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "51 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaaad6f93a10,\\n        ),\\n        serializer: PolymorphismTrampoline(\\n            PolymorphismTrampoline {\\n                class: Py(\\n                    0x0000aaaad6f93a10,\\n                ),\\n                serializer: Model(\\n                    ModelSerializer {\\n                        class: Py(\\n                            0x0000aaaad6f93a10,\\n                        ),\\n                        serializer: Fields(\\n                            GeneralFieldsSerializer {\\n                                fields: {\\n                                    \"b\": SerField {\\n                                        key: \"b\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                    \"a\": SerField {\\n                                        key: \"a\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                },\\n                                computed_fields: None,\\n                                mode: SimpleDict,\\n                                extra_serializer: None,\\n                                filter: SchemaFilter {\\n                                    include: None,\\n                                    exclude: None,\\n                                },\\n                                required_fields: 2,\\n                            },\\n                        ),\\n                        has_extra: false,\\n                        root_model: false,\\n                        name: \"MyModel\",\\n                    },\\n                ),\\n                enabled_from_config: false,\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-ce1136ee-79a0-4382-961a-f559ace2ae62-ce1136ee-79a0-4382-961a-f559ace2ae62-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-ce1136ee-79a0-4382-961a-f559ace2ae62-ce1136ee-79a0-4382-961a-f559ace2ae62-True], tests.pydantic_core.test_schema_functions::test_schema_functions[call_schema-({'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}, <function val_function at 0xffffb09847c0>)-{'type': 'call', 'function': <function val_function at 0xffffb09847c0>, 'arguments_schema': {'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_default_schema-({'type': 'int'}, default_factory=<function make_5 at 0xffffb09840e0>)-{'type': 'default', 'schema': {'type': 'int'}, 'default_factory': <function make_5 at 0xffffb09840e0>}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_after_validator_function-(<function val_function at 0xffffb09847c0>, {'type': 'int'})-{'type': 'function-after', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffb09847c0>}, 'schema': {'type': 'int'}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_before_validator_function-(<function val_function at 0xffffb09847c0>, {'type': 'int'})-{'type': 'function-before', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffb09847c0>}, 'schema': {'type': 'int'}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_plain_validator_function-(<function val_function at 0xffffb09847c0>)-{'type': 'function-plain', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffb09847c0>}}]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -5454,9 +5796,21 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11427 passed, 126 failing, of which 126 also fail at the parent (environment or pre-existing, not evidence about this PR); 36 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "35 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaaad51376c0,\\n        ),\\n        serializer: PolymorphismTrampoline(\\n            PolymorphismTrampoline {\\n                class: Py(\\n                    0x0000aaaad51376c0,\\n                ),\\n                serializer: Model(\\n                    ModelSerializer {\\n                        class: Py(\\n                            0x0000aaaad51376c0,\\n                        ),\\n                        serializer: Fields(\\n                            GeneralFieldsSerializer {\\n                                fields: {\\n                                    \"a\": SerField {\\n                                        key: \"a\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                    \"b\": SerField {\\n                                        key: \"b\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                },\\n                                computed_fields: None,\\n                                mode: SimpleDict,\\n                                extra_serializer: None,\\n                                filter: SchemaFilter {\\n                                    include: None,\\n                                    exclude: None,\\n                                },\\n                                required_fields: 2,\\n                            },\\n                        ),\\n                        has_extra: false,\\n                        root_model: false,\\n                        name: \"MyModel\",\\n                    },\\n                ),\\n                enabled_from_config: false,\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_any::test_any_python[{1, b'3', '2'}-{1, b'3', '2'}-IsList(1, '2', '3', check_order=False)], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-bd877ff2-544f-42f1-8888-10856068ee96-bd877ff2-544f-42f1-8888-10856068ee96-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-bd877ff2-544f-42f1-8888-10856068ee96-bd877ff2-544f-42f1-8888-10856068ee96-True], tests.pydantic_core.validators.test_complex::test_complex_cases[<tests.pydantic_core.validators.test_complex.Foobar object at 0xffff92baaae0>-Err('Input should be a valid python complex object, a number, or a valid complex string following the rules at https://docs.python.org/3/library/functions.html#complex')], tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithComplex object at 0xffff92baab10>-(5+0j)], tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithComplex object at 0xffff92baac60>-(3.14+0j)], tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithFloat object at 0xffff92baa5a0>-(2.5+0j)]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -5541,9 +5895,21 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11540 passed, 31 failing, of which 31 also fail at the parent (environment or pre-existing, not evidence about this PR); 49 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "49 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaaad6f93a10,\\n        ),\\n        serializer: PolymorphismTrampoline(\\n            PolymorphismTrampoline {\\n                class: Py(\\n                    0x0000aaaad6f93a10,\\n                ),\\n                serializer: Model(\\n                    ModelSerializer {\\n                        class: Py(\\n                            0x0000aaaad6f93a10,\\n                        ),\\n                        serializer: Fields(\\n                            GeneralFieldsSerializer {\\n                                fields: {\\n                                    \"b\": SerField {\\n                                        key: \"b\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                    \"a\": SerField {\\n                                        key: \"a\",\\n                                        alias: None,\\n                                        serializer: Some(\\n                                            Any(\\n                                                AnySerializer,\\n                                            ),\\n                                        ),\\n                                        required: true,\\n                                        serialize_by_alias: None,\\n                                        serialization_exclude_if: None,\\n                                    },\\n                                },\\n                                computed_fields: None,\\n                                mode: SimpleDict,\\n                                extra_serializer: None,\\n                                filter: SchemaFilter {\\n                                    include: None,\\n                                    exclude: None,\\n                                },\\n                                required_fields: 2,\\n                            },\\n                        ),\\n                        has_extra: false,\\n                        root_model: false,\\n                        name: \"MyModel\",\\n                    },\\n                ),\\n                enabled_from_config: false,\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_any::test_any_python[{1, '2', b'3'}-{1, '2', b'3'}-IsList(1, '2', '3', check_order=False)], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-ce1136ee-79a0-4382-961a-f559ace2ae62-ce1136ee-79a0-4382-961a-f559ace2ae62-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-ce1136ee-79a0-4382-961a-f559ace2ae62-ce1136ee-79a0-4382-961a-f559ace2ae62-True], tests.pydantic_core.test_schema_functions::test_schema_functions[call_schema-({'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}, <function val_function at 0xffffb09847c0>)-{'type': 'call', 'function': <function val_function at 0xffffb09847c0>, 'arguments_schema': {'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_default_schema-({'type': 'int'}, default_factory=<function make_5 at 0xffffb09840e0>)-{'type': 'default', 'schema': {'type': 'int'}, 'default_factory': <function make_5 at 0xffffb09840e0>}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_after_validator_function-(<function val_function at 0xffffb09847c0>, {'type': 'int'})-{'type': 'function-after', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffb09847c0>}, 'schema': {'type': 'int'}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_before_validator_function-(<function val_function at 0xffffb09847c0>, {'type': 'int'})-{'type': 'function-before', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffb09847c0>}, 'schema': {'type': 'int'}}]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -5720,9 +6086,87 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11328 passed, 94 failing, of which 88 also fail at the parent (environment or pre-existing, not evidence about this PR); 51 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_complex.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithComplex object at 0xffff8004d580>-(5+0j)]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_complex.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithComplex object at 0xffff8004f440>-(3.14+0j)]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_complex.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithFloat object at 0xffff8004d250>-(2.5+0j)]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_complex.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithFloat object at 0xffff8004e0f0>-(7+0j)]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_complex.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithIndex object at 0xffff8004d730>-(42+0j)]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/pydantic_core/validators/test_complex.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "test added by this PR fails at the PR head",
+      "rule": "tests.pydantic_core.validators.test_complex::test_complex_with_special_methods[<tests.pydantic_core.validators.test_complex.ComplexWithIndex object at 0xffff8004f110>-(10+0j)]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "49 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=Model(\\n    ModelSerializer {\\n        class: Py(\\n            0x0000aaaac0989f70,\\n        ),\\n        serializer: Fields(\\n            GeneralFieldsSerializer {\\n                fields: {\\n                    \"b\": SerField {\\n                        key_py: Py(\\n                            0x0000ffffbac3da38,\\n                        ),\\n                        alias: None,\\n                        alias_py: None,\\n                        serializer: Some(\\n                            Any(\\n                                AnySerializer,\\n                            ),\\n                        ),\\n                        required: true,\\n                        serialize_by_alias: None,\\n                        serialization_exclude_if: None,\\n                    },\\n                    \"a\": SerField {\\n                        key_py: Py(\\n                            0x0000ffffbac3da08,\\n                        ),\\n                        alias: None,\\n                        alias_py: None,\\n                        serializer: Some(\\n                            Any(\\n                                AnySerializer,\\n                            ),\\n                        ),\\n                        required: true,\\n                        serialize_by_alias: None,\\n                        serialization_exclude_if: None,\\n                    },\\n                },\\n                computed_fields: None,\\n                mode: SimpleDict,\\n                extra_serializer: None,\\n                filter: SchemaFilter {\\n                    include: None,\\n                    exclude: None,\\n                },\\n                required_fields: 2,\\n            },\\n        ),\\n        has_extra: false,\\n        root_model: false,\\n        name: \"MyModel\",\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-4d95c162-6b8b-49fd-888e-b8ec44d307ed-4d95c162-6b8b-49fd-888e-b8ec44d307ed-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-4d95c162-6b8b-49fd-888e-b8ec44d307ed-4d95c162-6b8b-49fd-888e-b8ec44d307ed-True], tests.pydantic_core.test_schema_functions::test_schema_functions[call_schema-({'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}, <function val_function at 0xffffb6054860>)-{'type': 'call', 'function': <function val_function at 0xffffb6054860>, 'arguments_schema': {'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_default_schema-({'type': 'int'}, default_factory=<function make_5 at 0xffffb6054040>)-{'type': 'default', 'schema': {'type': 'int'}, 'default_factory': <function make_5 at 0xffffb6054040>}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_after_validator_function-(<function val_function at 0xffffb6054860>, {'type': 'int'})-{'type': 'function-after', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffb6054860>}, 'schema': {'type': 'int'}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_before_validator_function-(<function val_function at 0xffffb6054860>, {'type': 'int'})-{'type': 'function-before', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffb6054860>}, 'schema': {'type': 'int'}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_plain_validator_function-(<function val_function at 0xffffb6054860>)-{'type': 'function-plain', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffb6054860>}}]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
@@ -5752,9 +6196,21 @@
    },
    {
     "tool": "tests",
-    "ok": false,
-    "note": "suite could not be collected at the PR head",
-    "findings": []
+    "ok": true,
+    "note": "suite at head: 11696 passed, 31 failing, of which 31 also fail at the parent (environment or pre-existing, not evidence about this PR); 60 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "58 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.pydantic_core.serializers.test_any::test_any_python[MyModel({'a': 1, 'b': 'foo', '__pydantic_serializer__': SchemaSerializer(serializer=PolymorphismTrampoline(\\n    PolymorphismTrampoline {\\n        class: Py(\\n            0x0000aaab0c8aa820,\\n        ),\\n        serializer: Model(\\n            ModelSerializer {\\n                class: Py(\\n                    0x0000aaab0c8aa820,\\n                ),\\n                serializer: Fields(\\n                    GeneralFieldsSerializer {\\n                        fields: {\\n                            \"a\": SerField {\\n                                key: \"a\",\\n                                alias: None,\\n                                serializer: Some(\\n                                    Any(\\n                                        AnySerializer,\\n                                    ),\\n                                ),\\n                                required: true,\\n                                serialize_by_alias: None,\\n                                serialization_exclude_if: None,\\n                            },\\n                            \"b\": SerField {\\n                                key: \"b\",\\n                                alias: None,\\n                                serializer: Some(\\n                                    Any(\\n                                        AnySerializer,\\n                                    ),\\n                                ),\\n                                required: true,\\n                                serialize_by_alias: None,\\n                                serialization_exclude_if: None,\\n                            },\\n                        },\\n                        computed_fields: None,\\n                        mode: SimpleDict,\\n                        extra_serializer: None,\\n                        filter: SchemaFilter {\\n                            include: None,\\n                            exclude: None,\\n                        },\\n                        required_fields: 2,\\n                    },\\n                ),\\n                has_extra: false,\\n                root_model: false,\\n                name: \"MyModel\",\\n            },\\n        ),\\n        enabled_from_config: false,\\n    },\\n), definitions=[])})-{'a': 1, 'b': 'foo'}-{'a': 1, 'b': 'foo'}], tests.pydantic_core.serializers.test_any::test_any_python[{'2', 1, b'3'}-{'2', 1, b'3'}-IsList(1, '2', '3', check_order=False)], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-5a566022-d90a-450e-8925-3812d3bde0ac-5a566022-d90a-450e-8925-3812d3bde0ac-False], tests.pydantic_core.serializers.test_union::test_union_serializer_picks_exact_type_over_subclass[core_schema_left11-core_schema_right11-5a566022-d90a-450e-8925-3812d3bde0ac-5a566022-d90a-450e-8925-3812d3bde0ac-True], tests.pydantic_core.test_schema_functions::test_schema_functions[call_schema-({'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}, <function val_function at 0xffffa82e7740>)-{'type': 'call', 'function': <function val_function at 0xffffa82e7740>, 'arguments_schema': {'type': 'arguments', 'arguments_schema': [{'name': 'foo', 'schema': {'type': 'int'}}]}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_default_schema-({'type': 'int'}, default_factory=<function make_5 at 0xffffa82e7880>)-{'type': 'default', 'schema': {'type': 'int'}, 'default_factory': <function make_5 at 0xffffa82e7880>}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_after_validator_function-(<function val_function at 0xffffa82e7740>, {'type': 'int'})-{'type': 'function-after', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffa82e7740>}, 'schema': {'type': 'int'}}], tests.pydantic_core.test_schema_functions::test_schema_functions[with_info_before_validator_function-(<function val_function at 0xffffa82e7740>, {'type': 'int'})-{'type': 'function-before', 'function': {'type': 'with-info', 'function': <function val_function at 0xffffa82e7740>}, 'schema': {'type': 'int'}}]",
+      "id": ""
+     }
+    ]
    },
    {
     "tool": "reviewer",
