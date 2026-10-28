@@ -1,0 +1,5877 @@
+{
+ "label": "tools_eval_all",
+ "harness_version": 6,
+ "calibration": "train-cal v1: 223 train PRs, min 3 bug PRs, LR >= 2 (Oct 28)",
+ "tools": [
+  "static",
+  "tests",
+  "reviewer"
+ ],
+ "n": 61,
+ "provenance": {
+  "tasks_file": "review/bench/public_eval.jsonl",
+  "tasks_sha256": "474408747597df89",
+  "ft_lab_commit": "6992ead",
+  "image_ids": {}
+ },
+ "tool_stats": {
+  "reviewer": {
+   "n_bug": 35,
+   "n_clean": 26,
+   "fired_bug": 25,
+   "fired_clean": 8,
+   "gold_hit": 29,
+   "gold_chance": 5.9,
+   "did_not_run": 0,
+   "findings": 71,
+   "wall_s": 546.7,
+   "lr": 2.32
+  },
+  "static": {
+   "n_bug": 35,
+   "n_clean": 26,
+   "fired_bug": 8,
+   "fired_clean": 5,
+   "gold_hit": 3,
+   "gold_chance": 1.8,
+   "did_not_run": 0,
+   "findings": 54,
+   "wall_s": 440.2,
+   "lr": 1.19
+  },
+  "tests": {
+   "n_bug": 27,
+   "n_clean": 18,
+   "fired_bug": 2,
+   "fired_clean": 1,
+   "gold_hit": 0,
+   "gold_chance": 0.0,
+   "did_not_run": 16,
+   "findings": 287,
+   "wall_s": 959.2,
+   "lr": 1.33
+  }
+ },
+ "wall_s": 1947.9,
+ "per_task": {
+  "mut__tenacity__815c34fe__690__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 25 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 120 passed, 1 failing, of which 1 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "tenacity/__init__.py",
+      "line_start": 689,
+      "line_end": 689,
+      "message": "The `__all__` entry is misspelled as \"wait_exeption\", so `wait_exception` is not exported and `from tenacity import *` raises AttributeError because the name doesn't exist in the module namespace.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__starlette__fd662b17": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 3 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1243 passed, 2 failing, of which 2 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__typer__6c289624__56__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 2 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 2 passed, 280 failing, of which 280 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "typer/_typing.py",
+      "line_start": 57,
+      "line_end": 57,
+      "message": "The comparison was inverted to `is not`, so `is_none_type` returns True for any non-None type and False for None itself, which breaks every caller that uses it to detect optional or None-typed parameters.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__tenacity__44eaefbb__135__return_none": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 2 diagnostics at head, 1 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tenacity/asyncio/retry.py",
+      "line_start": 135,
+      "line_end": 135,
+      "message": "Type \"None\" is not assignable to return type \"retry_all\" \"None\" is not assignable to \"retry_all\"",
+      "rule": "pyright reportReturnType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 142 passed, 1 failing, of which 1 also fail at the parent (environment or pre-existing, not evidence about this PR); 2 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "tenacity/asyncio/retry.py",
+      "line_start": 135,
+      "line_end": 135,
+      "message": "retry_all.__rand__ returns None instead of a combined retry_all when `other` is a retry_all, so `a & b` on async conditions silently yields None and later calling it raises TypeError.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__pydantic__fbf9c6e7__33__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "5 changed .py file(s); 372 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/_internal/_known_annotated_metadata.py",
+      "line_start": 33,
+      "line_end": 33,
+      "message": "The STR_CONSTRAINTS entry is misspelled as 'ascii_olny', so the real 'ascii_only' constraint is missing from that set and is not classified as a string constraint, while a nonexistent key is added.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__more-itertools__30a9e4da": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 12 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 670 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "clean__pydantic__d286c73d": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 1502 diagnostics at head, 4 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "tests/test_discriminated_union.py",
+      "line_start": 2305,
+      "line_end": 2305,
+      "message": "Name of type alias must match the name of the variable to which it is assigned",
+      "rule": "pyright reportGeneralTypeIssues",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_discriminated_union.py",
+      "line_start": 2343,
+      "line_end": 2343,
+      "message": "Argument of type \"dict[str, str]\" cannot be assigned to parameter \"f\" of type \"FooBar\" in function \"__init__\" Type \"dict[str, str]\" is not assignable to type \"FooBar\" \"dict[str, str]\" is not assignable to \"Foo\" \"dict[str, str]\" is not assig",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_discriminated_union.py",
+      "line_start": 2343,
+      "line_end": 2343,
+      "message": "Argument of type \"dict[str, str]\" cannot be assigned to parameter \"g\" of type \"FooBarTV[int]\" in function \"__init__\" Type \"dict[str, str]\" is not assignable to type \"FooBarTV[int]\" \"dict[str, str]\" is not assignable to \"Foo\" \"dict[str, str]",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "tests/test_discriminated_union.py",
+      "line_start": 2364,
+      "line_end": 2364,
+      "message": "Name of type alias must match the name of the variable to which it is assigned",
+      "rule": "pyright reportGeneralTypeIssues",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/types.py",
+      "line_start": 3059,
+      "line_end": 3060,
+      "message": "Removing the `is_union_origin` guard means `Discriminator` applied to a non-union type is no longer rejected with the clear `TypeError`, so invalid usage now fails later with a less specific error or is silently accepted.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/types.py",
+      "line_start": 3071,
+      "line_end": 3083,
+      "message": "When a `definition-ref` resolves to a non-union schema, `original_schema` is left as the `definition-ref` and falls into the single-member `!= 'union'` branch, which assumes a flattened schema and may produce an incorrect tagged union or a confusing error.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__click__61bdc2ae": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 6 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1415 passed, 95 failing, of which 95 also fail at the parent (environment or pre-existing, not evidence about this PR); 11 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "2 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.test_termui::test_hide_input_error_message[custom-raw-value-falls-back-to-generic], tests.test_termui::test_hide_input_error_message[repr-branch-leaves-raw-occurrence-visible]",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/termui.py",
+      "line_start": 72,
+      "line_end": 74,
+      "message": "The word-boundary raw-value pass no longer masks a secret embedded in a larger word (e.g. password \"ent\" or \"secret\" inside \"Authentication\" or \"secretary\"), so the old substring fallback that hid such values is replaced by output that leaks them under hide_input=True.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "src/click/termui.py",
+      "line_start": 70,
+      "line_end": 73,
+      "message": "Masking runs in two passes, so when the value is a regex-matching token such as \"*\" the raw-value pass can re-match inside the already-inserted \"'***'\" mask and corrupt the output.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__tenacity__d6e57dd1": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 119 passed, 1 failing, of which 1 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "clean__pydantic__cb1c5330": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 28 diagnostics at head, 1 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "pydantic/root_model.py",
+      "line_start": 103,
+      "line_end": 103,
+      "message": "\"__setitem__\" method not defined on type \"MappingProxyType[str, Any]\"",
+      "rule": "pyright reportIndexIssue",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/root_model.py",
+      "line_start": 102,
+      "line_end": 102,
+      "message": "`self.__dict__['root']` raises KeyError when a RootModel has no `root` entry in `__dict__` (e.g. built via `model_construct()` without a root value), so `model_copy(deep=False)` which previously worked now crashes.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__click__61bdc2ae__71__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 6 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1415 passed, 95 failing, of which 95 also fail at the parent (environment or pre-existing, not evidence about this PR); 11 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "low",
+      "file": "",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "2 test(s) removed by this PR",
+      "rule": "removed",
+      "evidence": "tests.test_termui::test_hide_input_error_message[custom-raw-value-falls-back-to-generic], tests.test_termui::test_hide_input_error_message[repr-branch-leaves-raw-occurrence-visible]",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/click/termui.py",
+      "line_start": 72,
+      "line_end": 74,
+      "message": "The docstring says the empty string is skipped, but the code has no such guard, so an empty value builds the pattern `(?<!\\w)(?!\\w)`, which matches at every non-word boundary and inserts `'***'` into unrelated parts of the error message.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "tests/test_termui.py",
+      "line_start": 1236,
+      "line_end": 1236,
+      "message": "The test passes `mix_stderr=False` to `runner.invoke`, a keyword that newer Click CliRunner versions removed, so this test can raise TypeError instead of checking the stderr path.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "real__fastapi__6ac12207": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 47 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 3220 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 4 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "fastapi/routing.py",
+      "line_start": 1466,
+      "line_end": 1485,
+      "message": "`RouteContext.__getattr__` reads `self._effective_route`, which reads `self._route_context`; if that field is absent (e.g. during `copy`/`pickle` reconstruction before `__init__` sets it), the missing attribute triggers `__getattr__` again, causing infinite recursion instead of an AttributeError.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "fastapi/openapi/utils.py",
+      "line_start": 482,
+      "line_end": 487,
+      "message": "`_get_api_route_for_openapi` no longer falls back to the wrapper route when the effective context's original route is not an `APIRoute`, so any route that previously matched via the wrapper's own `APIRoute` type is now silently excluded from the OpenAPI schema.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__pydantic__d286c73d__191__raise_pass": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 1502 diagnostics at head, 4 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "tests/test_discriminated_union.py",
+      "line_start": 2305,
+      "line_end": 2305,
+      "message": "Name of type alias must match the name of the variable to which it is assigned",
+      "rule": "pyright reportGeneralTypeIssues",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_discriminated_union.py",
+      "line_start": 2343,
+      "line_end": 2343,
+      "message": "Argument of type \"dict[str, str]\" cannot be assigned to parameter \"f\" of type \"FooBar\" in function \"__init__\" Type \"dict[str, str]\" is not assignable to type \"FooBar\" \"dict[str, str]\" is not assignable to \"Foo\" \"dict[str, str]\" is not assig",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_discriminated_union.py",
+      "line_start": 2343,
+      "line_end": 2343,
+      "message": "Argument of type \"dict[str, str]\" cannot be assigned to parameter \"g\" of type \"FooBarTV[int]\" in function \"__init__\" Type \"dict[str, str]\" is not assignable to type \"FooBarTV[int]\" \"dict[str, str]\" is not assignable to \"Foo\" \"dict[str, str]",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "tests/test_discriminated_union.py",
+      "line_start": 2364,
+      "line_end": 2364,
+      "message": "Name of type alias must match the name of the variable to which it is assigned",
+      "rule": "pyright reportGeneralTypeIssues",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/_internal/_discriminated_union.py",
+      "line_start": 190,
+      "line_end": 193,
+      "message": "The `if schema_ref not in self.definitions: pass` guard does nothing, so a missing definition falls through to `self.definitions[schema_ref]` and raises a bare KeyError instead of the intended handling.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/types.py",
+      "line_start": 3057,
+      "line_end": 3058,
+      "message": "Removing the `is_union_origin` check lets `Discriminator` be applied to non-union types without any error, so invalid usage now fails later with a confusing schema error or is silently accepted.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "pydantic/types.py",
+      "line_start": 3080,
+      "line_end": 3082,
+      "message": "If the resolved definition is not a union, `original_schema` stays a `definition-ref` and falls into the single-member branch, so a non-union referenced type is treated as a flattened one-item union without a clear error.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__starlette__fe522c46__195__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 13 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 921 passed, 2 failing, of which 2 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "starlette/applications.py",
+      "line_start": 194,
+      "line_end": 194,
+      "message": "The deprecation message for `Starlette.route` now links to `/router/`, but the other routing links in this diff use `/routing/`, so this URL is likely a broken link to a page that may not exist.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__click__6f85d26d__1108__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1638 passed, 24 failing, of which 24 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/types.py",
+      "line_start": 1107,
+      "line_end": 1108,
+      "message": "The `allow_dash` check was dropped from the dash detection, so with `allow_dash=False` a value of `\"-\"` (or `b\"-\"`) is now treated as the dash sentinel and skips all path validation and conversion, instead of being treated as a regular filename as before.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__fastapi__7815a32f": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "5 changed .py file(s); 15 diagnostics at head, 2 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "fastapi/encoders.py",
+      "line_start": 36,
+      "line_end": 36,
+      "message": "Type \"type[pydantic.color.Color]\" is not assignable to declared type \"type[fastapi.encoders.Color]\" \"pydantic.color.Color\" is not assignable to \"fastapi.encoders.Color\" Type \"type[pydantic.color.Color]\" is not assignable to type \"type[fasta",
+      "rule": "pyright reportAssignmentType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "fastapi/encoders.py",
+      "line_start": 45,
+      "line_end": 45,
+      "message": "Type \"type[Color]\" is not assignable to declared type \"type[PyExtraColor]\" \"type[Color]\" is not assignable to \"type[PyExtraColor]\" Type \"type[Color]\" is not assignable to type \"type[PyExtraColor]\"",
+      "rule": "pyright reportAssignmentType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 3136 passed, 19 failing, of which 19 also fail at the parent (environment or pre-existing, not evidence about this PR); 2 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__more-itertools__30a9e4da__1252__range_n_minus1": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 12 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 670 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "more_itertools/recipes.py",
+      "line_start": 1245,
+      "line_end": 1245,
+      "message": "The random-base loop was changed from `range(64)` to `range(64 - 1)`, so only 63 Miller-Rabin bases are tested, which weakens the false-positive bound the docstring still promises (less than 1 in 2**128).",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__fastapi__7815a32f__50__not_add": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "5 changed .py file(s); 16 diagnostics at head, 3 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "fastapi/_compat/v2.py",
+      "line_start": 51,
+      "line_end": 51,
+      "message": "Object of type \"None\" cannot be called",
+      "rule": "pyright reportOptionalCall",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "fastapi/encoders.py",
+      "line_start": 36,
+      "line_end": 36,
+      "message": "Type \"type[pydantic.color.Color]\" is not assignable to declared type \"type[fastapi.encoders.Color]\" \"pydantic.color.Color\" is not assignable to \"fastapi.encoders.Color\" Type \"type[pydantic.color.Color]\" is not assignable to type \"type[fasta",
+      "rule": "pyright reportAssignmentType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "fastapi/encoders.py",
+      "line_start": 45,
+      "line_end": 45,
+      "message": "Type \"type[Color]\" is not assignable to declared type \"type[PyExtraColor]\" \"type[Color]\" is not assignable to \"type[PyExtraColor]\" Type \"type[Color]\" is not assignable to type \"type[PyExtraColor]\"",
+      "rule": "pyright reportAssignmentType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 3136 passed, 19 failing, of which 19 also fail at the parent (environment or pre-existing, not evidence about this PR); 2 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "fastapi/_compat/v2.py",
+      "line_start": 51,
+      "line_end": 51,
+      "message": "The condition `if not try_eval_type is not None:` is inverted: it is true only when `try_eval_type` is None, so on Pydantic versions that provide `try_eval_type` it falls through to the deprecated path, and on versions lacking it the code calls `None(...)` and raises TypeError at runtime.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__more-itertools__958990e2__1537__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 145 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 730 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "more_itertools/more.py",
+      "line_start": 1537,
+      "line_end": 1538,
+      "message": "The guard rejects `n == 0` (`n <= 0`) but the message says 'n must be at least 0', which is self-contradictory; it also changes prior behavior, where `sliced(seq, 0)` silently returned an empty iterator instead of raising.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__click__c69643b6": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 8 diagnostics at head, 2 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 423,
+      "line_end": 423,
+      "message": "Cannot access attribute \"buffer\" for class \"BinaryIO\" Attribute \"buffer\" is unknown",
+      "rule": "pyright reportAttributeAccessIssue",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 426,
+      "line_end": 426,
+      "message": "Argument of type \"BinaryIO | TextIO\" cannot be assigned to parameter \"stream\" of type \"IO[bytes]\" in function \"__init__\" Type \"BinaryIO | TextIO\" is not assignable to type \"IO[bytes]\" \"TextIO\" is not assignable to \"IO[bytes]\" Type parameter",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1393 passed, 95 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[/foo/bar/example.py-None-example.py]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example--example]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example-None-example]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example.py-None-example.py]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example/__main__.py-example-python -m example]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example/cli.py-example-python -m example.cli]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_color_flag",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test0- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test0- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test0-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_with_capsys",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_writing_to_standard_error",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_expand_args",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_iter_keepopenfile",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_iter_lazyfile",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-empty]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-equal length, no dot]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-ignore dot in word]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-length includes suffix]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-paragraph < max]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-sentence < max]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-truncate]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-empty]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-equal length, no dot]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-ignore dot in word]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-length includes suffix]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-paragraph < max]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-sentence < max]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-truncate]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_existing_file[256]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_existing_file[292]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_existing_file[384]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_existing_file[420]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_new_file",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_ignore_errors_stdin",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_ignore_invalid_utf8",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_ignore_no_encoding",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_pathlib_dash",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_respects_ignore",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_prompt_cast_default",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 401,
+      "line_end": 405,
+      "message": "When PAGER is set but its command is not found, `_pipepager`/`_tempfilepager` now yield plain stdout and the caller returns immediately, so the less/more/nullpager fallback chain is skipped and output is never paged or color-stripped.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 428,
+      "line_end": 432,
+      "message": "A StringIO fallback stream has `encoding` set to None, so `get_pager_file` takes the BinaryIO branch and wraps the StringIO in `MaybeStripAnsi` (a TextIOWrapper), which raises TypeError because StringIO is not a binary buffer.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 434,
+      "line_end": 436,
+      "message": "The StringIO branch only sets `stream.color` and never strips ANSI, yet `should_strip_ansi` now returns False for any object with a `color` attribute, so ANSI codes leak into the non-tty output.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/click/_compat.py",
+      "line_start": 505,
+      "line_end": 508,
+      "message": "`should_strip_ansi` now skips stripping for any stream that has a `color` attribute, which assumes it is a MaybeStripAnsi wrapper; other streams with such an attribute will no longer have ANSI stripped.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 566,
+      "line_end": 576,
+      "message": "In `_tempfilepager`, the NamedTemporaryFile is only closed on the normal path, so if the caller's body raises inside the yield the file handle leaks before the unlink in finally runs.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "real__fastapi__749cefde": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "12 changed .py file(s); 49 diagnostics at head, 4 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_stream_json_validation_error.py",
+      "line_start": 20,
+      "line_end": 20,
+      "message": "Return type of async generator function must be compatible with \"AsyncGenerator[dict[str, str | float], Any]\"",
+      "rule": "pyright reportReturnType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_stream_json_validation_error.py",
+      "line_start": 21,
+      "line_end": 21,
+      "message": "Return type of async generator function must be compatible with \"AsyncGenerator[dict[str, str], Any]\"",
+      "rule": "pyright reportReturnType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_stream_json_validation_error.py",
+      "line_start": 26,
+      "line_end": 26,
+      "message": "Return type of generator function must be compatible with \"Generator[dict[str, str | float], Any, Any]\"",
+      "rule": "pyright reportReturnType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_stream_json_validation_error.py",
+      "line_start": 27,
+      "line_end": 27,
+      "message": "Return type of generator function must be compatible with \"Generator[dict[str, str], Any, Any]\"",
+      "rule": "pyright reportReturnType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 3100 passed, 19 failing, of which 19 also fail at the parent (environment or pre-existing, not evidence about this PR); 27 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "fastapi/routing.py",
+      "line_start": 716,
+      "line_end": 716,
+      "message": "For any endpoint annotated `Iterable`/`Iterator`/`Generator` that is not a generator function (e.g. returns a list), `response_model` is now forced to None, so the response is no longer validated or serialized against the declared item type and the OpenAPI response schema for it is lost.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "fastapi/routing.py",
+      "line_start": 464,
+      "line_end": 468,
+      "message": "In the JSONL path, a `ResponseValidationError` for a later item is raised after the 200 status and earlier lines have already been streamed, so the client gets a truncated 200 response instead of an error status.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "fastapi/routing.py",
+      "line_start": 500,
+      "line_end": 505,
+      "message": "A generator endpoint with an explicit non-streaming response_class (e.g. JSONResponse) falls into the raw branch and passes the generator as `content`, which fails at render time with a TypeError instead of producing a valid response.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__fastapi__7134121a__156__is_not_none_flip": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 3 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 3318 passed, 2 failing, of which 2 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__starlette__fd662b17__143__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 3 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1243 passed, 2 failing, of which 2 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "starlette/authentication.py",
+      "line_start": 142,
+      "line_end": 143,
+      "message": "`SimpleUser.identity` lowercases the username, so distinct usernames that differ only in case (e.g. \"Alice\" and \"alice\") yield the same identity, which would conflate those users for any code that keys on `identity`.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__pydantic__afff1eb7__2916__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 173 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/_internal/_generate_schema.py",
+      "line_start": 2916,
+      "line_end": 2916,
+      "message": "`_FieldNameStack.push` now calls `self._stack.pop(0)`, which removes the oldest entry instead of the most recently pushed one that `append` added. With nested fields, exiting an inner field leaves the outer name in place, so `get()` returns the wrong field name, and the stack ends up with stale entr",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__click__8762c775__389__rel_gt_ge": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 4 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1421 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/testing.py",
+      "line_start": 389,
+      "line_end": 389,
+      "message": "The stdout wrapper's name was changed from \"<stdout>\" to \"<stdout>=\", a typo that alters the public `sys.stdout.name` value and breaks any code or test that checks for the original name.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/click/testing.py",
+      "line_start": 150,
+      "line_end": 151,
+      "message": "`fileno()` now returns the real process fd, so C-level or subprocess writes through `sys.stdout.fileno()` bypass the in-memory capture buffer and go to the real terminal, making output inconsistent with what `result.output` reports.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__more-itertools__d49571b4__5103__one_zero": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 26 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 678 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "more_itertools/more.py",
+      "line_start": 5103,
+      "line_end": 5103,
+      "message": "`odd -= 0` leaves an even starting value unchanged, so the search with step -2 begins on an even number and only tests even candidates, which are never prime (except 2). The approximate path then returns the wrong result or runs down to 2. It should be `odd -= 1`.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "more_itertools/more.py",
+      "line_start": 5101,
+      "line_end": 5101,
+      "message": "The start point changed from floor(ceil(ub)) to floor(ub), which can be below the upper bound on the nth prime. The downward search can then return a prime smaller than the nth prime for the approximate path.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__typer__6c289624__57__true_false": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 2 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 2 passed, 280 failing, of which 280 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "typer/_typing.py",
+      "line_start": 54,
+      "line_end": 58,
+      "message": "`is_none_type` now returns `False` even when `type_` matches an entry in `NONE_TYPES` (the `return False` inside the loop should be `return True`), so `None`, `NoneType`, and `Literal[None]` are never recognized as None types, which breaks optional/None handling wherever this predicate is used.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__click__6f85d26d__1108__rel_eq_ne": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1638 passed, 24 failing, of which 24 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/types.py",
+      "line_start": 1108,
+      "line_end": 1108,
+      "message": "The comparison was inverted from `in` to `!=`, so `is_dash` is now True for every ordinary path and False for the `-` sentinel. Ordinary paths skip the resolve/existence/type checks, and `-` gets validated as a real file path, which breaks stdin/stdout dash handling.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__pydantic__363728fe__154__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 9 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "pydantic/_internal/_generate_schema.py",
+      "line_start": 154,
+      "line_end": 154,
+      "message": "`pathlib.PosixPath` is now listed twice in `PATH_TYPES`; if this list is used to build a union or mapping, the duplicate entry may produce redundant schema members or be a sign that a different type was meant to be added.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__click__bc32a92c__405__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 11 diagnostics at head, 2 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "tests/test_utils/test_echo_via_pager.py",
+      "line_start": 207,
+      "line_end": 207,
+      "message": "Cannot access attribute \"_PagerWriter\" for class \"object\" Attribute \"_PagerWriter\" is unknown",
+      "rule": "pyright reportAttributeAccessIssue",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "tests/test_utils/test_echo_via_pager.py",
+      "line_start": 213,
+      "line_end": 213,
+      "message": "Cannot access attribute \"_PagerWriter\" for class \"object\" Attribute \"_PagerWriter\" is unknown",
+      "rule": "pyright reportAttributeAccessIssue",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1947 passed, 24 failing, of which 24 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 397,
+      "line_end": 402,
+      "message": "`_PagerWriter.write` is annotated `-> int` but never returns a value, so it returns None and breaks any caller or wrapper that uses the byte or character count that `TextIOWrapper.write` used to provide.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 413,
+      "line_end": 414,
+      "message": "`__getattr__` reads `self._stream`, so if `_stream` is ever unset (for example during copy or pickle reconstruction), attribute lookup recurses infinitely instead of raising AttributeError.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__tenacity__815c34fe": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 25 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 120 passed, 1 failing, of which 1 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "tenacity/wait.py",
+      "line_start": 150,
+      "line_end": 151,
+      "message": "When the attempt returned a result instead of raising (e.g. retry_if_result triggers a retry), `exception` is None and `wait_exception` raises RuntimeError, which escapes the retry loop and replaces the intended retry with a crash.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__a54529f0": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 154 diagnostics at head, 2 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "tests/test_generics.py",
+      "line_start": 3278,
+      "line_end": 3278,
+      "message": "Type \"None\" is not assignable to declared type \"(self: Self@object) -> int\" Type \"None\" is not assignable to type \"(self: Self@object) -> int\"",
+      "rule": "pyright reportAssignmentType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_generics.py",
+      "line_start": 3287,
+      "line_end": 3287,
+      "message": "Argument of type \"Literal['1']\" cannot be assigned to parameter \"f\" of type \"int\" in function \"__init__\" \"Literal['1']\" is not assignable to \"int\"",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "pydantic/_internal/_generics.py",
+      "line_start": 190,
+      "line_end": 190,
+      "message": "`Generator[TypeVar]` uses a single type argument, which only type-checks on Python 3.13+ (where Generator gained defaults), while the project still supports 3.10-3.12 and type checkers will reject it there.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__afff1eb7": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 173 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "clean__pydantic__fbf9c6e7": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "5 changed .py file(s); 372 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "clean__pydantic__363728fe": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 9 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__more-itertools__30a9e4da__1252__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 12 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 670 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "more_itertools/recipes.py",
+      "line_start": 1245,
+      "line_end": 1245,
+      "message": "Reducing the random Miller-Rabin bases from 64 to 6 weakens the probabilistic guarantee for inputs at or above 10**24: each random base has at most a 1/4 chance of missing a composite, so 6 bases allow up to 4**-6 = 2**-12 false positives, not the less-than-2**-128 rate the docstring still claims.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__more-itertools__1b7f033d__5337__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 140 diagnostics at head, 8 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5359,
+      "line_end": 5359,
+      "message": "Object of type \"None\" is not subscriptable",
+      "rule": "pyright reportOptionalSubscript",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5361,
+      "line_end": 5361,
+      "message": "Object of type \"None\" is not subscriptable",
+      "rule": "pyright reportOptionalSubscript",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5362,
+      "line_end": 5362,
+      "message": "Object of type \"None\" is not subscriptable",
+      "rule": "pyright reportOptionalSubscript",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5363,
+      "line_end": 5363,
+      "message": "No overloads for \"__setitem__\" match the provided arguments",
+      "rule": "pyright reportCallIssue",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "more_itertools/more.py",
+      "line_start": 5363,
+      "line_end": 5363,
+      "message": "Argument of type \"list[None]\" cannot be assigned to parameter \"value\" of type \"None\" in function \"__setitem__\" \"list[None]\" is not assignable to \"None\"",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5363,
+      "line_end": 5363,
+      "message": "Object of type \"None\" is not subscriptable",
+      "rule": "pyright reportOptionalSubscript",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5364,
+      "line_end": 5364,
+      "message": "\"None\" is not iterable \"__iter__\" method not defined",
+      "rule": "pyright reportGeneralTypeIssues",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "tests/test_more.py",
+      "line_start": 6451,
+      "line_end": 6451,
+      "message": "Cannot access attribute \"lock\" for class \"Iterator[int]\" Attribute \"lock\" is unknown",
+      "rule": "pyright reportAttributeAccessIssue",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 695 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "clean__click__78a4efcd": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 0 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1436 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "clean__starlette__fe522c46": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 13 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 921 passed, 2 failing, of which 2 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__click__c69643b6__508__false_true": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 8 diagnostics at head, 2 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 423,
+      "line_end": 423,
+      "message": "Cannot access attribute \"buffer\" for class \"BinaryIO\" Attribute \"buffer\" is unknown",
+      "rule": "pyright reportAttributeAccessIssue",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 426,
+      "line_end": 426,
+      "message": "Argument of type \"BinaryIO | TextIO\" cannot be assigned to parameter \"stream\" of type \"IO[bytes]\" in function \"__init__\" Type \"BinaryIO | TextIO\" is not assignable to type \"IO[bytes]\" \"TextIO\" is not assignable to \"IO[bytes]\" Type parameter",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1393 passed, 95 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[/foo/bar/example.py-None-example.py]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example--example]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example-None-example]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example.py-None-example.py]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example/__main__.py-example-python -m example]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example/cli.py-example-python -m example.cli]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_color_flag",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test0- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test0- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test0-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_with_capsys",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_writing_to_standard_error",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_expand_args",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_iter_keepopenfile",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_iter_lazyfile",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-empty]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-equal length, no dot]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-ignore dot in word]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-length includes suffix]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-paragraph < max]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-sentence < max]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-truncate]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-empty]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-equal length, no dot]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-ignore dot in word]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-length includes suffix]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-paragraph < max]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-sentence < max]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-truncate]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_existing_file[256]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_existing_file[292]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_existing_file[384]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_existing_file[420]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_new_file",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_ignore_errors_stdin",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_ignore_invalid_utf8",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_ignore_no_encoding",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_pathlib_dash",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_respects_ignore",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_prompt_cast_default",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 430,
+      "line_end": 440,
+      "message": "For a real TextIO, `MaybeStripAnsi(stream.buffer, ...)` creates a TextIOWrapper over `sys.stdout.buffer`; when that wrapper is garbage-collected it closes the underlying buffer, so later stdout writes fail with 'I/O operation on closed file'.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/_compat.py",
+      "line_start": 508,
+      "line_end": 508,
+      "message": "The comment says the stream's wrapper handles ANSI stripping so nothing should be stripped here, but `return True` tells callers to strip, so colored output is stripped whenever the stream has a `color` attribute.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 441,
+      "line_end": 446,
+      "message": "A StringIO has `encoding` set to None, so it falls into the BinaryIO branch and is wrapped in TextIOWrapper, whose writes then call `.write(bytes)` on the StringIO and raise TypeError; this is the path taken when `_default_text_stdout()` returns None.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 572,
+      "line_end": 580,
+      "message": "If the body of the `with` block raises, the `yield` throws, so the NamedTemporaryFile is never flushed or closed before `os.unlink`; the handle leaks and unlink fails on Windows, which the comment says this code exists to support.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 399,
+      "line_end": 404,
+      "message": "When PAGER is set but its command is missing, `_pipepager` now yields plain stdout instead of returning False, so the old fallback chain to less/more/nullpager is never reached and paging is silently skipped.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__more-itertools__d49571b4": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 26 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 678 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "clean__click__8762c775": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 4 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1421 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "tests/test_testing.py",
+      "line_start": 545,
+      "line_end": 545,
+      "message": "The test passes the Python bool `True` in the args list to `runner.invoke`; Click's parser calls `len()`/slicing on each argument, so this raises TypeError, `result.exit_code` becomes 1, and the `exit_code == 0` assertion fails. The argument should be the string `\"true\"` or the flag should be passed",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/click/testing.py",
+      "line_start": 148,
+      "line_end": 149,
+      "message": "`fileno()` now returns the real process fd of the original stdout/stderr, so any C-level or os-level write through that fd (subprocess, os.write, faulthandler) bypasses the in-memory buffer and leaks to the real terminal instead of being captured in `result.output`.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "tests/test_testing.py",
+      "line_start": 542,
+      "line_end": 542,
+      "message": "`faulthandler.enable()` is called without a matching `faulthandler.disable()`, so the process-wide faulthandler stays registered on the real stderr fd after the test and affects subsequent tests in the session.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__click__c69643b6__508__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 8 diagnostics at head, 2 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 423,
+      "line_end": 423,
+      "message": "Cannot access attribute \"buffer\" for class \"BinaryIO\" Attribute \"buffer\" is unknown",
+      "rule": "pyright reportAttributeAccessIssue",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 426,
+      "line_end": 426,
+      "message": "Argument of type \"BinaryIO | TextIO\" cannot be assigned to parameter \"stream\" of type \"IO[bytes]\" in function \"__init__\" Type \"BinaryIO | TextIO\" is not assignable to type \"IO[bytes]\" \"TextIO\" is not assignable to \"IO[bytes]\" Type parameter",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1393 passed, 95 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": [
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[/foo/bar/example.py-None-example.py]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example--example]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example-None-example]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example.py-None-example.py]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example/__main__.py-example-python -m example]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_detect_program_name[example/cli.py-example-python -m example.cli]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_color_flag",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test0- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test0- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test0-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test1-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test2-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test3-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test4-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test5-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test6-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test7-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test8-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9- cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9- less ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9- less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9-cat ]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9-cat]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_via_pager[test9-less]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_with_capsys",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_echo_writing_to_standard_error",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_expand_args",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_iter_keepopenfile",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_iter_lazyfile",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-empty]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-equal length, no dot]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-ignore dot in word]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-length includes suffix]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-paragraph < max]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-sentence < max]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[-truncate]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-empty]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-equal length, no dot]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-ignore dot in word]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-length includes suffix]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-paragraph < max]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-sentence < max]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_make_default_short_help[no-wrap mark-truncate]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_existing_file[256]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_existing_file[292]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_existing_file[384]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_existing_file[420]",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_atomic_permissions_new_file",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_ignore_errors_stdin",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_ignore_invalid_utf8",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_ignore_no_encoding",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_pathlib_dash",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_open_file_respects_ignore",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "tests",
+      "severity": "high",
+      "file": "tests/test_utils.py",
+      "line_start": 0,
+      "line_end": 0,
+      "message": "passed at the parent commit, fails at the PR head",
+      "rule": "tests.test_utils::test_prompt_cast_default",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/_compat.py",
+      "line_start": 505,
+      "line_end": 508,
+      "message": "When a stream has a `color` attribute, this returns True (meaning strip ANSI) regardless of that attribute's value, so output the caller asked to keep in color is stripped, and the comment's claim that MaybeStripAnsi handles stripping contradicts the return value.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 425,
+      "line_end": 433,
+      "message": "A StringIO has no `buffer` and its `encoding` is None, so it falls into the `elif not getattr(stream, 'encoding')` branch and is wrapped in MaybeStripAnsi (a TextIOWrapper) instead of reaching the intended `stream.color = color` branch, which raises when the pager is a StringIO.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 427,
+      "line_end": 427,
+      "message": "MaybeStripAnsi wraps the existing `stream.buffer` of sys.stdout, and when the wrapper is garbage-collected TextIOWrapper closes that shared buffer, so subsequent writes to the real stdout fail with 'I/O operation on closed file'.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 401,
+      "line_end": 410,
+      "message": "The fallback chain was removed: if PAGER names a missing command or `less` is absent, the code now returns a no-op stdout instead of trying `more`/a temp file or the null pager, so paged output is silently written without paging and the prior fallbacks are lost.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 487,
+      "line_end": 490,
+      "message": "The `color` detection from LESS flags runs before `color` is defaulted, and the subsequent `if color is None: color = False` is placed after it, so behavior for the `less` case where the user passed `color=None` depends on ordering that no longer matches the original decision logic.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 548,
+      "line_end": 556,
+      "message": "The OSError handling around `subprocess.call` was removed and the temp file is not closed if the body raises, so a missing or unlaunchable pager command now raises OSError to the caller and the file can leak on Windows where unlink then fails.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__click__6f85d26d": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1638 passed, 24 failing, of which 24 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "clean__pydantic__ea8cfc5e": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 95 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "pydantic/_internal/_generate_schema.py",
+      "line_start": 2083,
+      "line_end": 2083,
+      "message": "`core_config.get('validate_by_name')` returns `None` rather than `False` when the key is absent, so the arguments schema receives `None` where the previous code passed a bool, which could change behavior if the core schema builder does not treat `None` as the default.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__pydantic__fc684220__341__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 340 diagnostics at head, 2 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "high",
+      "file": "tests/test_types.py",
+      "line_start": 6273,
+      "line_end": 6273,
+      "message": "\"Unknown\" is not defined",
+      "rule": "pyright reportUndefinedVariable",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_types.py",
+      "line_start": 6285,
+      "line_end": 6285,
+      "message": "Argument of type \"Literal[1]\" cannot be assigned to parameter \"c\" of type \"InstanceOf[ClassWithInvalidAnnotations]\" in function \"__init__\" \"Literal[1]\" is not assignable to \"ClassWithInvalidAnnotations\"",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/functional_validators.py",
+      "line_start": 792,
+      "line_end": 792,
+      "message": "Catching the broad GENERATE_SCHEMA_ERRORS tuple (including PydanticUserError and PydanticInvalidForJsonSchema) makes InstanceOf silently fall back to a Python-only is_instance schema for any user-facing schema error, so JSON validation is quietly dropped instead of surfacing the misconfiguration.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__more-itertools__1b7f033d": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 140 diagnostics at head, 8 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5359,
+      "line_end": 5359,
+      "message": "Object of type \"None\" is not subscriptable",
+      "rule": "pyright reportOptionalSubscript",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5361,
+      "line_end": 5361,
+      "message": "Object of type \"None\" is not subscriptable",
+      "rule": "pyright reportOptionalSubscript",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5362,
+      "line_end": 5362,
+      "message": "Object of type \"None\" is not subscriptable",
+      "rule": "pyright reportOptionalSubscript",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5363,
+      "line_end": 5363,
+      "message": "No overloads for \"__setitem__\" match the provided arguments",
+      "rule": "pyright reportCallIssue",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "more_itertools/more.py",
+      "line_start": 5363,
+      "line_end": 5363,
+      "message": "Argument of type \"list[None]\" cannot be assigned to parameter \"value\" of type \"None\" in function \"__setitem__\" \"list[None]\" is not assignable to \"None\"",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5363,
+      "line_end": 5363,
+      "message": "Object of type \"None\" is not subscriptable",
+      "rule": "pyright reportOptionalSubscript",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 5364,
+      "line_end": 5364,
+      "message": "\"None\" is not iterable \"__iter__\" method not defined",
+      "rule": "pyright reportGeneralTypeIssues",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "tests/test_more.py",
+      "line_start": 6451,
+      "line_end": 6451,
+      "message": "Cannot access attribute \"lock\" for class \"Iterator[int]\" Attribute \"lock\" is unknown",
+      "rule": "pyright reportAttributeAccessIssue",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 695 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__click__78a4efcd__195__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1436 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/click/types.py",
+      "line_start": 194,
+      "line_end": 197,
+      "message": "`convert` is annotated `-> None` but still returns `self.func(value)`, so type checkers flag the return and the override no longer matches `ParamType.convert`'s return type, which breaks type inference for callers that use the converted value.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__more-itertools__958990e2": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 145 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 730 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__pydantic__a54529f0__482__return_none": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 154 diagnostics at head, 2 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "tests/test_generics.py",
+      "line_start": 3278,
+      "line_end": 3278,
+      "message": "Type \"None\" is not assignable to declared type \"(self: Self@object) -> int\" Type \"None\" is not assignable to type \"(self: Self@object) -> int\"",
+      "rule": "pyright reportAssignmentType",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_generics.py",
+      "line_start": 3287,
+      "line_end": 3287,
+      "message": "Argument of type \"Literal['1']\" cannot be assigned to parameter \"f\" of type \"int\" in function \"__init__\" \"Literal['1']\" is not assignable to \"int\"",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/_internal/_generics.py",
+      "line_start": 482,
+      "line_end": 482,
+      "message": "`get_cached_generic_type_early` now unconditionally returns `None`, so the early-key cache lookup is dead and every parameterization falls through to the late path, which breaks the cache-hit guarantee that `Model[int] is Model[int]` depends on and makes repeated `__class_getitem__` calls rebuild cl",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__tenacity__44eaefbb": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 142 passed, 1 failing, of which 1 also fail at the parent (environment or pre-existing, not evidence about this PR); 2 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "tenacity/retry.py",
+      "line_start": 42,
+      "line_end": 43,
+      "message": "The `isinstance(other, retry_all)` check also matches user subclasses of retry_all that override `__call__`, so flattening them into a plain retry_all silently drops their custom condition logic (the same applies to the retry_any checks in `__or__`/`__ror__`).",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__pydantic__fc684220": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 340 diagnostics at head, 2 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "high",
+      "file": "tests/test_types.py",
+      "line_start": 6273,
+      "line_end": 6273,
+      "message": "\"Unknown\" is not defined",
+      "rule": "pyright reportUndefinedVariable",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "medium",
+      "file": "tests/test_types.py",
+      "line_start": 6285,
+      "line_end": 6285,
+      "message": "Argument of type \"Literal[1]\" cannot be assigned to parameter \"c\" of type \"InstanceOf[ClassWithInvalidAnnotations]\" in function \"__init__\" \"Literal[1]\" is not assignable to \"ClassWithInvalidAnnotations\"",
+      "rule": "pyright reportArgumentType",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "pydantic/functional_validators.py",
+      "line_start": 793,
+      "line_end": 793,
+      "message": "The broadened `except GENERATE_SCHEMA_ERRORS` now also swallows `PydanticUndefinedAnnotation`, `PydanticForbiddenQualifier` and `PydanticInvalidForJsonSchema`, so a genuinely broken or unresolved annotation on an `InstanceOf[...]` target silently degrades to a Python-only `is_instance` schema instea",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__tenacity__d6e57dd1__36__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 1 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 119 passed, 1 failing, of which 1 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "clean__typer__6c289624": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 2 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 2 passed, 280 failing, of which 280 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__more-itertools__d49571b4__5102__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 26 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 678 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "more_itertools/more.py",
+      "line_start": 5101,
+      "line_end": 5102,
+      "message": "The parity fix is inverted: `if odd & 1` subtracts 1 from odd values and leaves even values unchanged, so the search starts at an even number and steps by -2 over only even candidates, which can never find an odd prime (except 2).",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "more_itertools/more.py",
+      "line_start": 5100,
+      "line_end": 5100,
+      "message": "`odd = floor(ub)` uses the unrounded bound, whereas the original used `floor(ceil(ub))`, so the start point can fall below the nth prime and the approximate search may return a wrong, too-small prime.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__fastapi__7134121a": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "1 changed .py file(s); 3 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 3318 passed, 2 failing, of which 2 also fail at the parent (environment or pre-existing, not evidence about this PR); 0 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": []
+   }
+  ],
+  "mut__more-itertools__958990e2__1538__zero_one": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 145 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 730 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 1537,
+      "line_end": 1538,
+      "message": "The guard is `n < 0` but the error message says n must be at least 1, so n=0 is still accepted and silently returns an empty iterator, which contradicts the message.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__pydantic__cb1c5330__103__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 28 diagnostics at head, 1 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "pydantic/root_model.py",
+      "line_start": 103,
+      "line_end": 103,
+      "message": "\"__setitem__\" method not defined on type \"MappingProxyType[str, Any]\"",
+      "rule": "pyright reportIndexIssue",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/root_model.py",
+      "line_start": 102,
+      "line_end": 104,
+      "message": "`__copy__` assigns a copy of the root into `self.__dict__` (mutating the original model) but puts `new_dict`, which was copied before that assignment, on the new model, so the shallow copy still shares the original root object while the original's root is silently swapped out. Both objects should ge",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__pydantic__ea8cfc5e__2083__llm": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "3 changed .py file(s); 95 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": false,
+    "note": "suite could not be collected at the PR head",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "high",
+      "file": "pydantic/_internal/_generate_schema.py",
+      "line_start": 2083,
+      "line_end": 2083,
+      "message": "The v2 arguments schema now passes `core_config.get('validate_by_alias')` as `validate_by_name`, so the flag controls the wrong setting: it is typically True by default, which enables name-based lookup even when the user never asked for it, and it ignores the user's `validate_by_name`/`populate_by_n",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "clean__click__bc32a92c": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "4 changed .py file(s); 10 diagnostics at head, 2 on added lines and new vs parent",
+    "findings": [
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "tests/test_utils/test_echo_via_pager.py",
+      "line_start": 207,
+      "line_end": 207,
+      "message": "Cannot access attribute \"_PagerWriter\" for class \"object\" Attribute \"_PagerWriter\" is unknown",
+      "rule": "pyright reportAttributeAccessIssue",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "static",
+      "severity": "low",
+      "file": "tests/test_utils/test_echo_via_pager.py",
+      "line_start": 213,
+      "line_end": 213,
+      "message": "Cannot access attribute \"_PagerWriter\" for class \"object\" Attribute \"_PagerWriter\" is unknown",
+      "rule": "pyright reportAttributeAccessIssue",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 1947 passed, 24 failing, of which 24 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "medium",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 548,
+      "line_end": 548,
+      "message": "The pipe pager no longer uses get_best_encoding(); with text=True, Popen's stdin uses the locale encoding, so on ASCII or otherwise restricted locales non-ASCII output is replaced with '?' where the previous UTF-8 fallback kept it.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     },
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "src/click/_termui_impl.py",
+      "line_start": 407,
+      "line_end": 408,
+      "message": "_PagerWriter.__getattr__ reads self._stream, so any lookup before __init__ sets _stream (for example during copy or pickle reconstruction) recurses infinitely instead of raising AttributeError.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ],
+  "mut__more-itertools__958990e2__1537__zero_one": [
+   {
+    "tool": "static",
+    "ok": true,
+    "note": "2 changed .py file(s); 145 diagnostics at head, 0 on added lines and new vs parent",
+    "findings": []
+   },
+   {
+    "tool": "tests",
+    "ok": true,
+    "note": "suite at head: 730 passed, 0 failing, of which 0 also fail at the parent (environment or pre-existing, not evidence about this PR); 1 test(s) added",
+    "findings": []
+   },
+   {
+    "tool": "reviewer",
+    "ok": true,
+    "note": "",
+    "findings": [
+     {
+      "tool": "reviewer",
+      "severity": "low",
+      "file": "more_itertools/more.py",
+      "line_start": 1537,
+      "line_end": 1537,
+      "message": "The guard rejects n == 0, but the error message says 'n must be at least 0', which contradicts the check and misleads callers about the valid range.",
+      "rule": "",
+      "evidence": "",
+      "id": ""
+     }
+    ]
+   }
+  ]
+ }
+}

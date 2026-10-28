@@ -25,7 +25,10 @@ def test_prelude_and_mount_for_mined_tasks():
     shwin = {"image": "x"}
     mined = {"image": "rb-mine-click", "setup_cmd": "git clone -q /repo /testbed; cd /testbed", "repo_mount": "/c", "network": "bridge"}
     assert prelude(shwin, "abc") == "cd /testbed && git checkout -q abc"
-    assert prelude(mined, "abc").endswith("cd /testbed && git checkout -q abc")
+    # network tasks re-run setup after the checkout so the per-commit install happens at `abc` (pydantic pins)
+    setup = mined["setup_cmd"]
+    assert prelude(mined, "abc") == f"{setup} && git checkout -q abc && {setup}"
+    assert prelude({**mined, "network": "none"}, "abc").endswith("cd /testbed && git checkout -q abc")
     assert container_kw(shwin) == {"network": "none"}
     assert container_kw(mined) == {"network": "bridge", "mounts": ["/c:/repo:ro"]}
     assert container_kw({"image": "x"}, network="bridge")["network"] == "bridge"

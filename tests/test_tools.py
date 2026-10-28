@@ -405,3 +405,11 @@ def test_h6_table_summarize():
     assert s["src"]["llm"] == [0, 1, 0, 0] and s["src"]["mechanical"] == [1, 0, 0, 0]
     assert s["n_pairs"] == 1 and abs(s["paired"] - 0.5) < 1e-9 and abs(s["usd_per_pr"] - 0.05) < 1e-9
     assert h6_table.gate_name("mlx:mlx-community/Qwen3-8B-4bit") == "Qwen3-8B-4bit"
+
+
+def test_prelude_reinstalls_after_checkout_for_network_tasks():
+    from review.agent.loop import prelude
+    t = {"setup_cmd": "SETUP", "network": "bridge"}
+    assert prelude(t, "abc") == "SETUP && git checkout -q abc && SETUP"
+    assert prelude({**t, "network": "none"}, "abc") == "SETUP && git checkout -q abc"
+    assert prelude({}, "abc") == "cd /testbed && git checkout -q abc"

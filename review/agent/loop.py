@@ -160,7 +160,14 @@ def prelude(task: dict, sha: str) -> str:
     """Shell prefix that leaves the shell in /testbed at `sha`. shwin-bench images bake /testbed in;
     mined tasks (assemble.py) carry setup_cmd that clones the mounted /repo and sets PYTHONPATH."""
     if task.get("setup_cmd"):
-        return f"{task['setup_cmd']} && git checkout -q {sha}"
+        p = f"{task['setup_cmd']} && git checkout -q {sha}"
+        if task.get("network") not in (None, "none"):
+            # Network tasks need the per-commit install AT `sha` (pydantic pins an exact pydantic-core per commit and
+            # refuses to import otherwise). setup_cmd alone installs at the clone's HEAD, before the checkout, so
+            # every pydantic suite and probe failed at import until Oct 28. Re-running it after the checkout skips the
+            # clone and installs at `sha`.
+            p += f" && {task['setup_cmd']}"
+        return p
     return f"cd /testbed && git checkout -q {sha}"
 
 
