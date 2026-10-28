@@ -377,3 +377,31 @@ def test_review_one_routes_mlx_and_records_finish(monkeypatch):
     rev, ok, text, probes, audit = harness.review_one(_shwin_task(), "mlx:mlx-community/Qwen3-8B-4bit", [], [], ["free"], 0, None)
     assert calls == [("mlx-community/Qwen3-8B-4bit", None)] and rev.decision == "approve"
     assert audit["rounds"][0]["finish"] == "stop" and audit["rounds"][0]["out_tokens"] == 300
+
+
+def test_tool_notes_and_reviewer_silence_policy():
+    runs = [ToolRun("static", "s", []), ToolRun("reviewer", "r", [Finding("reviewer", "medium", "a.py", 3, 3, "m")])]
+    fs = number(runs)
+    txt = render(runs, notes=harness.TOOL_NOTES["calibrated"])
+    assert txt.count("(how to read this tool:") == 2 and "no findings is not evidence" in txt
+    assert "(how to read" not in render(runs)
+    P = harness.apply_policy
+    assert "F1" in P("approve", [], fs, ["approve-needs-reviewer-silence"], reviewer_ok=True)
+    assert "did not run" in P("approve", [], [], ["approve-needs-reviewer-silence"], reviewer_ok=False)
+    low = number([ToolRun("reviewer", "r", [Finding("reviewer", "low", "a.py", 3, 3, "m")])])
+    assert P("approve", [], low, ["approve-needs-reviewer-silence"], reviewer_ok=True) is None
+    assert "reviewer tool ran and reported no medium" in harness.system_prompt(["reviewer"], ["approve-needs-reviewer-silence"], 0)
+
+
+def test_h6_table_summarize():
+    from review.analysis import h6_table
+    d = {"label": "x", "model": "mlx:a/Qwen", "tools": ["static"], "policy": ["free"], "gate_usd": 0.2, "bounces": 1,
+         "reviews": [{"task_id": "mut__r__abc12345__1__llm", "kind": "bug", "decision": "block"},
+                     {"task_id": "mut__r__abc12345__2__true_false", "kind": "bug", "decision": "approve"},
+                     {"task_id": "clean__r__abc12345", "kind": "clean", "decision": "approve"},
+                     {"task_id": "clean__r__def67890", "kind": "clean", "decision": "escalate", "parsed": False}]}
+    s = h6_table.summarize(d)
+    assert s["bug"] == [1, 1, 0, 0] and s["clean"] == [1, 0, 0, 1]
+    assert s["src"]["llm"] == [0, 1, 0, 0] and s["src"]["mechanical"] == [1, 0, 0, 0]
+    assert s["n_pairs"] == 1 and abs(s["paired"] - 0.5) < 1e-9 and abs(s["usd_per_pr"] - 0.05) < 1e-9
+    assert h6_table.gate_name("mlx:mlx-community/Qwen3-8B-4bit") == "Qwen3-8B-4bit"

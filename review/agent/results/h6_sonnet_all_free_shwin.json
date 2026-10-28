@@ -1,0 +1,405 @@
+{
+ "label": "h6_sonnet_all_free_shwin",
+ "model": "claude-sonnet-5-5",
+ "harness_version": 6,
+ "calibration": "train-cal v1: 223 train PRs, min 3 bug PRs, LR >= 2 (Oct 28)",
+ "condition": "static+tests+reviewer",
+ "tools": [
+  "static",
+  "tests",
+  "reviewer"
+ ],
+ "policy": [
+  "free"
+ ],
+ "probes": 0,
+ "n": 8,
+ "provenance": {
+  "tasks_file": "/Users/ashwinsreedhar/ft-lab/review/bench/tasks.jsonl",
+  "tasks_sha256": "3ec1b48dc79ac241",
+  "ft_lab_commit": "333383b",
+  "image_ids": {
+   "shwin/emberserve:0a59d696a4e9": "sha256:545ed3793f26",
+   "shwin/emberserve:deccad851b5d": "sha256:d4e4018ba7ad",
+   "shwin/serverless-lakehouse:ede3c635aae3": "sha256:2a1945e7c8a9"
+  }
+ },
+ "unparsable": 0,
+ "wall_s": 69.0,
+ "gate_usd": 0.5775,
+ "tools_usd": 0.3775,
+ "bounces": 0,
+ "tool_stats": {
+  "reviewer": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "fired_bug": 4,
+   "fired_clean": 4,
+   "gold_hit": 3,
+   "gold_chance": 2.6,
+   "did_not_run": 0,
+   "findings": 25,
+   "wall_s": 212.8,
+   "lr": 1.0
+  },
+  "static": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "fired_bug": 3,
+   "fired_clean": 1,
+   "gold_hit": 2,
+   "gold_chance": 2.6,
+   "did_not_run": 0,
+   "findings": 85,
+   "wall_s": 36.3,
+   "lr": 3.0
+  },
+  "tests": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "fired_bug": 0,
+   "fired_clean": 0,
+   "gold_hit": 0,
+   "gold_chance": 0.0,
+   "did_not_run": 0,
+   "findings": 1,
+   "wall_s": 961.3,
+   "lr": null
+  }
+ },
+ "scores": {
+  "all": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "bugs_approved": 2,
+   "bugs_blocked": 2,
+   "clean_blocked": 0,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.75,
+   "escalation_rate": 0.125,
+   "block_precision": 1.0,
+   "localization": 0.5,
+   "strong_localization": 0.0,
+   "usd_per_pr": 0.072189375
+  },
+  "fresh": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "bugs_approved": 2,
+   "bugs_blocked": 2,
+   "clean_blocked": 0,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.75,
+   "escalation_rate": 0.125,
+   "block_precision": 1.0,
+   "localization": 0.5,
+   "strong_localization": 0.0,
+   "usd_per_pr": 0.072189375
+  }
+ },
+ "reviews": [
+  {
+   "task_id": "bug__emberserve__36f4e93",
+   "kind": "bug",
+   "decision": "approve",
+   "usd": 0.068571,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "approve",
+     "probe": false,
+     "parsed": true
+    }
+   ],
+   "bounces": [],
+   "cited": [
+    "F7",
+    "F8"
+   ],
+   "api_s": 8.5,
+   "docker_s": 0.0,
+   "n_findings": {
+    "static": 6,
+    "tests": 0,
+    "reviewer": 2
+   },
+   "tools_ok": {
+    "static": true,
+    "tests": true,
+    "reviewer": true
+   },
+   "tools_usd": 0.0544,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"evidence\":[\"F7\",\"F8\"],\"comments\":[]}"
+  },
+  {
+   "task_id": "bug__emberserve__7edbe0f",
+   "kind": "bug",
+   "decision": "block",
+   "usd": 0.060312,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe": false,
+     "parsed": true
+    }
+   ],
+   "bounces": [],
+   "cited": [
+    "F1"
+   ],
+   "api_s": 11.5,
+   "docker_s": 0.0,
+   "n_findings": {
+    "static": 0,
+    "tests": 0,
+    "reviewer": 3
+   },
+   "tools_ok": {
+    "static": true,
+    "tests": true,
+    "reviewer": true
+   },
+   "tools_usd": 0.0256,
+   "comments": [
+    {
+     "file": "pagedserve/server/engine_core.py",
+     "line_start": 326,
+     "line_end": 335,
+     "body": "`_run` catches only OSError/EOFError/ValueError. A pickling failure from `conn.send` (PicklingError, TypeError) kills the writer thread without setting `self.error`. Later `put` calls then queue forever and commands are silently dropped, where `send` used to raise to the caller.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"block\",\"evidence\":[\"F1\"],\"comments\":[{\"file\":\"pagedserve/server/engine_core.py\",\"line_start\":326,\"line_end\":335,\"body\":\"`_run` catches only OSError/EOFError/ValueError. A pickling failure from `conn.send` (PicklingError, TypeError) kills the writer thread without setting `self.error`. Later `put` calls then queue forever and commands are silently dropped, where `send` used to raise to the caller.\"}]}"
+  },
+  {
+   "task_id": "bug__emberserve__f1943a4",
+   "kind": "bug",
+   "decision": "block",
+   "usd": 0.116466,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "block",
+     "probe": false,
+     "parsed": true
+    }
+   ],
+   "bounces": [],
+   "cited": [
+    "F57"
+   ],
+   "api_s": 9.1,
+   "docker_s": 0.0,
+   "n_findings": {
+    "static": 56,
+    "tests": 0,
+    "reviewer": 5
+   },
+   "tools_ok": {
+    "static": true,
+    "tests": true,
+    "reviewer": true
+   },
+   "tools_usd": 0.0917,
+   "comments": [
+    {
+     "file": "pagedserve/dist.py",
+     "line_start": 232,
+     "line_end": 238,
+     "body": "In the tiny tp>1 branch the shard is built under torch.device(device) in the default dtype (fp32) and never cast. load_hf_state_dict copies into the existing fp32 params, so they stay fp32 while the KV cache and inputs use the requested dtype (fp16 in the GPU tests). Add .to(dtype).",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"block\",\"evidence\":[\"F57\"],\"comments\":[{\"file\":\"pagedserve/dist.py\",\"line_start\":232,\"line_end\":238,\"body\":\"In the tiny tp>1 branch the shard is built under torch.device(device) in the default dtype (fp32) and never cast. load_hf_state_dict copies into the existing fp32 params, so they stay fp32 while the KV cache and inputs use the requested dtype (fp16 in the GPU tests). Add .to(dtype).\"}]}"
+  },
+  {
+   "task_id": "bug__serverless-lakehouse__9e1c251",
+   "kind": "bug",
+   "decision": "approve",
+   "usd": 0.095994,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "approve",
+     "probe": false,
+     "parsed": true
+    }
+   ],
+   "bounces": [],
+   "cited": [],
+   "api_s": 9.6,
+   "docker_s": 0.0,
+   "n_findings": {
+    "static": 9,
+    "tests": 0,
+    "reviewer": 4
+   },
+   "tools_ok": {
+    "static": true,
+    "tests": true,
+    "reviewer": true
+   },
+   "tools_usd": 0.0654,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"evidence\":[],\"comments\":[]}"
+  },
+  {
+   "task_id": "clean__emberserve__c6278c4",
+   "kind": "clean",
+   "decision": "approve",
+   "usd": 0.058464,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "approve",
+     "probe": false,
+     "parsed": true
+    }
+   ],
+   "bounces": [],
+   "cited": [
+    "F1"
+   ],
+   "api_s": 7.2,
+   "docker_s": 0.0,
+   "n_findings": {
+    "static": 0,
+    "tests": 1,
+    "reviewer": 4
+   },
+   "tools_ok": {
+    "static": true,
+    "tests": true,
+    "reviewer": true
+   },
+   "tools_usd": 0.0389,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"evidence\":[\"F1\"],\"comments\":[]}"
+  },
+  {
+   "task_id": "clean__emberserve__581e293",
+   "kind": "clean",
+   "decision": "approve",
+   "usd": 0.049656,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "approve",
+     "probe": false,
+     "parsed": true
+    }
+   ],
+   "bounces": [],
+   "cited": [
+    "F6"
+   ],
+   "api_s": 8.9,
+   "docker_s": 0.0,
+   "n_findings": {
+    "static": 5,
+    "tests": 0,
+    "reviewer": 2
+   },
+   "tools_ok": {
+    "static": true,
+    "tests": true,
+    "reviewer": true
+   },
+   "tools_usd": 0.0232,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"evidence\":[\"F6\"],\"comments\":[]}"
+  },
+  {
+   "task_id": "clean__emberserve__96519cd",
+   "kind": "clean",
+   "decision": "approve",
+   "usd": 0.095553,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "approve",
+     "probe": false,
+     "parsed": true
+    }
+   ],
+   "bounces": [],
+   "cited": [
+    "F10"
+   ],
+   "api_s": 10.2,
+   "docker_s": 0.0,
+   "n_findings": {
+    "static": 9,
+    "tests": 0,
+    "reviewer": 3
+   },
+   "tools_ok": {
+    "static": true,
+    "tests": true,
+    "reviewer": true
+   },
+   "tools_usd": 0.0546,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"evidence\":[\"F10\"],\"comments\":[]}"
+  },
+  {
+   "task_id": "clean__serverless-lakehouse__0718b2f",
+   "kind": "clean",
+   "decision": "escalate",
+   "usd": 0.032499,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe": false,
+     "parsed": true
+    }
+   ],
+   "bounces": [],
+   "cited": [
+    "F1"
+   ],
+   "api_s": 3.4,
+   "docker_s": 0.0,
+   "n_findings": {
+    "static": 0,
+    "tests": 0,
+    "reviewer": 2
+   },
+   "tools_ok": {
+    "static": true,
+    "tests": true,
+    "reviewer": true
+   },
+   "tools_usd": 0.0237,
+   "comments": [
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 143,
+     "line_end": 150,
+     "body": "Left join to the run-notes seed on (series_label, run_index) assumes unique keys. The seed CSV (seeds/coldstart_run_notes.csv) is not visible to me, so I cannot rule out duplicates inflating gold counts and percentiles. A human should check the seed.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"evidence\":[\"F1\"],\"comments\":[{\"file\":\"lakehouse/silver.py\",\"line_start\":143,\"line_end\":150,\"body\":\"Left join to the run-notes seed on (series_label, run_index) assumes unique keys. The seed CSV (seeds/coldstart_run_notes.csv) is not visible to me, so I cannot rule out duplicates inflating gold counts and percentiles. A human should check the seed.\"}]}"
+  }
+ ]
+}

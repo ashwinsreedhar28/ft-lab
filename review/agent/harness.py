@@ -37,7 +37,25 @@ from review.bench.score import by_split, load_tasks, provenance
 from review.tools import ToolRun, gather, number, render, tool_stats
 
 HARNESS_VERSION = 6
-POLICIES = ("free", "block-needs-finding", "approve-needs-clean-tools", "approve-needs-probe")
+POLICIES = ("free", "block-needs-finding", "approve-needs-clean-tools", "approve-needs-probe",
+            "approve-needs-reviewer-silence")
+
+# What each tool's output -- and its silence -- is worth, from the train-split measurements (README, Oct 28):
+# static 13/117 bug vs 1/106 clean PRs at medium+ (no-fire LR ~0.9); reviewer on 40 mutant/twin pairs: medium+
+# LR 2.5, high LR 4.5, silent LR 0.12 (mutants partly Haiku-made, so the reviewer numbers may be optimistic).
+# Worded so nothing describes how the benchmark was built.
+TOOL_NOTES = {
+    "plain": None,
+    "calibrated": {
+        "static": "measured on 223 earlier PRs, a medium or high finding here made a defect about 10x more likely; "
+                  "this tool misses most defects, so no findings is not evidence that the change is correct",
+        "tests": "a passing suite says nothing about behavior the existing tests do not exercise; only a test that "
+                 "passed at the parent and fails at the PR head is evidence of a defect",
+        "reviewer": "measured on 80 earlier PRs, it flags something on most PRs, including about 40% of correct ones, "
+                    "so a medium finding alone is weak evidence (about 2.5x) and a high finding is stronger (about "
+                    "4.5x); when it reports nothing at medium or above, defects were about 8x less likely",
+    },
+}
 
 BASE = (
     "You are the code review gate for a production repository. Your approval merges and deploys the change "
@@ -57,6 +75,8 @@ POLICY_LINES = {
     "approve-needs-clean-tools": "- An approve is accepted only if no tool reported a high-severity finding.\n",
     "approve-needs-probe": "- An approve is accepted only if you ran a probe that passed and that calls at least one "
                            "of the changed functions by name.\n",
+    "approve-needs-reviewer-silence": "- An approve is accepted only if the reviewer tool ran and reported no medium- "
+                                      "or high-severity finding.\n",
 }
 PROBE_LINES = (
     "- You may ask the harness to run a test before deciding: add a top-level field "
@@ -92,7 +112,8 @@ def cited(obj: dict, valid_ids: set[str]) -> list[str]:
 
 
 def apply_policy(decision: str | None, cites: list[str], findings, policy: list[str],
-                 probe_failed: bool = False, probe_evidence: bool = False, probes_enabled: bool = False) -> str | None:
+                 probe_failed: bool = False, probe_evidence: bool = False, probes_enabled: bool = False,
+                 reviewer_ok: bool = False) -> str | None:
     """Pure: None if the decision stands, else the reason it is rejected (shown to the model on a bounce)."""
     if decision == "block" and "block-needs-finding" in policy and not cites and not probe_failed:
         return ("Block rejected: this gate requires a block to cite at least one finding id in \"evidence\""
@@ -103,6 +124,13 @@ def apply_policy(decision: str | None, cites: list[str], findings, policy: list[
         if high:
             return (f"Approve rejected: tools reported high-severity finding(s) {', '.join(high)}. "
                     "Block (citing the finding) or escalate.")
+    if decision == "approve" and "approve-needs-reviewer-silence" in policy:
+        if not reviewer_ok:
+            return "Approve rejected: this gate requires a clean review from the reviewer tool, which did not run. Escalate or block."
+        flagged = [f.id for f in findings if f.tool == "reviewer" and f.severity in ("high", "medium")]
+        if flagged:
+            return (f"Approve rejected: the reviewer reported medium/high finding(s) {', '.join(flagged)}. Block "
+                    "(citing the finding that shows the defect) or escalate.")
     if decision == "approve" and "approve-needs-probe" in policy and not probe_evidence:
         return "Approve rejected: no passing probe that calls a changed function. Write one (probe field) or block/escalate."
     return None
@@ -118,11 +146,12 @@ def gate_call(gate: str, system: str, messages: list[dict], max_tokens: int):
 
 
 def review_one(task: dict, gate: str, runs: list[ToolRun], tools: list[str], policy: list[str],
-               max_probes: int, max_tokens: int):
+               max_probes: int, max_tokens: int, tool_notes: str = "plain"):
     findings = number(runs)
     valid = {f.id for f in findings}
+    reviewer_ok = any(r.tool == "reviewer" and r.ok for r in runs)
     prompt = build_prompt(task, "diff+graph", None)
-    block = render(runs)
+    block = render(runs, notes=TOOL_NOTES[tool_notes])
     if block:
         prompt += "\n\n" + block
     system = system_prompt(tools, policy, max_probes)
@@ -177,7 +206,8 @@ def review_one(task: dict, gate: str, runs: list[ToolRun], tools: list[str], pol
                            "hypothesis": probe.get("hypothesis", ""), "source": probe["source"][:6000], "tail": out[-1500:]})
             messages.append({"role": "user", "content": f"Probe result at the PR head: {status}\n```\n{out[-3000:]}\n```\nDecide again."})
             continue
-        reason = apply_policy(decision, cited(obj, valid), findings, policy, probe_failed, probe_evidence, max_probes > 0)
+        reason = apply_policy(decision, cited(obj, valid), findings, policy, probe_failed, probe_evidence, max_probes > 0,
+                              reviewer_ok)
         if reason is None:
             break
         bounces.append({"round": r, "decision": decision, "reason": reason[:160]})
@@ -223,6 +253,8 @@ def main():
     ap.add_argument("--tools", default="static,tests", help="comma list of static,tests,reviewer, or none")
     ap.add_argument("--reviewer-model", default=None)
     ap.add_argument("--policy", default="free", help=f"comma list of {','.join(POLICIES)}")
+    ap.add_argument("--tool-notes", default="plain", choices=sorted(TOOL_NOTES),
+                    help="calibrated: tell the gate what each tool's findings and silence are worth (train numbers)")
     ap.add_argument("--probes", type=int, default=0)
     ap.add_argument("--max-tokens", type=int, default=None, help="default 14000 for claude-*, 4096 for mlx:")
     ap.add_argument("--label", default=None)
@@ -247,7 +279,10 @@ def main():
     if a.max_tokens is None and a.gate.startswith("claude"):
         a.max_tokens = 14000
     label = a.label or (f"tools_{'+'.join(tools) or 'none'}" if a.tools_only
-                        else f"h6_{gate_short(a.gate)}_{'+'.join(tools) or 'none'}_{'+'.join(policy)}")
+                        else f"h6_{gate_short(a.gate)}_{'+'.join(tools) or 'none'}_{'+'.join(policy)}"
+                             + ("_notes" if a.tool_notes != "plain" else ""))
+    if "approve-needs-reviewer-silence" in policy and "reviewer" not in tools:
+        raise SystemExit("approve-needs-reviewer-silence needs --tools to include reviewer (every approve would bounce)")
 
     per_task, t0 = {}, time.time()
     for t in tasks:
@@ -322,7 +357,8 @@ def run_gate(a, tasks, per_task, tools, policy, stats, label):
     reviews, strong, rows = {}, {}, []
     t0 = time.time()
     for t in tasks:
-        rev, ok, raw, probes, audit = review_one(t, a.gate, per_task[t["id"]], tools, policy, a.probes, a.max_tokens)
+        rev, ok, raw, probes, audit = review_one(t, a.gate, per_task[t["id"]], tools, policy, a.probes, a.max_tokens,
+                                                 a.tool_notes)
         reviews[t["id"]] = rev
         if any(p.get("strong") for p in probes):
             strong[t["id"]] = True
@@ -336,6 +372,7 @@ def run_gate(a, tasks, per_task, tools, policy, stats, label):
     p = RESULTS / f"{label}.json"
     p.write_text(json.dumps({"label": label, "model": a.gate, "decode": _decode(a), "harness_version": HARNESS_VERSION, "calibration": _calibration(),
                              "condition": "+".join(tools) or "none", "tools": tools, "policy": policy, "probes": a.probes,
+                             "tool_notes": a.tool_notes,
                              "n": len(tasks), "provenance": provenance(a.tasks, {t.get("image") for t in tasks if t.get("image")}),
                              "unparsable": sum(1 for r in rows if not r["parsed"]), "wall_s": round(time.time() - t0, 1),
                              "gate_usd": round(sum(r["usd"] for r in rows), 4), "tools_usd": round(sum(r["tools_usd"] for r in rows), 4),

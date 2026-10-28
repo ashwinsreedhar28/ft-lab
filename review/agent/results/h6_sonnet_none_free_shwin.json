@@ -1,0 +1,304 @@
+{
+ "label": "h6_sonnet_none_free_shwin",
+ "model": "claude-sonnet-5-5",
+ "decode": {
+  "max_tokens": 14000
+ },
+ "harness_version": 6,
+ "calibration": "train-cal v1: 223 train PRs, min 3 bug PRs, LR >= 2 (Oct 28)",
+ "condition": "none",
+ "tools": [],
+ "policy": [
+  "free"
+ ],
+ "probes": 0,
+ "n": 8,
+ "provenance": {
+  "tasks_file": "/Users/ashwinsreedhar/ft-lab/review/bench/tasks.jsonl",
+  "tasks_sha256": "3ec1b48dc79ac241",
+  "ft_lab_commit": "c2f5f63",
+  "image_ids": {
+   "shwin/emberserve:0a59d696a4e9": "sha256:545ed3793f26",
+   "shwin/emberserve:deccad851b5d": "sha256:d4e4018ba7ad",
+   "shwin/serverless-lakehouse:ede3c635aae3": "sha256:2a1945e7c8a9"
+  }
+ },
+ "unparsable": 0,
+ "wall_s": 75.5,
+ "gate_usd": 0.5558,
+ "tools_usd": 0,
+ "bounces": 0,
+ "tool_stats": {},
+ "scores": {
+  "all": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "bugs_approved": 1,
+   "bugs_blocked": 0,
+   "clean_blocked": 0,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.5,
+   "escalation_rate": 0.625,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.069474375
+  },
+  "fresh": {
+   "n_bug": 4,
+   "n_clean": 4,
+   "bugs_approved": 1,
+   "bugs_blocked": 0,
+   "clean_blocked": 0,
+   "bugs_approved_rate_ub95": null,
+   "auto_ship_rate": 0.5,
+   "escalation_rate": 0.625,
+   "block_precision": null,
+   "localization": null,
+   "strong_localization": null,
+   "usd_per_pr": 0.069474375
+  }
+ },
+ "reviews": [
+  {
+   "task_id": "bug__emberserve__36f4e93",
+   "kind": "bug",
+   "decision": "approve",
+   "usd": 0.064158,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "approve",
+     "probe": false,
+     "parsed": true,
+     "out_tokens": 654
+    }
+   ],
+   "bounces": [],
+   "cited": [],
+   "api_s": 10.3,
+   "docker_s": 0.0,
+   "n_findings": {},
+   "tools_ok": {},
+   "tools_usd": 0,
+   "comments": [],
+   "parsed": true,
+   "raw": "<invoke name=\"\">\n</invoke>\n\n{\"decision\": \"approve\", \"evidence\": [], \"comments\": []}"
+  },
+  {
+   "task_id": "bug__emberserve__7edbe0f",
+   "kind": "bug",
+   "decision": "escalate",
+   "usd": 0.039969,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe": false,
+     "parsed": true,
+     "out_tokens": 25
+    }
+   ],
+   "bounces": [],
+   "cited": [],
+   "api_s": 2.6,
+   "docker_s": 0.0,
+   "n_findings": {},
+   "tools_ok": {},
+   "tools_usd": 0,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"evidence\":[],\"comments\":[]}"
+  },
+  {
+   "task_id": "bug__emberserve__f1943a4",
+   "kind": "bug",
+   "decision": "escalate",
+   "usd": 0.118929,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe": false,
+     "parsed": true,
+     "out_tokens": 1806
+    }
+   ],
+   "bounces": [],
+   "cited": [],
+   "api_s": 14.7,
+   "docker_s": 0.0,
+   "n_findings": {},
+   "tools_ok": {},
+   "tools_usd": 0,
+   "comments": [
+    {
+     "file": "pagedserve/dist.py",
+     "line_start": 1,
+     "line_end": 30,
+     "body": "No defect found, but I cannot establish safety. This adds multi-process NCCL/gloo tensor parallelism with CUDA-graph capture of collectives, and none of it was executed here. The CPU tests need a real two-process gloo run and the GPU tests need two CUDA devices. A human should review it.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"evidence\":[],\"comments\":[{\"file\":\"pagedserve/dist.py\",\"line_start\":1,\"line_end\":30,\"body\":\"No defect found, but I cannot establish safety. This adds multi-process NCCL/gloo tensor parallelism with CUDA-graph capture of collectives, and none of it was executed here. The CPU tests need a real two-process gloo run and the GPU tests need two CUDA devices. A human should review it.\"}]}"
+  },
+  {
+   "task_id": "bug__serverless-lakehouse__9e1c251",
+   "kind": "bug",
+   "decision": "escalate",
+   "usd": 0.096933,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe": false,
+     "parsed": true,
+     "out_tokens": 1342
+    }
+   ],
+   "bounces": [],
+   "cited": [],
+   "api_s": 12.6,
+   "docker_s": 0.0,
+   "n_findings": {},
+   "tools_ok": {},
+   "tools_usd": 0,
+   "comments": [
+    {
+     "file": "lakehouse/silver.py",
+     "line_start": 29,
+     "line_end": 29,
+     "body": "I could not find a defect, but silver imports `load_table` from `.bronze`, which is not in the diff. Silver also depends on bronze column names, seed CSVs and Spark session timezone behavior that I could not see. No tests cover the new code.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"evidence\":[],\"comments\":[{\"file\":\"lakehouse/silver.py\",\"line_start\":29,\"line_end\":29,\"body\":\"I could not find a defect, but silver imports `load_table` from `.bronze`, which is not in the diff. Silver also depends on bronze column names, seed CSVs and Spark session timezone behavior that I could not see. No tests cover the new code.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__c6278c4",
+   "kind": "clean",
+   "decision": "escalate",
+   "usd": 0.056079,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe": false,
+     "parsed": true,
+     "out_tokens": 739
+    }
+   ],
+   "bounces": [],
+   "cited": [],
+   "api_s": 10.3,
+   "docker_s": 0.0,
+   "n_findings": {},
+   "tools_ok": {},
+   "tools_usd": 0,
+   "comments": [
+    {
+     "file": "deploy/runpod/main.py",
+     "line_start": 40,
+     "line_end": 60,
+     "body": "serve_command emits flags (--served-model-name, --enable-cuda-graphs, --enable-prefix-caching, --quantization, --tensor-parallel-size) that I could not check against pagedserve/cli.py. Tests only assert the built argv, not that the CLI accepts it. A wrong flag would crash the worker at startup, so a human should confirm.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"evidence\":[],\"comments\":[{\"file\":\"deploy/runpod/main.py\",\"line_start\":40,\"line_end\":60,\"body\":\"serve_command emits flags (--served-model-name, --enable-cuda-graphs, --enable-prefix-caching, --quantization, --tensor-parallel-size) that I could not check against pagedserve/cli.py. Tests only assert the built argv, not that the CLI accepts it. A wrong flag would crash the worker at startup, so a human should confirm.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__581e293",
+   "kind": "clean",
+   "decision": "escalate",
+   "usd": 0.044148,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "escalate",
+     "probe": false,
+     "parsed": true,
+     "out_tokens": 728
+    }
+   ],
+   "bounces": [],
+   "cited": [],
+   "api_s": 7.4,
+   "docker_s": 0.0,
+   "n_findings": {},
+   "tools_ok": {},
+   "tools_usd": 0,
+   "comments": [
+    {
+     "file": "pagedserve/engine.py",
+     "line_start": 49,
+     "line_end": 51,
+     "body": "Enabling CUDA graphs for paged_triton relies on code not shown here (graph runner, kernel split-K allocation and JIT during capture). The GPU tests are new and the earlier kernel commit says GPU validation is pending. A human should confirm on a GPU.",
+     "proposed_test": null
+    }
+   ],
+   "parsed": true,
+   "raw": "{\"decision\":\"escalate\",\"evidence\":[],\"comments\":[{\"file\":\"pagedserve/engine.py\",\"line_start\":49,\"line_end\":51,\"body\":\"Enabling CUDA graphs for paged_triton relies on code not shown here (graph runner, kernel split-K allocation and JIT during capture). The GPU tests are new and the earlier kernel commit says GPU validation is pending. A human should confirm on a GPU.\"}]}"
+  },
+  {
+   "task_id": "clean__emberserve__96519cd",
+   "kind": "clean",
+   "decision": "approve",
+   "usd": 0.094272,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "approve",
+     "probe": false,
+     "parsed": true,
+     "out_tokens": 912
+    }
+   ],
+   "bounces": [],
+   "cited": [],
+   "api_s": 8.8,
+   "docker_s": 0.0,
+   "n_findings": {},
+   "tools_ok": {},
+   "tools_usd": 0,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"evidence\":[],\"comments\":[]}"
+  },
+  {
+   "task_id": "clean__serverless-lakehouse__0718b2f",
+   "kind": "clean",
+   "decision": "approve",
+   "usd": 0.041307,
+   "probes": [],
+   "rounds": [
+    {
+     "round": 0,
+     "decision": "approve",
+     "probe": false,
+     "parsed": true,
+     "out_tokens": 837
+    }
+   ],
+   "bounces": [],
+   "cited": [],
+   "api_s": 8.5,
+   "docker_s": 0.0,
+   "n_findings": {},
+   "tools_ok": {},
+   "tools_usd": 0,
+   "comments": [],
+   "parsed": true,
+   "raw": "{\"decision\":\"approve\",\"evidence\":[],\"comments\":[]}"
+  }
+ ]
+}

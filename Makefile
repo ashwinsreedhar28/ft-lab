@@ -75,6 +75,6 @@ harness-tools:   ## docker, no API: run TOOLS on TASKS, cache findings in review
 harness:         ## one gate row: GATE=... TOOLS=... POLICY=free|block-needs-finding,... PROBES=0 (reads cached findings)
 	python -m review.agent.harness --gate $(GATE) --tools $(TOOLS) --policy $(POLICY) --probes $(or $(PROBES),0) \
 	  $(if $(TASKS),--tasks $(TASKS),) $(if $(LABEL),--label $(LABEL),) $(if $(ONLY),--only $(ONLY),) $(if $(REPEAT),--repeat $(REPEAT),) \
-	  $(if $(SEED),--seed $(SEED),) $(if $(MAXTOK),--max-tokens $(MAXTOK),)
+	  $(if $(SEED),--seed $(SEED),) $(if $(MAXTOK),--max-tokens $(MAXTOK),) $(if $(NOTES),--tool-notes $(NOTES),)
 harness-calibrate: ## no docker: per-rule fire rates / LR on a TRAIN tools-only run -> CALIBRATED_MEDIUM for static.py
 	python -m review.tools.calibrate $(or $(RESULTS),review/agent/results/tools_static_train.json)

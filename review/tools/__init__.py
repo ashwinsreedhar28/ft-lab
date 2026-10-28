@@ -129,8 +129,9 @@ def number(runs: list[ToolRun]) -> list[Finding]:
     return flat
 
 
-def render(runs: list[ToolRun], max_per_tool: int = 25) -> str:
-    """Text block appended to the gate prompt. Numbering must have been done (number())."""
+def render(runs: list[ToolRun], max_per_tool: int = 25, notes: dict[str, str] | None = None) -> str:
+    """Text block appended to the gate prompt. Numbering must have been done (number()). notes: optional
+    {tool: what its output (and its silence) means}, shown under that tool's header."""
     if not runs:
         return ""
     lines = ["Review tools ran on this PR. Their findings are evidence, not verdicts: tools miss real bugs and "
@@ -141,6 +142,8 @@ def render(runs: list[ToolRun], max_per_tool: int = 25) -> str:
             lines.append(f"{head} did not run ({r.note}). Treat this tool as absent, not as clean.")
             continue
         lines.append(f"{head} {len(r.findings)} finding{'s' if len(r.findings) != 1 else ''}" + (f". {r.note}" if r.note else ""))
+        if notes and r.tool in notes:
+            lines.append(f"  (how to read this tool: {notes[r.tool]})")
         for f in r.findings[:max_per_tool]:
             loc = f"{f.file}:{f.line_start}" + (f"-{f.line_end}" if f.line_end > f.line_start else "") if f.line_start else f.file
             rule = f" {f.rule}" if f.rule else ""
