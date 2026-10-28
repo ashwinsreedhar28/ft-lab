@@ -302,3 +302,45 @@ def test_tests_tool_recomputes_empty_cache(monkeypatch, tmp_path):
     r = tests_tool.run({"image": "i", "base_sha": "b", "head_sha": "h"})
     assert r.ok and [f.rule for f in r.findings] == ["t.a::x"]
     assert json.loads(runs_file.read_text())["outcomes:h"] == {"t.a::x": "failed"}
+
+
+def test_static_post_calibrates_severity():
+    fs = [Finding("static", "medium", "a.py", 1, 1, "m", "pyright reportReturnType"),
+          Finding("static", "medium", "a.py", 2, 2, "m", "pyright reportAttributeAccessIssue"),
+          Finding("static", "medium", "a.py", 3, 3, "m", "ruff B905"),
+          Finding("static", "high", "a.py", 4, 4, "m", "ruff F821"),
+          Finding("static", "low", "a.py", 5, 5, "m", "ruff F401")]
+    assert [f.severity for f in static.post(fs)] == ["medium", "low", "low", "high", "low"]
+    assert fs[1].severity == "medium"   # post copies, never mutates the cached findings
+    assert static.raw_severity("pyright reportUndefinedVariable") == "high" and static.raw_severity("ruff B905") == "medium"
+
+
+def test_calibrate_rule_table_and_twins():
+    from review.tools import calibrate
+    F = lambda rule, line=1: Finding("static", "medium", "a.py", line, line, "m", rule)
+    per = {"mut__r__s1__1__llm": [F("pyright reportReturnType", 10), F("ruff B905", 3)],
+           "clean__r__s1": [F("ruff B905", 3)],
+           "mut__r__s2__1__llm": [F("pyright reportReturnType", 20)], "clean__r__s2": [],
+           "mut__r__s3__1__llm": [F("pyright reportReturnType", 30)], "clean__r__s3": [F("ruff B905")]}
+    kinds = {t: "bug" if t.startswith("mut") else "clean" for t in per}
+    gold = {"mut__r__s1__1__llm": [{"file": "a.py", "line_start": 10, "line_end": 10}]}
+    t = calibrate.rule_table(per, kinds, gold)
+    assert (t["pyright reportReturnType"]["bug"], t["pyright reportReturnType"]["clean"], t["pyright reportReturnType"]["gold"]) == (3, 0, 1)
+    assert t["ruff B905"]["lr"] == 0.5
+    assert calibrate.calibrated_medium(t) == {"pyright reportReturnType"}
+    d = calibrate.twin_delta(per)
+    assert [f.rule for f in d["mut__r__s1__1__llm"]] == ["pyright reportReturnType"]   # B905 is in the twin
+    assert calibrate.twin_of("clean__r__s1") is None
+
+
+def test_gold_chance_and_lr():
+    from review.tools import gold_chance
+    task = {"diff": DIFF, "gold_hunks": [{"file": "pkg/new.py", "line_start": 1, "line_end": 1}], "kind": "bug", "id": "b"}
+    # 6 added lines (README included); with slack 3 both pkg/new.py lines hit -> q = 2/6
+    assert abs(gold_chance([Finding("s", "low", "x", 1, 1, "m")], task) - 1 / 3) < 1e-9
+    assert gold_chance([], task) == 0.0
+    tasks = [task, {"id": "c", "kind": "clean", "diff": "", "gold_hunks": []}]
+    per = {"b": [ToolRun("static", "v", [Finding("static", "medium", "pkg/new.py", 1, 1, "m")])],
+           "c": [ToolRun("static", "v", [])]}
+    s = tool_stats(per, tasks)["static"]
+    assert s["lr"] == float("inf") and s["gold_hit"] == 1 and s["gold_chance"] == 0.3

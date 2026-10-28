@@ -97,18 +97,20 @@ def gather(task: dict, tools: list[str], opts: dict | None = None, refresh: bool
         key = f"{name}:{mod.version(o)}:{task['id']}:{task['head_sha']}"
         if key in cache and not refresh:
             d = cache[key]
-            out.append(ToolRun(d["tool"], d["version"], [Finding(**f) for f in d["findings"]], d["note"], d["ok"],
-                               d["wall_s"], d.get("usd", 0.0)))
-            continue
-        t0 = time.time()
-        try:
-            run = mod.run(task, o)
-        except Exception as e:  # a tool failing must not kill a matrix; the gate is told the tool did not run
-            run = ToolRun(name, mod.version(o), [], f"{name} failed to run: {type(e).__name__}: {str(e)[:200]}", ok=False)
-        run.wall_s = round(time.time() - t0, 1)
-        if run.ok:   # a failure (docker down, image missing) is retried next time, never cached
-            cache[key] = {**asdict(run), "findings": [asdict(f) for f in run.findings]}
-            CACHE.write_text(json.dumps(cache, indent=1))
+            run = ToolRun(d["tool"], d["version"], [Finding(**f) for f in d["findings"]], d["note"], d["ok"],
+                          d["wall_s"], d.get("usd", 0.0))
+        else:
+            t0 = time.time()
+            try:
+                run = mod.run(task, o)
+            except Exception as e:  # a tool failing must not kill a matrix; the gate is told the tool did not run
+                run = ToolRun(name, mod.version(o), [], f"{name} failed to run: {type(e).__name__}: {str(e)[:200]}", ok=False)
+            run.wall_s = round(time.time() - t0, 1)
+            if run.ok:   # a failure (docker down, image missing) is retried next time, never cached
+                cache[key] = {**asdict(run), "findings": [asdict(f) for f in run.findings]}
+                CACHE.write_text(json.dumps(cache, indent=1))
+        if hasattr(mod, "post"):   # calibration on top of the raw cached findings (static severities)
+            run.findings = mod.post(run.findings)
         out.append(run)
     return out
 
@@ -161,6 +163,16 @@ def hits_gold(findings: list[Finding], gold_hunks, slack: int = 3) -> bool:
     return False
 
 
+def gold_chance(findings: list[Finding], task: dict, slack: int = 3) -> float:
+    """P(at least one of these findings hits a gold hunk) if each sat on a uniformly random added line."""
+    lines = [(f, l) for f, ls in added_lines(task.get("diff", "")).items() for l in ls]
+    k = sum(1 for f in findings if f.line_start)
+    if not lines or not k:
+        return 0.0
+    q = sum(1 for f, l in lines if hits_gold([Finding("x", "low", f, l, l, "")], task.get("gold_hunks", []), slack)) / len(lines)
+    return 1 - (1 - q) ** k
+
+
 def tool_stats(per_task: dict[str, list[ToolRun]], tasks: list[dict], min_severity: str = "medium") -> dict:
     """Per tool: how often it fires on bug vs clean PRs (any finding at >= min_severity), and how often a finding
     lands on the gold hunk of a bug PR. This is the tool's own recall/precision, before any gate reads it."""
@@ -170,8 +182,8 @@ def tool_stats(per_task: dict[str, list[ToolRun]], tasks: list[dict], min_severi
     out = {}
     names = sorted({r.tool for runs in per_task.values() for r in runs})
     for name in names:
-        s = {"n_bug": 0, "n_clean": 0, "fired_bug": 0, "fired_clean": 0, "gold_hit": 0, "did_not_run": 0,
-             "findings": 0, "wall_s": 0.0}
+        s = {"n_bug": 0, "n_clean": 0, "fired_bug": 0, "fired_clean": 0, "gold_hit": 0, "gold_chance": 0.0,
+             "did_not_run": 0, "findings": 0, "wall_s": 0.0}
         for tid, runs in per_task.items():
             t = by_id[tid]
             for r in runs:
@@ -187,9 +199,14 @@ def tool_stats(per_task: dict[str, list[ToolRun]], tasks: list[dict], min_severi
                     s["n_bug"] += 1
                     s["fired_bug"] += bool(strong)
                     s["gold_hit"] += hits_gold(r.findings, t.get("gold_hunks", []))
+                    s["gold_chance"] += gold_chance(r.findings, t)
                 else:
                     s["n_clean"] += 1
                     s["fired_clean"] += bool(strong)
         s["wall_s"] = round(s["wall_s"], 1)
+        s["gold_chance"] = round(s["gold_chance"], 1)
+        rb = s["fired_bug"] / s["n_bug"] if s["n_bug"] else 0.0
+        rc = s["fired_clean"] / s["n_clean"] if s["n_clean"] else 0.0
+        s["lr"] = round(rb / rc, 2) if rc else (None if not rb else float("inf"))   # P(fire|bug) / P(fire|clean)
         out[name] = s
     return out

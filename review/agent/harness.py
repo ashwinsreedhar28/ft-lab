@@ -237,7 +237,7 @@ def main():
     if a.tools_only:
         RESULTS.mkdir(exist_ok=True)
         p = RESULTS / f"{label}.json"
-        p.write_text(json.dumps({"label": label, "harness_version": HARNESS_VERSION, "tools": tools, "n": len(tasks),
+        p.write_text(json.dumps({"label": label, "harness_version": HARNESS_VERSION, "calibration": _calibration(), "tools": tools, "n": len(tasks),
                                  "provenance": provenance(a.tasks), "tool_stats": stats, "wall_s": round(time.time() - t0, 1),
                                  "per_task": {tid: [{"tool": r.tool, "ok": r.ok, "note": r.note,
                                                      "findings": [f.__dict__ for f in r.findings]} for r in rs]
@@ -248,14 +248,22 @@ def main():
         run_gate(a, tasks, per_task, tools, policy, stats, label if a.repeat == 1 else f"{label}_r{rep}")
 
 
+def _calibration() -> str:
+    from review.tools import static
+    return static.SEVERITY_VERSION
+
+
 def print_tool_stats(stats: dict):
     if not stats:
         return
-    print(f"\n{'tool':<10}{'fires on bug':>14}{'fires on clean':>16}{'gold-hunk hit':>15}{'findings':>10}{'not run':>9}{'wall s':>8}")
+    print(f"\n{'tool':<10}{'fires on bug':>14}{'fires on clean':>16}{'LR':>7}{'gold-hunk hit':>15}{'chance':>8}"
+          f"{'findings':>10}{'not run':>9}{'wall s':>8}")
     for name, s in stats.items():
         fb = f"{s['fired_bug']}/{s['n_bug']}"; fc = f"{s['fired_clean']}/{s['n_clean']}"; gh = f"{s['gold_hit']}/{s['n_bug']}"
-        print(f"{name:<10}{fb:>14}{fc:>16}{gh:>15}{s['findings']:>10}{s['did_not_run']:>9}{s['wall_s']:>8.0f}")
-    print("(fires = at least one medium-or-higher finding; gold-hunk hit = a finding within 3 lines of the injected/real defect)")
+        lr = "-" if s.get("lr") is None else "inf" if s["lr"] == float("inf") else f"{s['lr']:.1f}"
+        print(f"{name:<10}{fb:>14}{fc:>16}{lr:>7}{gh:>15}{s.get('gold_chance', 0):>8.1f}{s['findings']:>10}{s['did_not_run']:>9}{s['wall_s']:>8.0f}")
+    print("(fires = at least one medium-or-higher finding after calibration; LR = P(fire|bug)/P(fire|clean); gold-hunk hit = a\n"
+          " finding within 3 lines of the defect; chance = hits expected if the same findings sat on random added lines)")
 
 
 def run_gate(a, tasks, per_task, tools, policy, stats, label):
@@ -273,7 +281,7 @@ def run_gate(a, tasks, per_task, tools, policy, stats, label):
     scores = by_split(load_tasks(a.tasks) if not a.only else [x for x in load_tasks(a.tasks) if x.id in reviews], reviews, strong)
     RESULTS.mkdir(exist_ok=True)
     p = RESULTS / f"{label}.json"
-    p.write_text(json.dumps({"label": label, "model": a.gate, "harness_version": HARNESS_VERSION,
+    p.write_text(json.dumps({"label": label, "model": a.gate, "harness_version": HARNESS_VERSION, "calibration": _calibration(),
                              "condition": "+".join(tools) or "none", "tools": tools, "policy": policy, "probes": a.probes,
                              "n": len(tasks), "provenance": provenance(a.tasks, {t.get("image") for t in tasks if t.get("image")}),
                              "unparsable": sum(1 for r in rows if not r["parsed"]), "wall_s": round(time.time() - t0, 1),

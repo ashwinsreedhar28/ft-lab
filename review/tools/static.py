@@ -20,6 +20,7 @@ import argparse
 import json
 import shlex
 import subprocess
+from dataclasses import replace
 from pathlib import Path
 
 from review.tools import Finding, ToolRun, added_lines, py_files
@@ -147,6 +148,30 @@ def _severity(item: dict) -> str:
             return "low"
         return "medium"
     return "high" if item["rule"] in PYRIGHT_HIGH else "medium"
+
+
+def raw_severity(rule: str) -> str:
+    """Severity before calibration, from the stored rule string "<tool> <rule>"."""
+    tool, _, r = rule.partition(" ")
+    return _severity({"tool": tool, "rule": r})
+
+
+# ---- severity calibration, applied after the findings cache by review.tools.gather (post), so no Docker rerun.
+# Rule, fixed before looking at train: raw-high rules (undefined names, syntax errors) stay high; a raw-medium rule
+# stays medium only if on the train split it fires on >= 3 bug PRs and >= 2x as often on bug as on clean PRs;
+# everything else is low (still shown to the gate, never counts as "fires"). The count threshold was 5 when fixed
+# and was relaxed to 3 on train results only, before any eval run, to keep reportReturnType (4 bug / 0 clean PRs,
+# all on the mutated line). Regenerate: python -m review.tools.calibrate review/agent/results/tools_static_train.json
+SEVERITY_VERSION = "train-cal v1: 223 train PRs, min 3 bug PRs, LR >= 2 (Oct 28)"
+CALIBRATED_MEDIUM = frozenset({"pyright reportArgumentType", "pyright reportReturnType"})
+
+
+def post(findings: list[Finding]) -> list[Finding]:
+    out = []
+    for f in findings:
+        raw = raw_severity(f.rule)
+        out.append(replace(f, severity=raw if raw == "high" else "medium" if f.rule in CALIBRATED_MEDIUM else "low"))
+    return out
 
 
 def parse_findings(head_items: list[dict], base_items: list[dict], added: dict[str, set[int]]) -> list[Finding]:

@@ -19,7 +19,7 @@ own repos (shwin-bench), then a small model fine-tuned into the roles where it h
 
 ```
 pip install -r requirements.txt          # or bash pod/setup.sh on a pod
-make test                                # 71 pure-python tests
+make test                                # 74 pure-python tests
 python -m ftlab.train configs/gsm8k_h100.yaml
 python -m ftlab.eval  configs/gsm8k_h100.yaml --label tuned --model runs/gsm8k_h100/final
 python -m ftlab.plot  runs/gsm8k_h100
@@ -335,6 +335,16 @@ make harness-images                       # docker, once per task image
 make harness-tools                        # docker, no API: per-tool table on shwin-bench
 make harness GATE=claude-sonnet-5-5 TOOLS=static,tests POLICY=block-needs-finding
 ```
+
+Static severities are calibrated on the 223-row train split, never the eval (`make harness-calibrate`, rule fixed in
+`review/tools/static.py`). Raw-high rules (undefined names) stay high. A raw-medium rule stays medium only if it fires
+on ≥3 bug PRs and ≥2× as often on bug as on clean PRs, which keeps pyright `reportArgumentType` and `reportReturnType`;
+everything else is low. After calibration, on train static fires on 13/117 bug PRs vs 1/106 clean (LR 11.8). In the
+mutant-vs-clean-twin view, 19 mutants gain a finding the twin lacks and 14 of those land on the mutated line; gold-hunk
+hits are 15 vs 2.6 expected by chance. So a static finding is strong block evidence, but its silence is not evidence of
+a clean PR (LR of no-fire ≈ 0.9). On shwin-bench (4 bug / 4 clean) static fires 3/4 vs 1/4, and its 2 gold-hunk hits
+are below chance (2.6): those gold hunks span whole files. `tests` is 0/4 on shwin bugs, as expected: each of those
+bugs passed its suite when it landed.
 
 Next: reviewer smoke and a local Qwen3-8B gate on MLX (measurement-job decode settings), the gate × tools matrix on
 shwin-bench, then on the 61-task eval, then the evidence-policy ablation.
