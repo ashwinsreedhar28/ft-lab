@@ -64,3 +64,14 @@ same untrained model (seed 0): paired 9.0; of the merged step-50 model: 13.2.
   the untrained 8B thinking / compact prompt / 4k cap start.
 - Next run (not before funds allow): lr 3e-5, 3-seed periodic eval, train set grown with mutation run 5 (296 positives;
   eval frozen). Artifacts: `docs/phase3b/review_grpo_8b_v5/`.
+
+## v6 (8B) result — Oct 27, 1× H100, ~$10. Null; GRPO closed for pre-January.
+Changes vs v5: lr 3e-5, 3 seeds per checkpoint, train 223 rows (mutation run 5 via `assemble.py --freeze-eval`,
+eval byte-identical), DAPO clip-higher (ε_high 0.28). 3-seed means (bug approve/block, clean approve/block, invalid):
+step 0 18.3/15.7, 22.7/3.0, 1.3 · 10 17.3/17.3, 22.0/3.0, 1.0 · 20 15.7/19.0, 23.0/3.0, 0.3 · 30 16.0/18.0, 22.0/3.3, 1.3 ·
+40 17.0/17.3, 23.0/3.0, 0.3 · 50 15.3/19.0, 20.7/4.3, 1.0 · 60 16.7/17.0, 19.7/3.7, 1.3. kl 0.005–0.007.
+Step 0 reproduces the measurement job (eval path sound). No checkpoint met the rule; the range across the run
+(bugs 15–18, clean 20–23) is one seed's worth of noise. Six GRPO runs, each diagnosed; on this bench prompt, decode,
+cap and model choice moved the gate and RL did not at the scale credits allowed. Next: the review harness
+(`claude/harness-plan-2026-10-27.md` in the project); GRPO only if the small gate is the bottleneck with tools in place.
+Artifacts: `docs/phase3b/review_grpo_8b_v6/`.

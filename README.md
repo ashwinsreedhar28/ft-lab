@@ -296,3 +296,8 @@ gain over the 2k cap is the 22 truncated outputs finishing. GRPO v5 from that st
 advantages, reward v5, eval every 10 with step 0): kl 0.002, no movement; and the same untrained weights score
 paired 9.0 vs 13.5 across two seed-0 evals, so a single-seed 61-task eval cannot resolve the effects being chased.
 Details and the pre-registered rules: `docs/phase3b/MEASURE.md`.
+
+**v6 (Oct 27, ~$10): null.** lr 3e-5, 3-seed checkpoints, 223 train rows (eval frozen verbatim), clip-higher. Bug approvals
+15–18 and clean approvals 20–23 across all seven checkpoints, kl ≤ 0.007. Six GRPO runs, each diagnosed, none beat its
+start. Direction after the Oct 27 check-in: a review **harness** (model × the repo's review tool) evaluated on the same
+benches, with fine-tuning as a lever inside it — `docs/phase3b/MEASURE.md` has the v6 curve and the plan pointer.
