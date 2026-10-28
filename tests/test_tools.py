@@ -275,3 +275,30 @@ def test_main_gate_row_end_to_end(monkeypatch, tmp_path, capsys):
     out = json.loads((tmp_path / "t.json").read_text())
     assert out["n"] == 1 and out["reviews"][0]["decision"] == "approve" and out["condition"] == "none"
     assert "bugs_approved=" in capsys.readouterr().out
+
+
+def test_suite_outcomes_reads_long_junit(monkeypatch):
+    """Regression: junit for a real suite is 20+ KB; the 6000-char tail dropped JUNIT_BEGIN, so all 202 cached
+    outcomes were empty and the v5 suite delta never had data."""
+    import review.agent.loop as loop
+    cases = "".join(f'<testcase classname="tests.test_core" name="test_{i}" time="0.001"/>' for i in range(300))
+    cases += '<testcase classname="tests.test_core" name="test_bad"><failure message="x"/></testcase>'
+    out = f"JUNIT_BEGIN\n<testsuites><testsuite>{cases}</testsuite></testsuites>\nJUNIT_END\n"
+    assert len(out) > 6000
+
+    def fake_run(img, script, timeout=1200, network="none", mounts=None, keep=6000, files=None):
+        return 0, out if keep is None else out[-keep:]
+    monkeypatch.setattr(loop, "docker_run", fake_run)
+    r = loop.suite_outcomes({"image": "i", "test_cmd": "pytest"}, "abc", ".")
+    assert len(r) == 301 and r["tests.test_core::test_bad"] == "failed"
+
+
+def test_tests_tool_recomputes_empty_cache(monkeypatch, tmp_path):
+    import review.agent.loop as loop
+    runs_file = tmp_path / "runs.json"
+    runs_file.write_text(json.dumps({"outcomes:b": {}, "outcomes:h": {}}))
+    monkeypatch.setattr(loop, "RUNS", runs_file)
+    monkeypatch.setattr(loop, "suite_outcomes", lambda task, sha, subdir: {"t.a::x": "passed" if sha == "b" else "failed"})
+    r = tests_tool.run({"image": "i", "base_sha": "b", "head_sha": "h"})
+    assert r.ok and [f.rule for f in r.findings] == ["t.a::x"]
+    assert json.loads(runs_file.read_text())["outcomes:h"] == {"t.a::x": "failed"}

@@ -10,7 +10,7 @@ own repos (shwin-bench), then a small model fine-tuned into the roles where it h
 |---|---|---|---|
 | 0 | GRPO mechanics: GSM8K, Qwen3-1.7B, 1×H100 | answer match | done Oct 17; lessons below |
 | 1 | review-bench from shwin-bench: bisected bug PRs + matched clean PRs, 4 context conditions, frontier baselines | bugs approved (target 0), auto-ship rate | v0 built: 4 bug + 4 clean; see below |
-| 2 | the review agent: neighborhood → run suite → probe test → decision | same scorer | frozen at harness v5 (suite delta); Sonnet 2/35, Haiku 0/35 bugs approved on the bench v4 eval (below) |
+| 2 | the review agent: neighborhood → run suite → probe test → decision | same scorer | frozen at harness v5 (suite delta); Sonnet 2/35, Haiku 0/35 bugs approved on the bench v4 eval (below). Correction Oct 28: the suite delta was empty on every task (junit cut off by a 6000-char output tail), so those v5 rows had no test signal |
 | 3a | public bench: mined fix commits → validate → bisect (real positives, eval); mutation-injected bugs on clean PRs with a probe guard (training volume) | same scorer | bench v4 frozen Oct 20: 189 tasks (100 mutants + 2 real + 87 clean), eval 61 / train 128; 9 % label noise on hand review |
 | 3b | SFT warm-start on frontier review traces (TEMP-selected); GRPO a 4B/8B LoRA into the triage gate with variance-guided rollouts (VIGOR) | asymmetric decision reward | run Oct 20–25 (~$46): no GRPO run beat its start. 4B: approve-all, then block-all once advantages were unscaled; 8B thinking (v5): null, kl 0.002. Single-seed eval noise ±2–4 paired (below) |
 | 5 | harness v6: gate model × review tools (static, test-suite delta, AI reviewer) with evidence policies | same scorer + per-tool hit rates | wk1 tools layer Oct 28 (below) |
@@ -19,7 +19,7 @@ own repos (shwin-bench), then a small model fine-tuned into the roles where it h
 
 ```
 pip install -r requirements.txt          # or bash pod/setup.sh on a pod
-make test                                # 69 pure-python tests
+make test                                # 71 pure-python tests
 python -m ftlab.train configs/gsm8k_h100.yaml
 python -m ftlab.eval  configs/gsm8k_h100.yaml --label tuned --model runs/gsm8k_h100/final
 python -m ftlab.plot  runs/gsm8k_h100

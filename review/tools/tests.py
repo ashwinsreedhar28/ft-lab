@@ -63,7 +63,7 @@ def run(task: dict, opts: dict | None = None) -> ToolRun:
     runs = json.loads(RUNS.read_text()) if RUNS.exists() else {}
     for sha in (task["base_sha"], task["head_sha"]):
         key = f"outcomes:{sha}"
-        if key not in runs:
+        if not runs.get(key):   # empty = never collected (or cached before the Oct 28 truncation fix): retry
             runs[key] = suite_outcomes(task, sha, subdir)
             RUNS.write_text(json.dumps(runs, indent=1))
     parent, head = runs[f"outcomes:{task['base_sha']}"], runs[f"outcomes:{task['head_sha']}"]

@@ -184,7 +184,7 @@ def suite_outcomes(task: dict, sha: str, subdir: str) -> dict[str, str]:
     import xml.etree.ElementTree as ET
     cmd = (f"{prelude(task, sha)} && cd {subdir} && {task['test_cmd']} -q --continue-on-collection-errors "
            f"--junitxml=/tmp/j.xml >/dev/null 2>&1; echo JUNIT_BEGIN; cat /tmp/j.xml 2>/dev/null; echo JUNIT_END")
-    rc, out = docker_run(task["image"], cmd, **container_kw(task))
+    rc, out = docker_run(task["image"], cmd, keep=None, **container_kw(task))   # junit is 20+ KB; a tail cut BEGIN off
     if "JUNIT_BEGIN" not in out:
         return {}
     xml = out.split("JUNIT_BEGIN", 1)[1].split("JUNIT_END", 1)[0].strip()
@@ -205,7 +205,7 @@ def suite_delta(task: dict, subdir: str, runs: dict) -> str:
     collection errors) that were present at the parent too and were shown to the agent as evidence."""
     key_p, key_h = f"outcomes:{task['base_sha']}", f"outcomes:{task['head_sha']}"
     for key, sha in ((key_p, task["base_sha"]), (key_h, task["head_sha"])):
-        if key not in runs:
+        if not runs.get(key):   # {} entries cached before the Oct 28 truncation fix are recomputed
             runs[key] = suite_outcomes(task, sha, subdir)
             RUNS.write_text(json.dumps(runs, indent=1))
     p, h = runs[key_p], runs[key_h]
