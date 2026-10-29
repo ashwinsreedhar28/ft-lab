@@ -391,4 +391,39 @@ are worth (the train numbers above, worded without describing how the benchmark 
 1/6 approve threshold made mechanical). `python -m review.analysis.h6_table <results> [--by-source]` prints the
 matrix with the measurement job's PR-weighted paired metric.
 
-Next: finish the shwin matrix, run the tools on the 61, then gate × tools × {plain, calibrated notes} × policy on the 61.
+### Gate × tools on the 61 (Oct 28–29, one run per row, Sonnet $5.06 total, Qwen 49–59 min per row on the Mac)
+
+| gate | tools / lever | bugs approved | clean approved | clean blocked | paired /26 | J per PR |
+|---|---|---|---|---|---|---|
+| Sonnet 5.5 | none | 3/35 | 15/26 | 3 | 12.0 | +0.43 |
+| Sonnet 5.5 | static+tests | 9/35 | 19/26 | 2 | 13.0 | −0.07 |
+| Sonnet 5.5 | all three | 4/35 | 19/26 | 3 | **15.7** | +0.39 |
+| Sonnet 5.5 | all + calibrated notes | 5/35 | 19/26 | 2 | 14.2 | +0.33 |
+| Sonnet 5.5 | all + reviewer-silence policy | 7/35 | 14/26 | 2 | 10.3 | +0.05 |
+| Qwen3-8B 4-bit | none | 20/35 | 25/26 | 1 | 9.7 | −0.99 |
+| Qwen3-8B 4-bit | static+tests | 18/35 | 23/26 | 3 | 9.7 | −0.88 |
+| Qwen3-8B 4-bit | all three | 4/35 | 13/26 | 11 | 9.0 | +0.27 |
+| Qwen3-8B 4-bit | all + calibrated notes | 5/35 | 12/26 | 11 | 7.0 | +0.16 |
+| Qwen3-8B 4-bit | all + reviewer-silence policy | 4/35 | 14/26 | 11 | 11.0 | +0.32 |
+
+J uses the reward v5 costs (approve bug −5, correct decision +1, block clean −0.5, escalate 0). Block-all scores
++0.36 on this 57%-bug eval, so J alone flatters a gate that blocks; the paired metric (mutant blocked AND its clean
+twin approved) is the discrimination number. Single-seed noise on paired is ±2–4 (measurement job).
+
+- **Anchor:** Qwen 4-bit MLX with no tools reproduces the bf16 pod measurement: paired 9.7 vs 9.8 ± 1.4, bugs
+  approved 20 vs 17.7 ± 2.5, clean approved 25 vs 22.3.
+- **Silent tools hurt:** static+tests without the reviewer raised Sonnet's bug approvals from 3 to 9 (shwin: 1/4 to
+  4/4). Both tools are near-zero evidence here (LR 1.2 and 0.9), and the gate reads their silence as safety.
+- **The reviewer is the tool that matters, and the gate decides what it's worth.** With identical cached findings,
+  Sonnet weighs them (4/35 bugs approved, 19/26 clean approved, 3 clean blocked); Qwen obeys them (4/35 and 13/26,
+  11 clean blocked). Qwen goes from approving 20 bugs to 4 only by blocking much more of everything.
+- **The levers did not help.** Calibrated notes are within noise for both gates. The reviewer-silence policy hurt
+  Sonnet (7/35 bugs, 14/26 clean): the rule reads as permission to approve when the reviewer is quiet, and reviewer
+  silence is weaker evidence on the eval than on train (LR 0.41 vs 0.12).
+- **Not riding on Haiku-made mutants:** Sonnet with all tools approved 2/20 LLM-made, 1/13 mechanical, 1/2 real bugs.
+- **Where fine-tuning fits now:** with tools fixed, the gate model is the bottleneck (paired 9.0 for Qwen vs 15.7
+  for Sonnet on the same findings). That is the condition the Oct 27 plan set for bringing FT back. The cheapest
+  lever is cost-sensitive SFT on the decision given the findings (the labels give R(s, a) for every action), not GRPO.
+
+Next: two more Sonnet repeats of the none / static+tests / all rows to put error bars on the headline, then the
+Nov 17 one-pager.
